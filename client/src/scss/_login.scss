@@ -43,3 +43,13 @@
 		width: calc(100% - 900px);
 	}
 }
+
+.field-row {
+	margin: 0px -10px;
+	display: flex;
+
+	& > * {
+		flex: 1;
+		margin: 0px 10px;
+	}
+}

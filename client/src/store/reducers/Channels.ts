@@ -1,14 +1,12 @@
-import { initialStore } from "../store";
 import { ChannelAction } from "../../typings";
+import { channels as defaultChannels } from "../store";
 
 export const ChannelsReducer = (
-	state = initialStore,
-	{ type, ...rest }: ChannelAction
+	channels = defaultChannels,
+	{ type }: ChannelAction
 ) => {
 	switch (type) {
-		case "ADD_CHANNEL":
-			return { ...state, channels: state.channels.concat(rest) };
 		default:
-			return state;
+			return channels;
 	}
 };

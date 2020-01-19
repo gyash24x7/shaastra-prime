@@ -1,18 +1,17 @@
-import { Channel } from "../typings";
-import { Map, List } from "immutable";
+import { Channel, Department, User } from "../typings";
 
-let user = Map({
+export const user: User = {
 	rollNumber: "CH16B025",
 	name: "Yash Gupta",
 	department: "WEBOPS",
 	accessLevel: "CORE"
-});
+};
 
-let channels = List<Channel>([
+export const channels: Channel[] = [
 	{
 		id: "1",
 		name: "Core Team",
-		members: List([
+		members: [
 			{
 				rollNumber: "CH16B025",
 				name: "Yash Gupta",
@@ -37,8 +36,21 @@ let channels = List<Channel>([
 				department: "WEBOPS",
 				accessLevel: "CORE"
 			}
-		])
+		]
 	}
-]);
+];
 
-export const initialStore = { user, channels };
+export const departments: Department[] = [
+	{
+		id: "1",
+		name: "WEBOPS",
+		members: []
+	},
+	{
+		id: "2",
+		name: "PUBLICITY",
+		members: []
+	}
+];
+
+export const initialStore = { user, channels, departments };
