@@ -1,9 +1,12 @@
-import { UserAction } from "../../typings";
+import { UserAction, User } from "../../typings";
 import { user as defaultUser } from "./../store";
 
-export const UserReducer = (user = defaultUser, { type }: UserAction) => {
+export const UserReducer = (user = null as User, { type }: UserAction) => {
 	switch (type) {
+		case "LOGIN":
+			return defaultUser;
+
 		default:
-			return user;
+			return null as User;
 	}
 };

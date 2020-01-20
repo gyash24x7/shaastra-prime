@@ -16,14 +16,11 @@ import NumberListIcon from "@atlaskit/icon/glyph/editor/number-list";
 import createEmojiPlugin from "draft-js-emoji-plugin";
 import createLinkifyPlugin from "draft-js-linkify-plugin";
 import "draft-js-emoji-plugin/lib/plugin.css";
-
 const emojiPlugin = createEmojiPlugin();
 const linkifyPlugin = createLinkifyPlugin();
 const { EmojiSuggestions } = emojiPlugin;
-
 export const ChatEditor = () => {
 	const [editorState, setEditorState] = useState(EditorState.createEmpty());
-
 	const handleKeyCommand = (commad: string, newEditorState: EditorState) => {
 		const newState = RichUtils.handleKeyCommand(newEditorState, commad);
 		if (newState) {
@@ -32,36 +29,30 @@ export const ChatEditor = () => {
 		}
 		return "not-handled";
 	};
-
 	const onBlockSelect = (blockType: string) => () => {
 		setEditorState(RichUtils.toggleBlockType(editorState, blockType));
 	};
-
 	const onStyleBtnClick = (command: string) => () => {
 		setEditorState(
 			RichUtils.toggleInlineStyle(editorState, command.toUpperCase())
 		);
 	};
-
 	// const getSerializedValue = () => {
 	// 	let htmlString = stateToHTML(editorState.getCurrentContent());
 	// 	setEditorState(EditorState.createEmpty());
 	// 	return htmlString;
 	// };
-
 	const keyBindingFn = (e: React.KeyboardEvent) => {
 		if (e.keyCode === 72 && KeyBindingUtil.hasCommandModifier(e)) {
 			return "heading";
 		}
 		return getDefaultKeyBinding(e);
 	};
-
 	const currentInlineStyle = editorState.getCurrentInlineStyle();
 	const currentBlockType = editorState
 		.getCurrentContent()
 		.getBlockForKey(editorState.getSelection().getStartKey())
 		.getType();
-
 	return (
 		<div className="editor-wrapper">
 			<ButtonGroup>

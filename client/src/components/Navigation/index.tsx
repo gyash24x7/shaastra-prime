@@ -12,6 +12,8 @@ import { Profile } from "../Profile";
 import { Chat } from "../Chat";
 import Login from "../Login";
 import Signup from "../Signup";
+import { connect } from "react-redux";
+import { Store, User } from "../../typings";
 
 export interface WindowProps {
 	navigationViewController: any;
@@ -41,14 +43,24 @@ const WindowWithViewController = withNavigationViewController(
 	}
 );
 
-export default () => (
-	<BrowserRouter>
-		<Route exact path="/login" component={Login} />
-		<Route exact path="/signup" component={Signup} />
-		{false && (
-			<NavigationProvider>
-				<WindowWithViewController />
-			</NavigationProvider>
-		)}
-	</BrowserRouter>
-);
+const mapStateToProps = ({ user }: Store) => ({ user });
+
+interface NavigationProps {
+	user: User;
+}
+
+export default connect(mapStateToProps)((props: NavigationProps) => {
+	console.log(props);
+	return (
+		<BrowserRouter>
+			<Route exact path="/login" component={Login} />
+			<Route exact path="/signup" component={Signup} />
+			{props.user?.name && (
+				<NavigationProvider>
+					<WindowWithViewController />
+				</NavigationProvider>
+			)}
+			<Route render={() => <div>404</div>} />
+		</BrowserRouter>
+	);
+});
