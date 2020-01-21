@@ -1,13 +1,20 @@
-import { createStore, applyMiddleware } from "redux";
+import { applyMiddleware, compose, createStore } from "redux";
 import { reducer } from "./reducers";
 import { persistStore } from "redux-persist";
 import logger from "redux-logger";
 
-const middlewares = [logger];
+declare var window: any;
 
-export const store = createStore(reducer, applyMiddleware(...middlewares));
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export const persistor = persistStore(store);
+const middlewares = [ logger ];
+
+export const store = createStore(
+	reducer,
+	composeEnhancers( applyMiddleware( ...middlewares ) )
+);
+
+export const persistor = persistStore( store );
 
 store.subscribe(() => {
 	console.log(store.getState());
