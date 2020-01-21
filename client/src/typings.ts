@@ -39,3 +39,14 @@ export type Store = {
 export type UserAction = {
 	type: string;
 };
+
+export type LoginAction = {
+	type: string;
+	rollNumber: string;
+	password: string;
+};
+
+export interface LoginActionData {
+	rollNumber: string;
+	password: string;
+}

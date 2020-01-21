@@ -2,11 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "@atlaskit/css-reset/dist/bundle.css";
 import "./scss/app.scss";
-import App from "./App";
+import { AppRoutes } from "./routes";
 import * as serviceWorker from "./serviceWorker";
 
 const renderApp = () => {
-	ReactDOM.render(<App />, document.getElementById("root"));
+	ReactDOM.render(<AppRoutes />, document.getElementById("root"));
 };
 
 renderApp();

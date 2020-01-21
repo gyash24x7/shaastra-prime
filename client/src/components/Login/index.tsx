@@ -1,34 +1,88 @@
-import React from "react";
-import { Login } from "./Login";
+import React, { Fragment, Dispatch } from "react";
+import Form, {
+	Field,
+	HelperMessage,
+	ErrorMessage,
+	ValidMessage
+} from "@atlaskit/form";
+import TextField from "@atlaskit/textfield";
 import Button from "@atlaskit/button";
-import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { getLoginAction } from "../../store/actions/User";
+import { User, LoginAction, LoginActionData } from "../../typings";
 
-export default () => (
-	<div className="login-wrapper">
-		<div className="login-container">
-			<Login />
-			<br />
-			<br />
-			<div className="btn-flex">
-				<span>Don't have and account?</span>
-				<Link to="/signup">
-					<Button appearance="subtle" className="submit-btn">
-						signup
-					</Button>
-				</Link>
-			</div>
+interface LoginProps {
+	dispatch: Dispatch<LoginAction>;
+	user: User;
+}
 
-			<div className="btn-flex">
-				<span>Forgot your password?</span>
-				<Link to="/forgotpassword">
-					<Button appearance="subtle" className="submit-btn">
-						reset password
-					</Button>
-				</Link>
-			</div>
-		</div>
-		<div className="background-container">
-			<div className="shadow" />
-		</div>
-	</div>
-);
+export const Login = connect()((props: LoginProps) => (
+	<Form
+		onSubmit={({ rollNumber, password }: LoginActionData) =>
+			props.dispatch(getLoginAction({ rollNumber, password }))
+		}
+	>
+		{({ formProps, submitting }) => (
+			<form {...formProps} noValidate style={{ width: "100%" }}>
+				<Field
+					name="rollNumber"
+					label="Roll Number"
+					isRequired
+					defaultValue=""
+					validate={(value?: string) =>
+						value?.length === 8 ? undefined : "INVALID"
+					}
+				>
+					{({ fieldProps, error, valid }) => (
+						<Fragment>
+							<TextField autoComplete="off" {...fieldProps} />
+							{!error && !valid && (
+								<HelperMessage>Enter your Roll Number</HelperMessage>
+							)}
+							{error && (
+								<ErrorMessage>Please Enter a valid Roll Number</ErrorMessage>
+							)}
+							{valid && <ValidMessage>Nice Roll Number!</ValidMessage>}
+						</Fragment>
+					)}
+				</Field>
+				<Field
+					name="password"
+					label="Password"
+					defaultValue=""
+					isRequired
+					validate={(value?: string) =>
+						value?.length < 8 ? "TOO_SHORT" : undefined
+					}
+				>
+					{({ fieldProps, error, valid }) => (
+						<Fragment>
+							<TextField type="password" {...fieldProps} />
+							{!error && !valid && (
+								<HelperMessage>
+									Use 8 or more characters with a mix of letters, numbers &
+									symbols.
+								</HelperMessage>
+							)}
+							{error && (
+								<ErrorMessage>
+									Password needs to be more than 8 characters.
+								</ErrorMessage>
+							)}
+							{valid && <ValidMessage>Awesome password!</ValidMessage>}
+						</Fragment>
+					)}
+				</Field>
+				<br />
+				<Button
+					type="submit"
+					appearance="primary"
+					isLoading={submitting}
+					className="submit-btn"
+				>
+					login
+				</Button>
+			</form>
+		)}
+	</Form>
+));
