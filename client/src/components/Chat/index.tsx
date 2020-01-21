@@ -7,7 +7,7 @@ export const Chat = () => (
 		<div className="chat-header">
 			<div># Core Team</div>
 		</div>
-		<MessageBox />
-		<ChatInput />
+		<MessageBox/>
+		<ChatInput/>
 	</div>
 );

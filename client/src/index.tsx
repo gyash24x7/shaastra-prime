@@ -6,7 +6,7 @@ import { AppRoutes } from "./routes";
 import * as serviceWorker from "./serviceWorker";
 
 const renderApp = () => {
-	ReactDOM.render(<AppRoutes />, document.getElementById("root"));
+	ReactDOM.render( <AppRoutes/>, document.getElementById( "root" ) );
 };
 
 renderApp();

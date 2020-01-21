@@ -7,21 +7,21 @@ import Avatar from "@atlaskit/avatar";
 import { GlobalItem } from "@atlaskit/navigation-next";
 import Drawer from "@atlaskit/drawer";
 import { Link } from "react-router-dom";
-import { MenuGroup, Section, HeadingItem, ButtonItem } from "@atlaskit/menu";
+import { ButtonItem, HeadingItem, MenuGroup, Section } from "@atlaskit/menu";
 
 export const GlobalNav = () => {
-	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+	const [ isDrawerOpen, setIsDrawerOpen ] = useState( false );
 
-	const AppSwitcherComponent = (props: any) => (
+	const AppSwitcherComponent = ( props: any ) => (
 		<Fragment>
 			<Link to="/">
-				<GlobalItem icon={AppSwitcherIcon} onClick={() => {}} />
+				<GlobalItem icon={ AppSwitcherIcon } onClick={ () => {} }/>
 			</Link>
 			<GlobalItem
-				icon={NotificationIcon}
-				onClick={() => {
-					setIsDrawerOpen(true);
-				}}
+				icon={ NotificationIcon }
+				onClick={ () => {
+					setIsDrawerOpen( true );
+				} }
 			/>
 		</Fragment>
 	);
@@ -29,14 +29,14 @@ export const GlobalNav = () => {
 	return (
 		<Fragment>
 			<GlobalNavigation
-				productIcon={() => <AtlassianIcon />}
-				onProductClick={() => {}}
-				appSwitcherComponent={AppSwitcherComponent}
-				onSettingsClick={() => {}}
+				productIcon={ () => <AtlassianIcon/> }
+				onProductClick={ () => {} }
+				appSwitcherComponent={ AppSwitcherComponent }
+				onSettingsClick={ () => {} }
 			/>
 			<Drawer
-				onClose={() => setIsDrawerOpen(false)}
-				isOpen={isDrawerOpen}
+				onClose={ () => setIsDrawerOpen( false ) }
+				isOpen={ isDrawerOpen }
 				width="narrow"
 			>
 				<MenuGroup>
@@ -44,7 +44,7 @@ export const GlobalNav = () => {
 						<HeadingItem>Starred</HeadingItem>
 						<ButtonItem
 							description="Next-gen software project"
-							elemBefore={<Avatar appearance="square" />}
+							elemBefore={ <Avatar appearance="square"/> }
 						>
 							Navigation System
 						</ButtonItem>

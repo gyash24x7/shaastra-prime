@@ -5,7 +5,7 @@ export const DepartmentsReducer = (
 	departments = defaultDepartments,
 	{ type }: ChannelAction
 ) => {
-	switch (type) {
+	switch ( type ) {
 		default:
 			return departments;
 	}

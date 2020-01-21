@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { User, Store } from "../typings";
-import { Redirect, Link } from "react-router-dom";
+import { Store, User } from "../typings";
+import { Link, Redirect } from "react-router-dom";
 import Button from "@atlaskit/button";
 import { Login } from "../components/Login";
 
@@ -9,17 +9,19 @@ export interface PageProps {
 	user: User;
 }
 
-const mapStateToProps = ({ user }: Store) => ({ user });
+const mapStateToProps = ( { user }: Store ) => (
+	{ user }
+);
 
-export const LoginPage = connect(mapStateToProps)(({ user }: PageProps) => {
-	if (user?.name) return <Redirect to="/" />;
+export const LoginPage = connect( mapStateToProps )( ( { user }: PageProps ) => {
+	if ( user?.name ) return <Redirect to="/"/>;
 
 	return (
 		<div className="login-wrapper">
 			<div className="login-container">
-				<Login user={user} />
-				<br />
-				<br />
+				<Login user={ user }/>
+				<br/>
+				<br/>
 				<div className="btn-flex">
 					<span>Don't have and account?</span>
 					<Link to="/signup">
@@ -39,8 +41,8 @@ export const LoginPage = connect(mapStateToProps)(({ user }: PageProps) => {
 				</div>
 			</div>
 			<div className="background-container">
-				<div className="shadow" />
+				<div className="shadow"/>
 			</div>
 		</div>
 	);
-});
+} );

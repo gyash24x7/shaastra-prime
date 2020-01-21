@@ -6,9 +6,9 @@ import { Link } from "react-router-dom";
 export const SignupPage = () => (
 	<div className="login-wrapper">
 		<div className="login-container signup-container">
-			<Signup />
-			<br />
-			<br />
+			<Signup/>
+			<br/>
+			<br/>
 			<div className="btn-flex">
 				<span>Already have an account?</span>
 				<Link to="/login">
@@ -28,7 +28,7 @@ export const SignupPage = () => (
 			</div>
 		</div>
 		<div className="background-container">
-			<div className="shadow signup" />
+			<div className="shadow signup"/>
 		</div>
 	</div>
 );

@@ -10,14 +10,14 @@ import CodeIcon from "@atlaskit/icon-file-type/glyph/source-code/24";
 export const ChatInput = () => {
 	return (
 		<div className="chat-input">
-			<ChatEditor />
+			<ChatEditor/>
 			<div className="button-wrapper">
 				<ButtonGroup appearance="subtle">
-					<Button iconBefore={<ImageIcon label="" />} />
-					<Button iconBefore={<VideoIcon label="" />} />
-					<Button iconBefore={<DocumentIcon label="" />} />
-					<Button iconBefore={<AudioIcon label="" />} />
-					<Button iconBefore={<CodeIcon label="" />} />
+					<Button iconBefore={ <ImageIcon label=""/> }/>
+					<Button iconBefore={ <VideoIcon label=""/> }/>
+					<Button iconBefore={ <DocumentIcon label=""/> }/>
+					<Button iconBefore={ <AudioIcon label=""/> }/>
+					<Button iconBefore={ <CodeIcon label=""/> }/>
 				</ButtonGroup>
 				<Button appearance="primary" className="submit-btn">
 					Send

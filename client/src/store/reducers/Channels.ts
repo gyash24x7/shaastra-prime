@@ -1,11 +1,11 @@
-import { ChannelAction, Channel } from "../../typings";
+import { Channel, ChannelAction } from "../../typings";
 import { channels as defaultChannels } from "../store";
 
 export const ChannelsReducer = (
 	channels = [] as Channel[],
 	{ type }: ChannelAction
 ) => {
-	switch (type) {
+	switch ( type ) {
 		default:
 			return defaultChannels;
 	}

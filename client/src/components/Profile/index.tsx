@@ -1,13 +1,13 @@
 import React from "react";
 import Avatar from "@atlaskit/avatar";
-import { MenuGroup, Section, HeadingItem, ButtonItem } from "@atlaskit/menu";
+import { ButtonItem, HeadingItem, MenuGroup, Section } from "@atlaskit/menu";
 import { ProfileCard } from "./ProfileCard";
 
 export const Profile = () => (
 	<div className="content-window">
 		<div className="profile-container">
-			<div className="profile-cover" />
-			<ProfileCard />
+			<div className="profile-cover"/>
+			<ProfileCard/>
 			<div className="profile-details">
 				<h2>Your Activity</h2>
 				<div className="activity-container">
@@ -16,7 +16,7 @@ export const Profile = () => (
 							<HeadingItem>Starred</HeadingItem>
 							<ButtonItem
 								description="Next-gen software project"
-								elemBefore={<Avatar appearance="square" />}
+								elemBefore={ <Avatar appearance="square"/> }
 							>
 								Navigation System
 							</ButtonItem>

@@ -1,16 +1,17 @@
 .user-section {
-	padding: 20px;
+  padding: 20px;
 
-	& button {
-		border-radius: 8px !important;
-		background: #ebecf0 !important;
-		padding: 5px 10px !important;
-		height: 60px !important;
-	}
+  & button {
+	border-radius: 8px !important;
+	background: #ebecf0 !important;
+	padding: 5px 10px !important;
+	height: 60px !important;
+  }
 }
+
 .user-details {
-	font-size: 11px !important;
-	margin-left: 3px;
-	text-transform: uppercase !important;
-	font-family: "Montserrat" !important;
+  font-size: 11px !important;
+  margin-left: 3px;
+  text-transform: uppercase !important;
+  font-family: "Montserrat" !important;
 }

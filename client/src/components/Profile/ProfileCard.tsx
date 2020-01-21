@@ -1,20 +1,22 @@
 import React from "react";
 import Avatar from "@atlaskit/avatar";
-import { MenuGroup, Section, HeadingItem, ButtonItem } from "@atlaskit/menu";
+import { ButtonItem, HeadingItem, MenuGroup, Section } from "@atlaskit/menu";
 import PhoneIcon from "@atlaskit/icon/glyph/hipchat/dial-out";
 import MailIcon from "@atlaskit/icon/glyph/email";
 import PersonIcon from "@atlaskit/icon/glyph/person";
 import { connect } from "react-redux";
-import { User, Store } from "../../typings";
+import { Store, User } from "../../typings";
 
 interface ProfileCardProps {
 	user: User;
 }
 
-const mapStateToProps = ({ user }: Store) => ({ user });
+const mapStateToProps = ( { user }: Store ) => (
+	{ user }
+);
 
-export const ProfileCard = connect(mapStateToProps)(
-	(props: ProfileCardProps) => (
+export const ProfileCard = connect( mapStateToProps )(
+	( props: ProfileCardProps ) => (
 		<figure>
 			<img
 				src="https://source.unsplash.com/random/300x300"
@@ -27,9 +29,9 @@ export const ProfileCard = connect(mapStateToProps)(
 					size="xlarge"
 				/>
 				<h2>
-					{props.user.name}
+					{ props.user.name }
 					<span>
-						{props.user.department} | {props.user.accessLevel}
+						{ props.user.department } | { props.user.accessLevel }
 					</span>
 				</h2>
 				<p>
@@ -42,19 +44,19 @@ export const ProfileCard = connect(mapStateToProps)(
 							<HeadingItem>Personal Details</HeadingItem>
 							<ButtonItem
 								description="Mobile"
-								elemBefore={<PhoneIcon label="Phone" />}
+								elemBefore={ <PhoneIcon label="Phone"/> }
 							>
 								7388378834
 							</ButtonItem>
 							<ButtonItem
 								description="Email"
-								elemBefore={<MailIcon label="Email" />}
+								elemBefore={ <MailIcon label="Email"/> }
 							>
 								gyash@shaastra.org
 							</ButtonItem>
 							<ButtonItem
 								description="Roll Number"
-								elemBefore={<PersonIcon label="Roll Number" />}
+								elemBefore={ <PersonIcon label="Roll Number"/> }
 							>
 								CH16B025
 							</ButtonItem>
