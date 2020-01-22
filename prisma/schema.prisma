@@ -1,0 +1,54 @@
+datasource db {
+provider = "postgresql"
+url      = env("DB_URL")
+}
+
+generator client {
+provider = "prisma-client-js"
+}
+
+enum AccessLevel {
+PARTICIPANT
+COORD
+HEAD
+CORE
+COCAS
+COCAD
+}
+
+model Department {
+id             String   @id
+name           String
+members        User[]
+subDepartments String[]
+}
+
+model User {
+id          String      @id
+name        String
+rollNumber  String      @unique
+email       String      @unique
+password    String
+accessLevel AccessLevel @default(COORD)
+mobile      String      @unique
+upi         String
+channels    Channel[]
+profilePic  String
+coverPic    String
+department  Department
+messages    Message[]
+}
+
+model Channel {
+id       String    @id
+name     String
+members  User[]
+messages Message[]
+}
+
+model Message {
+id        String   @id
+content   String
+by        User
+timestamp DateTime @default(now())
+}
