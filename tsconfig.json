@@ -28,7 +28,7 @@
     "downlevelIteration": true
   },
   "include": [
-    "src"
+    "client/src"
   ],
   "exclude": [
     "/node_modules/"

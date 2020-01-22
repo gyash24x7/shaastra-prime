@@ -4,7 +4,7 @@ import Button from "@atlaskit/button";
 import { Login } from "../components/Login";
 
 export interface PageProps {
-	match: any
+	match: any;
 }
 
 export const LoginPage = () => (
@@ -21,7 +21,6 @@ export const LoginPage = () => (
 					</Button>
 				</Link>
 			</div>
-
 			<div className="btn-flex">
 				<span>Forgot your password?</span>
 				<Link to="/forgotpassword">

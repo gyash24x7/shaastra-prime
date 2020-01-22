@@ -8,8 +8,9 @@ import { Provider } from "react-redux";
 import { store } from "../store";
 import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
+import { hot } from "react-hot-loader/root";
 
-export const AppRoutes = () => (
+export const AppRoutes = hot( () => (
 	<Provider store={ store }>
 		<BrowserRouter>
 			<Switch>
@@ -25,4 +26,4 @@ export const AppRoutes = () => (
 			</Switch>
 		</BrowserRouter>
 	</Provider>
-);
+) );

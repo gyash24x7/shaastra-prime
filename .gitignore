@@ -83,7 +83,7 @@ mails
 /coverage
 
 # production
-/build
+build
 
 # misc
 .DS_Store
@@ -91,4 +91,3 @@ mails
 .env.development.local
 .env.test.local
 .env.production.local
-

@@ -2,8 +2,8 @@ const path = require( "path" );
 // const webpack = require("webpack");
 const nodeExternals = require( "webpack-node-externals" );
 
-module.exports = ( env, argv ) => {
-	const SERVER_PATH = "./index.ts";
+module.exports = () => {
+	const SERVER_PATH = "./server/index.ts";
 
 	return {
 		stats : true,
@@ -13,7 +13,7 @@ module.exports = ( env, argv ) => {
 			publicPath : "/",
 			filename : "index.js"
 		},
-		mode : argv.mode,
+		mode : "production",
 		resolve : {
 			extensions : [ ".js", ".ts" ]
 		},
