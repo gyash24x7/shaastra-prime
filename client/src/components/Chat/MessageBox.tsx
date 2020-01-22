@@ -1,50 +1,37 @@
 import React, { useEffect, useRef } from "react";
 import Comment, { CommentAuthor, CommentTime } from "@atlaskit/comment";
-import { LoremIpsum } from "lorem-ipsum";
+import { Store } from "../../typings";
+import { selectChannelMessages } from "../../store/selectors/Channel";
+import { useSelector } from "react-redux";
 
-export const MessageBox = () => {
+interface MessageBoxProps {
+	channelId: string
+}
+
+export const MessageBox = ( { channelId }: MessageBoxProps ) => {
 	const myMessageStyles = {
 		display : "flex",
 		justifyContent : "flex-end"
 	};
 
-	// const [arrayLength, setArrayLength] = useState(100);
-
-	const randomArray = Array.from(
-		Array( parseInt( (
-			Math.random() * 100
-		).toFixed( 0 ) ) ).keys()
-	);
-
-	const lorem = new LoremIpsum( {
-		sentencesPerParagraph : {
-			min : 1,
-			max : 8
-		},
-		wordsPerSentence : {
-			min : 4,
-			max : 12
-		}
-	} );
+	const messages = useSelector( selectChannelMessages( channelId ) );
+	const me = useSelector( ( store: Store ) => store.user );
 
 	const messageBoxRef = useRef( null );
 
 	useEffect( () => {
-		// const node =  ReactDOM.findDOMNode()
 		let node: any = messageBoxRef.current;
-		// console.log(node);
 		if ( node.scrollTop + node.clientHeight + 100 >= node.scrollHeight )
 			node.scrollTop = node.scrollHeight;
 	} );
 
 	return (
 		<div className="message-box" ref={ messageBoxRef }>
-			{ randomArray.map( ( _, index ) => {
-				let num = parseInt( (
-					Math.random() * 6
-				).toFixed( 0 ) );
-				return (
-					<div key={ index } style={ num >= 3 ? {} : myMessageStyles }>
+			{ messages.map( message => (
+					<div key={ message.id }
+					     style={ message.by.rollNumber === me.rollNumber
+						     ? {}
+						     : myMessageStyles }>
 						<div className="comment-wrapper">
 							<Comment
 								avatar={ <div/> }
@@ -54,7 +41,7 @@ export const MessageBox = () => {
 											className="montserrat"
 											style={ { textTransform : "capitalize" } }
 										>
-											{ lorem.generateWords( 2 ) }
+											{ message.by.name }
 										</span>
 									</CommentAuthor>
 								}
@@ -62,18 +49,16 @@ export const MessageBox = () => {
 								time={
 									<CommentTime>
 										<span className="small">
-											{ num >= 3 ? 1 : 0 }
-											{ num } January, 20{ num > 3 ? 1 : 0 }
-											{ num }
+											15 January
 										</span>
 									</CommentTime>
 								}
-								content={ <p>{ lorem.generateParagraphs( 1 ) }</p> }
+								content={ message.content }
 							/>
 						</div>
 					</div>
-				);
-			} ) }
+				)
+			) }
 		</div>
 	);
 };

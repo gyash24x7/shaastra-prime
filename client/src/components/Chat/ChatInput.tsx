@@ -6,6 +6,11 @@ import VideoIcon from "@atlaskit/icon-file-type/glyph/video/24";
 import DocumentIcon from "@atlaskit/icon-file-type/glyph/document/24";
 import AudioIcon from "@atlaskit/icon-file-type/glyph/audio/24";
 import CodeIcon from "@atlaskit/icon-file-type/glyph/source-code/24";
+import { DispatchProp } from "react-redux";
+
+interface ChatInputProps {
+	dispatch: DispatchProp
+}
 
 export const ChatInput = () => {
 	return (

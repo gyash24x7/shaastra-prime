@@ -1,13 +1,17 @@
 import React from "react";
 import { ChatInput } from "./ChatInput";
 import { MessageBox } from "./MessageBox";
+import { ChatHeader } from "./ChatHeader";
 
-export const Chat = () => (
+
+interface ChatProps {
+	channelId: string
+}
+
+export const Chat = ( { channelId }: ChatProps ) => (
 	<div className="chat-window">
-		<div className="chat-header">
-			<div># Core Team</div>
-		</div>
-		<MessageBox/>
+		<ChatHeader channelId={ channelId }/>
+		<MessageBox channelId={ channelId }/>
 		<ChatInput/>
 	</div>
 );
