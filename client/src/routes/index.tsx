@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Switch } from "react-router-dom";
 import { ProfilePage } from "../pages/Profile";
 import { SignupPage } from "../pages/Signup";
 import { ChatPage } from "../pages/Chat";
@@ -16,6 +16,11 @@ export const AppRoutes = () => (
 				<PublicRoute exact path="/login" component={ LoginPage }/>
 				<PublicRoute exact path="/signup" component={ SignupPage }/>
 				<PrivateRoute exact path="/" component={ ProfilePage }/>
+				<PrivateRoute
+					exact
+					path="/chat"
+					render={ () => <Redirect to="/chat/channel/1"/> }
+				/>
 				<PrivateRoute exact path="/chat/channel/:id" component={ ChatPage }/>
 			</Switch>
 		</BrowserRouter>

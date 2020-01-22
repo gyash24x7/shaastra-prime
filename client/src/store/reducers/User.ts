@@ -2,7 +2,7 @@ import { User, UserAction } from "../../typings";
 import { user as defaultUser } from "./../store";
 
 export const UserReducer = (
-	user = null as User,
+	user = defaultUser as User,
 	{ type }: UserAction
 ) => {
 	switch ( type ) {
