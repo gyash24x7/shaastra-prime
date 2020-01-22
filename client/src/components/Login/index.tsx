@@ -8,14 +8,10 @@ import Form, {
 import TextField from "@atlaskit/textfield";
 import Button from "@atlaskit/button";
 import { getLoginAction } from "../../store/actions/User";
-import { LoginActionData, User } from "../../typings";
+import { LoginActionData } from "../../typings";
 import { useDispatch } from "react-redux";
 
-interface LoginProps {
-	user: User;
-}
-
-export const Login = ( props: LoginProps ) => {
+export const Login = () => {
 
 	const dispatch = useDispatch();
 
