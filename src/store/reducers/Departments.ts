@@ -1,5 +1,5 @@
 import { ChannelAction } from "../../typings";
-import { departments as defaultDepartments } from "./../store";
+import { departments as defaultDepartments } from "../store";
 
 export const DepartmentsReducer = (
 	departments = defaultDepartments,

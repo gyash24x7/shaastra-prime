@@ -72,7 +72,9 @@ export const ChatEditor = () => {
 					iconBefore={ <BoldIcon label=""/> }
 				/>
 				<Button
-					appearance={ currentInlineStyle.has( "ITALIC" ) ? "default" : "subtle" }
+					appearance={ currentInlineStyle.has( "ITALIC" )
+						? "default"
+						: "subtle" }
 					onClick={ onStyleBtnClick( "italic" ) }
 					iconBefore={ <ItalicIcon label=""/> }
 				/>

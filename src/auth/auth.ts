@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import * as firebase from "firebase/app";
-import { auth } from "./";
+import { auth } from "./index";
 
 export const useAuth = () => {
 	const [ authState, setAuthState ] = useState( {
