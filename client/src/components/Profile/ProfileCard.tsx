@@ -4,19 +4,12 @@ import { ButtonItem, HeadingItem, MenuGroup, Section } from "@atlaskit/menu";
 import PhoneIcon from "@atlaskit/icon/glyph/hipchat/dial-out";
 import MailIcon from "@atlaskit/icon/glyph/email";
 import PersonIcon from "@atlaskit/icon/glyph/person";
-import { connect } from "react-redux";
-import { Store, User } from "../../typings";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../store/selectors/User";
 
-interface ProfileCardProps {
-	user: User;
-}
-
-const mapStateToProps = ( { user }: Store ) => (
-	{ user }
-);
-
-export const ProfileCard = connect( mapStateToProps )(
-	( props: ProfileCardProps ) => (
+export const ProfileCard = () => {
+	const user = useSelector( selectCurrentUser );
+	return (
 		<figure>
 			<img
 				src="https://source.unsplash.com/random/300x300"
@@ -29,13 +22,14 @@ export const ProfileCard = connect( mapStateToProps )(
 					size="xlarge"
 				/>
 				<h2>
-					{ props.user.name }
+					{ user.name }
 					<span>
-						{ props.user.department } | { props.user.accessLevel }
+						{ user.department } | { user.accessLevel }
 					</span>
 				</h2>
 				<p>
-					I'm looking for something that can deliver a 50-pound payload of snow
+					I'm looking for something that can deliver a 50-pound payload of
+					snow
 					on a small feminine target. Can you suggest something? Hello...?
 				</p>
 				<div className="user-details">
@@ -65,5 +59,5 @@ export const ProfileCard = connect( mapStateToProps )(
 				</div>
 			</figcaption>
 		</figure>
-	)
-);
+	);
+};

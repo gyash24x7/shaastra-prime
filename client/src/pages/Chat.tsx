@@ -1,19 +1,18 @@
 import React from "react";
 import { PageProps } from "./Login";
-import { Store } from "../typings";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { LayoutManager, NavigationProvider } from "@atlaskit/navigation-next";
 import { GlobalNav } from "../components/Navigation/GlobalNav";
 import { ChatNav } from "../components/Navigation/ChatNav";
 import { Chat } from "../components/Chat";
 import { ProductNav } from "../components/Navigation/ProductNav";
+import { selectCurrentUser } from "../store/selectors/User";
 
-const mapStateToProps = ( { user }: Store ) => (
-	{ user }
-);
+export const ChatPage = ( { match }: PageProps ) => {
 
-export const ChatPage = connect( mapStateToProps )( ( { user }: PageProps ) => {
+	const user = useSelector( selectCurrentUser );
+
 	if ( user?.name ) return (
 		<NavigationProvider>
 			<LayoutManager
@@ -21,11 +20,11 @@ export const ChatPage = connect( mapStateToProps )( ( { user }: PageProps ) => {
 				productNavigation={ ProductNav }
 				containerNavigation={ ChatNav }
 			>
-				<Chat/>
+				<Chat channelId={ match.params.id }/>
 			</LayoutManager>
 		</NavigationProvider>
 	);
 
 	return <Redirect to="/login"/>;
 
-} );
+};

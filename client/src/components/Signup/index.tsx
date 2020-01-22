@@ -7,29 +7,29 @@ import Form, {
 } from "@atlaskit/form";
 import TextField from "@atlaskit/textfield";
 import Button from "@atlaskit/button";
-import { connect } from "react-redux";
-import { Department, Store } from "../../typings";
 import Select from "@atlaskit/select";
+import { auth } from "../../auth";
+import { useSelector } from "react-redux";
+import { selectDepartmentList } from "../../store/selectors/Departments";
 
-const mapStateToProps = ( { departments }: Store ) => (
-	{ departments }
-);
+export const Signup = () => {
 
-export interface SignUpProps {
-	departments: Department[];
-}
+	const departments = useSelector( selectDepartmentList );
 
-export const Signup = connect( mapStateToProps )( ( props: SignUpProps ) => {
-	const options = props.departments.map( ( { name, id } ) => (
+	const options = departments.map( ( { name, id } ) => (
 		{
 			label : name,
 			value : id
 		}
 	) );
 
-	console.log( props );
+	const handleSubmit = async ( { email, password }: any ) => {
+		const user = await auth.createUserWithEmailAndPassword( email, password );
+		console.log( user );
+	};
+
 	return (
-		<Form onSubmit={ ( variables: any ) => console.log( { variables } ) }>
+		<Form onSubmit={ handleSubmit }>
 			{ ( { formProps, submitting } ) => (
 				<form { ...formProps } noValidate style={ { width : "100%" } }>
 					<div className="field-row">
@@ -166,9 +166,9 @@ export const Signup = connect( mapStateToProps )( ( props: SignUpProps ) => {
 								value ? undefined : "INVALID"
 							) }
 						>
-							{ ( { error, valid } ) => (
+							{ ( { error, valid, fieldProps }: any ) => (
 								<Fragment>
-									<Select options={ options }/>
+									<Select options={ options } { ...fieldProps }/>
 									{ !error && !valid && (
 										<HelperMessage>Choose your Department</HelperMessage>
 									) }
@@ -192,4 +192,4 @@ export const Signup = connect( mapStateToProps )( ( props: SignUpProps ) => {
 			) }
 		</Form>
 	);
-} );
+};

@@ -21,8 +21,10 @@ export const ProductNav = () => (
 			{ ( { className }: { className: string } ) => (
 				<div className={ className }>
 					<Link to="/chat">
-						<Item text={ <span className="montserrat">Shaastra Chat</span> }
-						      before={ HipchatIcon }/>
+						<Item
+							text={ <span className="montserrat">Shaastra Chat</span> }
+							before={ HipchatIcon }
+						/>
 					</Link>
 				</div>
 			) }

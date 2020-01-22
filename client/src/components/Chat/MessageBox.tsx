@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import Comment, { CommentAuthor, CommentTime } from "@atlaskit/comment";
-import { Store } from "../../typings";
 import { selectChannelMessages } from "../../store/selectors/Channel";
 import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../store/selectors/User";
 
 interface MessageBoxProps {
 	channelId: string
@@ -15,7 +15,7 @@ export const MessageBox = ( { channelId }: MessageBoxProps ) => {
 	};
 
 	const messages = useSelector( selectChannelMessages( channelId ) );
-	const me = useSelector( ( store: Store ) => store.user );
+	const me = useSelector( selectCurrentUser );
 
 	const messageBoxRef = useRef( null );
 

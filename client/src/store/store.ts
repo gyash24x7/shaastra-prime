@@ -11,6 +11,7 @@ export const channels: Channel[] = [
 	{
 		id : "1",
 		name : "Core Team",
+		messages : [],
 		members : [
 			{
 				rollNumber : "CH16B025",

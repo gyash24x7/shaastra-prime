@@ -12,7 +12,7 @@ import { ButtonItem, HeadingItem, MenuGroup, Section } from "@atlaskit/menu";
 export const GlobalNav = () => {
 	const [ isDrawerOpen, setIsDrawerOpen ] = useState( false );
 
-	const AppSwitcherComponent = ( props: any ) => (
+	const AppSwitcherComponent = () => (
 		<Fragment>
 			<Link to="/">
 				<GlobalItem icon={ AppSwitcherIcon } onClick={ () => {} }/>

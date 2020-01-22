@@ -1,19 +1,17 @@
 import React from "react";
-import { connect } from "react-redux";
-import { Store, User } from "../typings";
+import { useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import Button from "@atlaskit/button";
 import { Login } from "../components/Login";
+import { selectCurrentUser } from "../store/selectors/User";
 
 export interface PageProps {
-	user: User;
+	match: any
 }
 
-const mapStateToProps = ( { user }: Store ) => (
-	{ user }
-);
+export const LoginPage = () => {
 
-export const LoginPage = connect( mapStateToProps )( ( { user }: PageProps ) => {
+	const user = useSelector( selectCurrentUser );
 	if ( user?.name ) return <Redirect to="/"/>;
 
 	return (
@@ -45,4 +43,4 @@ export const LoginPage = connect( mapStateToProps )( ( { user }: PageProps ) => 
 			</div>
 		</div>
 	);
-} );
+};
