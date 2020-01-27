@@ -1,0 +1,46 @@
+enum AccessLevel {
+  COORD
+  CORE
+  COCAS
+  COCAD
+  HEAD
+}
+
+type User {
+  id: ID! @id
+  name: String!
+  rollNumber: String! @unique
+  email: String! @unique
+  mobile: String! @unique
+  upi: String!
+  profilePic:String!
+  coverPic: String!
+  role: AccessLevel! @default(value: COORD)
+  department: Department @relation(name:"DepartmentMembers", link:INLINE)
+  channels: [Channel!]! @relation(name:"ChannelMembers")
+  messages: [Message!]! @relation(name:"MessageByUser", onDelete:CASCADE)
+}
+
+type Department {
+  id: ID! @id
+  name: String!
+  subDepartments: [String!]! @scalarList(strategy:RELATION)
+  members: [User!]! @relation(name:"DepartmentMembers", onDelete:CASCADE)
+}
+
+type Channel {
+  id: ID! @id
+  name: String!
+  members: [User!]! @relation(name:"ChannelMembers", link:TABLE)
+  messages: [Message!]! @relation(name:"MessageOfChannel", onDelete:CASCADE)
+  createdAt: DateTime! @createdAt
+}
+
+type Message {
+  id: ID! @id
+  content: String!
+  by: User! @relation(link:INLINE, name:"MessageByUser")
+  channel: Channel! @relation(link:INLINE, name:"MessageOfChannel")
+  createdAt: DateTime! @createdAt
+}
+
