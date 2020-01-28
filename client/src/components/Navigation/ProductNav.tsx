@@ -1,19 +1,17 @@
 import React, { Fragment } from "react";
-import { AtlassianWordmark, HipchatIcon } from "@atlaskit/logo";
-import {
-	HeaderSection,
-	Item,
-	MenuSection,
-	Wordmark
-} from "@atlaskit/navigation-next";
+import { HipchatIcon } from "@atlaskit/logo";
+import { HeaderSection, Item, MenuSection } from "@atlaskit/navigation-next";
 import { Link } from "react-router-dom";
+import { getLogo } from "../Logos";
+
+const Logo = getLogo( "#fff" );
 
 export const ProductNav = () => (
 	<Fragment>
 		<HeaderSection>
 			{ ( { className }: { className: string } ) => (
-				<div className={ className }>
-					<Wordmark wordmark={ AtlassianWordmark }/>
+				<div className={ className } style={ { padding : "25px 30px 20px" } }>
+					<Logo/>
 				</div>
 			) }
 		</HeaderSection>

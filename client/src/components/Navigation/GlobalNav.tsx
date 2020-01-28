@@ -29,7 +29,7 @@ export const GlobalNav = () => {
 	return (
 		<Fragment>
 			<GlobalNavigation
-				productIcon={ getIcon( "#fff" ) }
+				productIcon={ getIcon( "fff" ) }
 				onProductClick={ () => {} }
 				appSwitcherComponent={ AppSwitcherComponent }
 				onSettingsClick={ () => {} }
