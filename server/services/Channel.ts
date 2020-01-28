@@ -1,8 +1,5 @@
-import {
-	ChannelCreateInput,
-	ChannelUpdateInput
-} from "../../../prisma/generated";
-import { prisma } from "../../../prisma";
+import { ChannelCreateInput, ChannelUpdateInput } from "../../prisma/generated";
+import { prisma } from "../../prisma";
 
 export class ChannelService {
 	async find() {

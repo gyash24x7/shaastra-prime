@@ -1,8 +1,5 @@
-import {
-	MessageCreateInput,
-	MessageUpdateInput
-} from "../../../prisma/generated";
-import { prisma } from "../../../prisma";
+import { MessageCreateInput, MessageUpdateInput } from "../../prisma/generated";
+import { prisma } from "../../prisma";
 
 export class MessageService {
 	async find() {

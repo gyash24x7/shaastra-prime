@@ -4,7 +4,12 @@ const HtmlWebpackPlugin = require( "html-webpack-plugin" );
 const PWAManifestPlugin = require( "webpack-pwa-manifest" );
 
 module.exports = {
-	entry : [ "react-hot-loader/patch", "./client/src/index.tsx" ],
+	entry : [
+		"core-js/stable",
+		"regenerator-runtime/runtime",
+		"react-hot-loader/patch",
+		"./client/src/index.tsx"
+	],
 	mode : "development",
 	output : {
 		path : path.join( __dirname, "client", "build" ),
@@ -51,7 +56,7 @@ module.exports = {
 		publicPath : "/"
 	},
 	target : "web",
-	devtool : "eval",
+	devtool : "cheap-module-source-map",
 	plugins : [
 		new HtmlWebpackPlugin( {
 			template : "./client/public/index.html",

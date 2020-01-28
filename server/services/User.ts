@@ -1,5 +1,5 @@
-import { UserCreateInput, UserUpdateInput } from "../../../prisma/generated";
-import { prisma } from "../../../prisma";
+import { UserCreateInput, UserUpdateInput } from "../../prisma/generated";
+import { prisma } from "../../prisma";
 
 export class UserService {
 	async find() {

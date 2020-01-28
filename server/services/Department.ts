@@ -1,8 +1,8 @@
 import {
 	DepartmentCreateInput,
 	DepartmentUpdateInput
-} from "../../../prisma/generated";
-import { prisma } from "../../../prisma";
+} from "../../prisma/generated";
+import { prisma } from "../../prisma";
 
 export class DepartmentService {
 	async find() {

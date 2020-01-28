@@ -1,6 +1,5 @@
 import React, { Fragment, useState } from "react";
 import GlobalNavigation from "@atlaskit/global-navigation";
-import { AtlassianIcon } from "@atlaskit/logo";
 import AppSwitcherIcon from "@atlaskit/icon/glyph/app-switcher";
 import NotificationIcon from "@atlaskit/icon/glyph/notification";
 import Avatar from "@atlaskit/avatar";
@@ -8,6 +7,7 @@ import { GlobalItem } from "@atlaskit/navigation-next";
 import Drawer from "@atlaskit/drawer";
 import { Link } from "react-router-dom";
 import { ButtonItem, HeadingItem, MenuGroup, Section } from "@atlaskit/menu";
+import { getIcon } from "../Logos";
 
 export const GlobalNav = () => {
 	const [ isDrawerOpen, setIsDrawerOpen ] = useState( false );
@@ -29,7 +29,7 @@ export const GlobalNav = () => {
 	return (
 		<Fragment>
 			<GlobalNavigation
-				productIcon={ () => <AtlassianIcon/> }
+				productIcon={ getIcon( "#fff" ) }
 				onProductClick={ () => {} }
 				appSwitcherComponent={ AppSwitcherComponent }
 				onSettingsClick={ () => {} }
