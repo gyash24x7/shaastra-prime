@@ -457,6 +457,14 @@
     tiny-invariant "^0.0.3"
     tslib "^1.9.3"
 
+"@atlaskit/reduced-ui-pack@^12.0.7":
+  version "12.0.7"
+  resolved "https://registry.yarnpkg.com/@atlaskit/reduced-ui-pack/-/reduced-ui-pack-12.0.7.tgz#2001dcffedf85f1378805d1f88256d1f7c9c1863"
+  integrity sha512-4B4ZQekQQtBmMgXlJ+i46WoHzL6PnBgPOBCZOL9bX0mzyhrlBjow7XlIdrb3P0+M/vJJhiju331+pRKWlLt+Kw==
+  dependencies:
+    "@atlaskit/theme" "^9.2.4"
+    fbjs "^1.0.0"
+
 "@atlaskit/refinement-bar@^1.1.15":
   version "1.1.15"
   resolved "https://registry.yarnpkg.com/@atlaskit/refinement-bar/-/refinement-bar-1.1.15.tgz#ba54d83ca1ebfa31e25c6521551150b136b22515"

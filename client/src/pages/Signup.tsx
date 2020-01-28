@@ -2,13 +2,19 @@ import React from "react";
 import { Signup } from "../components/Signup";
 import Button from "@atlaskit/button";
 import { Link } from "react-router-dom";
+import { getLogo } from "../components/Logos";
+
+const Logo = getLogo("#172b4d");
 
 export const SignupPage = () => (
 	<div className="login-wrapper">
 		<div className="login-container signup-container">
-			<Signup/>
-			<br/>
-			<br/>
+			<div className="logo-wrapper">
+				<Logo />
+			</div>
+			<Signup />
+			<br />
+			<br />
 			<div className="btn-flex">
 				<span>Already have an account?</span>
 				<Link to="/login">
@@ -28,7 +34,7 @@ export const SignupPage = () => (
 			</div>
 		</div>
 		<div className="background-container">
-			<div className="shadow signup"/>
+			<div className="shadow signup" />
 		</div>
 	</div>
 );

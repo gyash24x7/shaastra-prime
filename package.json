@@ -61,6 +61,7 @@
     "@atlaskit/navigation-next": "^7.3.3",
     "@atlaskit/onboarding": "^9.0.7",
     "@atlaskit/pagination": "^12.0.17",
+    "@atlaskit/reduced-ui-pack": "^12.0.7",
     "@atlaskit/refinement-bar": "^1.1.15",
     "@atlaskit/select": "^11.0.4",
     "@atlaskit/spinner": "^12.1.3",
