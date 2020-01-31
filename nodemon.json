@@ -1,10 +1,6 @@
 {
-  "ignore": [
-    "README"
-  ],
-  "exec": "ts-node server",
-  "watch": [
-    "./"
-  ],
-  "ext": "ts"
+	"ignore": ["README"],
+	"exec": "ts-node server",
+	"watch": ["./"],
+	"ext": "ts"
 }
