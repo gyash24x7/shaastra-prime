@@ -1,10 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../store/selectors/User";
 import { Redirect, Route, RouteProps } from "react-router";
+import { useObserver } from "mobx-react-lite";
+import { useUserStore } from "../store";
 
-export const PrivateRoute = ( props: RouteProps ) => {
-	const user = useSelector( selectCurrentUser );
-	if ( user?.name ) return <Route { ...props }/>;
-	else return <Redirect to="/login"/>;
-};
+export const PrivateRoute = (props: RouteProps) =>
+	useObserver(() => {
+		const { isAuthenticated } = useUserStore();
+		return isAuthenticated ? <Route {...props} /> : <Redirect to="/login" />;
+	});

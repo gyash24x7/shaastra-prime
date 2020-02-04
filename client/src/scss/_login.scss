@@ -65,3 +65,11 @@
 		margin: 0px 10px;
 	}
 }
+
+.single-select {
+	& > * {
+		background-color: #fafbfc !important;
+		border-radius: 3px;
+		border: 2px solid #dfe1e6 !important;
+	}
+}

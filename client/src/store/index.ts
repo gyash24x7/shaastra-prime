@@ -1,21 +1,25 @@
-import { applyMiddleware, compose, createStore } from "redux";
-import { reducer } from "./reducers";
-// import { persistStore } from "redux-persist";
-import logger from "redux-logger";
+import { createContext, useContext } from "react";
+import { DepartmentStore } from "./Department";
+import { UserStore } from "./User";
 
-declare var window: any;
+interface CombinedStore {
+	departmentStore: DepartmentStore;
+	userStore: UserStore;
+}
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+export const StoreContext = createContext<CombinedStore>({} as CombinedStore);
+export const StoreProvider = StoreContext.Provider;
 
-const middlewares = [ logger ];
+export const useDepartmentStore = () =>
+	useContext(StoreContext).departmentStore;
 
-export const store = createStore(
-	reducer,
-	composeEnhancers( applyMiddleware( ...middlewares ) )
-);
+export const useUserStore = () => useContext(StoreContext).userStore;
 
-// export const persistor = persistStore( store );
-
-store.subscribe( () => {
-	console.log( store.getState() );
-} );
+export const initialStore: CombinedStore = {
+	departmentStore: new DepartmentStore(),
+	userStore: new UserStore(
+		localStorage.getItem("currentUser") &&
+			localStorage.getItem("auth") &&
+			JSON.parse(localStorage.getItem("currentUser") || "")
+	)
+};

@@ -1,17 +1,16 @@
+import "reflect-metadata";
+import { createConnection } from "typeorm";
+import { buildSchema } from "type-graphql";
+import { ApolloServer } from "apollo-server";
+import { resolvers } from "./resolvers";
 require("dotenv").config();
 
-import app from "./app";
-const port = app.get("port");
-const server = app.listen(port);
+const startServer = async () => {
+	await createConnection();
+	const schema = await buildSchema({ resolvers });
+	const server = new ApolloServer({ schema });
+	await server.listen(8000);
+	console.log("Server running on PORT 8000!");
+};
 
-process.on("unhandledRejection", (reason, p) =>
-	console.log("Unhandled Rejection at: Promise ", p, reason)
-);
-
-server.on("listening", () =>
-	console.log(
-		"Feathers application started on http://%s:%d",
-		app.get("host"),
-		port
-	)
-);
+startServer();
