@@ -10,6 +10,7 @@ import { redis } from "./utils/redis";
 import cors from "cors";
 import { GraphQLContext } from "./utils";
 import { authChecker } from "./utils/authChecker";
+require("dotenv").config();
 
 const startServer = async () => {
 	await createConnection();
@@ -44,7 +45,7 @@ const startServer = async () => {
 
 	server.applyMiddleware({ app, path: "/" });
 
-	app.listen(8000, () => {
+	app.listen(8000, async () => {
 		console.log("Server running on localhost:8000!");
 	});
 };

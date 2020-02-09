@@ -60,6 +60,9 @@ export class User extends BaseEntity {
 	@Column()
 	departmentId: number;
 
+	@Column({ default: "" })
+	otp: string;
+
 	@Field(() => Department)
 	@ManyToOne(
 		() => Department,
