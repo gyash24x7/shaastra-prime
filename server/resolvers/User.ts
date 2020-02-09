@@ -50,4 +50,12 @@ export class UserResolver {
 	async department(@Root() { departmentId }: User) {
 		return Department.findOne(departmentId);
 	}
+
+	@Query(() => User, { nullable: true })
+	async me(@Ctx() { req }: GraphQLContext) {
+		const id = req.session!.userId;
+		if (!id) return null;
+
+		return User.findOne(id);
+	}
 }
