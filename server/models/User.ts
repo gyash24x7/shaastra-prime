@@ -61,7 +61,10 @@ export class User extends BaseEntity {
 	departmentId: number;
 
 	@Column({ default: "" })
-	otp: string;
+	verificationOTP: string;
+
+	@Column({ default: "" })
+	passwordOTP: string;
 
 	@Field(() => Department)
 	@ManyToOne(

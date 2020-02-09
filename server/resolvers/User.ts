@@ -16,19 +16,25 @@ import bcrypt from "bcryptjs";
 import { GraphQLContext } from "../utils";
 import { sendgrid } from "../utils/sendgrid";
 import { VerifyUserInput } from "../inputs/User/VerifyUser";
+import { ForgotPasswordInput } from "../inputs/User/ForgotPassword";
 
 @Resolver(User)
 export class UserResolver {
 	@Mutation(() => User)
 	async createUser(@Arg("data") data: CreateUserInput) {
 		const password = await bcrypt.hash(data.password, 13);
-		const otp = Math.round(Math.random() * 1000000).toString();
-		const user = await User.create({ ...data, password, otp }).save();
+		const verificationOTP = Math.round(Math.random() * 1000000).toString();
+		const user = await User.create({
+			...data,
+			password,
+			verificationOTP
+		}).save();
+
 		const mailOptions = {
 			from: "webops@shaastra.org",
 			to: `${user.rollNumber.toLowerCase()}@smail.iitm.ac.in`,
 			subject: "Verify Your Email | Shaastra Prime",
-			html: `<p>Your verification code for Shaastra Prime is <strong>${otp}</strong> </p>`
+			html: `<p>Your verification code for Shaastra Prime is <strong>${verificationOTP}</strong> </p>`
 		};
 
 		await sendgrid.send(mailOptions);
@@ -49,7 +55,7 @@ export class UserResolver {
 		const user = await User.findOne({ where: { rollNumber } });
 		if (!user) return null;
 
-		const valid = bcrypt.compare(password, user.password);
+		const valid = await bcrypt.compare(password, user.password);
 		if (!valid) return null;
 
 		if (!user.verified) return null;
@@ -96,5 +102,40 @@ export class UserResolver {
 			user.verified = true;
 			return user.save();
 		}
+	}
+
+	@Mutation(() => Boolean)
+	async sendPasswordOTP(@Arg("rollNumber") rollNumber: string) {
+		const user = await User.findOne({ where: { rollNumber } });
+		if (!user) return false;
+
+		const otp = Math.round(Math.random() * 1000000).toString();
+		user.passwordOTP = otp;
+		await user.save();
+
+		const mailOptions = {
+			from: "webops@shaastra.org",
+			to: `${user.rollNumber.toLowerCase()}@smail.iitm.ac.in`,
+			subject: "Reset Your Password | Shaastra Prime",
+			html: `<p>Your password reset code for Shaastra Prime is <strong>${otp}</strong> </p>`
+		};
+
+		await sendgrid.send(mailOptions);
+
+		return true;
+	}
+
+	@Mutation(() => Boolean)
+	async forgotPassword(
+		@Arg("data") { rollNumber, passwordOTP, newPassword }: ForgotPasswordInput
+	) {
+		const user = await User.findOne({ where: { rollNumber, passwordOTP } });
+		if (!user) return false;
+
+		const password = await bcrypt.hash(newPassword, 13);
+		user.password = password;
+		await user.save();
+
+		return true;
 	}
 }
