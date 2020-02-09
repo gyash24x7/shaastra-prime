@@ -1,18 +1,38 @@
-import { Resolver, Query, Mutation, Arg } from "type-graphql";
+import {
+	Resolver,
+	Mutation,
+	Arg,
+	Query,
+	FieldResolver,
+	Root
+} from "type-graphql";
 import { Department } from "../models/Department";
-import { CreateDepartmentInput } from "../inputs/Department/CreateDepartment";
+import { User } from "../models/User";
+import { AddSubDepartmentInput } from "../inputs/Department/AddSubDepartment";
 
-@Resolver()
+@Resolver(Department)
 export class DepartmentResolver {
-	@Query(() => [Department])
-	getDepartments() {
-		return Department.find();
+	@Mutation(() => Department)
+	async createDepartment(@Arg("name") name: string) {
+		const department = await Department.create({ name }).save();
+		return department;
 	}
 
 	@Mutation(() => Department)
-	async createDepartment(@Arg("data") data: CreateDepartmentInput) {
-		const department = Department.create(data);
-		await department.save();
-		return department;
+	async addSubDepartment(@Arg("data") { id, subDept }: AddSubDepartmentInput) {
+		const department = await Department.findOne({ where: { id } });
+		if (!department) throw new Error("Department Not Found!");
+		department.subDepartments = department.subDepartments.concat(subDept);
+		return department.save();
+	}
+
+	@Query(() => [Department])
+	async getDepartments() {
+		return Department.find();
+	}
+
+	@FieldResolver(() => [User])
+	async members(@Root() { id }: Department) {
+		return User.find({ where: { departmentId: id } });
 	}
 }

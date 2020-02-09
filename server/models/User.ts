@@ -1,55 +1,69 @@
+import { UserRole } from "../utils";
 import {
-	BaseEntity,
-	Column,
 	PrimaryGeneratedColumn,
+	Column,
 	Entity,
-	PrimaryColumn,
+	BaseEntity,
 	ManyToOne
 } from "typeorm";
-import { Field, ObjectType, ID } from "type-graphql";
 import { Department } from "./Department";
-import { Lazy } from "../utils";
+import { Field, ID, registerEnumType, ObjectType } from "type-graphql";
 
-@Entity()
+registerEnumType(UserRole, { name: "UserRole" });
+
 @ObjectType()
+@Entity()
 export class User extends BaseEntity {
 	@Field(() => ID)
 	@PrimaryGeneratedColumn()
-	readonly id: string;
+	id: number;
 
-	@Field(() => String)
+	@Field()
 	@Column()
 	name: string;
 
-	@Field(() => String)
-	@PrimaryColumn()
+	@Field()
+	@Column({ unique: true })
 	email: string;
 
-	@Field(() => String)
 	@Column()
 	password: string;
 
-	@Field(() => String)
-	@PrimaryColumn()
-	mobile: string;
-
-	@Field(() => String)
-	@PrimaryColumn()
+	@Field()
+	@Column({ unique: true })
 	rollNumber: string;
 
-	@Field(() => String)
+	@Field()
 	@Column({ default: "" })
 	profilePic: string;
 
-	@Field(() => String)
+	@Field()
 	@Column({ default: "" })
 	coverPic: string;
+
+	@Field()
+	@Column()
+	mobile: string;
+
+	@Field()
+	@Column({ default: "Hi, I am on Shaastra Prime!" })
+	about: string;
+
+	@Field(() => UserRole)
+	@Column({ type: "enum", enum: UserRole, default: UserRole.COORD })
+	role: UserRole;
+
+	@Field()
+	@Column({ default: false })
+	verified: boolean;
+
+	@Column()
+	departmentId: number;
 
 	@Field(() => Department)
 	@ManyToOne(
 		() => Department,
-		department => department.members,
-		{ lazy: true }
+		department => department.members
 	)
-	department: Lazy<Department>;
+	department: Department;
 }

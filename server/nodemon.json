@@ -1,6 +1,0 @@
-{
-	"ignore": ["README"],
-	"exec": "ts-node ./index.ts",
-	"watch": ["./"],
-	"ext": "ts"
-}

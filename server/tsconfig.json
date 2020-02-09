@@ -34,6 +34,6 @@
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true
 	},
-	"include": ["inputs", "models", "resolvers", "index.ts"],
+	"include": ["input", "models", "resolvers", "index.ts", "response", "utils"],
 	"exclude": ["/node_modules/"]
 }

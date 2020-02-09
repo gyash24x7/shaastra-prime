@@ -1,33 +1,32 @@
 import {
-	BaseEntity,
-	Entity,
 	PrimaryGeneratedColumn,
 	Column,
-	OneToMany
+	Entity,
+	OneToMany,
+	BaseEntity
 } from "typeorm";
-import { ObjectType, Field, ID } from "type-graphql";
 import { User } from "./User";
+import { ObjectType, Field, ID } from "type-graphql";
 
-@Entity()
 @ObjectType()
+@Entity()
 export class Department extends BaseEntity {
 	@Field(() => ID)
 	@PrimaryGeneratedColumn()
-	id: string;
+	id: number;
 
-	@Field(() => String)
+	@Field()
 	@Column()
 	name: string;
 
 	@Field(() => [String])
-	@Column({ array: true })
-	subDepartments: string;
+	@Column({ type: "simple-array", default: "" })
+	subDepartments: string[];
 
-	@Field(() => User)
+	@Field(() => [User])
 	@OneToMany(
 		() => User,
-		user => user.department,
-		{ nullable: true }
+		user => user.department
 	)
-	members: User;
+	members: User[];
 }
