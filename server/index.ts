@@ -9,11 +9,12 @@ import connectRedis from "connect-redis";
 import { redis } from "./utils/redis";
 import cors from "cors";
 import { GraphQLContext } from "./utils";
+import { authChecker } from "./utils/authChecker";
 
 const startServer = async () => {
 	await createConnection();
 
-	const schema = await buildSchema({ resolvers });
+	const schema = await buildSchema({ resolvers, authChecker });
 
 	const server = new ApolloServer({
 		schema,

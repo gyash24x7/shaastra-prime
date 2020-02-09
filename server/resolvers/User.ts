@@ -5,7 +5,8 @@ import {
 	Query,
 	FieldResolver,
 	Root,
-	Ctx
+	Ctx,
+	Authorized
 } from "type-graphql";
 import { CreateUserInput } from "../inputs/User/CreateUser";
 import { LoginInput } from "../inputs/User/Login";
@@ -51,11 +52,25 @@ export class UserResolver {
 		return Department.findOne(departmentId);
 	}
 
+	@Authorized()
 	@Query(() => User, { nullable: true })
 	async me(@Ctx() { req }: GraphQLContext) {
 		const id = req.session!.userId;
 		if (!id) return null;
 
 		return User.findOne(id);
+	}
+
+	@Mutation(() => Boolean)
+	async logout(@Ctx() { req, res }: GraphQLContext) {
+		return new Promise((resolve, reject) => {
+			req.session!.destroy(err => {
+				if (err) reject(false);
+				else {
+					res.clearCookie("qid");
+					resolve(true);
+				}
+			});
+		});
 	}
 }
