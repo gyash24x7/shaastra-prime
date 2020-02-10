@@ -3,15 +3,14 @@ import { ChatInput } from "./ChatInput";
 import { MessageBox } from "./MessageBox";
 import { ChatHeader } from "./ChatHeader";
 
-
 interface ChatProps {
-	channelId: string
+	channelId: string;
 }
 
-export const Chat = ( { channelId }: ChatProps ) => (
+export const Chat = ({ channelId }: ChatProps) => (
 	<div className="chat-window">
-		<ChatHeader channelId={ channelId }/>
-		<MessageBox channelId={ channelId }/>
-		<ChatInput/>
+		<ChatHeader channelId={channelId} />
+		<MessageBox channelId={channelId} />
+		<ChatInput />
 	</div>
 );

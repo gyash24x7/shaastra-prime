@@ -4,10 +4,6 @@ import Button from "@atlaskit/button";
 import { Login } from "../components/Login";
 import { getLogo } from "../components/Logos";
 
-export interface PageProps {
-	match: any;
-}
-
 const Logo = getLogo("#172b4d");
 
 export const LoginPage = () => (

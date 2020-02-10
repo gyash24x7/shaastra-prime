@@ -4,13 +4,17 @@ import { ButtonItem, HeadingItem, MenuGroup, Section } from "@atlaskit/menu";
 import PhoneIcon from "@atlaskit/icon/glyph/hipchat/dial-out";
 import MailIcon from "@atlaskit/icon/glyph/email";
 import PersonIcon from "@atlaskit/icon/glyph/person";
-import { useObserver } from "mobx-react-lite";
-import { useUserStore } from "../../store";
+import { useMeQuery } from "../../generated";
+import { Loader } from "../Shared/Loader";
+import { ShowError } from "../Shared/ShowError";
 
-export const ProfileCard = () =>
-	useObserver(() => {
-		const { user } = useUserStore();
+export const ProfileCard = () => {
+	const { data, error } = useMeQuery();
 
+	if (error) return <ShowError />;
+
+	if (data?.me) {
+		const user = data.me;
 		return (
 			<figure>
 				<img
@@ -60,4 +64,7 @@ export const ProfileCard = () =>
 				</figcaption>
 			</figure>
 		);
-	});
+	}
+
+	return <Loader />;
+};

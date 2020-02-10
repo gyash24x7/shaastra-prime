@@ -1,23 +1,30 @@
 import React from "react";
 import { ContainerHeader, ItemAvatar } from "@atlaskit/navigation-next";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../store/selectors/User";
+import { useMeQuery } from "../../generated";
+import { ShowError } from "../Shared/ShowError";
+import { Loader } from "../Shared/Loader";
 
 export const NavHeader = () => {
+	const { data, error } = useMeQuery();
 
-	const user = useSelector( selectCurrentUser );
+	if (error) return <ShowError />;
+	if (data?.me?.id) {
+		return (
+			<div className="user-section">
+				<ContainerHeader
+					before={(itemState: any) => (
+						<ItemAvatar itemState={itemState} size="large" />
+					)}
+					text={<strong className="user-details">{data.me.name}</strong>}
+					subText={
+						<strong className="user-details">
+							{data.me.department.name} | {data.me.role}
+						</strong>
+					}
+				/>
+			</div>
+		);
+	}
 
-	return (
-		<div className="user-section">
-			<ContainerHeader
-				before={ ( itemState: any ) => (
-					<ItemAvatar itemState={ itemState } size="large"/>
-				) }
-				text={ <strong className="user-details">{ user.name }</strong> }
-				subText={ <strong className="user-details">
-					{ user.department } | { user.accessLevel }
-				</strong> }
-			/>
-		</div>
-	);
+	return <Loader />;
 };

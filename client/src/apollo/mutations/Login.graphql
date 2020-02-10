@@ -1,0 +1,10 @@
+mutation Login($rollNumber: String!, $password: String!) {
+	login(data: { rollNumber: $rollNumber, password: $password }) {
+		id
+		name
+		department {
+			name
+			id
+		}
+	}
+}

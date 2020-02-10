@@ -1,16 +1,16 @@
 import React from "react";
-import { BrowserRouter, Redirect, Switch } from "react-router-dom";
+import { BrowserRouter, Switch } from "react-router-dom";
 import { ProfilePage } from "../pages/Profile";
 import { SignupPage } from "../pages/Signup";
-import { ChatPage } from "../pages/Chat";
+// import { ChatPage } from "../pages/Chat";
 import { LoginPage } from "../pages/Login";
 import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
-import { hot } from "react-hot-loader/root";
-import { StoreProvider, initialStore } from "../store";
+import { ApolloProvider } from "@apollo/react-hooks";
+import { client } from "../apollo";
 
-export const AppRoutes = hot(() => (
-	<StoreProvider value={initialStore}>
+export const AppRoutes = () => (
+	<ApolloProvider client={client}>
 		<BrowserRouter>
 			<Switch>
 				<PublicRoute exact path="/login" component={LoginPage} />
@@ -24,5 +24,5 @@ export const AppRoutes = hot(() => (
 				<PrivateRoute exact path="/chat/channel/:id" component={ChatPage} /> */}
 			</Switch>
 		</BrowserRouter>
-	</StoreProvider>
-));
+	</ApolloProvider>
+);

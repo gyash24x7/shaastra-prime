@@ -1,8 +1,18 @@
 import React from "react";
 import { Redirect, Route, RouteProps } from "react-router";
-import { useUserStore } from "../store";
+import { useMeQuery } from "../generated";
+import { ShowError } from "../components/Shared/ShowError";
+import { Loader } from "../components/Shared/Loader";
+import { VerificationRoute } from "./VerificationRoute";
 
 export const PublicRoute = (props: RouteProps) => {
-	const { isAuthenticated } = useUserStore();
-	return isAuthenticated ? <Redirect to="/" /> : <Route {...props} />;
+	const { data, loading, error } = useMeQuery();
+
+	if (error) return <ShowError />;
+
+	if (loading) return <Loader />;
+
+	if (data?.me?.id && data?.me?.verified) return <Redirect to="/" />;
+	else if (!data?.me?.verified) return <VerificationRoute />;
+	else return <Route {...props} />;
 };

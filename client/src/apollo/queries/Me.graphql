@@ -1,0 +1,15 @@
+query Me {
+	me {
+		id
+		name
+		email
+		rollNumber
+		mobile
+		role
+		verified
+		department {
+			id
+			name
+		}
+	}
+}
