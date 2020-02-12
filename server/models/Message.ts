@@ -6,10 +6,12 @@ import {
 	Column,
 	CreateDateColumn,
 	ManyToOne,
-	BaseEntity
+	BaseEntity,
+	OneToMany
 } from "typeorm";
 import { ObjectType, Field, ID, registerEnumType } from "type-graphql";
 import { Channel } from "./Channel";
+import { Reaction } from "./Reaction";
 
 registerEnumType(MessageStatus, { name: "MessageStatus" });
 
@@ -25,7 +27,7 @@ export class Message extends BaseEntity {
 	content: string;
 
 	@Field(() => String)
-	@CreateDateColumn()
+	@CreateDateColumn({ type: "timestamp" })
 	createdAt: Date;
 
 	@Column()
@@ -59,4 +61,11 @@ export class Message extends BaseEntity {
 		default: MessageStatus.NOT_SENT
 	})
 	status: MessageStatus;
+
+	@Field(() => [Reaction])
+	@OneToMany(
+		() => Reaction,
+		reaction => reaction.message
+	)
+	reactions: Reaction[];
 }

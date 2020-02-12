@@ -5,11 +5,14 @@ import {
 	Entity,
 	OneToMany,
 	BaseEntity,
-	OneToOne
+	OneToOne,
+	JoinColumn,
+	ManyToMany
 } from "typeorm";
 import { ObjectType, Field, ID } from "type-graphql";
 import { User } from "./User";
 import { Message } from "./Message";
+import { Media } from "./Media";
 
 @ObjectType()
 @Entity()
@@ -27,7 +30,7 @@ export class Channel extends BaseEntity {
 	description: string;
 
 	@Field(() => String)
-	@CreateDateColumn()
+	@CreateDateColumn({ type: "timestamp" })
 	createdAt: Date;
 
 	@Field()
@@ -45,9 +48,21 @@ export class Channel extends BaseEntity {
 	createdById: number;
 
 	@Field(() => User)
-	@OneToOne(
-		() => User,
-		user => user.channelsCreated
-	)
+	@OneToOne(() => User)
+	@JoinColumn()
 	createdBy: User;
+
+	@Field(() => [User])
+	@ManyToMany(
+		() => User,
+		user => user.channels
+	)
+	members: User[];
+
+	@Field(() => [Media])
+	@OneToMany(
+		() => Media,
+		media => media.channel
+	)
+	media: Media[];
 }
