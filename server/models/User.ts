@@ -4,10 +4,14 @@ import {
 	Column,
 	Entity,
 	BaseEntity,
-	ManyToOne
+	ManyToOne,
+	OneToMany,
+	OneToOne
 } from "typeorm";
 import { Department } from "./Department";
 import { Field, ID, registerEnumType, ObjectType } from "type-graphql";
+import { Channel } from "./Channel";
+import { Message } from "./Message";
 
 registerEnumType(UserRole, { name: "UserRole" });
 
@@ -72,4 +76,17 @@ export class User extends BaseEntity {
 		department => department.members
 	)
 	department: Department;
+
+	@Field(() => [Message])
+	@OneToMany(
+		() => Message,
+		message => message.createdBy
+	)
+	messages: Message[];
+
+	@OneToOne(
+		() => Channel,
+		channel => channel.createdBy
+	)
+	channelsCreated: Channel[];
 }

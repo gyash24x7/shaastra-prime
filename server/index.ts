@@ -3,7 +3,7 @@ import { ApolloServer } from "apollo-server-express";
 import express from "express";
 import { buildSchema } from "type-graphql";
 import { resolvers } from "./resolvers";
-import { createConnection } from "typeorm";
+import { createConnection, getConnectionOptions } from "typeorm";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import { redis } from "./utils/redis";
@@ -13,7 +13,8 @@ import { authChecker } from "./utils/authChecker";
 require("dotenv").config();
 
 const startServer = async () => {
-	await createConnection();
+	const connectionOptions = await getConnectionOptions();
+	await createConnection({ ...connectionOptions, entities: ["models/*.ts"] });
 
 	const schema = await buildSchema({ resolvers, authChecker });
 
