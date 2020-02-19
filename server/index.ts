@@ -7,9 +7,10 @@ import { createConnection, getConnectionOptions } from "typeorm";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import { redis } from "./utils/redis";
-import cors from "cors";
+// import cors from "cors";
 import { GraphQLContext } from "./utils";
 import { authChecker } from "./utils/authChecker";
+import bodyParser from "body-parser";
 require("dotenv").config();
 
 const startServer = async () => {
@@ -27,7 +28,9 @@ const startServer = async () => {
 
 	const RedisStore = connectRedis(session);
 
-	app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+	// app.use(cors());
+	app.use(bodyParser.json());
+	app.use(bodyParser.urlencoded({ extended: true }));
 
 	app.use(
 		session({
@@ -44,7 +47,11 @@ const startServer = async () => {
 		})
 	);
 
-	server.applyMiddleware({ app, path: "/" });
+	server.applyMiddleware({
+		app,
+		path: "/",
+		cors: { credentials: true, origin: "http://localhost:3000" }
+	});
 
 	app.listen(8000, async () => {
 		console.log("Server running on localhost:8000!");

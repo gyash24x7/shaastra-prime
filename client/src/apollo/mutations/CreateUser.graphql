@@ -5,6 +5,7 @@ mutation CreateUser(
 	$departmentId: Int!
 	$rollNumber: String!
 	$mobile: String!
+	$upi: String!
 ) {
 	createUser(
 		data: {
@@ -14,10 +15,7 @@ mutation CreateUser(
 			rollNumber: $rollNumber
 			mobile: $mobile
 			departmentId: $departmentId
+			upi: $upi
 		}
-	) {
-		id
-		name
-		email
-	}
+	)
 }

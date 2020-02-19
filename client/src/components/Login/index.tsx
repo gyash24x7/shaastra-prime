@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import Button from "@atlaskit/button";
 import { ErrorMessage, HelperMessage, ValidMessage } from "@atlaskit/form";
 import TextField from "@atlaskit/textfield";
-import Button from "@atlaskit/button";
+import React, { useState } from "react";
 import { useLoginMutation } from "../../generated";
 import { ShowError } from "../Shared/ShowError";
-import { Redirect } from "react-router-dom";
 
 export const Login = () => {
 	const [rollNumber, setRollNumber] = useState("");
@@ -16,7 +15,7 @@ export const Login = () => {
 
 	const [login, { data, loading, error }] = useLoginMutation();
 
-	if (data?.login?.id) return <Redirect to="/" />;
+	if (data?.login?.id) window.location.pathname = "/";
 
 	if (error) return <ShowError />;
 

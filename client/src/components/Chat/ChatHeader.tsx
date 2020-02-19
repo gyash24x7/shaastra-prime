@@ -5,13 +5,12 @@ interface ChatHeaderProps {
 }
 
 export const ChatHeader = ({ channelId }: ChatHeaderProps) => {
-	const channel = useSelector(selectChannelHeader(channelId));
-
+	console.log(channelId);
 	return (
 		<div className="chat-header">
-			<div># {channel.name}</div>
+			<div># Core Team</div>
 			<div className="channel-members">
-				{channel.members.map(member => member.name + ", ")}
+				Yash Gupta, Abhinav Kankane, Swarnav Das
 			</div>
 		</div>
 	);

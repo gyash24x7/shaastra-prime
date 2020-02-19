@@ -22,6 +22,9 @@ export class CreateUserInput {
 	@Length(10, 10)
 	mobile: string;
 
+	@Field()
+	upi: string;
+
 	@Field(() => Int)
 	departmentId: number;
 }

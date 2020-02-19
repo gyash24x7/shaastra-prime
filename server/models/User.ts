@@ -52,6 +52,10 @@ export class User extends BaseEntity {
 	mobile: string;
 
 	@Field()
+	@Column()
+	upi: string;
+
+	@Field()
 	@Column({ default: "Hi, I am on Shaastra Prime!" })
 	about: string;
 

@@ -1,9 +1,9 @@
 import React from "react";
 import { Redirect, Route, RouteProps } from "react-router";
-import { useMeQuery } from "../generated";
-import { ShowError } from "../components/Shared/ShowError";
+
 import { Loader } from "../components/Shared/Loader";
-import { VerificationRoute } from "./VerificationRoute";
+import { ShowError } from "../components/Shared/ShowError";
+import { useMeQuery } from "../generated";
 
 export const PrivateRoute = (props: RouteProps) => {
 	const { data, loading, error } = useMeQuery();
@@ -12,7 +12,8 @@ export const PrivateRoute = (props: RouteProps) => {
 
 	if (loading) return <Loader />;
 
-	if (data?.me?.id && data?.me?.verified) return <Route {...props} />;
-	else if (!data?.me?.verified) return <VerificationRoute />;
-	else return <Redirect to="/login" />;
+	if (data?.me) {
+		if (data.me.verified) return <Route {...props} />;
+		else return <Redirect to="/verification" />;
+	} else return <Redirect to="/login" />;
 };

@@ -1,27 +1,31 @@
-import {
-	Mutation,
-	Arg,
-	Resolver,
-	Query,
-	FieldResolver,
-	Root,
-	Ctx,
-	Authorized
-} from "type-graphql";
-import { CreateUserInput } from "../inputs/User/CreateUser";
-import { LoginInput } from "../inputs/User/Login";
-import { User } from "../models/User";
-import { Department } from "../models/Department";
 import bcrypt from "bcryptjs";
+import {
+  Arg,
+  Authorized,
+  Ctx,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root
+} from "type-graphql";
+
+import { CreateUserInput } from "../inputs/User/CreateUser";
+import { ForgotPasswordInput } from "../inputs/User/ForgotPassword";
+import { LoginInput } from "../inputs/User/Login";
+import { VerifyUserInput } from "../inputs/User/VerifyUser";
+import { Department } from "../models/Department";
+import { User } from "../models/User";
 import { GraphQLContext } from "../utils";
 import { sendgrid } from "../utils/sendgrid";
-import { VerifyUserInput } from "../inputs/User/VerifyUser";
-import { ForgotPasswordInput } from "../inputs/User/ForgotPassword";
 
 @Resolver(User)
 export class UserResolver {
-	@Mutation(() => User)
-	async createUser(@Arg("data") data: CreateUserInput) {
+	@Mutation(() => Boolean)
+	async createUser(
+		@Arg("data") data: CreateUserInput,
+		@Ctx() { req }: GraphQLContext
+	) {
 		const password = await bcrypt.hash(data.password, 13);
 		const verificationOTP = Math.round(Math.random() * 1000000).toString();
 		const user = await User.create({
@@ -37,11 +41,13 @@ export class UserResolver {
 			html: `<p>Your verification code for Shaastra Prime is <strong>${verificationOTP}</strong> </p>`
 		};
 
-		await sendgrid.send(mailOptions);
-		return user;
+		if (!!user) {
+			await sendgrid.send(mailOptions);
+			req.session!.userId = user.id;
+		}
+		return !!user;
 	}
 
-	@Authorized()
 	@Query(() => [User])
 	async getUsers() {
 		return User.find();
@@ -58,8 +64,6 @@ export class UserResolver {
 		const valid = await bcrypt.compare(password, user.password);
 		if (!valid) return null;
 
-		if (!user.verified) return null;
-
 		req.session!.userId = user.id;
 		return user;
 	}
@@ -69,7 +73,6 @@ export class UserResolver {
 		return Department.findOne(departmentId);
 	}
 
-	@Authorized()
 	@Query(() => User, { nullable: true })
 	async me(@Ctx() { req }: GraphQLContext) {
 		const id = req.session!.userId;
@@ -92,15 +95,16 @@ export class UserResolver {
 		});
 	}
 
-	@Mutation(() => User, { nullable: true })
+	@Mutation(() => Boolean)
 	async verifyUser(@Arg("data") { rollNumber, otp }: VerifyUserInput) {
-		let user = await User.findOne({
-			where: { rollNumber, otp, verified: false }
-		});
-		if (!user) return null;
+		let user = await User.findOne({ where: { rollNumber } });
+
+		if (!user) return false;
 		else {
+			if (user.verificationOTP !== otp) return false;
 			user.verified = true;
-			return user.save();
+			await user.save();
+			return true;
 		}
 	}
 

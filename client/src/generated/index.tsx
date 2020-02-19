@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import * as ApolloReactCommon from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client';
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -16,12 +16,26 @@ export type AddSubDepartmentInput = {
   subDept: Scalars['String'],
 };
 
+export type Channel = {
+   __typename?: 'Channel',
+  id: Scalars['ID'],
+  name: Scalars['String'],
+  description: Scalars['String'],
+  createdAt: Scalars['String'],
+  archived: Scalars['Boolean'],
+  messages: Array<Message>,
+  createdBy: User,
+  members: Array<User>,
+  media: Array<Media>,
+};
+
 export type CreateUserInput = {
   name: Scalars['String'],
   email: Scalars['String'],
   password: Scalars['String'],
   rollNumber: Scalars['String'],
   mobile: Scalars['String'],
+  upi: Scalars['String'],
   departmentId: Scalars['Int'],
 };
 
@@ -44,14 +58,51 @@ export type LoginInput = {
   password: Scalars['String'],
 };
 
+export type Media = {
+   __typename?: 'Media',
+  id: Scalars['ID'],
+  url: Scalars['String'],
+  type: MediaType,
+  uploadedBy: User,
+  channel: Channel,
+};
+
+export enum MediaType {
+  Image = 'IMAGE',
+  Audio = 'AUDIO',
+  Video = 'VIDEO',
+  Doc = 'DOC',
+  Code = 'CODE'
+}
+
+export type Message = {
+   __typename?: 'Message',
+  id: Scalars['ID'],
+  content: Scalars['String'],
+  createdAt: Scalars['String'],
+  createdBy: User,
+  channel: Channel,
+  starred: Scalars['Boolean'],
+  status: MessageStatus,
+  reactions: Array<Reaction>,
+};
+
+export enum MessageStatus {
+  NotSent = 'NOT_SENT',
+  Sent = 'SENT',
+  Delivered = 'DELIVERED',
+  Received = 'RECEIVED',
+  Read = 'READ'
+}
+
 export type Mutation = {
    __typename?: 'Mutation',
   createDepartment: Department,
   addSubDepartment: Department,
-  createUser: User,
+  createUser: Scalars['Boolean'],
   login?: Maybe<User>,
   logout: Scalars['Boolean'],
-  verifyUser?: Maybe<User>,
+  verifyUser: Scalars['Boolean'],
   sendPasswordOTP: Scalars['Boolean'],
   forgotPassword: Scalars['Boolean'],
 };
@@ -98,6 +149,22 @@ export type Query = {
   me?: Maybe<User>,
 };
 
+export type Reaction = {
+   __typename?: 'Reaction',
+  id: Scalars['ID'],
+  type: ReactionType,
+  by: User,
+  message: Message,
+};
+
+export enum ReactionType {
+  Love = 'LOVE',
+  Like = 'LIKE',
+  Haha = 'HAHA',
+  Angry = 'ANGRY',
+  Sad = 'SAD'
+}
+
 export type User = {
    __typename?: 'User',
   id: Scalars['ID'],
@@ -107,10 +174,14 @@ export type User = {
   profilePic: Scalars['String'],
   coverPic: Scalars['String'],
   mobile: Scalars['String'],
+  upi: Scalars['String'],
   about: Scalars['String'],
   role: UserRole,
   verified: Scalars['Boolean'],
   department: Department,
+  messages: Array<Message>,
+  media: Array<Media>,
+  channels: Array<Channel>,
 };
 
 export enum UserRole {
@@ -132,16 +203,14 @@ export type CreateUserMutationVariables = {
   password: Scalars['String'],
   departmentId: Scalars['Int'],
   rollNumber: Scalars['String'],
-  mobile: Scalars['String']
+  mobile: Scalars['String'],
+  upi: Scalars['String']
 };
 
 
 export type CreateUserMutation = (
   { __typename?: 'Mutation' }
-  & { createUser: (
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name' | 'email'>
-  ) }
+  & Pick<Mutation, 'createUser'>
 );
 
 export type LoginMutationVariables = {
@@ -168,6 +237,17 @@ export type LogoutMutationVariables = {};
 export type LogoutMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'logout'>
+);
+
+export type VerifyUserMutationVariables = {
+  rollNumber: Scalars['String'],
+  otp: Scalars['String']
+};
+
+
+export type VerifyUserMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'verifyUser'>
 );
 
 export type GetDepartmentsQueryVariables = {};
@@ -198,12 +278,8 @@ export type MeQuery = (
 
 
 export const CreateUserDocument = gql`
-    mutation CreateUser($name: String!, $email: String!, $password: String!, $departmentId: Int!, $rollNumber: String!, $mobile: String!) {
-  createUser(data: {name: $name, email: $email, password: $password, rollNumber: $rollNumber, mobile: $mobile, departmentId: $departmentId}) {
-    id
-    name
-    email
-  }
+    mutation CreateUser($name: String!, $email: String!, $password: String!, $departmentId: Int!, $rollNumber: String!, $mobile: String!, $upi: String!) {
+  createUser(data: {name: $name, email: $email, password: $password, rollNumber: $rollNumber, mobile: $mobile, departmentId: $departmentId, upi: $upi})
 }
     `;
 export type CreateUserMutationFn = ApolloReactCommon.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
@@ -227,6 +303,7 @@ export type CreateUserMutationFn = ApolloReactCommon.MutationFunction<CreateUser
  *      departmentId: // value for 'departmentId'
  *      rollNumber: // value for 'rollNumber'
  *      mobile: // value for 'mobile'
+ *      upi: // value for 'upi'
  *   },
  * });
  */
@@ -303,6 +380,37 @@ export function useLogoutMutation(baseOptions?: ApolloReactHooks.MutationHookOpt
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = ApolloReactCommon.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const VerifyUserDocument = gql`
+    mutation VerifyUser($rollNumber: String!, $otp: String!) {
+  verifyUser(data: {rollNumber: $rollNumber, otp: $otp})
+}
+    `;
+export type VerifyUserMutationFn = ApolloReactCommon.MutationFunction<VerifyUserMutation, VerifyUserMutationVariables>;
+
+/**
+ * __useVerifyUserMutation__
+ *
+ * To run a mutation, you first call `useVerifyUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVerifyUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [verifyUserMutation, { data, loading, error }] = useVerifyUserMutation({
+ *   variables: {
+ *      rollNumber: // value for 'rollNumber'
+ *      otp: // value for 'otp'
+ *   },
+ * });
+ */
+export function useVerifyUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<VerifyUserMutation, VerifyUserMutationVariables>) {
+        return ApolloReactHooks.useMutation<VerifyUserMutation, VerifyUserMutationVariables>(VerifyUserDocument, baseOptions);
+      }
+export type VerifyUserMutationHookResult = ReturnType<typeof useVerifyUserMutation>;
+export type VerifyUserMutationResult = ApolloReactCommon.MutationResult<VerifyUserMutation>;
+export type VerifyUserMutationOptions = ApolloReactCommon.BaseMutationOptions<VerifyUserMutation, VerifyUserMutationVariables>;
 export const GetDepartmentsDocument = gql`
     query GetDepartments {
   getDepartments {

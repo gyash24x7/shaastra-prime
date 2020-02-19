@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { ErrorMessage, HelperMessage, ValidMessage } from "@atlaskit/form";
-import TextField from "@atlaskit/textfield";
 import Button from "@atlaskit/button";
+import { ErrorMessage, HelperMessage, ValidMessage } from "@atlaskit/form";
 import Select from "@atlaskit/select";
-import { useGetDepartmentsQuery, useCreateUserMutation } from "../../generated";
-import { ShowError } from "../Shared/ShowError";
+import TextField from "@atlaskit/textfield";
+import React, { useState } from "react";
+
+import { useCreateUserMutation, useGetDepartmentsQuery } from "../../generated";
 import { Loader } from "../Shared/Loader";
-import { Redirect } from "react-router-dom";
+import { ShowError } from "../Shared/ShowError";
 
 const emailRegex = /^([a-zA-Z0-9_\-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 
@@ -56,12 +56,13 @@ export const Signup = () => {
 				email,
 				password,
 				mobile,
-				departmentId: department
+				departmentId: department,
+				upi
 			}
 		});
 	};
 
-	if (MutationData?.createUser?.id) return <Redirect to="/verifyUser" />;
+	if (MutationData?.createUser) window.location.pathname = "/verification";
 
 	const handleOnChange = (field: string) => (e: any) => {
 		switch (field) {
@@ -78,7 +79,7 @@ export const Signup = () => {
 				setTouched({ ...touched, mobile: true });
 				break;
 			case "rollNumber":
-				setRollNumber(e.target.value);
+				setRollNumber(e.target.value.toUpperCase());
 				setTouched({ ...touched, rollNumber: true });
 				break;
 			case "password":
@@ -238,7 +239,7 @@ export const Signup = () => {
 					{!department && touched.department && (
 						<ErrorMessage>Department is required</ErrorMessage>
 					)}
-					{department && <ValidMessage>Great Choice!</ValidMessage>}
+					{!!department && <ValidMessage>Great Choice!</ValidMessage>}
 				</div>
 			</div>
 			<br />

@@ -1,5 +1,5 @@
 import React, { Fragment, Dispatch, SetStateAction } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { GlobalItem } from "@atlaskit/navigation-next";
 import AppSwitcherIcon from "@atlaskit/icon/glyph/app-switcher";
 import NotificationIcon from "@atlaskit/icon/glyph/notification";
@@ -18,7 +18,7 @@ export const AppSwitcher = ({ setIsDrawerOpen }: AppSwitcherProps) => {
 
 	if (error) return <ShowError />;
 
-	if (data?.logout) return <Redirect to="/login" />;
+	if (data?.logout) window.location.pathname = "/login";
 
 	return (
 		<Fragment>

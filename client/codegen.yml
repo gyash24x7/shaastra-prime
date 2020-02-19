@@ -8,6 +8,8 @@ generates:
       - "typescript-operations"
       - "typescript-react-apollo"
     config:
+      apolloReactCommonImportFrom: "@apollo/client"
+      apolloReactHooksImportFrom: "@apollo/client"
       withHooks: true
       withHOC: false
       withComponent: false

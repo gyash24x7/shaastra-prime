@@ -1,18 +1,25 @@
 import React from "react";
-import { Route, RouteProps, Redirect } from "react-router-dom";
-import { useMeQuery } from "../generated";
-import { ShowError } from "../components/Shared/ShowError";
+import { Redirect, Route, RouteProps } from "react-router-dom";
+
 import { Loader } from "../components/Shared/Loader";
+import { useMeQuery } from "../generated";
+import { VerificationPage } from "../pages/Verification";
 
 export const VerificationRoute = (props: RouteProps) => {
-	const { data, loading, error } = useMeQuery();
-
-	if (error) return <ShowError />;
+	const { data, loading } = useMeQuery();
 
 	if (loading) return <Loader />;
 
-	if (data?.me?.id) {
+	if (data?.me) {
 		if (data.me.verified) return <Redirect to="/" />;
-		else return <Route {...props} />;
+		else
+			return (
+				<Route
+					{...props}
+					render={() => (
+						<VerificationPage rollNumber={data.me?.rollNumber || ""} />
+					)}
+				/>
+			);
 	} else return <Redirect to="/login" />;
 };
