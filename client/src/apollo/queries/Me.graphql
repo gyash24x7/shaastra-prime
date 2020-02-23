@@ -6,6 +6,9 @@ query Me {
 		rollNumber
 		mobile
 		role
+		profilePic
+		coverPic
+		about
 		verified
 		department {
 			id

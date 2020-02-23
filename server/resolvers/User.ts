@@ -142,4 +142,26 @@ export class UserResolver {
 
 		return true;
 	}
+
+	@Authorized()
+	@Mutation(() => Boolean)
+	async uploadProfilePic(
+		@Arg("profilePic") profilePic: string,
+		@Ctx() { req }: GraphQLContext
+	) {
+		const userId = req.session!.userId;
+		const { affected } = await User.update(userId, { profilePic });
+		return affected === 1;
+	}
+
+	@Authorized()
+	@Mutation(() => Boolean)
+	async uploadCoverPic(
+		@Arg("coverPic") coverPic: string,
+		@Ctx() { req }: GraphQLContext
+	) {
+		const userId = req.session!.userId;
+		const { affected } = await User.update(userId, { coverPic });
+		return affected === 1;
+	}
 }

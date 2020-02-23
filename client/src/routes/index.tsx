@@ -11,7 +11,7 @@ import { PublicRoute } from "./PublicRoute";
 import { VerificationRoute } from "./VerificationRoute";
 
 // import { ChatPage } from "../pages/Chat";
-export const AppRoutes = () => (
+const AppRoutes = () => (
 	<ApolloProvider client={client}>
 		<BrowserRouter>
 			<Switch>
@@ -29,3 +29,5 @@ export const AppRoutes = () => (
 		</BrowserRouter>
 	</ApolloProvider>
 );
+
+export default AppRoutes;

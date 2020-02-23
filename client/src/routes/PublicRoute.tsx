@@ -11,7 +11,6 @@ export const PublicRoute = (props: RouteProps) => {
 	if (error) return <ShowError />;
 
 	if (loading) return <Loader />;
-	console.log(data);
 
 	if (data?.me) {
 		if (data.me.verified) return <Redirect to="/" />;

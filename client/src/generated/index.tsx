@@ -105,6 +105,8 @@ export type Mutation = {
   verifyUser: Scalars['Boolean'],
   sendPasswordOTP: Scalars['Boolean'],
   forgotPassword: Scalars['Boolean'],
+  uploadProfilePic: Scalars['Boolean'],
+  uploadCoverPic: Scalars['Boolean'],
 };
 
 
@@ -140,6 +142,16 @@ export type MutationSendPasswordOtpArgs = {
 
 export type MutationForgotPasswordArgs = {
   data: ForgotPasswordInput
+};
+
+
+export type MutationUploadProfilePicArgs = {
+  profilePic: Scalars['String']
+};
+
+
+export type MutationUploadCoverPicArgs = {
+  coverPic: Scalars['String']
 };
 
 export type Query = {
@@ -239,6 +251,26 @@ export type LogoutMutation = (
   & Pick<Mutation, 'logout'>
 );
 
+export type UploadCoverPicMutationVariables = {
+  coverPic: Scalars['String']
+};
+
+
+export type UploadCoverPicMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'uploadCoverPic'>
+);
+
+export type UploadProfilePicMutationVariables = {
+  profilePic: Scalars['String']
+};
+
+
+export type UploadProfilePicMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'uploadProfilePic'>
+);
+
 export type VerifyUserMutationVariables = {
   rollNumber: Scalars['String'],
   otp: Scalars['String']
@@ -268,7 +300,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'name' | 'email' | 'rollNumber' | 'mobile' | 'role' | 'verified'>
+    & Pick<User, 'id' | 'name' | 'email' | 'rollNumber' | 'mobile' | 'role' | 'profilePic' | 'coverPic' | 'about' | 'verified'>
     & { department: (
       { __typename?: 'Department' }
       & Pick<Department, 'id' | 'name'>
@@ -380,6 +412,66 @@ export function useLogoutMutation(baseOptions?: ApolloReactHooks.MutationHookOpt
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = ApolloReactCommon.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const UploadCoverPicDocument = gql`
+    mutation UploadCoverPic($coverPic: String!) {
+  uploadCoverPic(coverPic: $coverPic)
+}
+    `;
+export type UploadCoverPicMutationFn = ApolloReactCommon.MutationFunction<UploadCoverPicMutation, UploadCoverPicMutationVariables>;
+
+/**
+ * __useUploadCoverPicMutation__
+ *
+ * To run a mutation, you first call `useUploadCoverPicMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadCoverPicMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadCoverPicMutation, { data, loading, error }] = useUploadCoverPicMutation({
+ *   variables: {
+ *      coverPic: // value for 'coverPic'
+ *   },
+ * });
+ */
+export function useUploadCoverPicMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UploadCoverPicMutation, UploadCoverPicMutationVariables>) {
+        return ApolloReactHooks.useMutation<UploadCoverPicMutation, UploadCoverPicMutationVariables>(UploadCoverPicDocument, baseOptions);
+      }
+export type UploadCoverPicMutationHookResult = ReturnType<typeof useUploadCoverPicMutation>;
+export type UploadCoverPicMutationResult = ApolloReactCommon.MutationResult<UploadCoverPicMutation>;
+export type UploadCoverPicMutationOptions = ApolloReactCommon.BaseMutationOptions<UploadCoverPicMutation, UploadCoverPicMutationVariables>;
+export const UploadProfilePicDocument = gql`
+    mutation UploadProfilePic($profilePic: String!) {
+  uploadProfilePic(profilePic: $profilePic)
+}
+    `;
+export type UploadProfilePicMutationFn = ApolloReactCommon.MutationFunction<UploadProfilePicMutation, UploadProfilePicMutationVariables>;
+
+/**
+ * __useUploadProfilePicMutation__
+ *
+ * To run a mutation, you first call `useUploadProfilePicMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadProfilePicMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadProfilePicMutation, { data, loading, error }] = useUploadProfilePicMutation({
+ *   variables: {
+ *      profilePic: // value for 'profilePic'
+ *   },
+ * });
+ */
+export function useUploadProfilePicMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UploadProfilePicMutation, UploadProfilePicMutationVariables>) {
+        return ApolloReactHooks.useMutation<UploadProfilePicMutation, UploadProfilePicMutationVariables>(UploadProfilePicDocument, baseOptions);
+      }
+export type UploadProfilePicMutationHookResult = ReturnType<typeof useUploadProfilePicMutation>;
+export type UploadProfilePicMutationResult = ApolloReactCommon.MutationResult<UploadProfilePicMutation>;
+export type UploadProfilePicMutationOptions = ApolloReactCommon.BaseMutationOptions<UploadProfilePicMutation, UploadProfilePicMutationVariables>;
 export const VerifyUserDocument = gql`
     mutation VerifyUser($rollNumber: String!, $otp: String!) {
   verifyUser(data: {rollNumber: $rollNumber, otp: $otp})
@@ -454,6 +546,9 @@ export const MeDocument = gql`
     rollNumber
     mobile
     role
+    profilePic
+    coverPic
+    about
     verified
     department {
       id

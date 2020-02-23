@@ -20,6 +20,7 @@
 		"express": "^4.17.1",
 		"express-session": "^1.17.0",
 		"graphql": "^14.6.0",
+		"graphql-upload": "^10.0.0",
 		"ioredis": "^4.14.1",
 		"pg": "^7.18.1",
 		"reflect-metadata": "^0.1.13",

@@ -1,12 +1,14 @@
-import React from "react";
-import Avatar from "@atlaskit/avatar";
-import { ButtonItem, HeadingItem, MenuGroup, Section } from "@atlaskit/menu";
-import PhoneIcon from "@atlaskit/icon/glyph/hipchat/dial-out";
 import MailIcon from "@atlaskit/icon/glyph/email";
+import PhoneIcon from "@atlaskit/icon/glyph/hipchat/dial-out";
 import PersonIcon from "@atlaskit/icon/glyph/person";
+import { ButtonItem, HeadingItem, MenuGroup, Section } from "@atlaskit/menu";
+import React from "react";
+
 import { useMeQuery } from "../../generated";
 import { Loader } from "../Shared/Loader";
 import { ShowError } from "../Shared/ShowError";
+import { CoverPic } from "./CoverPic";
+import { ProfilePic } from "./ProfilePic";
 
 export const ProfileCard = () => {
 	const { data, error } = useMeQuery();
@@ -17,25 +19,16 @@ export const ProfileCard = () => {
 		const user = data.me;
 		return (
 			<figure>
-				<img
-					src="https://source.unsplash.com/random/300x300"
-					alt="sample87"
-					className="cover-pic"
-				/>
+				<CoverPic />
 				<figcaption>
-					<Avatar
-						src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/profile-sample4.jpg"
-						size="xlarge"
-					/>
+					<ProfilePic />
 					<h2>
 						{user.name}
-						<span>WEBOPS | {user.role}</span>
+						<span>
+							{user.department.name} | {user.role}
+						</span>
 					</h2>
-					<p>
-						I'm looking for something that can deliver a 50-pound payload of
-						snow on a small feminine target. Can you suggest something?
-						Hello...?
-					</p>
+					<p>{user.about}</p>
 					<div className="user-details">
 						<MenuGroup>
 							<Section>

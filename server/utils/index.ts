@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { Stream } from "stream";
 
 export enum UserRole {
 	COORD = "COORD",
@@ -35,4 +36,11 @@ export enum ReactionType {
 	HAHA = "HAHA",
 	ANGRY = "ANGRY",
 	SAD = "SAD"
+}
+
+export interface Upload {
+	filename: string;
+	mimetype: string;
+	encoding: string;
+	createReadStream: () => Stream;
 }
