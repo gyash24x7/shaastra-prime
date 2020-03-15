@@ -1,19 +1,19 @@
-import { UserRole } from "../utils";
+import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
-	PrimaryGeneratedColumn,
-	Column,
-	Entity,
-	BaseEntity,
-	ManyToOne,
-	OneToMany,
-	ManyToMany,
-	JoinTable
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn
 } from "typeorm";
-import { Department } from "./Department";
-import { Field, ID, registerEnumType, ObjectType } from "type-graphql";
-import { Message } from "./Message";
+
+import { UserRole } from "../utils";
 import { Channel } from "./Channel";
+import { Department } from "./Department";
 import { Media } from "./Media";
+import { Message } from "./Message";
 
 registerEnumType(UserRole, { name: "UserRole" });
 
@@ -102,6 +102,5 @@ export class User extends BaseEntity {
 		() => Channel,
 		channel => channel.members
 	)
-	@JoinTable()
 	channels: Channel[];
 }

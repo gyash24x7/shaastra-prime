@@ -1,18 +1,20 @@
+import { Field, ID, ObjectType } from "type-graphql";
 import {
-	PrimaryGeneratedColumn,
-	Column,
-	CreateDateColumn,
-	Entity,
-	OneToMany,
-	BaseEntity,
-	OneToOne,
-	JoinColumn,
-	ManyToMany
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn
 } from "typeorm";
-import { ObjectType, Field, ID } from "type-graphql";
-import { User } from "./User";
-import { Message } from "./Message";
+
 import { Media } from "./Media";
+import { Message } from "./Message";
+import { User } from "./User";
 
 @ObjectType()
 @Entity()
@@ -57,6 +59,7 @@ export class Channel extends BaseEntity {
 		() => User,
 		user => user.channels
 	)
+	@JoinTable()
 	members: User[];
 
 	@Field(() => [Media])

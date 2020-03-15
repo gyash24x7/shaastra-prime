@@ -1,17 +1,18 @@
 import "reflect-metadata";
+
 import { ApolloServer } from "apollo-server-express";
-import express from "express";
-import { buildSchema } from "type-graphql";
-import { resolvers } from "./resolvers";
-import { createConnection, getConnectionOptions } from "typeorm";
-import session from "express-session";
+import bodyParser from "body-parser";
 import connectRedis from "connect-redis";
-import { redis } from "./utils/redis";
-// import cors from "cors";
+import express from "express";
+import session from "express-session";
+import path from "path";
+import { buildSchema } from "type-graphql";
+import { createConnection, getConnectionOptions } from "typeorm";
+
+import { resolvers } from "./resolvers";
 import { GraphQLContext } from "./utils";
 import { authChecker } from "./utils/authChecker";
-import bodyParser from "body-parser";
-require("dotenv").config();
+import { redis } from "./utils/redis";
 
 const startServer = async () => {
 	const connectionOptions = await getConnectionOptions();
@@ -27,8 +28,6 @@ const startServer = async () => {
 	const app = express();
 
 	const RedisStore = connectRedis(session);
-
-	// app.use(cors());
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -46,6 +45,10 @@ const startServer = async () => {
 			store: new RedisStore({ client: redis })
 		})
 	);
+	app.use(express.static(path.join(__dirname, "..", "web", "build")));
+	app.get("*", (_, res) => {
+		res.sendFile(path.join(__dirname, "..", "web", "build", "index.html"));
+	});
 
 	server.applyMiddleware({
 		app,

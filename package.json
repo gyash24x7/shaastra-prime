@@ -1,0 +1,10 @@
+{
+  "name": "shaastra-prime",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "repository": "https://github.com/gyash24x7/shaastra-prime.git",
+  "author": "Yash Gupta <38939232+gyash24x7@users.noreply.github.com>",
+  "license": "MIT",
+  "workspaces": ["./app", "./server", "./web"]
+}
