@@ -1,10 +1,13 @@
-import { Layout, Text } from "@ui-kitten/components";
+import { Layout } from "@ui-kitten/components";
 import React from "react";
+
+import styles from "../../styles/Login";
 
 export const LoginScreen = () => {
 	return (
-		<Layout>
-			<Text>Login Screen</Text>
+		<Layout style={styles.container}>
+			<Layout style={styles.bgWrapper}></Layout>
+			<Layout></Layout>
 		</Layout>
 	);
 };
