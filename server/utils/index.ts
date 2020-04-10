@@ -38,6 +38,14 @@ export enum ReactionType {
 	SAD = "SAD"
 }
 
+export enum TaskStatus {
+	COORD = "COORD",
+	HEAD = "HEAD",
+	CORE = "CORE",
+	COCAS = "COCAS",
+	COCAD = "COCAD"
+}
+
 export interface Upload {
 	filename: string;
 	mimetype: string;

@@ -1,32 +1,16 @@
-import {
-	PrimaryGeneratedColumn,
-	Column,
-	Entity,
-	OneToMany,
-	BaseEntity
-} from "typeorm";
+import { Field, ID, ObjectType } from "type-graphql";
+
+import { Task } from "./Task";
+import { Update } from "./Update";
 import { User } from "./User";
-import { ObjectType, Field, ID } from "type-graphql";
 
 @ObjectType()
-@Entity()
-export class Department extends BaseEntity {
-	@Field(() => ID)
-	@PrimaryGeneratedColumn()
-	id: number;
-
-	@Field()
-	@Column()
-	name: string;
-
-	@Field(() => [String])
-	@Column({ type: "simple-array", default: "" })
-	subDepartments: string[];
-
-	@Field(() => [User])
-	@OneToMany(
-		() => User,
-		user => user.department
-	)
-	members: User[];
+export class Department {
+	@Field(() => ID) id: number;
+	@Field() name: string;
+	@Field(() => [String]) subDepartments: string[];
+	@Field(() => [User]) members: User[];
+	@Field(() => [Task]) tasksAssigned: Task[];
+	@Field(() => [Task]) tasksCreated: Task[];
+	@Field(() => [Update]) updates: Update[];
 }

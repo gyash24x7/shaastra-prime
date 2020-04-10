@@ -1,28 +1,25 @@
 {
 	"compilerOptions": {
-		"target": "esnext",
-		"lib": ["dom", "dom.iterable", "esnext", "esnext.asynciterable"],
-		"allowJs": true,
+		"strict": true,
+		"lib": ["ES2016", "ES2018.AsyncIterable"],
 		"esModuleInterop": true,
+		"target": "ESNext",
+		"allowJs": true,
 		"skipLibCheck": true,
 		"allowSyntheticDefaultImports": true,
-		"strict": true,
 		"forceConsistentCasingInFileNames": true,
-		"module": "commonjs",
+		"module": "ESNext",
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"noEmit": true,
-		"jsx": "react",
 		"noImplicitAny": true,
 		"outDir": "./dist/",
 		"preserveConstEnums": true,
 		"removeComments": true,
 		"sourceMap": true,
-		"alwaysStrict": true,
 		"strictNullChecks": true,
 		"downlevelIteration": true,
-		"incremental": true,
 		"strictFunctionTypes": true,
 		"strictBindCallApply": true,
 		"strictPropertyInitialization": false,
@@ -33,7 +30,5 @@
 		"noFallthroughCasesInSwitch": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true
-	},
-	"include": ["inputs", "models", "resolvers", "index.ts", "utils"],
-	"exclude": ["/node_modules/"]
+	}
 }
