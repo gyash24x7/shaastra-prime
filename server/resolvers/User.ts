@@ -7,7 +7,7 @@ import {
   Mutation,
   Query,
   Resolver,
-  Root
+  Root,
 } from "type-graphql";
 
 import { CreateUserInput } from "../inputs/User/CreateUser";
@@ -16,8 +16,8 @@ import { LoginInput } from "../inputs/User/Login";
 import { VerifyUserInput } from "../inputs/User/VerifyUser";
 import { Department } from "../models/Department";
 import { User } from "../models/User";
+import { prisma } from "../prisma";
 import { GraphQLContext } from "../utils";
-import { sendgrid } from "../utils/sendgrid";
 
 @Resolver(User)
 export class UserResolver {
@@ -28,21 +28,26 @@ export class UserResolver {
 	) {
 		const password = await bcrypt.hash(data.password, 13);
 		const verificationOTP = Math.round(Math.random() * 1000000).toString();
-		const user = await User.create({
-			...data,
-			password,
-			verificationOTP
-		}).save();
+		const user = await prisma.user.create({
+			data: {
+				...data,
+				password,
+				verificationOTP,
+				profilePic: "",
+				coverPic: "",
+				about: ""
+			}
+		});
 
-		const mailOptions = {
-			from: "webops@shaastra.org",
-			to: `${user.rollNumber.toLowerCase()}@smail.iitm.ac.in`,
-			subject: "Verify Your Email | Shaastra Prime",
-			html: `<p>Your verification code for Shaastra Prime is <strong>${verificationOTP}</strong> </p>`
-		};
+		// const mailOptions = {
+		// 	from: "webops@shaastra.org",
+		// 	to: `${user.rollNumber.toLowerCase()}@smail.iitm.ac.in`,
+		// 	subject: "Verify Your Email | Shaastra Prime",
+		// 	html: `<p>Your verification code for Shaastra Prime is <strong>${verificationOTP}</strong> </p>`
+		// };
 
 		if (!!user) {
-			await sendgrid.send(mailOptions);
+			// await sendgrid.send(mailOptions);
 			req.session!.userId = user.id;
 		}
 		return !!user;
@@ -50,7 +55,7 @@ export class UserResolver {
 
 	@Query(() => [User])
 	async getUsers() {
-		return User.find();
+		return prisma.user.findMany();
 	}
 
 	@Mutation(() => User, { nullable: true })
@@ -58,7 +63,7 @@ export class UserResolver {
 		@Arg("data") { rollNumber, password }: LoginInput,
 		@Ctx() { req }: GraphQLContext
 	) {
-		const user = await User.findOne({ where: { rollNumber } });
+		const user = await prisma.user.findOne({ where: { rollNumber } });
 		if (!user) return null;
 
 		const valid = await bcrypt.compare(password, user.password);
@@ -68,9 +73,9 @@ export class UserResolver {
 		return user;
 	}
 
-	@FieldResolver(() => Department)
-	async department(@Root() { departmentId }: User) {
-		return Department.findOne(departmentId);
+	@FieldResolver(() => [Department])
+	async departments(@Root() { id }: User) {
+		return prisma.user.findOne({ where: { id } }).departments();
 	}
 
 	@Query(() => User, { nullable: true })
@@ -78,14 +83,14 @@ export class UserResolver {
 		const id = req.session!.userId;
 		if (!id) return null;
 
-		return User.findOne(id);
+		return prisma.user.findOne(id);
 	}
 
 	@Authorized()
 	@Mutation(() => Boolean)
 	async logout(@Ctx() { req, res }: GraphQLContext) {
 		return new Promise((resolve, reject) => {
-			req.session!.destroy(err => {
+			req.session!.destroy((err) => {
 				if (err) reject(false);
 				else {
 					res.clearCookie("qid");
@@ -97,34 +102,35 @@ export class UserResolver {
 
 	@Mutation(() => Boolean)
 	async verifyUser(@Arg("data") { rollNumber, otp }: VerifyUserInput) {
-		let user = await User.findOne({ where: { rollNumber } });
+		let user = await prisma.user.findOne({ where: { rollNumber } });
 
 		if (!user) return false;
 		else {
 			if (user.verificationOTP !== otp) return false;
-			user.verified = true;
-			await user.save();
+			await prisma.user.update({
+				where: { rollNumber },
+				data: { verified: true }
+			});
 			return true;
 		}
 	}
 
 	@Mutation(() => Boolean)
 	async sendPasswordOTP(@Arg("rollNumber") rollNumber: string) {
-		const user = await User.findOne({ where: { rollNumber } });
+		const user = await prisma.user.findOne({ where: { rollNumber } });
 		if (!user) return false;
 
-		const otp = Math.round(Math.random() * 1000000).toString();
-		user.passwordOTP = otp;
-		await user.save();
+		const passwordOTP = Math.round(Math.random() * 1000000).toString();
+		await prisma.user.update({ where: { rollNumber }, data: { passwordOTP } });
 
-		const mailOptions = {
-			from: "webops@shaastra.org",
-			to: `${user.rollNumber.toLowerCase()}@smail.iitm.ac.in`,
-			subject: "Reset Your Password | Shaastra Prime",
-			html: `<p>Your password reset code for Shaastra Prime is <strong>${otp}</strong> </p>`
-		};
+		// const mailOptions = {
+		// 	from: "webops@shaastra.org",
+		// 	to: `${user.rollNumber.toLowerCase()}@smail.iitm.ac.in`,
+		// 	subject: "Reset Your Password | Shaastra Prime",
+		// 	html: `<p>Your password reset code for Shaastra Prime is <strong>${otp}</strong> </p>`
+		// };
 
-		await sendgrid.send(mailOptions);
+		// await sendgrid.send(mailOptions);
 
 		return true;
 	}
@@ -133,14 +139,12 @@ export class UserResolver {
 	async forgotPassword(
 		@Arg("data") { rollNumber, passwordOTP, newPassword }: ForgotPasswordInput
 	) {
-		const user = await User.findOne({ where: { rollNumber, passwordOTP } });
-		if (!user) return false;
-
-		const password = await bcrypt.hash(newPassword, 13);
-		user.password = password;
-		await user.save();
-
-		return true;
+		const user = await prisma.user.findOne({ where: { rollNumber } });
+		if (user && user.passwordOTP === passwordOTP) {
+			const password = await bcrypt.hash(newPassword, 13);
+			await prisma.user.update({ where: { rollNumber }, data: { password } });
+			return true;
+		} else return false;
 	}
 
 	@Authorized()
@@ -149,9 +153,12 @@ export class UserResolver {
 		@Arg("profilePic") profilePic: string,
 		@Ctx() { req }: GraphQLContext
 	) {
-		const userId = req.session!.userId;
-		const { affected } = await User.update(userId, { profilePic });
-		return affected === 1;
+		const id = req.session!.userId;
+		const user = await prisma.user.update({
+			where: { id },
+			data: { profilePic }
+		});
+		return !!user;
 	}
 
 	@Authorized()
@@ -160,8 +167,11 @@ export class UserResolver {
 		@Arg("coverPic") coverPic: string,
 		@Ctx() { req }: GraphQLContext
 	) {
-		const userId = req.session!.userId;
-		const { affected } = await User.update(userId, { coverPic });
-		return affected === 1;
+		const id = req.session!.userId;
+		const user = await prisma.user.update({
+			where: { id },
+			data: { coverPic }
+		});
+		return !!user;
 	}
 }

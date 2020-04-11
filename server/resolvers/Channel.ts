@@ -1,37 +1,45 @@
 import {
   Arg,
   Authorized,
+  Ctx,
   FieldResolver,
   Mutation,
   Query,
   Resolver,
-  Root
+  Root,
 } from "type-graphql";
 
 import { CreateChannelInput } from "../inputs/Channel/CreateChannel";
 import { Channel } from "../models/Channel";
-import { User } from "../models/User";
+import { prisma } from "../prisma";
+import { GraphQLContext } from "../utils";
 
 @Resolver(Channel)
 export class ChannelResolver {
 	@Authorized()
 	@Mutation(() => Channel)
 	async createChannel(
-		@Arg("data") { members, name, description }: CreateChannelInput
+		@Arg("data") { members, name, description }: CreateChannelInput,
+		@Ctx() { req }: GraphQLContext
 	) {
-		const channel = new Channel();
-		channel.name = name;
-		channel.description = description;
-		channel.members = await User.find({ where: { id: [members] } });
+		let userId: number = req.session!.userId;
+		return prisma.channel.create({
+			data: {
+				name,
+				description,
+				members: { connect: members.map((id) => ({ id })) },
+				createdBy: { connect: { id: userId } }
+			}
+		});
 	}
 
 	@FieldResolver()
-	createdBy(@Root() { createdById }: Channel) {
-		return User.findOne(createdById);
+	createdBy(@Root() { id }: Channel) {
+		return prisma.channel.findOne({ where: { id } }).createdBy();
 	}
 
 	@Query(() => [Channel])
 	getChannels() {
-		return Channel.find();
+		return prisma.channel.findMany();
 	}
 }

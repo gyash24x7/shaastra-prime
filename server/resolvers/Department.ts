@@ -1,38 +1,42 @@
 import {
-	Resolver,
-	Mutation,
-	Arg,
-	Query,
-	FieldResolver,
-	Root
+  Arg,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
 } from "type-graphql";
+
+import { AddSubDepartmentInput } from "../inputs/Department/AddSubDepartment";
 import { Department } from "../models/Department";
 import { User } from "../models/User";
-import { AddSubDepartmentInput } from "../inputs/Department/AddSubDepartment";
+import { prisma } from "../prisma";
 
 @Resolver(Department)
 export class DepartmentResolver {
 	@Mutation(() => Department)
 	async createDepartment(@Arg("name") name: string) {
-		const department = await Department.create({ name }).save();
-		return department;
+		return prisma.department.create({ data: { name } });
 	}
 
-	@Mutation(() => Department)
+	@Mutation(() => Boolean)
 	async addSubDepartment(@Arg("data") { id, subDept }: AddSubDepartmentInput) {
-		const department = await Department.findOne({ where: { id } });
-		if (!department) throw new Error("Department Not Found!");
-		department.subDepartments = department.subDepartments.concat(subDept);
-		return department.save();
+		let dept = await prisma.department.findOne({ where: { id } });
+		if (!dept) return false;
+		dept = await prisma.department.update({
+			where: { id },
+			data: { subDepartments: { set: dept.subDepartments.concat(subDept) } }
+		});
+		return !!dept;
 	}
 
 	@Query(() => [Department])
 	async getDepartments() {
-		return Department.find();
+		return prisma.department.findMany();
 	}
 
 	@FieldResolver(() => [User])
 	async members(@Root() { id }: Department) {
-		return User.find({ where: { departmentId: id } });
+		return prisma.department.findOne({ where: { id } }).members();
 	}
 }

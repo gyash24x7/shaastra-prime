@@ -1,28 +1,26 @@
 import "reflect-metadata";
 
+import { PrismaClient } from "@prisma/client";
 import { ApolloServer } from "apollo-server-express";
 import bodyParser from "body-parser";
 import connectRedis from "connect-redis";
 import express from "express";
 import session from "express-session";
-import path from "path";
 import { buildSchema } from "type-graphql";
-import { createConnection, getConnectionOptions } from "typeorm";
 
 import { resolvers } from "./resolvers";
 import { GraphQLContext } from "./utils";
 import { authChecker } from "./utils/authChecker";
 import { redis } from "./utils/redis";
 
+require("dotenv").config();
+
 const startServer = async () => {
-	const connectionOptions = await getConnectionOptions();
-	await createConnection({ ...connectionOptions, entities: ["models/*.ts"] });
-
 	const schema = await buildSchema({ resolvers, authChecker });
-
+	const prisma = new PrismaClient();
 	const server = new ApolloServer({
 		schema,
-		context: ({ req, res }) => ({ req, res } as GraphQLContext)
+		context: ({ req, res }) => ({ req, res, prisma } as GraphQLContext)
 	});
 
 	const app = express();
@@ -45,10 +43,10 @@ const startServer = async () => {
 			store: new RedisStore({ client: redis })
 		})
 	);
-	app.use(express.static(path.join(__dirname, "..", "web", "build")));
-	app.get("*", (_, res) => {
-		res.sendFile(path.join(__dirname, "..", "web", "build", "index.html"));
-	});
+	// app.use(express.static(path.join(__dirname, "..", "web", "build")));
+	// app.get("*", (_, res) => {
+	// 	res.sendFile(path.join(__dirname, "..", "web", "build", "index.html"));
+	// });
 
 	server.applyMiddleware({
 		app,
