@@ -1,4 +1,4 @@
+import { Spin } from "antd";
 import React from "react";
-import { ActivityIndicator } from "react-native";
 
-export const Loader = () => <ActivityIndicator />;
+export const Loader = () => <Spin />;
