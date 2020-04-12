@@ -1,0 +1,23 @@
+.wrapper {
+	height: 100vh;
+}
+
+.public-bg {
+	background-image: url(https://source.unsplash.com/featured/800x450);
+	background-position: center center;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.public-container {
+	padding: 30px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.logo-container img {
+	width: 100%;
+	padding: 30px;
+	margin-bottom: 30px;
+}

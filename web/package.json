@@ -8,11 +8,12 @@
 		"antd": "^4.1.2",
 		"babel-plugin-import": "^1.13.0",
 		"firebase": "^7.14.0",
-		"graphql": "^15.0.0",
+		"graphql": "14.6.0",
 		"graphql-tag": "^2.10.3",
 		"less": "^3.11.1",
 		"less-loader": "^5.0.0",
 		"lorem-ipsum": "^2.0.3",
+		"node-sass": "^4.13.1",
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1",
 		"react-hot-loader": "^4.12.20",
@@ -21,7 +22,7 @@
 		"typescript": "^3.8.3"
 	},
 	"scripts": {
-		"start": "BROWSER=none react-app-rewired start",
+		"dev": "BROWSER=none react-app-rewired start",
 		"build": "react-app-rewired build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
