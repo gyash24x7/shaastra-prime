@@ -16,8 +16,9 @@ export const PrimaryNav = () => {
 				<NavIcon name="finbooks" />
 			</div>
 			<div className="app-settings-container">
-				<NavIcon name="notification" />
+				<NavIcon name="notification" linkDisabled />
 				<NavIcon name="settings" />
+				<NavIcon name="logout" linkDisabled />
 			</div>
 		</div>
 	);

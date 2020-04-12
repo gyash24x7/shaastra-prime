@@ -5,6 +5,7 @@ import {
   DollarCircleOutlined,
   HomeFilled,
   HomeOutlined,
+  LogoutOutlined,
   MessageFilled,
   MessageOutlined,
   NotificationFilled,
@@ -12,10 +13,16 @@ import {
   SettingFilled,
   SettingOutlined,
 } from "@ant-design/icons";
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-export const NavIcon = ({ name }: { name: string }) => {
+interface NavIconProps {
+	name: string;
+	linkDisabled?: boolean;
+	onClick?: () => void;
+}
+
+export const NavIcon = ({ name, linkDisabled }: NavIconProps) => {
 	let OutlinedIcon = HomeOutlined;
 	let FilledIcon = HomeFilled;
 	switch (name) {
@@ -43,14 +50,20 @@ export const NavIcon = ({ name }: { name: string }) => {
 			OutlinedIcon = NotificationOutlined;
 			FilledIcon = NotificationFilled;
 			break;
+
+		case "logout":
+			OutlinedIcon = LogoutOutlined;
+			FilledIcon = LogoutOutlined;
+			break;
 	}
 
 	const [hover, setHover] = useState(false);
 	const { pathname } = useLocation();
 	const isActive = pathname.split("/")[1] === name;
+	const WrapperComponent = linkDisabled ? Fragment : Link;
 
 	return (
-		<Link to={`/${name}`}>
+		<WrapperComponent to={`/${name}`}>
 			<div
 				className="app-icon"
 				onMouseEnter={() => setHover(true)}
@@ -62,6 +75,6 @@ export const NavIcon = ({ name }: { name: string }) => {
 					<OutlinedIcon className="icon" />
 				)}
 			</div>
-		</Link>
+		</WrapperComponent>
 	);
 };
