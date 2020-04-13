@@ -7,13 +7,13 @@ import { SecondaryNav } from "../Navigation/SecondaryNav";
 export const PrivateLayout = (props: any) => {
 	return (
 		<Fragment>
-			<Layout>
+			<Layout className="private-container">
+				<Layout.Sider breakpoint="lg" width="270px" collapsedWidth="0px">
+					<SecondaryNav />
+				</Layout.Sider>
 				<Layout.Content>{props.children}</Layout.Content>
 			</Layout>
-			<div className="nav-container">
-				<PrimaryNav />
-				<SecondaryNav />
-			</div>
+			<PrimaryNav />
 		</Fragment>
 	);
 };

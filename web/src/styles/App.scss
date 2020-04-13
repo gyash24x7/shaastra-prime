@@ -5,6 +5,7 @@
 @import "./layout";
 @import "./login";
 @import "./navigation";
+@import "./home";
 
 body {
 	font-family: "Montserrat", sans-serif;
@@ -18,7 +19,8 @@ button {
 	font-weight: 600 !important;
 }
 
-.icon {
+.icon,
+.nav-icon.icon {
 	font-size: 20px;
 
 	&.input-icon {

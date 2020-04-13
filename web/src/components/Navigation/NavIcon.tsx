@@ -61,9 +61,11 @@ export const NavIcon = ({ name, linkDisabled }: NavIconProps) => {
 	const { pathname } = useLocation();
 	const isActive = pathname.split("/")[1] === name;
 	const WrapperComponent = linkDisabled ? Fragment : Link;
+	let linkProps: any = {};
+	if (!linkDisabled) linkProps.to = `/${name}`;
 
 	return (
-		<WrapperComponent to={`/${name}`}>
+		<WrapperComponent {...linkProps}>
 			<div
 				className="app-icon"
 				onMouseEnter={() => setHover(true)}
