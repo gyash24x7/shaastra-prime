@@ -8,9 +8,7 @@
 }
 
 .update-item {
-	flex: 1;
-	height: calc(100vh - 108px);
-	margin-right: 30px;
+	margin-bottom: 30px;
 }
 
 .ant-card-head-title {
@@ -21,17 +19,4 @@
 
 .ant-tag {
 	font-weight: 600;
-}
-
-.update-list {
-	height: calc(100vh - 108px);
-	overflow-y: scroll;
-
-	.ant-list-item {
-		cursor: pointer;
-
-		&:hover {
-			background-color: #333;
-		}
-	}
 }

@@ -16,12 +16,11 @@ import { AvatarHeader } from "../shared/AvatarHeader";
 export const SecondaryNav = () => {
 	const { pathname } = useLocation();
 	const history = useHistory();
-	const selectedKey = pathname.split("/")[1] || "profile";
 
 	return (
 		<Menu
 			style={{ height: "100vh" }}
-			selectedKeys={[selectedKey]}
+			selectedKeys={[pathname]}
 			onClick={({ key }) => history.push(key)}
 		>
 			<Menu.ItemGroup className="avatar-item-group">
@@ -44,19 +43,19 @@ export const SecondaryNav = () => {
 			</Menu.ItemGroup>
 			<Menu.Divider />
 			<Menu.ItemGroup title="Links">
-				<Menu.Item key="profile">
+				<Menu.Item key="/">
 					<ProfileOutlined className="icon nav-icon" />
 					<span>Profile</span>
 				</Menu.Item>
-				<Menu.Item key="webops">
+				<Menu.Item key="/team/Webops">
 					<TeamOutlined className="icon nav-icon" />
 					<span>My Team</span>
 				</Menu.Item>
-				<Menu.Item key="viewIssues">
+				<Menu.Item key="/issues">
 					<IssuesCloseOutlined className="icon nav-icon" />
 					View Issues
 				</Menu.Item>
-				<Menu.Item key="updates">
+				<Menu.Item key="/updates">
 					<InboxOutlined className="icon nav-icon" />
 					Updates
 				</Menu.Item>
