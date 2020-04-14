@@ -1,0 +1,86 @@
+.screen-wrapper {
+	display: flex;
+	flex-direction: column;
+}
+
+.messages-container {
+	height: calc(100vh - 118px);
+	overflow-y: scroll;
+}
+
+.message-input-box {
+	height: 70px;
+	margin-top: 30px;
+	display: flex;
+}
+
+.message-input {
+	flex: 1;
+	background: #141414;
+
+	& > * {
+		height: 100%;
+	}
+
+	textarea {
+		padding: 10px;
+	}
+}
+
+.message-btn-container {
+	display: flex;
+	margin-right: -5px;
+	flex-direction: column;
+}
+
+.send-btn {
+	width: 10vw;
+	margin-left: 10px;
+	height: 70px;
+	background-color: #0747a6;
+}
+
+.file-upload-btn {
+	height: 70px;
+	width: 70px;
+	background-color: #141414;
+	margin-left: 10px;
+}
+
+.message-box {
+	margin: 0px;
+	margin-bottom: 20px;
+	max-width: 60%;
+	background-color: #000;
+	align-items: flex-start;
+
+	.avatar {
+		margin-top: 5px;
+	}
+}
+
+.message-content {
+	line-height: 20px;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.sender-name {
+	line-height: 30px;
+	font-size: 17px;
+}
+
+.message-alignment-box {
+	width: 100%;
+	display: flex;
+}
+
+.ant-drawer-content-wrapper {
+	width: 350px !important;
+
+	.ant-drawer-body {
+		padding: 0;
+		text-transform: capitalize;
+		overflow-x: hidden;
+	}
+}

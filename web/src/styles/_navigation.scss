@@ -44,11 +44,12 @@
 	}
 }
 
-.avatar-container {
+.avatar-container,
+.message-box {
 	display: flex;
 	padding: 12px;
 	border-radius: 10px;
-	background: #141414;
+	background: #000;
 	border: 1px solid #303030;
 	width: inherit;
 	justify-content: space-around;
@@ -65,7 +66,8 @@
 	padding: 15px;
 }
 
-.user-details {
+.user-details,
+.message-details {
 	margin-left: 15px;
 	width: calc(100% - 30px);
 }

@@ -1,14 +1,53 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import { MenuOutlined, SendOutlined, UploadOutlined } from "@ant-design/icons";
+import { Button, Card, Mentions } from "antd";
+import React, { useState } from "react";
 
 import { PrivateLayout } from "../shared/PrivateLayout";
+import { ChannelDrawer } from "./ChannelDrawer";
+import { MessageComponent } from "./Message";
+
+const { Option } = Mentions;
 
 export const ChatScreen = () => {
-	const { channel } = useParams();
+	const [drawerVisible, setDrawerVisible] = useState(false);
 
 	return (
-		<PrivateLayout title={channel}>
-			<div className="screen-wrapper">Chat Screen</div>
+		<PrivateLayout
+			title="House of Lords"
+			extra={
+				<MenuOutlined className="icon" onClick={() => setDrawerVisible(true)} />
+			}
+		>
+			<div className="screen-wrapper chat">
+				<Card className="messages-container">
+					{[...Array(20)].map((_, i) => {
+						let rand = Math.round(Math.random());
+						return <MessageComponent isYour={!!rand} key={i} />;
+					})}
+				</Card>
+				<div className="message-input-box">
+					<div className="message-input">
+						<Mentions
+							autoFocus
+							placement="top"
+							onChange={() => {}}
+							onSelect={() => {}}
+							rows={3}
+						>
+							<Option value="afc163">afc163</Option>
+							<Option value="zombieJ">zombieJ</Option>
+							<Option value="yesmeck">yesmeck</Option>
+						</Mentions>
+					</div>
+					<Button className="file-upload-btn">
+						<UploadOutlined className="icon" />
+					</Button>
+					<Button className="send-btn">
+						<SendOutlined className="icon" />
+					</Button>
+				</div>
+				<ChannelDrawer visible={drawerVisible} setVisible={setDrawerVisible} />
+			</div>
 		</PrivateLayout>
 	);
 };

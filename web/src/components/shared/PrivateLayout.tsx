@@ -32,6 +32,7 @@ export const PrivateLayout = (props: any) => {
 								title={props.title}
 								onBack={() => history.goBack()}
 								backIcon={<ArrowLeftOutlined className="icon" />}
+								extra={props.extra}
 							/>
 						</div>
 					</Layout.Header>
