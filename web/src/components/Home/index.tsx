@@ -7,7 +7,7 @@ import { UserDataCard } from "./UserDataCard";
 
 export const HomeScreen = () => {
 	return (
-		<PrivateLayout>
+		<PrivateLayout title="Profile">
 			<div className="screen-wrapper">
 				<div className="cover-pic" />
 				<Row>
