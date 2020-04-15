@@ -2,7 +2,8 @@ import React from "react";
 import { hot } from "react-hot-loader/root";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 
-import { ChatScreen } from "../components/chat";
+import { ChatScreen } from "../components/Chat";
+import { EquipScreen } from "../components/Equip";
 import { HomeScreen } from "../components/Home";
 import { LoginScreen } from "../components/Login";
 import { TeamScreen } from "../components/Team";
@@ -13,7 +14,7 @@ export const AppRoutes = hot(() => (
 		<Switch>
 			<Route exact path="/login" component={LoginScreen} />
 			<Route exact path="/chat/:channel" component={ChatScreen} />
-			<Route exact path="/equip" component={HomeScreen} />
+			<Route exact path="/equip" component={EquipScreen} />
 			<Route exact path="/finbooks" component={HomeScreen} />
 			<Route exact path="/updates" component={UpdateScreen} />
 			<Route exact path="/team/:department" component={TeamScreen} />

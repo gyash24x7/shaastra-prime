@@ -14,11 +14,11 @@ export const PrivateLayout = (props: any) => {
 		<Fragment>
 			<Layout className="private-container">
 				<Layout.Sider
-					breakpoint="lg"
+					breakpoint="xl"
 					width="270px"
 					collapsedWidth="0px"
 					onBreakpoint={() => {
-						if (window.innerWidth < 992) {
+						if (window.innerWidth < 1199) {
 							setMarginLeft(0);
 						} else setMarginLeft(270);
 					}}

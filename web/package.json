@@ -13,12 +13,14 @@
 		"less": "^3.11.1",
 		"less-loader": "^5.0.0",
 		"lorem-ipsum": "^2.0.3",
+		"moment": "^2.24.0",
 		"node-sass": "^4.13.1",
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1",
 		"react-hot-loader": "^4.12.20",
 		"react-router-dom": "^5.1.2",
 		"react-scripts": "^3.4.1",
+		"react-stack-grid": "^0.7.1",
 		"typescript": "^3.8.3"
 	},
 	"scripts": {
