@@ -4,7 +4,7 @@ import React from "react";
 import { stringGen } from "../../utils/lorem";
 
 interface MessageProps {
-	isYour: boolean;
+	isYour?: boolean;
 }
 
 export const MessageComponent = ({ isYour }: MessageProps) => {

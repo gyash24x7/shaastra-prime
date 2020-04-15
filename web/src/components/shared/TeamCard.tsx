@@ -1,14 +1,17 @@
 import { Card } from "antd";
 import React from "react";
 
-import { NavIcon } from "../Navigation/NavIcon";
 import { AvatarHeader } from "./AvatarHeader";
+import { SwitchingIcon } from "./SwitchingIcon";
 
 export const TeamCard = () => {
 	return (
 		<Card
 			className="team-card"
-			actions={[<NavIcon name="settings" />, <NavIcon name="edit" />]}
+			actions={[
+				<SwitchingIcon name="settings" />,
+				<SwitchingIcon name="edit" />
+			]}
 		>
 			<AvatarHeader />
 		</Card>

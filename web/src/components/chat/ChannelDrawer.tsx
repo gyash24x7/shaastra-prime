@@ -1,14 +1,9 @@
-import {
-  PicCenterOutlined,
-  SettingOutlined,
-  TeamOutlined,
-} from "@ant-design/icons";
-import { Drawer, Menu } from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import { Card, Collapse, Drawer, Typography } from "antd";
 import React from "react";
 
-import { stringGen } from "../../utils/lorem";
-
-const { SubMenu, Item } = Menu;
+import { AvatarHeader } from "../shared/AvatarHeader";
+import { MessageComponent } from "./Message";
 
 export const ChannelDrawer = (props: any) => {
 	return (
@@ -17,53 +12,40 @@ export const ChannelDrawer = (props: any) => {
 			closable
 			onClose={() => props.setVisible(false)}
 		>
-			<Menu
-				mode="inline"
-				openKeys={["sub1"]}
-				onOpenChange={() => {}}
-				style={{ width: 350 }}
+			<Collapse
+				accordion
+				defaultActiveKey="members"
+				expandIcon={() => <DownOutlined className="icon" />}
 			>
-				<Item></Item>
-				<SubMenu
-					key="sub1"
-					title={
-						<span>
-							<TeamOutlined className="nav-icon icon" />
-							<span>Members</span>
-						</span>
-					}
+				<Collapse.Panel
+					key="members"
+					header={<Typography.Title level={4}>Members</Typography.Title>}
 				>
-					{[...Array(25)].map((_, i) => (
-						<Item key={i}>{stringGen.generateWords(2)}</Item>
+					{[...Array(6)].map((_, i) => (
+						<AvatarHeader key={i} />
 					))}
-				</SubMenu>
-				<SubMenu
-					key="sub2"
-					title={
-						<span>
-							<PicCenterOutlined className="nav-icon icon" />
-							<span></span>
-						</span>
+				</Collapse.Panel>
+				<Collapse.Panel
+					key="pinned"
+					header={
+						<Typography.Title level={4}>Pinned Messages</Typography.Title>
 					}
 				>
-					<Item key="5">Option 5</Item>
-					<Item key="6">Option 6</Item>
-				</SubMenu>
-				<SubMenu
-					key="sub4"
-					title={
-						<span>
-							<SettingOutlined className="nav-icon icon" />
-							<span>Navigation Three</span>
-						</span>
-					}
+					{[...Array(8)].map((_, i) => (
+						<MessageComponent key={i} />
+					))}
+				</Collapse.Panel>
+				<Collapse.Panel
+					key="media"
+					header={<Typography.Title level={4}>Media</Typography.Title>}
 				>
-					<Item key="9">Option 9</Item>
-					<Item key="10">Option 10</Item>
-					<Item key="11">Option 11</Item>
-					<Item key="12">Option 12</Item>
-				</SubMenu>
-			</Menu>
+					<div className="media-box-container">
+						{[...Array(10)].map((_, i) => (
+							<Card className="media-box" key={i}></Card>
+						))}
+					</div>
+				</Collapse.Panel>
+			</Collapse>
 		</Drawer>
 	);
 };

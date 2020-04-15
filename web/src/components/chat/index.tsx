@@ -1,8 +1,9 @@
-import { MenuOutlined, SendOutlined, UploadOutlined } from "@ant-design/icons";
+import { MenuOutlined, UploadOutlined } from "@ant-design/icons";
 import { Button, Card, Mentions } from "antd";
 import React, { useState } from "react";
 
 import { PrivateLayout } from "../shared/PrivateLayout";
+import { SwitchingIcon } from "../shared/SwitchingIcon";
 import { ChannelDrawer } from "./ChannelDrawer";
 import { MessageComponent } from "./Message";
 
@@ -42,8 +43,8 @@ export const ChatScreen = () => {
 					<Button className="file-upload-btn">
 						<UploadOutlined className="icon" />
 					</Button>
-					<Button className="send-btn">
-						<SendOutlined className="icon" />
+					<Button className="send-btn" type="primary">
+						<SwitchingIcon name="send" />
 					</Button>
 				</div>
 				<ChannelDrawer visible={drawerVisible} setVisible={setDrawerVisible} />

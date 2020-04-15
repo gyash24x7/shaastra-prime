@@ -1,4 +1,4 @@
-import { Col, Row, Typography } from "antd";
+import { Typography } from "antd";
 import React from "react";
 import { useParams } from "react-router-dom";
 
@@ -12,29 +12,29 @@ export const TeamScreen = () => {
 		<PrivateLayout title={`${department} Team`}>
 			<div className="screen-wrapper">
 				<Typography.Title level={4}>Cores</Typography.Title>
-				<Row style={{ margin: "5px -15px 10px -15px" }}>
+				<div className="grid-row">
 					{[...Array(2)].map((_, i) => (
-						<Col key={i} lg={8} xl={6}>
+						<div key={i} className="grid-col">
 							<TeamCard />
-						</Col>
+						</div>
 					))}
-				</Row>
+				</div>
 				<Typography.Title level={4}>Heads</Typography.Title>
-				<Row style={{ margin: "5px -15px 10px -15px" }}>
+				<div className="grid-row">
 					{[...Array(3)].map((_, i) => (
-						<Col key={i} lg={8} xl={6}>
+						<div key={i} className="grid-col">
 							<TeamCard />
-						</Col>
+						</div>
 					))}
-				</Row>
+				</div>
 				<Typography.Title level={4}>Coords</Typography.Title>
-				<Row style={{ margin: "5px -15px 10px -15px" }}>
-					{[...Array(6)].map((_, i) => (
-						<Col key={i} lg={8} xl={6}>
+				<div className="grid-row">
+					{[...Array(7)].map((_, i) => (
+						<div key={i} className="grid-col">
 							<TeamCard />
-						</Col>
+						</div>
 					))}
-				</Row>
+				</div>
 			</div>
 		</PrivateLayout>
 	);

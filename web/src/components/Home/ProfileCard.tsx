@@ -1,15 +1,18 @@
 import { Card } from "antd";
 import React from "react";
 
-import { NavIcon } from "../Navigation/NavIcon";
 import { AvatarHeader } from "../shared/AvatarHeader";
+import { SwitchingIcon } from "../shared/SwitchingIcon";
 
 export const ProfileCard = () => {
 	return (
 		<Card
 			className="profile-card"
 			cover={<img alt="" src="https://source.unsplash.com/featured/500x400" />}
-			actions={[<NavIcon name="settings" />, <NavIcon name="edit" />]}
+			actions={[
+				<SwitchingIcon name="settings" />,
+				<SwitchingIcon name="edit" />
+			]}
 		>
 			<AvatarHeader />
 		</Card>

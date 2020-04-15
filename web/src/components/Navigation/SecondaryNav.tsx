@@ -24,7 +24,9 @@ export const SecondaryNav = () => {
 			onClick={({ key }) => history.push(key)}
 		>
 			<Menu.ItemGroup className="avatar-item-group">
-				<AvatarHeader />
+				<div style={{ padding: "5px 20px" }}>
+					<AvatarHeader />
+				</div>
 			</Menu.ItemGroup>
 			<Menu.Divider />
 			<Menu.ItemGroup title="Quick Actions">
