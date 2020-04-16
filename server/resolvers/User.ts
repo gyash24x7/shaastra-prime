@@ -23,7 +23,7 @@ import { GraphQLContext } from "../utils";
 export class UserResolver {
 	@Mutation(() => Boolean)
 	async createUser(
-		@Arg("data") data: CreateUserInput,
+		@Arg("data") { departmentId, ...data }: CreateUserInput,
 		@Ctx() { req }: GraphQLContext
 	) {
 		const password = await bcrypt.hash(data.password, 13);
@@ -35,7 +35,10 @@ export class UserResolver {
 				verificationOTP,
 				profilePic: "",
 				coverPic: "",
-				about: ""
+				about: "",
+				departments: {
+					connect: { id: departmentId }
+				}
 			}
 		});
 
