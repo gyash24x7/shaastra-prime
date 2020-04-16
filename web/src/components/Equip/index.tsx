@@ -1,4 +1,4 @@
-import { Button, Typography } from "antd";
+import { Pagination, Tabs, Typography } from "antd";
 import moment from "moment";
 import React, { useState } from "react";
 
@@ -48,30 +48,54 @@ export const datasource = [...Array(25)].map((_, i) => ({
 }));
 
 export const EquipScreen = () => {
-	const [view, setView] = useState("table");
+	const [currentPage, setCurrentPage] = useState(1);
+	const [activeKey, setActiveKey] = useState("table");
 
 	return (
 		<PrivateLayout title="Equip">
 			<div className="screen-wrapper">
 				<Typography.Title level={3}>My Tasks</Typography.Title>
-				<div className="equip-toggle-container">
-					<Button
-						type={view === "kanban" ? "primary" : "default"}
-						onClick={() => setView("kanban")}
-						className="equip-toggle"
+				<Tabs
+					activeKey={activeKey}
+					onChange={setActiveKey}
+					tabBarExtraContent={
+						activeKey === "table" ? (
+							<Pagination
+								total={datasource.length}
+								current={currentPage}
+								onChange={setCurrentPage}
+							/>
+						) : (
+							<div />
+						)
+					}
+				>
+					<Tabs.TabPane
+						key="table"
+						tab={
+							<div className="equip-view-tab">
+								<SwitchingIcon name="table" />
+								<Typography.Text strong>Table View</Typography.Text>
+							</div>
+						}
 					>
-						<SwitchingIcon name="grid" />
-					</Button>
-					<Button
-						type={view === "table" ? "primary" : "default"}
-						onClick={() => setView("table")}
-						className="equip-toggle"
+						<TableLayout
+							data={datasource.slice(currentPage * 10 - 10, currentPage * 10)}
+							page={currentPage}
+						/>
+					</Tabs.TabPane>
+					<Tabs.TabPane
+						key="grid"
+						tab={
+							<div className="equip-view-tab">
+								<SwitchingIcon name="grid" />
+								<Typography.Text strong>Kanban View</Typography.Text>
+							</div>
+						}
 					>
-						<SwitchingIcon name="table" />
-					</Button>
-				</div>
-				{view === "kanban" && <KanbanLayout data={datasource} />}
-				{view === "table" && <TableLayout data={datasource} />}
+						<KanbanLayout data={datasource} />
+					</Tabs.TabPane>
+				</Tabs>
 			</div>
 		</PrivateLayout>
 	);

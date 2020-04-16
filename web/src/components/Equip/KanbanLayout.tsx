@@ -1,12 +1,8 @@
-import {
-  EditOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
 import { Card, Tag, Typography } from "antd";
 import React from "react";
 
 import { status, statusColor } from ".";
+import { SwitchingIcon } from "../shared/SwitchingIcon";
 
 export const KanbanLayout = (props: any) => {
 	return (
@@ -36,9 +32,8 @@ const KanbanItem = (props: any) => {
 		<Card
 			className="kanban-item"
 			actions={[
-				<SettingOutlined key="setting" />,
-				<EditOutlined key="edit" />,
-				<EllipsisOutlined key="ellipsis" />
+				<SwitchingIcon key="setting" name="settings" />,
+				<SwitchingIcon key="edit" name="ellipsis" />
 			]}
 		>
 			{props.task.brief}
