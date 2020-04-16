@@ -1,5 +1,5 @@
-import { Card, Typography } from "antd";
-import React, { useState } from "react";
+import { Card, Tag, Typography } from "antd";
+import React, { Fragment, useState } from "react";
 
 import { UserDetails } from "./UserDetails";
 import { UserMedia } from "./UserMedia";
@@ -13,7 +13,7 @@ export const UserDataCard = () => {
 	const [activeTab, setActiveTab] = useState("Details");
 	return (
 		<Card
-			title={<Typography.Title level={3}>User Data</Typography.Title>}
+			title={<Typography.Title level={3}>Yash Gupta</Typography.Title>}
 			tabList={[
 				{
 					key: "Details",
@@ -27,6 +27,13 @@ export const UserDataCard = () => {
 			activeTabKey={activeTab}
 			className="user-card"
 			onTabChange={setActiveTab}
+			tabBarExtraContent={<div />}
+			extra={
+				<Fragment>
+					<Tag color="#de350b">WEBOPS</Tag>
+					<Tag color="#0747a6">CORE</Tag>
+				</Fragment>
+			}
 		>
 			{TabComponents[activeTab]}
 		</Card>

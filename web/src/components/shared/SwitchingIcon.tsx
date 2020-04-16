@@ -1,26 +1,7 @@
-import {
-  AppstoreFilled,
-  AppstoreOutlined,
-  BookFilled,
-  BookOutlined,
-  DollarCircleFilled,
-  DollarCircleOutlined,
-  EditFilled,
-  EditOutlined,
-  HomeFilled,
-  HomeOutlined,
-  LogoutOutlined,
-  MessageFilled,
-  MessageOutlined,
-  NotificationFilled,
-  NotificationOutlined,
-  SendOutlined,
-  SettingFilled,
-  SettingOutlined,
-  TableOutlined,
-  UnorderedListOutlined,
-} from "@ant-design/icons";
+import { HomeFilled, HomeOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
+
+import { ICON_MAP } from "../../utils/getIcon";
 
 interface SwitchingIconProps {
 	name: string;
@@ -33,63 +14,8 @@ export const SwitchingIcon = ({
 	isActive = false,
 	className = ""
 }: SwitchingIconProps) => {
-	let OutlinedIcon = HomeOutlined;
-	let FilledIcon = HomeFilled;
-	switch (name) {
-		case "equip":
-			OutlinedIcon = BookOutlined;
-			FilledIcon = BookFilled;
-			break;
-
-		case "edit":
-			OutlinedIcon = EditOutlined;
-			FilledIcon = EditFilled;
-			break;
-
-		case "send":
-			OutlinedIcon = SendOutlined;
-			FilledIcon = SendOutlined;
-			break;
-
-		case "finbooks":
-			OutlinedIcon = DollarCircleOutlined;
-			FilledIcon = DollarCircleFilled;
-			break;
-
-		case "chat":
-			OutlinedIcon = MessageOutlined;
-			FilledIcon = MessageFilled;
-			break;
-
-		case "settings":
-			OutlinedIcon = SettingOutlined;
-			FilledIcon = SettingFilled;
-			break;
-
-		case "notification":
-			OutlinedIcon = NotificationOutlined;
-			FilledIcon = NotificationFilled;
-			break;
-
-		case "logout":
-			OutlinedIcon = LogoutOutlined;
-			FilledIcon = LogoutOutlined;
-			break;
-
-		case "grid":
-			OutlinedIcon = AppstoreOutlined;
-			FilledIcon = AppstoreFilled;
-			break;
-
-		case "list":
-			OutlinedIcon = UnorderedListOutlined;
-			FilledIcon = UnorderedListOutlined;
-			break;
-
-		case "table":
-			OutlinedIcon = TableOutlined;
-			FilledIcon = TableOutlined;
-	}
+	let OutlinedIcon = (ICON_MAP[name] && ICON_MAP[name][0]) || HomeOutlined;
+	let FilledIcon = (ICON_MAP[name] && ICON_MAP[name][1]) || HomeFilled;
 
 	const [hover, setHover] = useState(false);
 

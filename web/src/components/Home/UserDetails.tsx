@@ -1,40 +1,34 @@
-import { Col, Row, Typography } from "antd";
-import React, { Fragment } from "react";
+import { Button, Descriptions, Typography } from "antd";
+import React from "react";
+
+import { stringGen } from "../../utils/lorem";
+
+const { Title, Paragraph } = Typography;
+const { Item: DescriptionItem } = Descriptions;
 
 export const UserDetails = () => {
 	return (
-		<Fragment>
-			<Row className="user-details-row">
-				<Col>
-					<Typography.Paragraph>About</Typography.Paragraph>
-					<Typography.Title level={4}>
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia,
-						illum, dolorem culpa molestiae in aut inventore soluta!
-					</Typography.Title>
-				</Col>
-			</Row>
-			<br />
-			<Row className="user-details-row">
-				<Col lg={12}>
-					<Typography.Paragraph>Email</Typography.Paragraph>
-					<Typography.Title level={4}>blah24x7@blah.co</Typography.Title>
-				</Col>
-				<Col lg={12}>
-					<Typography.Paragraph>Roll Number</Typography.Paragraph>
-					<Typography.Title level={4}>CH16B025</Typography.Title>
-				</Col>
-			</Row>
-			<br />
-			<Row className="user-details-row">
-				<Col lg={12}>
-					<Typography.Paragraph>Mobile</Typography.Paragraph>
-					<Typography.Title level={4}>9999999999</Typography.Title>
-				</Col>
-				<Col lg={12}>
-					<Typography.Paragraph>Upi</Typography.Paragraph>
-					<Typography.Title level={4}>abcd123@okbank</Typography.Title>
-				</Col>
-			</Row>
-		</Fragment>
+		<Descriptions layout="vertical" bordered column={2}>
+			<DescriptionItem label={<Title level={4}>About</Title>} span={2}>
+				<Paragraph>{stringGen.generateSentences(3)}</Paragraph>
+			</DescriptionItem>
+			<DescriptionItem label={<Title level={4}>Email</Title>}>
+				<Paragraph>abcxyz@shaastra.org</Paragraph>
+			</DescriptionItem>
+			<DescriptionItem label={<Title level={4}>Roll Number</Title>}>
+				<Paragraph>CH16B025</Paragraph>
+			</DescriptionItem>
+			<DescriptionItem label={<Title level={4}>Mobile</Title>}>
+				<Paragraph>+91 1234 567 890</Paragraph>
+			</DescriptionItem>
+			<DescriptionItem label={<Title level={4}>Upi</Title>}>
+				<Paragraph>abcd123@okbank</Paragraph>
+			</DescriptionItem>
+			<DescriptionItem label={<Title level={4}>Actions</Title>}>
+				<div className="grid-row">
+					<Button className="button default">Edit Profile</Button>
+				</div>
+			</DescriptionItem>
+		</Descriptions>
 	);
 };

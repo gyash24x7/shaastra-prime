@@ -88,7 +88,7 @@ export const EquipScreen = () => {
 						key="grid"
 						tab={
 							<div className="equip-view-tab">
-								<SwitchingIcon name="grid" />
+								<SwitchingIcon name="kanban" />
 								<Typography.Text strong>Kanban View</Typography.Text>
 							</div>
 						}

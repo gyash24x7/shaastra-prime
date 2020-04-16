@@ -68,15 +68,20 @@
 .user-details,
 .message-details {
 	margin-left: 15px;
+	padding: 5px;
 	width: calc(100% - 30px);
 }
 
 .user-position {
 	font-size: 12px;
-	line-height: 20px;
+	margin-top: 5px;
+	.ant-tag {
+		font-size: 12px;
+	}
 }
 
 .user-name {
+	font-size: 16px;
 	line-height: 20px;
 }
 

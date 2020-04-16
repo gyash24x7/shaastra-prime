@@ -7,7 +7,7 @@ import { PrimaryNav } from "../Navigation/PrimaryNav";
 import { SecondaryNav } from "../Navigation/SecondaryNav";
 
 export const PrivateLayout = (props: any) => {
-	const [marginLeft, setMarginLeft] = useState(270);
+	const [marginLeft, setMarginLeft] = useState(300);
 	const history = useHistory();
 
 	return (
@@ -15,12 +15,12 @@ export const PrivateLayout = (props: any) => {
 			<Layout className="private-container">
 				<Layout.Sider
 					breakpoint="xl"
-					width="270px"
+					width="300px"
 					collapsedWidth="0px"
 					onBreakpoint={() => {
 						if (window.innerWidth < 1199) {
 							setMarginLeft(0);
-						} else setMarginLeft(270);
+						} else setMarginLeft(300);
 					}}
 				>
 					<SecondaryNav />

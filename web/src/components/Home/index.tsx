@@ -1,4 +1,3 @@
-import { Col, Row } from "antd";
 import React from "react";
 
 import { PrivateLayout } from "../shared/PrivateLayout";
@@ -9,15 +8,14 @@ export const HomeScreen = () => {
 	return (
 		<PrivateLayout title="Profile">
 			<div className="screen-wrapper">
-				<div className="cover-pic" />
-				<Row>
-					<Col lg={12} xl={15} xxl={17}>
+				<div className="grid-row">
+					<div className="grid-col" style={{ flex: 2 }}>
 						<UserDataCard />
-					</Col>
-					<Col lg={12} xl={9} xxl={7}>
+					</div>
+					<div className="grid-col">
 						<ProfileCard />
-					</Col>
-				</Row>
+					</div>
+				</div>
 			</div>
 		</PrivateLayout>
 	);
