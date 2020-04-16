@@ -40,10 +40,10 @@ export const ChatScreen = () => {
 							<Option value="yesmeck">yesmeck</Option>
 						</Mentions>
 					</div>
-					<Button className="file-upload-btn">
+					<Button className="file-upload-btn button default">
 						<UploadOutlined className="icon" />
 					</Button>
-					<Button className="send-btn" type="primary">
+					<Button className="send-btn button primary">
 						<SwitchingIcon name="send" />
 					</Button>
 				</div>

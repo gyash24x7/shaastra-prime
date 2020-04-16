@@ -40,14 +40,13 @@
 
 .send-btn {
 	width: 10vw;
-	margin-left: 10px;
-	height: 70px;
+	margin: 0 0 0 10px !important;
+	height: 70px !important;
 }
 
 .file-upload-btn {
-	height: 70px;
-	width: 70px;
-	background-color: #141414;
+	height: 70px !important;
+	margin: 0 0 0 10px !important;
 	margin-left: 10px;
 }
 

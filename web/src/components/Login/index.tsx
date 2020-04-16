@@ -55,7 +55,12 @@ export const LoginScreen = () => {
 						/>
 					</Form.Item>
 					<Form.Item>
-						<Button htmlType="submit" block style={{ marginTop: 15 }}>
+						<Button
+							htmlType="submit"
+							block
+							style={{ marginTop: 15 }}
+							className="button primary"
+						>
 							Submit
 						</Button>
 					</Form.Item>

@@ -8,7 +8,11 @@ export const ShowError = () => {
 		<Result
 			title="Internal Server Error"
 			status="500"
-			extra={<Button onClick={() => history.push("/")}>Go to Home</Button>}
+			extra={
+				<Button className="button danger" onClick={() => history.push("/")}>
+					Go to Home
+				</Button>
+			}
 		/>
 	);
 };

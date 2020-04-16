@@ -5,6 +5,7 @@ import React, { useState } from "react";
 
 import { departments, status, statusColor } from ".";
 import { AvatarHeader } from "../shared/AvatarHeader";
+import { TaskDescription } from "./TaskDescription";
 
 export const TableLayout = (props: any) => {
 	const [filters, setFilters] = useState<any>(null);
@@ -24,7 +25,8 @@ export const TableLayout = (props: any) => {
 			render: (val: string) => <Tag color={statusColor[val]}>{val}</Tag>,
 			filters: status.map((status) => ({ text: status, value: status })),
 			onFilter: (value, record) => record.status === value,
-			filteredValue: filters?.status || null
+			filteredValue: filters?.status || null,
+			width: 200
 		},
 		byDept: {
 			key: "byDept",
@@ -34,7 +36,8 @@ export const TableLayout = (props: any) => {
 			onFilter: (value, record) => record.byDept === value,
 			filteredValue: filters?.byDept || null,
 			sorter: (a, b) => a.byDept.localeCompare(b.byDept),
-			sortOrder: sorters?.columnKey === "byDept" && sorters?.order
+			sortOrder: sorters?.columnKey === "byDept" && sorters?.order,
+			width: 250
 		},
 		createdAt: {
 			key: "createdAt",
@@ -42,14 +45,21 @@ export const TableLayout = (props: any) => {
 			dataIndex: "createdAt",
 			render: (val: Moment) => val.format("DD MMMM"),
 			sorter: (a, b) => a.createdAt.diff(b.createdAt),
-			sortOrder: sorters?.columnKey === "createdAt" && sorters?.order
+			sortOrder: sorters?.columnKey === "createdAt" && sorters?.order,
+			width: 150
 		},
 		assignedTo: {
 			key: "assignedTo",
 			title: <Typography.Text strong>Assigned&nbsp;To</Typography.Text>,
 			dataIndex: "assignedTo",
-			render: (val: string[]) => val.map((_, i) => <AvatarHeader key={i} />),
-			width: 300
+			render: (val: string[]) => (
+				<div className="grid-row">
+					{val.map((_, i) => (
+						<AvatarHeader key={i} />
+					))}
+				</div>
+			),
+			colSpan: 2
 		}
 	};
 
@@ -59,7 +69,7 @@ export const TableLayout = (props: any) => {
 	};
 
 	const expandableConfig = {
-		expandedRowRender: (val: any) => <div>{val.details}</div>,
+		expandedRowRender: (val: any) => <TaskDescription data={val} />,
 		expandRowByClick: true
 	};
 
