@@ -1,4 +1,6 @@
 import {
+  AppstoreFilled,
+  AppstoreOutlined,
   BookFilled,
   BookOutlined,
   DollarCircleFilled,
@@ -15,6 +17,8 @@ import {
   SendOutlined,
   SettingFilled,
   SettingOutlined,
+  TableOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 import React, { useState } from "react";
 
@@ -71,6 +75,20 @@ export const SwitchingIcon = ({
 			OutlinedIcon = LogoutOutlined;
 			FilledIcon = LogoutOutlined;
 			break;
+
+		case "grid":
+			OutlinedIcon = AppstoreOutlined;
+			FilledIcon = AppstoreFilled;
+			break;
+
+		case "list":
+			OutlinedIcon = UnorderedListOutlined;
+			FilledIcon = UnorderedListOutlined;
+			break;
+
+		case "table":
+			OutlinedIcon = TableOutlined;
+			FilledIcon = TableOutlined;
 	}
 
 	const [hover, setHover] = useState(false);

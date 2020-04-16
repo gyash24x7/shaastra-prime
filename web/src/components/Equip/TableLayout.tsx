@@ -3,10 +3,10 @@ import Table, { ColumnProps } from "antd/lib/table";
 import { Moment } from "moment";
 import React, { useState } from "react";
 
-import { datasource, departments, status, statusColor } from ".";
+import { departments, status, statusColor } from ".";
 import { AvatarHeader } from "../shared/AvatarHeader";
 
-export const TableLayout = () => {
+export const TableLayout = (props: any) => {
 	const [filters, setFilters] = useState<any>(null);
 	const [sorters, setSorters] = useState<any>(null);
 
@@ -65,7 +65,7 @@ export const TableLayout = () => {
 
 	return (
 		<Table
-			dataSource={datasource}
+			dataSource={props.data}
 			tableLayout="auto"
 			columns={Object.keys(columns).map((str) => columns[str])}
 			bordered

@@ -1,0 +1,30 @@
+.kanban-container {
+	display: flex;
+	height: calc(100% - 35px);
+	margin: auto -5px;
+	overflow-x: scroll;
+}
+
+.kanban-col {
+	margin: 5px;
+	overflow-y: scroll;
+	flex: 1;
+	min-width: 350px;
+}
+
+.kanban-item {
+	margin-bottom: 10px;
+}
+
+.equip-toggle-container {
+	display: flex;
+	margin-bottom: 30px;
+	margin-left: -5px;
+	margin-right: -5px;
+}
+
+.equip-toggle {
+	flex: 1;
+	height: 50px;
+	margin: 5px;
+}
