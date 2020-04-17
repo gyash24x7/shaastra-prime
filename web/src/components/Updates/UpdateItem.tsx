@@ -14,9 +14,9 @@ export const UpdateItem = () => {
 			className="update-item"
 			extra={
 				<Fragment>
-					<Tag color="#0052cc">WebOps</Tag>
-					<Tag color="#de350b">Yash</Tag>
-					<Tag icon={<ClockCircleFilled />} color="#172b4d">
+					<Tag color="red">WebOps</Tag>
+					<Tag color="cyan">Yash Gupta</Tag>
+					<Tag icon={<ClockCircleFilled />} color="lime">
 						6 Days Ago
 					</Tag>
 				</Fragment>

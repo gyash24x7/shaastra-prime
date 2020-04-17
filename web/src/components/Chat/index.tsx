@@ -1,3 +1,5 @@
+import "./styles.scss";
+
 import { MenuOutlined, UploadOutlined } from "@ant-design/icons";
 import { Button, Card, Mentions } from "antd";
 import React, { useState } from "react";
@@ -19,7 +21,7 @@ export const ChatScreen = () => {
 				<MenuOutlined className="icon" onClick={() => setDrawerVisible(true)} />
 			}
 		>
-			<div className="screen-wrapper chat">
+			<div className="screen-wrapper">
 				<Card className="messages-container">
 					{[...Array(20)].map((_, i) => {
 						let rand = Math.round(Math.random());
@@ -43,7 +45,7 @@ export const ChatScreen = () => {
 					<Button className="file-upload-btn button default">
 						<UploadOutlined className="icon" />
 					</Button>
-					<Button className="send-btn button primary">
+					<Button className="send-btn button" type="primary">
 						<SwitchingIcon name="send" />
 					</Button>
 				</div>

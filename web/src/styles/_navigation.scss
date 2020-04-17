@@ -54,6 +54,18 @@
 	width: inherit;
 	justify-content: space-around;
 	align-items: center;
+
+	&.with-avatar {
+		padding-top: 30px;
+
+		.avatar {
+			position: absolute;
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			top: 12px;
+		}
+	}
 }
 
 .profile-card .avatar-container {
@@ -67,37 +79,29 @@
 
 .user-details,
 .message-details {
-	margin-left: 15px;
 	padding: 5px;
-	width: calc(100% - 30px);
+	width: 100%;
 }
 
 .user-position {
-	font-size: 12px;
-	margin-top: 5px;
+	display: flex;
+	margin: 0 -5px;
+
 	.ant-tag {
-		font-size: 12px;
+		flex: 1;
+		text-align: center;
+		margin: 5px !important;
 	}
 }
 
-.user-name {
-	font-size: 16px;
-	line-height: 20px;
+.user-name > .ant-tag {
+	font-size: 14px;
+	width: 100%;
+	text-align: center;
 }
 
 .ant-layout-sider-collapsed .avatar-container {
 	display: none;
-}
-
-.ant-menu-item-group-list > .ant-menu-item {
-	height: 50px;
-	line-height: 50px;
-	display: flex;
-	align-items: center;
-}
-
-.ant-menu-item-selected {
-	border-right: 3px solid #0747a6;
 }
 
 .avatar-item-group {
@@ -105,9 +109,4 @@
 	& > .ant-menu-item {
 		padding: 0 20px;
 	}
-}
-
-.ant-menu-item-group {
-	padding-top: 15px;
-	padding-bottom: 20px;
 }

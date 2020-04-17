@@ -81,7 +81,6 @@ export const TableLayout = (props: any) => {
 			bordered
 			onChange={handleOnChange}
 			expandable={expandableConfig}
-			scroll={{ y: "calc(100vh - 290px)" }}
 			pagination={false}
 		/>
 	);

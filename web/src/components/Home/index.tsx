@@ -1,3 +1,5 @@
+import "./styles.scss";
+
 import React from "react";
 
 import { PrivateLayout } from "../shared/PrivateLayout";

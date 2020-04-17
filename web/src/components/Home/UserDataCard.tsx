@@ -9,20 +9,16 @@ const TabComponents: Record<string, JSX.Element> = {
 	Media: <UserMedia />
 };
 
+const { Title, Text } = Typography;
+
 export const UserDataCard = () => {
 	const [activeTab, setActiveTab] = useState("Details");
 	return (
 		<Card
-			title={<Typography.Title level={3}>Yash Gupta</Typography.Title>}
+			title={<Title level={3}>Yash Gupta</Title>}
 			tabList={[
-				{
-					key: "Details",
-					tab: <Typography.Text strong>Details</Typography.Text>
-				},
-				{
-					key: "Media",
-					tab: <Typography.Text strong>Media</Typography.Text>
-				}
+				{ key: "Details", tab: <Text strong>Details</Text> },
+				{ key: "Media", tab: <Text strong>Media</Text> }
 			]}
 			activeTabKey={activeTab}
 			className="user-card"
@@ -30,8 +26,8 @@ export const UserDataCard = () => {
 			tabBarExtraContent={<div />}
 			extra={
 				<Fragment>
-					<Tag color="#de350b">WEBOPS</Tag>
-					<Tag color="#0747a6">CORE</Tag>
+					<Tag color="red">WEBOPS</Tag>
+					<Tag color="gold">CORE</Tag>
 				</Fragment>
 			}
 		>

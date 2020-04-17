@@ -1,8 +1,10 @@
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import "./styles.scss";
+
 import { Button, Form, Input, Typography } from "antd";
 import React from "react";
 
 import { PublicLayout } from "../shared/PublicLayout";
+import { SwitchingIcon } from "../shared/SwitchingIcon";
 
 export const LoginScreen = () => {
 	const [form] = Form.useForm();
@@ -37,21 +39,21 @@ export const LoginScreen = () => {
 						<Input
 							placeholder="Enter Roll Number"
 							type="text"
-							prefix={<UserOutlined className="icon input-icon" />}
+							prefix={<SwitchingIcon name="user" className="icon input-icon" />}
 						/>
 					</Form.Item>
 					<Form.Item
 						name="password"
 						label="Password"
 						rules={[
-							{ min: 8, message: "Enter Valid Roll Number" },
-							{ required: true, message: "Roll Number is required!" }
+							{ min: 8, message: "Enter Valid Password" },
+							{ required: true, message: "Password is required!" }
 						]}
 					>
-						<Input.Password
+						<Input
 							placeholder="Enter Password"
 							type="password"
-							prefix={<LockOutlined className="icon input-icon" />}
+							prefix={<SwitchingIcon name="lock" className="icon input-icon" />}
 						/>
 					</Form.Item>
 					<Form.Item>

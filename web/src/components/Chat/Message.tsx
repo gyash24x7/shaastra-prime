@@ -1,4 +1,4 @@
-import { Avatar } from "antd";
+import { Tag, Typography } from "antd";
 import React from "react";
 
 import { stringGen } from "../../utils/lorem";
@@ -7,6 +7,8 @@ interface MessageProps {
 	isYour?: boolean;
 }
 
+const { Text } = Typography;
+
 export const MessageComponent = ({ isYour }: MessageProps) => {
 	return (
 		<div
@@ -14,14 +16,12 @@ export const MessageComponent = ({ isYour }: MessageProps) => {
 			style={{ justifyContent: isYour ? "flex-end" : "flex-start" }}
 		>
 			<div className="message-box">
-				<div className="avatar">
-					<Avatar
-						src="https://shaastra-2020.s3.ap-south-1.amazonaws.com/images/user2.svg"
-						size={48}
-					/>
-				</div>
 				<div className="message-details">
-					<div className="sender-name">Yash Gupta</div>
+					<div className="sender-name">
+						<Tag color="cyan">
+							<Text strong>{stringGen.generateWords(2)}</Text>
+						</Tag>
+					</div>
 					<div className="message-content">
 						{stringGen.generateSentences(4)}
 					</div>

@@ -11,6 +11,7 @@ export const ChannelDrawer = (props: any) => {
 			visible={props.visible}
 			closable
 			onClose={() => props.setVisible(false)}
+			className="channel-drawer"
 		>
 			<Collapse
 				accordion

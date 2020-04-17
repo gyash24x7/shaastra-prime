@@ -1,4 +1,6 @@
-import { Pagination, Tabs, Typography } from "antd";
+import "./styles.scss";
+
+import { Card, Pagination, Typography } from "antd";
 import moment from "moment";
 import React, { useState } from "react";
 
@@ -37,6 +39,8 @@ export const statusColor: Record<string, string> = {
 	COMPLETED: "#00875A"
 };
 
+const { Title } = Typography;
+
 export const datasource = [...Array(25)].map((_, i) => ({
 	key: i.toString(),
 	brief: stringGen.generateWords(5),
@@ -51,13 +55,45 @@ export const EquipScreen = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [activeKey, setActiveKey] = useState("table");
 
+	const tablist = [
+		{
+			key: "table",
+			tab: (
+				<div className="equip-view-tab">
+					<SwitchingIcon name="table" />
+					<Typography.Text strong>Table View</Typography.Text>
+				</div>
+			)
+		},
+		{
+			key: "kanban",
+			tab: (
+				<div className="equip-view-tab">
+					<SwitchingIcon name="kanban" />
+					<Typography.Text strong>Kanban View</Typography.Text>
+				</div>
+			)
+		}
+	];
+
+	const tabContent: Record<string, JSX.Element> = {
+		table: (
+			<TableLayout
+				data={datasource.slice(currentPage * 10 - 10, currentPage * 10)}
+				page={currentPage}
+			/>
+		),
+		kanban: <KanbanLayout data={datasource} />
+	};
+
 	return (
 		<PrivateLayout title="Equip">
 			<div className="screen-wrapper">
-				<Typography.Title level={3}>My Tasks</Typography.Title>
-				<Tabs
-					activeKey={activeKey}
-					onChange={setActiveKey}
+				<Card
+					title={<Title level={3}>My Tasks</Title>}
+					tabList={tablist}
+					activeTabKey={activeKey}
+					onTabChange={setActiveKey}
 					tabBarExtraContent={
 						activeKey === "table" ? (
 							<Pagination
@@ -70,32 +106,8 @@ export const EquipScreen = () => {
 						)
 					}
 				>
-					<Tabs.TabPane
-						key="table"
-						tab={
-							<div className="equip-view-tab">
-								<SwitchingIcon name="table" />
-								<Typography.Text strong>Table View</Typography.Text>
-							</div>
-						}
-					>
-						<TableLayout
-							data={datasource.slice(currentPage * 10 - 10, currentPage * 10)}
-							page={currentPage}
-						/>
-					</Tabs.TabPane>
-					<Tabs.TabPane
-						key="grid"
-						tab={
-							<div className="equip-view-tab">
-								<SwitchingIcon name="kanban" />
-								<Typography.Text strong>Kanban View</Typography.Text>
-							</div>
-						}
-					>
-						<KanbanLayout data={datasource} />
-					</Tabs.TabPane>
-				</Tabs>
+					{tabContent[activeKey]}
+				</Card>
 			</div>
 		</PrivateLayout>
 	);

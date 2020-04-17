@@ -7,13 +7,13 @@ import { SwitchingIcon } from "./SwitchingIcon";
 export const TeamCard = () => {
 	return (
 		<Card
-			className="team-card"
+			className="team-card grid-col"
 			actions={[
 				<SwitchingIcon name="settings" />,
 				<SwitchingIcon name="edit" />
 			]}
 		>
-			<AvatarHeader />
+			<AvatarHeader withAvatar />
 		</Card>
 	);
 };

@@ -12,6 +12,8 @@ import {
   HomeOutlined,
   LayoutFilled,
   LayoutOutlined,
+  LockFilled,
+  LockOutlined,
   LogoutOutlined,
   MessageFilled,
   MessageOutlined,
@@ -22,6 +24,7 @@ import {
   SettingOutlined,
   TableOutlined,
   UnorderedListOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 
 export const ICON_MAP: Record<string, any[]> = {
@@ -38,5 +41,7 @@ export const ICON_MAP: Record<string, any[]> = {
 	table: [TableOutlined, TableOutlined],
 	kanban: [LayoutOutlined, LayoutFilled],
 	home: [HomeOutlined, HomeFilled],
-	ellipsis: [EllipsisOutlined, EllipsisOutlined]
+	ellipsis: [EllipsisOutlined, EllipsisOutlined],
+	lock: [LockOutlined, LockFilled],
+	user: [UserOutlined, UserOutlined]
 };

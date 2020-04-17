@@ -1,4 +1,4 @@
-import { Button, Descriptions, Typography } from "antd";
+import { Descriptions, Typography } from "antd";
 import React from "react";
 
 import { stringGen } from "../../utils/lorem";
@@ -23,11 +23,6 @@ export const UserDetails = () => {
 			</DescriptionItem>
 			<DescriptionItem label={<Title level={4}>Upi</Title>}>
 				<Paragraph>abcd123@okbank</Paragraph>
-			</DescriptionItem>
-			<DescriptionItem label={<Title level={4}>Actions</Title>}>
-				<div className="grid-row">
-					<Button className="button default">Edit Profile</Button>
-				</div>
 			</DescriptionItem>
 		</Descriptions>
 	);

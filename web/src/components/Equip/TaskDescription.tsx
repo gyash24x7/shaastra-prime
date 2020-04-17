@@ -59,17 +59,15 @@ export const TaskDescription = ({ data }: any) => {
 			<Descriptions.Item
 				label={<Typography.Title level={4}>Actions</Typography.Title>}
 			>
-				<div className="grid-row">
-					<Button className="action-btn button default">Assign Task</Button>
-					<Button className="action-btn button warning">Submit Task</Button>
-					<Button className="action-btn button primary">
-						Mark As Completed
-					</Button>
-					<Button className="action-btn button danger">Delete Task</Button>
-					<Button className="action-btn button default">
-						View Conversation
-					</Button>
-				</div>
+				<Button className="action-btn button">Assign Task</Button>
+				<Button className="action-btn button">Submit Task</Button>
+				<Button className="action-btn button" type="primary">
+					Mark As Completed
+				</Button>
+				<Button className="action-btn button" type="danger">
+					Delete Task
+				</Button>
+				<Button className="action-btn button default">View Conversation</Button>
 			</Descriptions.Item>
 		</Descriptions>
 	);

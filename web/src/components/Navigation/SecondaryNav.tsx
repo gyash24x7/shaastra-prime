@@ -25,7 +25,7 @@ export const SecondaryNav = () => {
 		>
 			<Menu.ItemGroup className="avatar-item-group">
 				<div style={{ padding: "5px 20px" }}>
-					<AvatarHeader />
+					<AvatarHeader withAvatar />
 				</div>
 			</Menu.ItemGroup>
 			<Menu.Divider />
