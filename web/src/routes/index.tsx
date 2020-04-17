@@ -6,6 +6,9 @@ import { ChatScreen } from "../components/Chat";
 import { EquipScreen } from "../components/Equip";
 import { HomeScreen } from "../components/Home";
 import { LoginScreen } from "../components/Login";
+import { ForgotPasswordScreen } from "../components/Login/ForgotPassword";
+import { OTPScreen } from "../components/Login/OTPScreen";
+import { SignupScreen } from "../components/Login/Signup";
 import { TeamScreen } from "../components/Team";
 import { UpdateScreen } from "../components/Updates";
 
@@ -13,6 +16,9 @@ export const AppRoutes = hot(() => (
 	<BrowserRouter>
 		<Switch>
 			<Route exact path="/login" component={LoginScreen} />
+			<Route exact path="/signup" component={SignupScreen} />
+			<Route exact path="/forgotpassword" component={ForgotPasswordScreen} />
+			<Route exact path="/enterotp" component={OTPScreen} />
 			<Route exact path="/chat/:channel" component={ChatScreen} />
 			<Route exact path="/equip" component={EquipScreen} />
 			<Route exact path="/finbooks" component={HomeScreen} />

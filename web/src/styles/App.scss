@@ -3,12 +3,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&display=swap");
 
 @import "./layout";
-// @import "./login";
 @import "./navigation";
-// @import "./home";
-// @import "./updates";
-// @import "./chat";
-// @import "./_equip.scss";
 
 body {
 	font-family: "Montserrat", sans-serif;
@@ -91,7 +86,7 @@ button {
 
 .ant-layout-sider {
 	position: fixed;
-	z-index: 2;
+	z-index: 1001;
 	height: 100vh;
 }
 

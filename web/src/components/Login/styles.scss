@@ -1,4 +1,17 @@
-.form-container {
+.login-form-container {
 	width: 100%;
 	padding: 20px;
+}
+
+.signup-form-container {
+	width: 100%;
+	padding: 20px;
+
+	.grid-row {
+		margin: auto -10px;
+	}
+
+	.form-field {
+		margin: 10px;
+	}
 }

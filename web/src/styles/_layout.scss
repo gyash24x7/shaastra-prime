@@ -1,5 +1,6 @@
 .wrapper {
 	height: 100vh;
+	overflow: hidden;
 }
 
 .public-bg {
@@ -7,19 +8,36 @@
 	background-position: center center;
 	background-size: cover;
 	background-repeat: no-repeat;
+	width: 100vw;
+	min-height: 100%;
+	z-index: -1;
+	overflow: hidden;
 }
 
 .public-container {
 	padding: 30px;
 	display: flex;
 	flex-direction: column;
+	position: absolute;
 	justify-content: center;
+	min-width: 400px;
+	width: 33vw;
+	max-width: 1000px;
+	min-height: 100vh;
+	z-index: 0;
+	background-color: black;
+	right: 0;
+	top: 0;
 }
 
-.logo-container img {
-	width: 100%;
-	padding: 30px;
-	margin-bottom: 30px;
+.logo-container {
+	display: flex;
+	justify-content: center;
+
+	img {
+		width: 400px;
+		margin-bottom: 30px;
+	}
 }
 
 .private-container {

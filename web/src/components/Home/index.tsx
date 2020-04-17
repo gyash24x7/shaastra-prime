@@ -10,12 +10,15 @@ export const HomeScreen = () => {
 	return (
 		<PrivateLayout title="Profile">
 			<div className="screen-wrapper">
-				<div className="grid-row">
-					<div className="grid-col" style={{ flex: 2 }}>
-						<UserDataCard />
-					</div>
+				<div
+					className="grid-row"
+					style={{ flexDirection: "row-reverse", margin: "auto -15px" }}
+				>
 					<div className="grid-col">
 						<ProfileCard />
+					</div>
+					<div className="grid-col" style={{ flex: 2 }}>
+						<UserDataCard />
 					</div>
 				</div>
 			</div>

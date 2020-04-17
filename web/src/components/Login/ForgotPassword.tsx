@@ -1,12 +1,10 @@
-import "./styles.scss";
-
 import { Button, Form, Input, Typography } from "antd";
 import React from "react";
 
 import { PublicLayout } from "../shared/PublicLayout";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
 
-export const LoginScreen = () => {
+export const ForgotPasswordScreen = () => {
 	const [form] = Form.useForm();
 
 	const handleSubmit = async () => {
@@ -21,7 +19,7 @@ export const LoginScreen = () => {
 	return (
 		<PublicLayout>
 			<div className="login-form-container">
-				<Typography.Title level={3}>LOGIN</Typography.Title>
+				<Typography.Title level={3}>FORGOT PASSWORD</Typography.Title>
 				<Form
 					form={form}
 					onFinish={handleSubmit}
@@ -42,28 +40,15 @@ export const LoginScreen = () => {
 							prefix={<SwitchingIcon name="user" className="icon input-icon" />}
 						/>
 					</Form.Item>
-					<Form.Item
-						name="password"
-						label="Password"
-						rules={[
-							{ min: 8, message: "Enter Valid Password" },
-							{ required: true, message: "Password is required!" }
-						]}
-					>
-						<Input
-							placeholder="Enter Password"
-							type="password"
-							prefix={<SwitchingIcon name="lock" className="icon input-icon" />}
-						/>
-					</Form.Item>
 					<Form.Item>
 						<Button
 							htmlType="submit"
 							block
 							style={{ marginTop: 15 }}
-							className="button primary"
+							className="button"
+							type="primary"
 						>
-							Submit
+							Get OTP
 						</Button>
 					</Form.Item>
 				</Form>

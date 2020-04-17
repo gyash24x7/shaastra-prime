@@ -21,7 +21,7 @@
 }
 
 .user-card {
-	margin-right: 30px;
+	margin: auto 15px;
 	height: calc(100vh - 104px);
 
 	.ant-card-head-wrapper {
@@ -66,4 +66,20 @@
 	border: 1px solid #303030;
 	padding: 10px;
 	margin: 10px;
+}
+
+.profile-card {
+	margin: auto 15px;
+	margin-bottom: 15px;
+	.avatar {
+		position: absolute;
+		bottom: 170px;
+		width: calc(100% - 60px);
+		display: flex;
+		justify-content: center;
+	}
+
+	.avatar-container {
+		margin-top: 20px;
+	}
 }
