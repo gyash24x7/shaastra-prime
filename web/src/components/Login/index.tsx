@@ -1,5 +1,3 @@
-import "./styles.scss";
-
 import { Button, Form, Input, Typography } from "antd";
 import React from "react";
 

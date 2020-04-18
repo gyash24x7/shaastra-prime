@@ -1,5 +1,3 @@
-import "./styles.scss";
-
 import { MenuOutlined, UploadOutlined } from "@ant-design/icons";
 import { Button, Card, Mentions } from "antd";
 import React, { useState } from "react";

@@ -4,8 +4,7 @@ import { Moment } from "moment";
 import React, { useState } from "react";
 
 import { departments, status, statusColor } from ".";
-import { AvatarHeader } from "../shared/AvatarHeader";
-import { TaskDescription } from "./TaskDescription";
+import { UserCardSmall } from "../shared/UserCardSmall";
 
 export const TableLayout = (props: any) => {
 	const [filters, setFilters] = useState<any>(null);
@@ -15,8 +14,7 @@ export const TableLayout = (props: any) => {
 		brief: {
 			key: "brief",
 			title: <Typography.Text strong>Brief</Typography.Text>,
-			dataIndex: "brief",
-			width: 200
+			dataIndex: "brief"
 		},
 		status: {
 			key: "status",
@@ -25,8 +23,7 @@ export const TableLayout = (props: any) => {
 			render: (val: string) => <Tag color={statusColor[val]}>{val}</Tag>,
 			filters: status.map((status) => ({ text: status, value: status })),
 			onFilter: (value, record) => record.status === value,
-			filteredValue: filters?.status || null,
-			width: 200
+			filteredValue: filters?.status || null
 		},
 		byDept: {
 			key: "byDept",
@@ -36,8 +33,7 @@ export const TableLayout = (props: any) => {
 			onFilter: (value, record) => record.byDept === value,
 			filteredValue: filters?.byDept || null,
 			sorter: (a, b) => a.byDept.localeCompare(b.byDept),
-			sortOrder: sorters?.columnKey === "byDept" && sorters?.order,
-			width: 250
+			sortOrder: sorters?.columnKey === "byDept" && sorters?.order
 		},
 		createdAt: {
 			key: "createdAt",
@@ -45,32 +41,25 @@ export const TableLayout = (props: any) => {
 			dataIndex: "createdAt",
 			render: (val: Moment) => val.format("DD MMMM"),
 			sorter: (a, b) => a.createdAt.diff(b.createdAt),
-			sortOrder: sorters?.columnKey === "createdAt" && sorters?.order,
-			width: 150
+			sortOrder: sorters?.columnKey === "createdAt" && sorters?.order
 		},
 		assignedTo: {
 			key: "assignedTo",
 			title: <Typography.Text strong>Assigned&nbsp;To</Typography.Text>,
 			dataIndex: "assignedTo",
 			render: (val: string[]) => (
-				<div className="grid-row">
+				<div style={{ display: "flex" }}>
 					{val.map((_, i) => (
-						<AvatarHeader key={i} />
+						<UserCardSmall key={i} />
 					))}
 				</div>
-			),
-			colSpan: 2
+			)
 		}
 	};
 
 	const handleOnChange = (_: any, filters: any, sorter: any) => {
 		setFilters(filters);
 		setSorters(sorter);
-	};
-
-	const expandableConfig = {
-		expandedRowRender: (val: any) => <TaskDescription data={val} />,
-		expandRowByClick: true
 	};
 
 	return (
@@ -80,8 +69,8 @@ export const TableLayout = (props: any) => {
 			columns={Object.keys(columns).map((str) => columns[str])}
 			bordered
 			onChange={handleOnChange}
-			expandable={expandableConfig}
 			pagination={false}
+			size="middle"
 		/>
 	);
 };

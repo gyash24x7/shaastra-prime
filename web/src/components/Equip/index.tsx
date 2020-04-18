@@ -1,12 +1,13 @@
-import "./styles.scss";
-
 import { Card, Pagination, Typography } from "antd";
 import moment from "moment";
 import React, { useState } from "react";
 
+import { EquipDrawerContext } from "../../utils/context";
 import { stringGen } from "../../utils/lorem";
+import { CommonDrawer } from "../shared/CommonDrawer";
 import { PrivateLayout } from "../shared/PrivateLayout";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
+import { GridLayout } from "./GridLayout";
 import { KanbanLayout } from "./KanbanLayout";
 import { TableLayout } from "./TableLayout";
 
@@ -73,6 +74,15 @@ export const EquipScreen = () => {
 					<Typography.Text strong>Kanban View</Typography.Text>
 				</div>
 			)
+		},
+		{
+			key: "grid",
+			tab: (
+				<div className="equip-view-tab">
+					<SwitchingIcon name="grid" />
+					<Typography.Text strong>Grid View</Typography.Text>
+				</div>
+			)
 		}
 	];
 
@@ -83,8 +93,13 @@ export const EquipScreen = () => {
 				page={currentPage}
 			/>
 		),
-		kanban: <KanbanLayout data={datasource} />
+		kanban: <KanbanLayout data={datasource} />,
+		grid: <GridLayout data={datasource} />
 	};
+
+	const [activeDrawerComponent, setActiveDrawerComponent] = useState<
+		JSX.Element | undefined
+	>();
 
 	return (
 		<PrivateLayout title="Equip">
@@ -95,20 +110,30 @@ export const EquipScreen = () => {
 					activeTabKey={activeKey}
 					onTabChange={setActiveKey}
 					tabBarExtraContent={
-						activeKey === "table" ? (
-							<Pagination
-								total={datasource.length}
-								current={currentPage}
-								onChange={setCurrentPage}
-							/>
-						) : (
-							<div />
-						)
+						<Pagination
+							total={datasource.length}
+							current={currentPage}
+							onChange={setCurrentPage}
+						/>
 					}
+					className="equip-card"
 				>
-					{tabContent[activeKey]}
+					<EquipDrawerContext.Provider
+						value={{
+							component: activeDrawerComponent,
+							visible: !!activeDrawerComponent,
+							onClose: () => setActiveDrawerComponent(undefined)
+						}}
+					>
+						{tabContent[activeKey]}
+					</EquipDrawerContext.Provider>
 				</Card>
 			</div>
+			<CommonDrawer
+				component={activeDrawerComponent}
+				visible={!!activeDrawerComponent}
+				onClose={() => setActiveDrawerComponent(undefined)}
+			/>
 		</PrivateLayout>
 	);
 };
