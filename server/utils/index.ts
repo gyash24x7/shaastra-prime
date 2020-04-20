@@ -52,3 +52,43 @@ export interface Upload {
 	encoding: string;
 	createReadStream: () => Stream;
 }
+
+export enum MilestoneStatus {
+	IN_PROGRESS = "IN_PROGRESS",
+	ACHIEVED = "ACHIEVED"
+}
+
+export enum GoalType {
+	WEEKLY = "WEEKLY",
+	BI_WEEKLY = "BI_WEEKLY",
+	MONTHLY = "MONTHLY",
+	END_GOAL = "END_GOAL"
+}
+
+export enum SprintStatus {
+	NOT_STARTED = "NOT_STARTED",
+	IN_PROGRESS = "IN_PROGRESS",
+	COMPLETED = "COMPLETED"
+}
+
+export enum InvoiceActivityType {
+	UPLOADED = "UPLOADED",
+	EDITED = "EDITED",
+	APPROVED = "APPROVED",
+	REJECTED = "REJECTED"
+}
+
+export enum InvoiceType {
+	REIMBURSEMENT = "REIMBURSEMENT",
+	SETTLEMENT = "SETTLEMENT",
+	DIRECT_PAYMENT = "DIRECT_PAYMENT"
+}
+
+export enum InvoiceStatus {
+	COORD = "COORD",
+	HEAD = "HEAD",
+	CORE = "CORE",
+	FIN_MANAGER = "FIN_MANAGER",
+	FIN_CORE = "FIN_CORE",
+	COCAD = "COCAD"
+}

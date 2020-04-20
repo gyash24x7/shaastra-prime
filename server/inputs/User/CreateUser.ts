@@ -1,6 +1,8 @@
-import { InputType, Field, Int } from "type-graphql";
 import { IsEmail, Length } from "class-validator";
+import { Field, InputType, Int } from "type-graphql";
+
 import { IsExistingUser } from "../../utils/IsExistingUser";
+
 @InputType()
 export class CreateUserInput {
 	@Field()
@@ -8,6 +10,7 @@ export class CreateUserInput {
 
 	@Field()
 	@IsEmail()
+	@IsExistingUser({ message: "User Already Exists!" })
 	email: string;
 
 	@Field()
@@ -15,7 +18,6 @@ export class CreateUserInput {
 
 	@Field()
 	@Length(8, 8)
-	@IsExistingUser({ message: "User Already Exists!" })
 	rollNumber: string;
 
 	@Field()

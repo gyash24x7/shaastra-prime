@@ -8,37 +8,49 @@ generator client {
 }
 
 model Department {
-  id             Int      @default(autoincrement()) @id
-  name           String
-  subDepartments String[]
-  members        User[]   @relation("DepartmentMembers", references: [id])
-  tasksAssigned  Task[]   @relation("TasksForDept")
-  tasksCreated   Task[]   @relation("TasksByDept")
-  updates        Update[] @relation("DeptUpdates")
+  id                Int       @default(autoincrement()) @id
+  name              String
+  subDepartments    Team[]    @relation("DeptTeams")
+  members           User[]    @relation("DepartmentMembers", references: [id])
+  tasksAssigned     Task[]    @relation("TasksForDept")
+  tasksCreated      Task[]    @relation("TasksByDept")
+  updates           Update[]  @relation("DeptUpdates")
+  invoicesSubmitted Invoice[] @relation("InvoicesByDept")
+}
+
+model Team {
+  id         Int        @default(autoincrement()) @id
+  name       String
+  members    User[]     @relation("TeamMembers", references: [id])
+  department Department @relation("DeptTeams", fields: [deptId], references: [id])
+  deptId     Int
 }
 
 model User {
-  id              Int          @default(autoincrement()) @id
-  name            String
-  email           String       @unique
-  password        String
-  rollNumber      String       @unique
-  profilePic      String
-  coverPic        String
-  mobile          String
-  upi             String
-  about           String
-  role            UserRole     @default(COORD)
-  verified        Boolean      @default(false)
-  verificationOTP String
-  passwordOTP     String?
-  departments     Department[] @relation("DepartmentMembers", references: [id])
-  channels        Channel[]    @relation("ChannelMembers", references: [id])
-  channelsCreated Channel[]    @relation("ChannelsByUser")
-  messages        Message[]    @relation("MessagesByUser")
-  media           Media[]      @relation("MediaByUser")
-  tasksCreated    Task[]       @relation("TasksByUser")
-  tasksAssigned   Task[]       @relation("TasksForUser", references: [id])
+  id                Int        @default(autoincrement()) @id
+  name              String
+  email             String     @unique
+  password          String
+  rollNumber        String
+  profilePic        String
+  coverPic          String
+  mobile            String
+  upi               String
+  about             String
+  role              UserRole   @default(COORD)
+  verified          Boolean    @default(false)
+  verificationOTP   String
+  passwordOTP       String?
+  department        Department @relation("DepartmentMembers", fields: [departmentId], references: [id])
+  departmentId      Int
+  channels          Channel[]  @relation("ChannelMembers", references: [id])
+  channelsCreated   Channel[]  @relation("ChannelsByUser")
+  messages          Message[]  @relation("MessagesByUser")
+  media             Media[]    @relation("MediaByUser")
+  tasksCreated      Task[]     @relation("TasksByUser")
+  tasksAssigned     Task[]     @relation("TasksForUser", references: [id])
+  teams             Team[]     @relation("TeamMembers", references: [id])
+  invoicesSubmitted Invoice[]  @relation("InvoicesByUser")
 }
 
 model Channel {
@@ -102,21 +114,128 @@ model Task {
   deadline    DateTime
   channel     Channel    @relation("ChannelTask", fields: [channelId], references: [id])
   media       Media[]    @relation("TaskMedia")
+  sprints     Sprint[]   @relation("SprintsForTask")
   byDeptId    Int
   forDeptId   Int
   createdById Int
   channelId   Int
 }
 
+model Sprint {
+  id         Int          @default(autoincrement()) @id
+  title      String
+  status     SprintStatus @default(NOT_STARTED)
+  task       Task         @relation("SprintsForTask", fields: [taskId], references: [id])
+  taskId     Int
+  isTemplate Boolean      @default(false)
+}
+
 model Update {
-  id           Int        @default(autoincrement()) @id
-  subject      String
-  content      String
-  byDept       Department @relation("DepartmentUpdates", fields: [byDeptId], references: [id])
-  postedBy     User       @relation("UserUpdate", fields: [postedById], references: [id])
-  createdAt    DateTime   @default(now())
-  postedById   Int
-  byDeptId     Int
+  id         Int        @default(autoincrement()) @id
+  subject    String
+  content    String
+  byDept     Department @relation("DeptUpdates", fields: [byDeptId], references: [id])
+  postedBy   User       @relation("UserUpdate", fields: [postedById], references: [id])
+  createdAt  DateTime   @default(now())
+  postedById Int
+  byDeptId   Int
+}
+
+model Invoice {
+  id            Int               @default(autoincrement()) @id
+  title         String
+  date          DateTime
+  invoiceNumber String
+  amount        String
+  purpose       String
+  status        InvoiceStatus
+  type          InvoiceType
+  vendor        Vendor            @relation("VendorInvoices", fields: [vendorId], references: [id])
+  vendorId      Int
+  media         Media             @relation("InvoiceMedia", fields: [mediaId], references: [id])
+  mediaId       Int
+  activity      InvoiceActivity[] @relation("InvoiceActivity")
+  uploadedBy    User              @relation("InvoicesByUser", fields: [uploadedById], references: [id])
+  uploadedById  Int
+  byDept        Department        @relation("InvoicesByDept", fields: [byDeptId], references: [id])
+  byDeptId      Int
+}
+
+model InvoiceActivity {
+  id        Int                 @default(autoincrement()) @id
+  type      InvoiceActivityType
+  on        DateTime            @default(now())
+  invoice   Invoice             @relation("InvoiceActivity", fields: [invoiceId], references: [id])
+  invoiceId Int
+}
+
+model Vendor {
+  id            Int       @default(autoincrement()) @id
+  name          String
+  gstNumber     String
+  accountName   String
+  accountNumber String
+  ifsc          String
+  bankDetails   String
+  invoices      Invoice[] @relation("VendorInvoices")
+}
+
+model Goal {
+  id         Int         @default(autoincrement()) @id
+  title      String
+  dept       Department  @relation("DeptGoals", fields: [deptId], references: [id])
+  deptId     Int
+  type       GoalType
+  createdAt  DateTime    @default(now())
+  milestones Milestone[] @relation("GoalMilestones")
+}
+
+model Milestone {
+  id     Int             @default(autoincrement()) @id
+  title  String
+  status MilestoneStatus @default(IN_PROGRESS)
+  goal   Goal            @relation("GoalMilestones", fields: [goalId], references: [id])
+  goalId Int
+}
+
+enum MilestoneStatus {
+  IN_PROGRESS
+  ACHIEVED
+}
+
+enum GoalType {
+  WEEKLY
+  BI_WEEKLY
+  MONTHLY
+  END_GOAL
+}
+
+enum SprintStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum InvoiceActivityType {
+  UPLOADED
+  EDITED
+  APPROVED
+  REJECTED
+}
+
+enum InvoiceType {
+  REIMBURSEMENT
+  SETTLEMENT
+  DIRECT_PAYMENT
+}
+
+enum InvoiceStatus {
+  COORD
+  HEAD
+  CORE
+  FIN_MANAGER
+  FIN_CORE
+  COCAD
 }
 
 enum TaskStatus {

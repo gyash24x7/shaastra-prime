@@ -9,8 +9,8 @@ import { prisma } from "../prisma";
 
 @ValidatorConstraint({ async: true })
 export class IsExistingUserConstraint implements ValidatorConstraintInterface {
-	async validate(rollNumber: string) {
-		let user = await prisma.user.findOne({ where: { rollNumber } });
+	async validate(email: string) {
+		let user = await prisma.user.findOne({ where: { email } });
 		return !user;
 	}
 }

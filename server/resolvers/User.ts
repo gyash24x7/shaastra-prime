@@ -21,7 +21,7 @@ import { GraphQLContext } from "../utils";
 
 @Resolver(User)
 export class UserResolver {
-	@Mutation(() => Boolean)
+	@Mutation(() => User)
 	async createUser(
 		@Arg("data") { departmentId, ...data }: CreateUserInput,
 		@Ctx() { req }: GraphQLContext
@@ -36,7 +36,7 @@ export class UserResolver {
 				profilePic: "",
 				coverPic: "",
 				about: "",
-				departments: {
+				department: {
 					connect: { id: departmentId }
 				}
 			}
@@ -53,7 +53,7 @@ export class UserResolver {
 			// await sendgrid.send(mailOptions);
 			req.session!.userId = user.id;
 		}
-		return !!user;
+		return user;
 	}
 
 	@Query(() => [User])
@@ -63,10 +63,10 @@ export class UserResolver {
 
 	@Mutation(() => User, { nullable: true })
 	async login(
-		@Arg("data") { rollNumber, password }: LoginInput,
+		@Arg("data") { email, password }: LoginInput,
 		@Ctx() { req }: GraphQLContext
 	) {
-		const user = await prisma.user.findOne({ where: { rollNumber } });
+		const user = await prisma.user.findOne({ where: { email } });
 		if (!user) return null;
 
 		const valid = await bcrypt.compare(password, user.password);
@@ -77,8 +77,8 @@ export class UserResolver {
 	}
 
 	@FieldResolver(() => [Department])
-	async departments(@Root() { id }: User) {
-		return prisma.user.findOne({ where: { id } }).departments();
+	async department(@Root() { id }: User) {
+		return prisma.user.findOne({ where: { id } }).department();
 	}
 
 	@Query(() => User, { nullable: true })
@@ -104,14 +104,14 @@ export class UserResolver {
 	}
 
 	@Mutation(() => Boolean)
-	async verifyUser(@Arg("data") { rollNumber, otp }: VerifyUserInput) {
-		let user = await prisma.user.findOne({ where: { rollNumber } });
+	async verifyUser(@Arg("data") { email, otp }: VerifyUserInput) {
+		let user = await prisma.user.findOne({ where: { email } });
 
 		if (!user) return false;
 		else {
 			if (user.verificationOTP !== otp) return false;
 			await prisma.user.update({
-				where: { rollNumber },
+				where: { email },
 				data: { verified: true }
 			});
 			return true;
@@ -119,12 +119,12 @@ export class UserResolver {
 	}
 
 	@Mutation(() => Boolean)
-	async sendPasswordOTP(@Arg("rollNumber") rollNumber: string) {
-		const user = await prisma.user.findOne({ where: { rollNumber } });
+	async sendPasswordOTP(@Arg("email") email: string) {
+		const user = await prisma.user.findOne({ where: { email } });
 		if (!user) return false;
 
 		const passwordOTP = Math.round(Math.random() * 1000000).toString();
-		await prisma.user.update({ where: { rollNumber }, data: { passwordOTP } });
+		await prisma.user.update({ where: { email }, data: { passwordOTP } });
 
 		// const mailOptions = {
 		// 	from: "webops@shaastra.org",
@@ -140,12 +140,12 @@ export class UserResolver {
 
 	@Mutation(() => Boolean)
 	async forgotPassword(
-		@Arg("data") { rollNumber, passwordOTP, newPassword }: ForgotPasswordInput
+		@Arg("data") { email, passwordOTP, newPassword }: ForgotPasswordInput
 	) {
-		const user = await prisma.user.findOne({ where: { rollNumber } });
+		const user = await prisma.user.findOne({ where: { email } });
 		if (user && user.passwordOTP === passwordOTP) {
 			const password = await bcrypt.hash(newPassword, 13);
-			await prisma.user.update({ where: { rollNumber }, data: { password } });
+			await prisma.user.update({ where: { email }, data: { password } });
 			return true;
 		} else return false;
 	}

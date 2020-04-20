@@ -1,9 +1,9 @@
-import { InputType, Field } from "type-graphql";
+import { Field, InputType } from "type-graphql";
 
 @InputType()
 export class ForgotPasswordInput {
 	@Field()
-	rollNumber: string;
+	email: string;
 
 	@Field()
 	newPassword: string;

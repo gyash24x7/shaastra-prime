@@ -1,9 +1,9 @@
-import { InputType, Field } from "type-graphql";
+import { Field, InputType } from "type-graphql";
 
 @InputType()
 export class LoginInput {
 	@Field()
-	rollNumber: string;
+	email: string;
 
 	@Field()
 	password: string;
