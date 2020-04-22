@@ -3,7 +3,7 @@ import "./styles/App.scss";
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { AppRoutes } from "./routes";
+import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
 declare let module: any;
@@ -14,12 +14,12 @@ const renderApp = (Component: React.FC) => {
 
 if (module.hot) {
 	module.hot.accept("./routes", () => {
-		const NextApp = require("./routes").default;
+		const NextApp = require("./App").default;
 		renderApp(NextApp);
 	});
 }
 
-renderApp(AppRoutes);
+renderApp(App);
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA

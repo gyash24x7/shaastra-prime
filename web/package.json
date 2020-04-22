@@ -26,6 +26,7 @@
 	},
 	"scripts": {
 		"dev": "BROWSER=none react-app-rewired start",
+		"gen": "graphql-codegen --watch",
 		"build": "react-app-rewired build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"

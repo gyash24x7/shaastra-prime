@@ -1,7 +1,11 @@
 import { Button, Form, Input, Select, Tag, Typography } from "antd";
-import React from "react";
+import React, { useContext } from "react";
+import { Redirect } from "react-router-dom";
 
+import { useCreateUserMutation } from "../../generated";
+import { DepartmentContext } from "../../utils/context";
 import { PublicLayout } from "../shared/PublicLayout";
+import { ShowError } from "../shared/ShowError";
 
 // eslint-disable-next-line
 const emailRegex = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
@@ -9,10 +13,32 @@ const emailRegex = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\
 export const SignupScreen = () => {
 	const [form] = Form.useForm();
 
+	const [createUser, { data, loading, error }] = useCreateUserMutation();
+	const { departments } = useContext(DepartmentContext);
+	if (error) {
+		console.log(error);
+		return <ShowError />;
+	}
+
+	if (data?.createUser) {
+		localStorage.setItem("user", JSON.stringify(data.createUser));
+		return <Redirect to="/" />;
+	}
+
 	const handleSubmit = async () => {
 		try {
 			const values = await form.validateFields();
-			console.log("Success:", values);
+			createUser({
+				variables: {
+					name: values["name"],
+					email: values["email"],
+					rollNumber: values["rollNumber"],
+					password: values["password"],
+					upi: "",
+					mobile: values["mobile"],
+					departmentId: parseInt(values["department"])
+				}
+			});
 		} catch (errorInfo) {
 			console.log("Failed:", errorInfo);
 		}
@@ -75,24 +101,19 @@ export const SignupScreen = () => {
 					</div>
 					<div className="grid-row">
 						<Form.Item
-							name="departments"
-							label="Departments"
+							name="department"
+							label="Department"
 							className="grid-col form-field"
 							rules={[{ required: true, message: "Departments are required!" }]}
 						>
 							<Select
-								mode="multiple"
-								options={[
-									{ label: "WebOps", value: "WebOps" },
-									{ label: "O&IP", value: "O&IP" },
-									{ label: "C&D", value: "C&D" },
-									{ label: "Finance", value: "Finance" },
-									{ label: "Evolve", value: "Evolve" },
-									{ label: "Envisage", value: "Envisage" }
-								]}
+								options={departments.map((dept) => ({
+									label: dept.name,
+									value: dept.id
+								}))}
 								tagRender={(props) => (
 									<Tag {...props} color="red">
-										{props.value}
+										{props.label}
 									</Tag>
 								)}
 							/>
@@ -129,6 +150,7 @@ export const SignupScreen = () => {
 							<Button
 								htmlType="submit"
 								type="primary"
+								loading={loading}
 								block
 								style={{ marginTop: 15 }}
 								className="button"

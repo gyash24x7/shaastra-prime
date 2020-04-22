@@ -1,16 +1,36 @@
 import { Button, Form, Input, Typography } from "antd";
 import React from "react";
+import { Link, Redirect } from "react-router-dom";
 
+import { useLoginMutation } from "../../generated";
 import { PublicLayout } from "../shared/PublicLayout";
+import { ShowError } from "../shared/ShowError";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
+
+// eslint-disable-next-line
+const emailRegex = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 
 export const LoginScreen = () => {
 	const [form] = Form.useForm();
 
+	const [login, { data, error, loading }] = useLoginMutation();
+
+	if (error) return <ShowError />;
+
+	if (data?.login) {
+		localStorage.setItem("user", JSON.stringify(data.login));
+		return <Redirect to="/" />;
+	}
+
 	const handleSubmit = async () => {
 		try {
 			const values = await form.validateFields();
-			console.log("Success:", values);
+			login({
+				variables: {
+					email: values["email"],
+					password: values["password"]
+				}
+			});
 		} catch (errorInfo) {
 			console.log("Failed:", errorInfo);
 		}
@@ -27,11 +47,11 @@ export const LoginScreen = () => {
 					size="large"
 				>
 					<Form.Item
-						name="rollNumber"
-						label="Roll Number"
+						name="email"
+						label="Email"
 						rules={[
-							{ len: 8, message: "Enter Valid Roll Number!" },
-							{ required: true, message: "Roll Number is required!" }
+							{ required: true, message: "Email is required!" },
+							{ pattern: emailRegex, message: "Enter Valid Email" }
 						]}
 					>
 						<Input
@@ -59,12 +79,17 @@ export const LoginScreen = () => {
 							htmlType="submit"
 							block
 							style={{ marginTop: 15 }}
+							loading={loading}
 							className="button primary"
 						>
 							Submit
 						</Button>
 					</Form.Item>
 				</Form>
+				<div style={{ display: "flex", justifyContent: "space-between" }}>
+					<Link to="/signup">Sign Up</Link>
+					<Link to="/forgotpassword">Forgot Password</Link>
+				</div>
 			</div>
 		</PublicLayout>
 	);
