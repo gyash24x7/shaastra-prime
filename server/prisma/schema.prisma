@@ -11,7 +11,7 @@ model Department {
   id                Int       @default(autoincrement()) @id
   name              String
   subDepartments    Team[]    @relation("DeptTeams")
-  members           User[]    @relation("DepartmentMembers", references: [id])
+  members           User[]    @relation("DepartmentMembers")
   tasksAssigned     Task[]    @relation("TasksForDept")
   tasksCreated      Task[]    @relation("TasksByDept")
   updates           Update[]  @relation("DeptUpdates")
