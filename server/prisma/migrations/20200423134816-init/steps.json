@@ -3,6 +3,64 @@
   "steps": [
     {
       "tag": "CreateEnum",
+      "enum": "MilestoneStatus",
+      "values": [
+        "IN_PROGRESS",
+        "ACHIEVED"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "GoalType",
+      "values": [
+        "WEEKLY",
+        "BI_WEEKLY",
+        "MONTHLY",
+        "END_GOAL"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "SprintStatus",
+      "values": [
+        "NOT_STARTED",
+        "IN_PROGRESS",
+        "COMPLETED"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "InvoiceActivityType",
+      "values": [
+        "UPLOADED",
+        "EDITED",
+        "APPROVED",
+        "REJECTED"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "InvoiceType",
+      "values": [
+        "REIMBURSEMENT",
+        "SETTLEMENT",
+        "DIRECT_PAYMENT"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "InvoiceStatus",
+      "values": [
+        "COORD",
+        "HEAD",
+        "CORE",
+        "FIN_MANAGER",
+        "FIN_CORE",
+        "COCAD"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
       "enum": "TaskStatus",
       "values": [
         "NOT_ASSIGNED",
@@ -75,7 +133,7 @@
       "tag": "CreateField",
       "model": "Department",
       "field": "id",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
@@ -101,7 +159,7 @@
         "directive": "default"
       },
       "argument": "",
-      "value": "autoincrement()"
+      "value": "cuid()"
     },
     {
       "tag": "CreateDirective",
@@ -125,8 +183,33 @@
       "tag": "CreateField",
       "model": "Department",
       "field": "subDepartments",
-      "type": "String",
+      "type": "Team",
       "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Department",
+          "field": "subDepartments"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Department",
+          "field": "subDepartments"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"DeptTeams\""
     },
     {
       "tag": "CreateField",
@@ -159,20 +242,6 @@
       },
       "argument": "",
       "value": "\"DepartmentMembers\""
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Department",
-          "field": "members"
-        },
-        "directive": "relation"
-      },
-      "argument": "references",
-      "value": "[id]"
     },
     {
       "tag": "CreateField",
@@ -271,6 +340,205 @@
       "value": "\"DeptUpdates\""
     },
     {
+      "tag": "CreateField",
+      "model": "Department",
+      "field": "invoicesSubmitted",
+      "type": "Invoice",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Department",
+          "field": "invoicesSubmitted"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Department",
+          "field": "invoicesSubmitted"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"InvoicesByDept\""
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Team"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Team",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Team",
+      "field": "name",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Team",
+      "field": "members",
+      "type": "User",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "members"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "members"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"TeamMembers\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "members"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Team",
+      "field": "department",
+      "type": "Department",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "department"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "department"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"DeptTeams\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "department"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[deptId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "department"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Team",
+      "field": "deptId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
       "tag": "CreateModel",
       "model": "User"
     },
@@ -278,7 +546,7 @@
       "tag": "CreateField",
       "model": "User",
       "field": "id",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
@@ -304,7 +572,7 @@
         "directive": "default"
       },
       "argument": "",
-      "value": "autoincrement()"
+      "value": "cuid()"
     },
     {
       "tag": "CreateDirective",
@@ -355,17 +623,6 @@
       "field": "rollNumber",
       "type": "String",
       "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "User",
-          "field": "rollNumber"
-        },
-        "directive": "unique"
-      }
     },
     {
       "tag": "CreateField",
@@ -483,9 +740,9 @@
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "departments",
+      "field": "department",
       "type": "Department",
-      "arity": "List"
+      "arity": "Required"
     },
     {
       "tag": "CreateDirective",
@@ -493,7 +750,7 @@
         "path": {
           "tag": "Field",
           "model": "User",
-          "field": "departments"
+          "field": "department"
         },
         "directive": "relation"
       }
@@ -505,7 +762,7 @@
         "path": {
           "tag": "Field",
           "model": "User",
-          "field": "departments"
+          "field": "department"
         },
         "directive": "relation"
       },
@@ -519,12 +776,33 @@
         "path": {
           "tag": "Field",
           "model": "User",
-          "field": "departments"
+          "field": "department"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[departmentId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "department"
         },
         "directive": "relation"
       },
       "argument": "references",
       "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "departmentId",
+      "type": "String",
+      "arity": "Required"
     },
     {
       "tag": "CreateField",
@@ -747,6 +1025,84 @@
       "value": "[id]"
     },
     {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "teams",
+      "type": "Team",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "teams"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "teams"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"TeamMembers\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "teams"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "invoicesSubmitted",
+      "type": "Invoice",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "invoicesSubmitted"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "invoicesSubmitted"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"InvoicesByUser\""
+    },
+    {
       "tag": "CreateModel",
       "model": "Channel"
     },
@@ -754,7 +1110,7 @@
       "tag": "CreateField",
       "model": "Channel",
       "field": "id",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
@@ -780,7 +1136,7 @@
         "directive": "default"
       },
       "argument": "",
-      "value": "autoincrement()"
+      "value": "cuid()"
     },
     {
       "tag": "CreateDirective",
@@ -1077,14 +1433,14 @@
       "tag": "CreateField",
       "model": "Channel",
       "field": "createdById",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "Channel",
       "field": "taskId",
-      "type": "Int",
+      "type": "String",
       "arity": "Optional"
     },
     {
@@ -1095,7 +1451,7 @@
       "tag": "CreateField",
       "model": "Message",
       "field": "id",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
@@ -1121,7 +1477,7 @@
         "directive": "default"
       },
       "argument": "",
-      "value": "autoincrement()"
+      "value": "cuid()"
     },
     {
       "tag": "CreateDirective",
@@ -1361,14 +1717,14 @@
       "tag": "CreateField",
       "model": "Message",
       "field": "createdById",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "Message",
       "field": "channelId",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
@@ -1379,7 +1735,7 @@
       "tag": "CreateField",
       "model": "Media",
       "field": "id",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
@@ -1405,7 +1761,7 @@
         "directive": "default"
       },
       "argument": "",
-      "value": "autoincrement()"
+      "value": "cuid()"
     },
     {
       "tag": "CreateDirective",
@@ -1556,7 +1912,7 @@
       "tag": "CreateField",
       "model": "Media",
       "field": "taskId",
-      "type": "Int",
+      "type": "String",
       "arity": "Optional"
     },
     {
@@ -1623,14 +1979,14 @@
       "tag": "CreateField",
       "model": "Media",
       "field": "uploadedById",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "Media",
       "field": "channelId",
-      "type": "Int",
+      "type": "String",
       "arity": "Optional"
     },
     {
@@ -1641,7 +1997,7 @@
       "tag": "CreateField",
       "model": "Reaction",
       "field": "id",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
@@ -1667,7 +2023,7 @@
         "directive": "default"
       },
       "argument": "",
-      "value": "autoincrement()"
+      "value": "cuid()"
     },
     {
       "tag": "CreateDirective",
@@ -1811,14 +2167,14 @@
       "tag": "CreateField",
       "model": "Reaction",
       "field": "byId",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "Reaction",
       "field": "messageId",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
@@ -1829,7 +2185,7 @@
       "tag": "CreateField",
       "model": "Task",
       "field": "id",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
@@ -1855,7 +2211,7 @@
         "directive": "default"
       },
       "argument": "",
-      "value": "autoincrement()"
+      "value": "cuid()"
     },
     {
       "tag": "CreateDirective",
@@ -2274,30 +2630,247 @@
     {
       "tag": "CreateField",
       "model": "Task",
+      "field": "sprints",
+      "type": "Sprint",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Task",
+          "field": "sprints"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Task",
+          "field": "sprints"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"SprintsForTask\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Task",
       "field": "byDeptId",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "Task",
       "field": "forDeptId",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "Task",
       "field": "createdById",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "Task",
       "field": "channelId",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Sprint"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Sprint",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Sprint",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Sprint",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Sprint",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Sprint",
+      "field": "title",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Sprint",
+      "field": "status",
+      "type": "SprintStatus",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Sprint",
+          "field": "status"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Sprint",
+          "field": "status"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "NOT_STARTED"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Sprint",
+      "field": "task",
+      "type": "Task",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Sprint",
+          "field": "task"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Sprint",
+          "field": "task"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"SprintsForTask\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Sprint",
+          "field": "task"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[taskId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Sprint",
+          "field": "task"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Sprint",
+      "field": "taskId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Sprint",
+      "field": "isTemplate",
+      "type": "Boolean",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Sprint",
+          "field": "isTemplate"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Sprint",
+          "field": "isTemplate"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "false"
     },
     {
       "tag": "CreateModel",
@@ -2307,7 +2880,7 @@
       "tag": "CreateField",
       "model": "Update",
       "field": "id",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
@@ -2333,7 +2906,7 @@
         "directive": "default"
       },
       "argument": "",
-      "value": "autoincrement()"
+      "value": "cuid()"
     },
     {
       "tag": "CreateDirective",
@@ -2390,7 +2963,7 @@
         "directive": "relation"
       },
       "argument": "",
-      "value": "\"DepartmentUpdates\""
+      "value": "\"DeptUpdates\""
     },
     {
       "tag": "CreateArgument",
@@ -2516,14 +3089,1029 @@
       "tag": "CreateField",
       "model": "Update",
       "field": "postedById",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "Update",
       "field": "byDeptId",
-      "type": "Int",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Invoice"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "title",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "date",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "invoiceNumber",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "amount",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "purpose",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "status",
+      "type": "InvoiceStatus",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "type",
+      "type": "InvoiceType",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "vendor",
+      "type": "Vendor",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "vendor"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "vendor"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"VendorInvoices\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "vendor"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[vendorId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "vendor"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "vendorId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "media",
+      "type": "Media",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "media"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "media"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"InvoiceMedia\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "media"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[mediaId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "media"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "mediaId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "activity",
+      "type": "InvoiceActivity",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "activity"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "activity"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"InvoiceActivity\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "uploadedBy",
+      "type": "User",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "uploadedBy"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "uploadedBy"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"InvoicesByUser\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "uploadedBy"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[uploadedById]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "uploadedBy"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "uploadedById",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "byDept",
+      "type": "Department",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "byDept"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "byDept"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"InvoicesByDept\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "byDept"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[byDeptId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Invoice",
+          "field": "byDept"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Invoice",
+      "field": "byDeptId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "InvoiceActivity"
+    },
+    {
+      "tag": "CreateField",
+      "model": "InvoiceActivity",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "InvoiceActivity",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "InvoiceActivity",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "InvoiceActivity",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "InvoiceActivity",
+      "field": "type",
+      "type": "InvoiceActivityType",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "InvoiceActivity",
+      "field": "on",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "InvoiceActivity",
+          "field": "on"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "InvoiceActivity",
+          "field": "on"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "InvoiceActivity",
+      "field": "invoice",
+      "type": "Invoice",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "InvoiceActivity",
+          "field": "invoice"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "InvoiceActivity",
+          "field": "invoice"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"InvoiceActivity\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "InvoiceActivity",
+          "field": "invoice"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[invoiceId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "InvoiceActivity",
+          "field": "invoice"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "InvoiceActivity",
+      "field": "invoiceId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Vendor"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Vendor",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Vendor",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Vendor",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Vendor",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Vendor",
+      "field": "name",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Vendor",
+      "field": "gstNumber",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Vendor",
+      "field": "accountName",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Vendor",
+      "field": "accountNumber",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Vendor",
+      "field": "ifsc",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Vendor",
+      "field": "bankDetails",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Vendor",
+      "field": "invoices",
+      "type": "Invoice",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Vendor",
+          "field": "invoices"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Vendor",
+          "field": "invoices"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"VendorInvoices\""
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Goal"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Goal",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Goal",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Goal",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Goal",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Goal",
+      "field": "title",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Goal",
+      "field": "dept",
+      "type": "Department",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Goal",
+          "field": "dept"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Goal",
+          "field": "dept"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"DeptGoals\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Goal",
+          "field": "dept"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[deptId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Goal",
+          "field": "dept"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Goal",
+      "field": "deptId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Goal",
+      "field": "type",
+      "type": "GoalType",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Goal",
+      "field": "createdAt",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Goal",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Goal",
+          "field": "createdAt"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "now()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Goal",
+      "field": "milestones",
+      "type": "Milestone",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Goal",
+          "field": "milestones"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Goal",
+          "field": "milestones"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"GoalMilestones\""
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Milestone"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Milestone",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Milestone",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Milestone",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Milestone",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Milestone",
+      "field": "title",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Milestone",
+      "field": "status",
+      "type": "MilestoneStatus",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Milestone",
+          "field": "status"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Milestone",
+          "field": "status"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "IN_PROGRESS"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Milestone",
+      "field": "goal",
+      "type": "Goal",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Milestone",
+          "field": "goal"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Milestone",
+          "field": "goal"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"GoalMilestones\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Milestone",
+          "field": "goal"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[goalId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Milestone",
+          "field": "goal"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Milestone",
+      "field": "goalId",
+      "type": "String",
       "arity": "Required"
     }
   ]

@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -10,7 +10,6 @@ generator client {
 model Department {
   id                String    @default(cuid()) @id
   name              String
-  shortName         String    @default("")
   subDepartments    Team[]    @relation("DeptTeams")
   members           User[]    @relation("DepartmentMembers")
   tasksAssigned     Task[]    @relation("TasksForDept")
