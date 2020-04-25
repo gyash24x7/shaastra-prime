@@ -65,7 +65,7 @@ export enum GoalType {
 	END_GOAL = "END_GOAL"
 }
 
-export enum SprintStatus {
+export enum SubTaskStatus {
 	NOT_STARTED = "NOT_STARTED",
 	IN_PROGRESS = "IN_PROGRESS",
 	COMPLETED = "COMPLETED"
