@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Department, User } from "../generated";
 
 interface IDrawerContext {
@@ -39,7 +38,7 @@ export const UserContext = React.createContext<IUserContext>({
 });
 
 interface IDepartmentContext {
-	departments: Pick<Department, "id" | "name" | "subDepartments">[];
+	departments: Pick<Department, "id" | "name">[];
 }
 
 export const DepartmentContext = React.createContext<IDepartmentContext>({

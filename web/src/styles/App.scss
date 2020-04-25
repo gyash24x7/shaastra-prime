@@ -18,7 +18,7 @@ body {
 
 input,
 button {
-	font-size: 16px;
+	font-size: 14px;
 	font-weight: 600 !important;
 }
 
@@ -44,12 +44,12 @@ button {
 
 	.grid-col {
 		flex: 1;
-		min-width: 350px;
+		min-width: 300px;
 	}
 }
 
 .button {
-	padding: 10px 30px;
+	padding: 5px 30px;
 	height: auto;
 	border-width: 2px;
 	border-radius: 3px;
@@ -62,13 +62,6 @@ button {
 	justify-content: space-between;
 	align-items: center;
 	flex-direction: row-reverse;
-}
-
-.page-header {
-	position: fixed;
-	padding: 0 30px;
-	top: 0;
-	z-index: 1000;
 }
 
 .ant-card-head-title {
@@ -89,12 +82,6 @@ button {
 	text-transform: capitalize;
 }
 
-.ant-layout-sider {
-	position: fixed;
-	z-index: 1001;
-	height: 100vh;
-}
-
 .ant-layout-header {
 	background-color: #000000;
 }
@@ -107,4 +94,14 @@ button {
 .ant-menu-item-group {
 	padding-top: 15px;
 	padding-bottom: 20px;
+}
+
+.title-card {
+	margin-bottom: 10px;
+
+	.ant-typography {
+		margin-bottom: 0;
+		font-size: 24px;
+		line-height: 24px;
+	}
 }

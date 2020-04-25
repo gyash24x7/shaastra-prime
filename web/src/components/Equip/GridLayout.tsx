@@ -1,7 +1,6 @@
 import React from "react";
 import StackGrid from "react-stack-grid";
 import { useWindowSize } from "react-use";
-
 import { KanbanItem } from "./KanbanLayout";
 
 export const GridLayout = (props: any) => {
@@ -13,8 +12,6 @@ export const GridLayout = (props: any) => {
 		else if (width < 1500) return (width - 450) / 2;
 		else return (width - 450) / 3;
 	};
-
-	console.log(width);
 
 	return (
 		<div style={{ margin: "0px -10px" }}>

@@ -1,7 +1,6 @@
 import { CalendarFilled } from "@ant-design/icons";
 import { Card, Tag, Typography } from "antd";
 import React from "react";
-
 import { status, statusColor } from ".";
 
 const { Title } = Typography;
@@ -13,6 +12,7 @@ export const KanbanLayout = (props: any) => {
 				<div
 					className="kanban-col"
 					style={{ border: "2px solid", borderColor: statusColor[status] }}
+					key={status}
 				>
 					<Tag color={statusColor[status]}>
 						<Title level={4}>{status}</Title>

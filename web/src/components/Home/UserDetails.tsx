@@ -1,6 +1,5 @@
 import { Descriptions, Typography } from "antd";
 import React from "react";
-
 import { stringGen } from "../../utils/lorem";
 
 const { Title, Paragraph } = Typography;
@@ -8,7 +7,7 @@ const { Item: DescriptionItem } = Descriptions;
 
 export const UserDetails = () => {
 	return (
-		<Descriptions layout="vertical" bordered column={2}>
+		<Descriptions layout="vertical" bordered column={2} size="middle">
 			<DescriptionItem label={<Title level={4}>About</Title>} span={2}>
 				<Paragraph>{stringGen.generateSentences(3)}</Paragraph>
 			</DescriptionItem>
