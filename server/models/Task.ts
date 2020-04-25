@@ -3,7 +3,7 @@ import { TaskStatus } from "../utils";
 import { Channel } from "./Channel";
 import { Department } from "./Department";
 import { Media } from "./Media";
-import { Sprint } from "./Sprint";
+import { SubTask } from "./SubTask";
 import { User } from "./User";
 
 registerEnumType(TaskStatus, { name: "TaskStatus" });
@@ -22,5 +22,5 @@ export class Task {
 	@Field() deadline: string;
 	@Field(() => Channel) channel: Channel;
 	@Field(() => [Media]) media: Media[];
-	@Field(() => [Sprint]) sprints: Sprint[];
+	@Field(() => [SubTask]) SubTasks: SubTask[];
 }
