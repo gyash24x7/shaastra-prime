@@ -12,7 +12,7 @@ export type Scalars = {
 };
 
 export type AddSubDepartmentInput = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
   subDept: Scalars['String'];
 };
 
@@ -33,7 +33,7 @@ export type Channel = {
 export type CreateChannelInput = {
   name: Scalars['String'];
   description: Scalars['String'];
-  members: Array<Scalars['Int']>;
+  members: Array<Scalars['String']>;
 };
 
 export type CreateUserInput = {
@@ -42,7 +42,6 @@ export type CreateUserInput = {
   password: Scalars['String'];
   rollNumber: Scalars['String'];
   mobile: Scalars['String'];
-  upi: Scalars['String'];
   departmentId: Scalars['Int'];
 };
 
@@ -50,11 +49,12 @@ export type Department = {
    __typename?: 'Department';
   id: Scalars['ID'];
   name: Scalars['String'];
-  subDepartments: Array<Scalars['String']>;
   members: Array<User>;
   tasksAssigned: Array<Task>;
   tasksCreated: Array<Task>;
   updates: Array<Update>;
+  invoicesSubmitted: Array<Invoice>;
+  subDepartments: Array<Team>;
 };
 
 export type ForgotPasswordInput = {
@@ -62,6 +62,53 @@ export type ForgotPasswordInput = {
   newPassword: Scalars['String'];
   passwordOTP: Scalars['String'];
 };
+
+export type Invoice = {
+   __typename?: 'Invoice';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  date: Scalars['String'];
+  invoiceNumber: Scalars['String'];
+  amount: Scalars['String'];
+  purpose: Scalars['String'];
+  status: InvoiceStatus;
+  type: InvoiceType;
+  media: Media;
+  activity: Array<InvoiceActivity>;
+  uploadedBy: User;
+  byDept: Department;
+  vendor: Vendor;
+};
+
+export type InvoiceActivity = {
+   __typename?: 'InvoiceActivity';
+  id: Scalars['ID'];
+  type: InvoiceActivityType;
+  on: Scalars['String'];
+  invoice: Invoice;
+};
+
+export enum InvoiceActivityType {
+  Uploaded = 'UPLOADED',
+  Edited = 'EDITED',
+  Approved = 'APPROVED',
+  Rejected = 'REJECTED'
+}
+
+export enum InvoiceStatus {
+  Coord = 'COORD',
+  Head = 'HEAD',
+  Core = 'CORE',
+  FinManager = 'FIN_MANAGER',
+  FinCore = 'FIN_CORE',
+  Cocad = 'COCAD'
+}
+
+export enum InvoiceType {
+  Reimbursement = 'REIMBURSEMENT',
+  Settlement = 'SETTLEMENT',
+  DirectPayment = 'DIRECT_PAYMENT'
+}
 
 export type LoginInput = {
   email: Scalars['String'];
@@ -186,6 +233,21 @@ export enum ReactionType {
   Sad = 'SAD'
 }
 
+export type Sprint = {
+   __typename?: 'Sprint';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  status: SprintStatus;
+  task: Task;
+  isTemplate: Scalars['Boolean'];
+};
+
+export enum SprintStatus {
+  NotStarted = 'NOT_STARTED',
+  InProgress = 'IN_PROGRESS',
+  Completed = 'COMPLETED'
+}
+
 export type Task = {
    __typename?: 'Task';
   id: Scalars['ID'];
@@ -200,6 +262,7 @@ export type Task = {
   deadline: Scalars['String'];
   channel: Channel;
   media: Array<Media>;
+  sprints: Array<Sprint>;
 };
 
 export enum TaskStatus {
@@ -209,6 +272,14 @@ export enum TaskStatus {
   Cocas = 'COCAS',
   Cocad = 'COCAD'
 }
+
+export type Team = {
+   __typename?: 'Team';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  members: Array<User>;
+  department: Department;
+};
 
 export type Update = {
    __typename?: 'Update';
@@ -237,6 +308,8 @@ export type User = {
   messages: Array<Message>;
   media: Array<Media>;
   channels: Array<Channel>;
+  invoicesSubmitted: Array<Invoice>;
+  teams: Array<Team>;
 };
 
 export enum UserRole {
@@ -246,6 +319,18 @@ export enum UserRole {
   Cocas = 'COCAS',
   Cocad = 'COCAD'
 }
+
+export type Vendor = {
+   __typename?: 'Vendor';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  gstNumber: Scalars['String'];
+  accountName: Scalars['String'];
+  accountNumber: Scalars['String'];
+  ifsc: Scalars['String'];
+  bankDetails: Scalars['String'];
+  invoices: Array<Invoice>;
+};
 
 export type VerifyUserInput = {
   email: Scalars['String'];
@@ -259,7 +344,6 @@ export type CreateUserMutationVariables = {
   departmentId: Scalars['Int'];
   rollNumber: Scalars['String'];
   mobile: Scalars['String'];
-  upi: Scalars['String'];
 };
 
 
@@ -339,7 +423,7 @@ export type GetDepartmentsQuery = (
   { __typename?: 'Query' }
   & { getDepartments: Array<(
     { __typename?: 'Department' }
-    & Pick<Department, 'id' | 'name' | 'subDepartments'>
+    & Pick<Department, 'id' | 'name'>
   )> }
 );
 
@@ -360,8 +444,8 @@ export type MeQuery = (
 
 
 export const CreateUserDocument = gql`
-    mutation CreateUser($name: String!, $email: String!, $password: String!, $departmentId: Int!, $rollNumber: String!, $mobile: String!, $upi: String!) {
-  createUser(data: {name: $name, email: $email, password: $password, rollNumber: $rollNumber, mobile: $mobile, departmentId: $departmentId, upi: $upi}) {
+    mutation CreateUser($name: String!, $email: String!, $password: String!, $departmentId: Int!, $rollNumber: String!, $mobile: String!) {
+  createUser(data: {name: $name, email: $email, password: $password, rollNumber: $rollNumber, mobile: $mobile, departmentId: $departmentId}) {
     id
     name
     email
@@ -400,7 +484,6 @@ export type CreateUserMutationFn = ApolloReactCommon.MutationFunction<CreateUser
  *      departmentId: // value for 'departmentId'
  *      rollNumber: // value for 'rollNumber'
  *      mobile: // value for 'mobile'
- *      upi: // value for 'upi'
  *   },
  * });
  */
@@ -573,7 +656,6 @@ export const GetDepartmentsDocument = gql`
   getDepartments {
     id
     name
-    subDepartments
   }
 }
     `;
@@ -647,22 +729,3 @@ export function useMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptio
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
-
-      export interface IntrospectionResultData {
-        __schema: {
-          types: {
-            kind: string;
-            name: string;
-            possibleTypes: {
-              name: string;
-            }[];
-          }[];
-        };
-      }
-      const result: IntrospectionResultData = {
-  "__schema": {
-    "types": []
-  }
-};
-      export default result;
-    

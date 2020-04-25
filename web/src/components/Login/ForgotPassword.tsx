@@ -1,8 +1,9 @@
 import { Button, Form, Input, Typography } from "antd";
 import React from "react";
-
 import { PublicLayout } from "../shared/PublicLayout";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
+
+const { Title } = Typography;
 
 export const ForgotPasswordScreen = () => {
 	const [form] = Form.useForm();
@@ -19,7 +20,9 @@ export const ForgotPasswordScreen = () => {
 	return (
 		<PublicLayout>
 			<div className="login-form-container">
-				<Typography.Title level={3}>FORGOT PASSWORD</Typography.Title>
+				<Title level={3} className="form-title">
+					FORGOT PASSWORD
+				</Title>{" "}
 				<Form
 					form={form}
 					onFinish={handleSubmit}

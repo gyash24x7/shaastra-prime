@@ -1,7 +1,6 @@
 import { Card, Pagination, Typography } from "antd";
 import moment from "moment";
 import React, { useState } from "react";
-
 import { EquipDrawerContext } from "../../utils/context";
 import { stringGen } from "../../utils/lorem";
 import { CommonDrawer } from "../shared/CommonDrawer";
@@ -103,32 +102,30 @@ export const EquipScreen = () => {
 
 	return (
 		<PrivateLayout title="Equip">
-			<div className="screen-wrapper">
-				<Card
-					title={<Title level={3}>My Tasks</Title>}
-					tabList={tablist}
-					activeTabKey={activeKey}
-					onTabChange={setActiveKey}
-					tabBarExtraContent={
-						<Pagination
-							total={datasource.length}
-							current={currentPage}
-							onChange={setCurrentPage}
-						/>
-					}
-					className="equip-card"
+			<Card
+				title={<Title level={3}>My Tasks</Title>}
+				tabList={tablist}
+				activeTabKey={activeKey}
+				onTabChange={setActiveKey}
+				tabBarExtraContent={
+					<Pagination
+						total={datasource.length}
+						current={currentPage}
+						onChange={setCurrentPage}
+					/>
+				}
+				className="equip-card"
+			>
+				<EquipDrawerContext.Provider
+					value={{
+						component: activeDrawerComponent,
+						visible: !!activeDrawerComponent,
+						onClose: () => setActiveDrawerComponent(undefined)
+					}}
 				>
-					<EquipDrawerContext.Provider
-						value={{
-							component: activeDrawerComponent,
-							visible: !!activeDrawerComponent,
-							onClose: () => setActiveDrawerComponent(undefined)
-						}}
-					>
-						{tabContent[activeKey]}
-					</EquipDrawerContext.Provider>
-				</Card>
-			</div>
+					{tabContent[activeKey]}
+				</EquipDrawerContext.Provider>
+			</Card>
 			<CommonDrawer
 				component={activeDrawerComponent}
 				visible={!!activeDrawerComponent}

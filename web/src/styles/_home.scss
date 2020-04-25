@@ -1,15 +1,14 @@
 .screen-wrapper {
-	padding: 30px;
-	padding-top: 10px;
-	height: calc(100vh - 64px);
+	padding: 10px;
+	height: calc(100vh - 20px);
 }
 
 .team-card-wrapper {
-	min-height: calc(100vh - 104px);
+	min-height: calc(100vh - 102px);
 }
 
 .team-card {
-	margin: 15px;
+	margin: 10px;
 	margin-bottom: 25px;
 
 	.ant-card-body {
@@ -22,8 +21,8 @@
 }
 
 .user-card {
-	margin: auto 15px;
-	height: calc(100vh - 104px);
+	margin: 0px 5px;
+	min-height: calc(100vh - 102px);
 
 	.ant-card-head-wrapper {
 		display: flex;
@@ -70,8 +69,8 @@
 }
 
 .profile-card {
-	margin: auto 15px;
-	margin-bottom: 15px;
+	margin: 0px 5px;
+	margin-bottom: 5px;
 	.avatar {
 		position: absolute;
 		bottom: 170px;

@@ -1,7 +1,8 @@
 import { Button, Form, Input, Typography } from "antd";
 import React from "react";
-
 import { PublicLayout } from "../shared/PublicLayout";
+
+const { Title } = Typography;
 
 export const OTPScreen = () => {
 	const [form] = Form.useForm();
@@ -18,7 +19,9 @@ export const OTPScreen = () => {
 	return (
 		<PublicLayout>
 			<div className="login-form-container">
-				<Typography.Title level={3}>FORGOT PASSWORD</Typography.Title>
+				<Title level={3} className="form-title">
+					VERIFICATION
+				</Title>{" "}
 				<Form
 					form={form}
 					onFinish={handleSubmit}

@@ -1,7 +1,6 @@
 import { Button, Form, Input, Typography } from "antd";
 import React from "react";
 import { Link, Redirect } from "react-router-dom";
-
 import { useLoginMutation } from "../../generated";
 import { PublicLayout } from "../shared/PublicLayout";
 import { ShowError } from "../shared/ShowError";
@@ -9,6 +8,8 @@ import { SwitchingIcon } from "../shared/SwitchingIcon";
 
 // eslint-disable-next-line
 const emailRegex = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+
+const { Title } = Typography;
 
 export const LoginScreen = () => {
 	const [form] = Form.useForm();
@@ -39,7 +40,9 @@ export const LoginScreen = () => {
 	return (
 		<PublicLayout>
 			<div className="login-form-container">
-				<Typography.Title level={3}>LOGIN</Typography.Title>
+				<Title level={3} className="form-title">
+					LOGIN
+				</Title>
 				<Form
 					form={form}
 					onFinish={handleSubmit}
@@ -80,7 +83,8 @@ export const LoginScreen = () => {
 							block
 							style={{ marginTop: 15 }}
 							loading={loading}
-							className="button primary"
+							className="button"
+							type="primary"
 						>
 							Submit
 						</Button>

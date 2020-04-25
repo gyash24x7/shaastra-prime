@@ -1,7 +1,6 @@
 import { Card, Typography } from "antd";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-
 import { PrivateLayout } from "../shared/PrivateLayout";
 import { TeamCard } from "../shared/TeamCard";
 
@@ -43,17 +42,15 @@ export const TeamScreen = () => {
 
 	return (
 		<PrivateLayout title={`${department} Team`}>
-			<div className="screen-wrapper">
-				<Card
-					tabList={tabList}
-					activeTabKey={activeKey}
-					tabBarExtraContent={<div />}
-					onTabChange={setActiveKey}
-					className="team-card-wrapper"
-				>
-					{tabContent[activeKey]}
-				</Card>
-			</div>
+			<Card
+				tabList={tabList}
+				activeTabKey={activeKey}
+				tabBarExtraContent={<div />}
+				onTabChange={setActiveKey}
+				className="team-card-wrapper"
+			>
+				{tabContent[activeKey]}
+			</Card>
 		</PrivateLayout>
 	);
 };

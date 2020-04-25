@@ -1,52 +1,38 @@
-import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Layout, PageHeader } from "antd";
-import React, { Fragment, useState } from "react";
-import { useHistory } from "react-router-dom";
-
+import { Card, Layout, Typography } from "antd";
+import React from "react";
 import { PrimaryNav } from "../Navigation/PrimaryNav";
 import { SecondaryNav } from "../Navigation/SecondaryNav";
 
-const { Content, Sider, Header } = Layout;
+const { Content, Sider } = Layout;
+const { Title } = Typography;
 
-export const PrivateLayout = (props: any) => {
-	const [marginLeft, setMarginLeft] = useState(270);
-	const history = useHistory();
+interface PrivateLayoutProps {
+	title: string;
+	children: any;
+	extra?: JSX.Element;
+}
 
+export const PrivateLayout = (props: PrivateLayoutProps) => {
 	return (
-		<Fragment>
-			<Layout className="private-container">
-				<Sider
-					breakpoint="xl"
-					width="270px"
-					collapsedWidth="0px"
-					onBreakpoint={() => {
-						if (window.innerWidth < 1199) {
-							setMarginLeft(0);
-						} else setMarginLeft(270);
-					}}
-				>
+		<div className="private-container">
+			<Layout>
+				<Sider breakpoint="xl" width="270" collapsedWidth="0">
 					<SecondaryNav />
 				</Sider>
 				<Layout>
-					<Layout style={{ marginLeft }}>
-						<Header
-							className="page-header"
-							style={{
-								width: marginLeft ? "calc(100% - 330px)" : "calc(100% - 60px)"
-							}}
-						>
-							<PageHeader
-								title={props.title}
-								onBack={() => history.goBack()}
-								backIcon={<ArrowLeftOutlined className="icon" />}
-								extra={props.extra}
-							/>
-						</Header>
-						<Content style={{ marginTop: 64 }}>{props.children}</Content>
-					</Layout>
+					<Content>
+						<div className="screen-wrapper">
+							<div className="grid-row">
+								<Card className="title-card">
+									<Title level={3}>{props.title}</Title>
+								</Card>
+							</div>
+							{props.children}
+						</div>
+					</Content>
 				</Layout>
 			</Layout>
 			<PrimaryNav />
-		</Fragment>
+		</div>
 	);
 };

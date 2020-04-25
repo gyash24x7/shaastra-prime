@@ -1,11 +1,12 @@
 import { Button, Form, Input, Select, Tag, Typography } from "antd";
 import React, { useContext } from "react";
-import { Redirect } from "react-router-dom";
-
+import { Link, Redirect } from "react-router-dom";
 import { useCreateUserMutation } from "../../generated";
 import { DepartmentContext } from "../../utils/context";
 import { PublicLayout } from "../shared/PublicLayout";
 import { ShowError } from "../shared/ShowError";
+
+const { Title } = Typography;
 
 // eslint-disable-next-line
 const emailRegex = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
@@ -34,7 +35,6 @@ export const SignupScreen = () => {
 					email: values["email"],
 					rollNumber: values["rollNumber"],
 					password: values["password"],
-					upi: "",
 					mobile: values["mobile"],
 					departmentId: parseInt(values["department"])
 				}
@@ -47,7 +47,9 @@ export const SignupScreen = () => {
 	return (
 		<PublicLayout>
 			<div className="signup-form-container">
-				<Typography.Title level={3}>SIGN UP</Typography.Title>
+				<Title level={3} className="form-title">
+					SIGN UP
+				</Title>
 				<Form
 					form={form}
 					onFinish={handleSubmit}
@@ -74,8 +76,6 @@ export const SignupScreen = () => {
 						>
 							<Input placeholder="Enter Email" type="email" />
 						</Form.Item>
-					</div>
-					<div className="grid-row">
 						<Form.Item
 							name="mobile"
 							label="Mobile Number"
@@ -98,28 +98,7 @@ export const SignupScreen = () => {
 						>
 							<Input placeholder="Enter Roll Number" type="text" />
 						</Form.Item>
-					</div>
-					<div className="grid-row">
-						<Form.Item
-							name="department"
-							label="Department"
-							className="grid-col form-field"
-							rules={[{ required: true, message: "Departments are required!" }]}
-						>
-							<Select
-								options={departments.map((dept) => ({
-									label: dept.name,
-									value: dept.id
-								}))}
-								tagRender={(props) => (
-									<Tag {...props} color="red">
-										{props.label}
-									</Tag>
-								)}
-							/>
-						</Form.Item>
-					</div>
-					<div className="grid-row">
+
 						<Form.Item
 							name="password"
 							className="grid-col form-field"
@@ -144,6 +123,25 @@ export const SignupScreen = () => {
 						>
 							<Input placeholder="Enter Password" type="password" />
 						</Form.Item>
+						<Form.Item
+							name="department"
+							label="Department"
+							className="grid-col form-field"
+							rules={[{ required: true, message: "Departments are required!" }]}
+						>
+							<Select
+								options={departments.map((dept) => ({
+									label: dept.name,
+									value: dept.id
+								}))}
+								tagRender={(props) => (
+									<Tag {...props} color="red">
+										{props.label}
+									</Tag>
+								)}
+								placeholder="Select Department"
+							/>
+						</Form.Item>
 					</div>
 					<div className="grid-row">
 						<Form.Item className="grid-col form-field">
@@ -160,6 +158,10 @@ export const SignupScreen = () => {
 						</Form.Item>
 					</div>
 				</Form>
+				<div style={{ display: "flex", justifyContent: "space-between" }}>
+					<span>Already have an account?</span>
+					<Link to="/login">Login</Link>
+				</div>
 			</div>
 		</PublicLayout>
 	);
