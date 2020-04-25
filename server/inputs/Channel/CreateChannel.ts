@@ -1,4 +1,4 @@
-import { Field, InputType, Int } from "type-graphql";
+import { Field, InputType } from "type-graphql";
 
 @InputType()
 export class CreateChannelInput {
@@ -8,6 +8,6 @@ export class CreateChannelInput {
 	@Field()
 	description: string;
 
-	@Field(() => [Int])
-	members: number[];
+	@Field(() => [String])
+	members: string[];
 }

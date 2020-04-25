@@ -1,5 +1,4 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-
 import { MessageStatus } from "../utils";
 import { Channel } from "./Channel";
 import { Reaction } from "./Reaction";
@@ -9,7 +8,7 @@ registerEnumType(MessageStatus, { name: "MessageStatus" });
 
 @ObjectType()
 export class Message {
-	@Field(() => ID) id: number;
+	@Field(() => ID) id: string;
 	@Field() content: string;
 	@Field() createdAt: string;
 	@Field(() => User) createdBy: User;
