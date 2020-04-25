@@ -1,14 +1,13 @@
 import {
-  Arg,
-  Authorized,
-  Ctx,
-  FieldResolver,
-  Mutation,
-  Query,
-  Resolver,
-  Root,
+	Arg,
+	Authorized,
+	Ctx,
+	FieldResolver,
+	Mutation,
+	Query,
+	Resolver,
+	Root
 } from "type-graphql";
-
 import { CreateChannelInput } from "../inputs/Channel/CreateChannel";
 import { Channel } from "../models/Channel";
 import { prisma } from "../prisma";
@@ -22,7 +21,7 @@ export class ChannelResolver {
 		@Arg("data") { members, name, description }: CreateChannelInput,
 		@Ctx() { req }: GraphQLContext
 	) {
-		let userId: number = req.session!.userId;
+		let userId: string = req.session!.userId;
 		return prisma.channel.create({
 			data: {
 				name,

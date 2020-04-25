@@ -1,12 +1,11 @@
 import {
-  Arg,
-  FieldResolver,
-  Mutation,
-  Query,
-  Resolver,
-  Root,
+	Arg,
+	FieldResolver,
+	Mutation,
+	Query,
+	Resolver,
+	Root
 } from "type-graphql";
-
 import { AddSubDepartmentInput } from "../inputs/Department/AddSubDepartment";
 import { Department } from "../models/Department";
 import { User } from "../models/User";
@@ -25,7 +24,7 @@ export class DepartmentResolver {
 		if (!dept) return false;
 		dept = await prisma.department.update({
 			where: { id },
-			data: { subDepartments: { set: dept.subDepartments.concat(subDept) } }
+			data: { subDepartments: { create: { name: subDept } } }
 		});
 		return !!dept;
 	}

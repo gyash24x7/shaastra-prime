@@ -1,5 +1,4 @@
 import { Field, ID, ObjectType } from "type-graphql";
-
 import { Media } from "./Media";
 import { Message } from "./Message";
 import { Task } from "./Task";
@@ -7,7 +6,7 @@ import { User } from "./User";
 
 @ObjectType()
 export class Channel {
-	@Field(() => ID) id: number;
+	@Field(() => ID) id: string;
 	@Field() name: string;
 	@Field() description: string;
 	@Field() createdAt: string;

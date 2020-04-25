@@ -1,5 +1,4 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-
 import { TaskStatus } from "../utils";
 import { Channel } from "./Channel";
 import { Department } from "./Department";
@@ -11,7 +10,7 @@ registerEnumType(TaskStatus, { name: "TaskStatus" });
 
 @ObjectType()
 export class Task {
-	@Field(() => ID) id: number;
+	@Field(() => ID) id: string;
 	@Field() brief: string;
 	@Field() details: string;
 	@Field(() => Department) byDept: Department;

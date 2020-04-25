@@ -1,9 +1,9 @@
-import { InputType, Field, Int } from "type-graphql";
+import { Field, InputType } from "type-graphql";
 
 @InputType()
 export class AddSubDepartmentInput {
-	@Field(() => Int)
-	id: number;
+	@Field()
+	id: string;
 
 	@Field()
 	subDept: string;

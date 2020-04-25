@@ -1,10 +1,9 @@
 import { Field, ID, ObjectType } from "type-graphql";
-
 import { Invoice } from "./Invoice";
 
 @ObjectType()
 export class Vendor {
-	@Field(() => ID) id: number;
+	@Field(() => ID) id: string;
 	@Field() name: string;
 	@Field() gstNumber: string;
 	@Field() accountName: string;

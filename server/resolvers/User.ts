@@ -1,15 +1,14 @@
 import bcrypt from "bcryptjs";
 import {
-  Arg,
-  Authorized,
-  Ctx,
-  FieldResolver,
-  Mutation,
-  Query,
-  Resolver,
-  Root,
+	Arg,
+	Authorized,
+	Ctx,
+	FieldResolver,
+	Mutation,
+	Query,
+	Resolver,
+	Root
 } from "type-graphql";
-
 import { CreateUserInput } from "../inputs/User/CreateUser";
 import { ForgotPasswordInput } from "../inputs/User/ForgotPassword";
 import { LoginInput } from "../inputs/User/Login";
@@ -36,6 +35,7 @@ export class UserResolver {
 				profilePic: "",
 				coverPic: "",
 				about: "",
+				upi: "",
 				department: {
 					connect: { id: departmentId }
 				}
