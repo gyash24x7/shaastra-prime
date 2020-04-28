@@ -4,10 +4,10 @@ import { Department, User } from "../generated";
 interface IDrawerContext {
 	component?: JSX.Element;
 	visible: boolean;
-	onClose?: () => void;
+	setDrawerComponent?: (comp: JSX.Element) => void;
 }
 
-export const EquipDrawerContext = React.createContext<IDrawerContext>({
+export const DrawerContext = React.createContext<IDrawerContext>({
 	visible: false
 });
 

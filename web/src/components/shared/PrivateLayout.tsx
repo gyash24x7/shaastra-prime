@@ -1,38 +1,48 @@
-import { Card, Layout, Typography } from "antd";
-import React from "react";
+import { Layout } from "antd";
+import React, { useState } from "react";
+import { DrawerContext } from "../../utils/context";
 import { PrimaryNav } from "../Navigation/PrimaryNav";
 import { SecondaryNav } from "../Navigation/SecondaryNav";
+import { CommonDrawer } from "./CommonDrawer";
 
 const { Content, Sider } = Layout;
-const { Title } = Typography;
 
 interface PrivateLayoutProps {
-	title: string;
 	children: any;
-	extra?: JSX.Element;
 }
 
 export const PrivateLayout = (props: PrivateLayoutProps) => {
+	const [activeDrawerComponent, setActiveDrawerComponent] = useState<
+		JSX.Element | undefined
+	>();
+
 	return (
 		<div className="private-container">
-			<Layout>
-				<Sider breakpoint="xl" width="270" collapsedWidth="0">
-					<SecondaryNav />
-				</Sider>
+			<DrawerContext.Provider
+				value={{
+					component: activeDrawerComponent,
+					visible: !!activeDrawerComponent,
+					setDrawerComponent: setActiveDrawerComponent
+				}}
+			>
 				<Layout>
-					<Content>
-						<div className="screen-wrapper">
-							<div className="grid-row">
-								<Card className="title-card">
-									<Title level={3}>{props.title}</Title>
-								</Card>
-							</div>
-							{props.children}
-						</div>
-					</Content>
+					<Sider breakpoint="xl" width="270" collapsedWidth="0">
+						<SecondaryNav />
+					</Sider>
+					<Layout>
+						<Content>
+							<div className="screen-wrapper">{props.children}</div>
+						</Content>
+					</Layout>
 				</Layout>
-			</Layout>
-			<PrimaryNav />
+				<PrimaryNav />
+			</DrawerContext.Provider>
+
+			<CommonDrawer
+				component={activeDrawerComponent}
+				visible={!!activeDrawerComponent}
+				onClose={() => setActiveDrawerComponent(undefined)}
+			/>
 		</div>
 	);
 };
