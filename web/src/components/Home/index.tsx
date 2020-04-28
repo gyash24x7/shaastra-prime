@@ -5,7 +5,7 @@ import { UserDataCard } from "./UserDataCard";
 
 export const HomeScreen = () => {
 	return (
-		<PrivateLayout title="Profile">
+		<PrivateLayout>
 			<div
 				className="grid-row"
 				style={{ flexDirection: "row-reverse", margin: "0px -5px" }}

@@ -1,7 +1,9 @@
 import { CalendarFilled } from "@ant-design/icons";
 import { Card, Tag, Typography } from "antd";
-import React from "react";
+import React, { useContext } from "react";
 import { status, statusColor } from ".";
+import { DrawerContext } from "../../utils/context";
+import { TaskDescription } from "./TaskDescription";
 
 const { Title } = Typography;
 
@@ -29,8 +31,14 @@ export const KanbanLayout = (props: any) => {
 };
 
 export const KanbanItem = (props: any) => {
+	const { setDrawerComponent } = useContext(DrawerContext);
+
 	return (
-		<Card className="kanban-item" bordered={false}>
+		<Card
+			className="kanban-item"
+			bordered={false}
+			onClick={() => setDrawerComponent!(<TaskDescription data={props.task} />)}
+		>
 			<Title level={4}>{props.task.brief}</Title>
 			<Tag icon={<CalendarFilled />}>
 				{props.task.createdAt.format("DD/MM/YYYY")}

@@ -1,3 +1,15 @@
 .update-item {
 	margin-bottom: 10px;
 }
+
+.update-list-item {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	cursor: pointer;
+	align-items: center;
+
+	span.ant-typography {
+		font-size: 16px;
+	}
+}

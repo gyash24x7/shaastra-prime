@@ -1,6 +1,5 @@
 import { Button, Descriptions, Tag, Typography } from "antd";
 import React from "react";
-
 import { statusColor } from ".";
 import { AvatarHeader } from "../shared/AvatarHeader";
 

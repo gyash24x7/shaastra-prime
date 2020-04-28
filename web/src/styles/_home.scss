@@ -3,13 +3,8 @@
 	height: calc(100vh - 20px);
 }
 
-.team-card-wrapper {
-	min-height: calc(100vh - 102px);
-}
-
 .team-card {
-	margin: 10px;
-	margin-bottom: 25px;
+	margin: 30px 10px;
 
 	.ant-card-body {
 		padding: 0;
@@ -82,4 +77,8 @@
 	.avatar-container {
 		margin-top: 20px;
 	}
+}
+
+.team-card-grid {
+	width: 100%;
 }
