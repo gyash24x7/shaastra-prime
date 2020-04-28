@@ -63,7 +63,7 @@ export const TableLayout = (props: any) => {
 		setSorters(sorter);
 	};
 
-	const { setDrawerComponent } = useContext(DrawerContext);
+	const { setDrawerComponent } = useContext(DrawerContext)!;
 
 	return (
 		<Table

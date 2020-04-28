@@ -1,28 +1,27 @@
 import {
-  FileAddOutlined,
-  InboxOutlined,
-  IssuesCloseOutlined,
-  PlusOutlined,
-  ProfileOutlined,
-  SubnodeOutlined,
-  TeamOutlined,
+	FileAddOutlined,
+	InboxOutlined,
+	IssuesCloseOutlined,
+	PlusOutlined,
+	ProfileOutlined,
+	SubnodeOutlined,
+	TeamOutlined
 } from "@ant-design/icons";
-import { Menu } from "antd";
-import React from "react";
-import { useHistory, useLocation } from "react-router-dom";
-
+import { Menu, Typography } from "antd";
+import React, { useContext } from "react";
+import { useLocation } from "react-router-dom";
+import { ModalContext } from "../../utils/context";
 import { AvatarHeader } from "../shared/AvatarHeader";
+
+const { Title } = Typography;
 
 export const SecondaryNav = () => {
 	const { pathname } = useLocation();
-	const history = useHistory();
+
+	const { setModalComponent, setModalProps } = useContext(ModalContext)!;
 
 	return (
-		<Menu
-			style={{ height: "100vh" }}
-			selectedKeys={[pathname]}
-			onClick={({ key }) => history.push(key)}
-		>
+		<Menu style={{ height: "100vh" }} selectedKeys={[pathname]}>
 			<Menu.ItemGroup className="avatar-item-group">
 				<div style={{ padding: "5px 20px" }}>
 					<AvatarHeader withAvatar />
@@ -38,7 +37,13 @@ export const SecondaryNav = () => {
 					<FileAddOutlined className="icon nav-icon" />
 					<span>Submit Invoice</span>
 				</Menu.Item>
-				<Menu.Item key="sendUpdate">
+				<Menu.Item
+					key="sendUpdate"
+					onClick={() => {
+						setModalComponent(<div>Hello</div>);
+						setModalProps({ title: <Title level={4}>Send New Update</Title> });
+					}}
+				>
 					<SubnodeOutlined className="icon nav-icon" />
 					<span>Send Update</span>
 				</Menu.Item>
