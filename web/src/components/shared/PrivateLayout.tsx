@@ -1,9 +1,11 @@
 import { Layout } from "antd";
+import { ModalProps } from "antd/lib/modal";
 import React, { useState } from "react";
-import { DrawerContext } from "../../utils/context";
+import { DrawerContext, ModalContext } from "../../utils/context";
 import { PrimaryNav } from "../Navigation/PrimaryNav";
 import { SecondaryNav } from "../Navigation/SecondaryNav";
 import { CommonDrawer } from "./CommonDrawer";
+import { CommonModal } from "./CommonModal";
 
 const { Content, Sider } = Layout;
 
@@ -12,36 +14,37 @@ interface PrivateLayoutProps {
 }
 
 export const PrivateLayout = (props: PrivateLayoutProps) => {
-	const [activeDrawerComponent, setActiveDrawerComponent] = useState<
-		JSX.Element | undefined
-	>();
+	const [drawerComponent, setDrawerComponent] = useState<JSX.Element>();
+	const [modalComponent, setModalComponent] = useState<JSX.Element>();
+	const [modalProps, setModalProps] = useState<ModalProps>({});
 
 	return (
 		<div className="private-container">
-			<DrawerContext.Provider
-				value={{
-					component: activeDrawerComponent,
-					visible: !!activeDrawerComponent,
-					setDrawerComponent: setActiveDrawerComponent
-				}}
-			>
-				<Layout>
-					<Sider breakpoint="xl" width="270" collapsedWidth="0">
-						<SecondaryNav />
-					</Sider>
+			<DrawerContext.Provider value={{ setDrawerComponent }}>
+				<ModalContext.Provider value={{ setModalComponent, setModalProps }}>
 					<Layout>
-						<Content>
-							<div className="screen-wrapper">{props.children}</div>
-						</Content>
+						<Sider breakpoint="xl" width="270" collapsedWidth="0">
+							<SecondaryNav />
+						</Sider>
+						<Layout>
+							<Content>
+								<div className="screen-wrapper">{props.children}</div>
+							</Content>
+						</Layout>
 					</Layout>
-				</Layout>
-				<PrimaryNav />
+					<PrimaryNav />
+				</ModalContext.Provider>
 			</DrawerContext.Provider>
-
+			<CommonModal
+				component={modalComponent}
+				visible={!!modalComponent}
+				onCancel={() => setModalComponent(undefined)}
+				modalProps={modalProps}
+			/>
 			<CommonDrawer
-				component={activeDrawerComponent}
-				visible={!!activeDrawerComponent}
-				onClose={() => setActiveDrawerComponent(undefined)}
+				component={drawerComponent}
+				visible={!!drawerComponent}
+				onClose={() => setDrawerComponent(undefined)}
 			/>
 		</div>
 	);

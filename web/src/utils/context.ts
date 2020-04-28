@@ -1,15 +1,19 @@
+import { ModalProps } from "antd/lib/modal";
 import React from "react";
 import { Department, User } from "../generated";
 
 interface IDrawerContext {
-	component?: JSX.Element;
-	visible: boolean;
-	setDrawerComponent?: (comp: JSX.Element) => void;
+	setDrawerComponent: (comp: JSX.Element) => void;
 }
 
-export const DrawerContext = React.createContext<IDrawerContext>({
-	visible: false
-});
+export const DrawerContext = React.createContext<IDrawerContext | null>(null);
+
+interface IModalContext {
+	setModalComponent: (comp: JSX.Element) => void;
+	setModalProps: (props: ModalProps) => void;
+}
+
+export const ModalContext = React.createContext<IModalContext | null>(null);
 
 interface IUserContext {
 	user?:

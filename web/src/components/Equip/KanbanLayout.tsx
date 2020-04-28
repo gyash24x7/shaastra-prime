@@ -31,7 +31,7 @@ export const KanbanLayout = (props: any) => {
 };
 
 export const KanbanItem = (props: any) => {
-	const { setDrawerComponent } = useContext(DrawerContext);
+	const { setDrawerComponent } = useContext(DrawerContext)!;
 
 	return (
 		<Card

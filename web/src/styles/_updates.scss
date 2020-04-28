@@ -9,7 +9,21 @@
 	cursor: pointer;
 	align-items: center;
 
+	.update-brief {
+		margin-right: 20px;
+		flex: 1;
+	}
+
+	.update-actions {
+		display: flex;
+		flex-wrap: nowrap;
+	}
+
 	span.ant-typography {
 		font-size: 16px;
+	}
+
+	div.ant-typography {
+		font-weight: 300;
 	}
 }

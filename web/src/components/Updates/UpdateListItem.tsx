@@ -5,21 +5,24 @@ import { DrawerContext } from "../../utils/context";
 import { stringGen } from "../../utils/lorem";
 import { UpdateItem } from "./UpdateItem";
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 interface UpdateListItemProps {
 	update: { byDept: string; postedBy: string };
 }
 
 export const UpdateListItem = ({ update }: UpdateListItemProps) => {
-	const { setDrawerComponent } = useContext(DrawerContext);
+	const { setDrawerComponent } = useContext(DrawerContext)!;
 
 	return (
 		<div
 			className="update-list-item"
 			onClick={() => setDrawerComponent!(<UpdateItem />)}
 		>
-			<Text strong>{stringGen.generateWords(4)}</Text>
+			<div className="update-brief">
+				<Text strong>{stringGen.generateWords(4)}</Text>
+				<Paragraph>{stringGen.generateSentences(2)}</Paragraph>
+			</div>
 			<div className="update-actions">
 				<Tag color="red">{update.byDept}</Tag>
 				<Tag color="cyan">Yash Gupta</Tag>
