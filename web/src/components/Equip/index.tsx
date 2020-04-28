@@ -1,9 +1,7 @@
 import { Card, Pagination, Typography } from "antd";
 import moment from "moment";
 import React, { useState } from "react";
-import { EquipDrawerContext } from "../../utils/context";
 import { stringGen } from "../../utils/lorem";
-import { CommonDrawer } from "../shared/CommonDrawer";
 import { PrivateLayout } from "../shared/PrivateLayout";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
 import { GridLayout } from "./GridLayout";
@@ -96,12 +94,8 @@ export const EquipScreen = () => {
 		grid: <GridLayout data={datasource} />
 	};
 
-	const [activeDrawerComponent, setActiveDrawerComponent] = useState<
-		JSX.Element | undefined
-	>();
-
 	return (
-		<PrivateLayout title="Equip">
+		<PrivateLayout>
 			<Card
 				title={<Title level={3}>My Tasks</Title>}
 				tabList={tablist}
@@ -116,21 +110,8 @@ export const EquipScreen = () => {
 				}
 				className="equip-card"
 			>
-				<EquipDrawerContext.Provider
-					value={{
-						component: activeDrawerComponent,
-						visible: !!activeDrawerComponent,
-						onClose: () => setActiveDrawerComponent(undefined)
-					}}
-				>
-					{tabContent[activeKey]}
-				</EquipDrawerContext.Provider>
+				{tabContent[activeKey]}
 			</Card>
-			<CommonDrawer
-				component={activeDrawerComponent}
-				visible={!!activeDrawerComponent}
-				onClose={() => setActiveDrawerComponent(undefined)}
-			/>
 		</PrivateLayout>
 	);
 };

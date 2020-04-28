@@ -1,10 +1,11 @@
 import { Tag, Typography } from "antd";
 import Table, { ColumnProps } from "antd/lib/table";
 import { Moment } from "moment";
-import React, { useState } from "react";
-
+import React, { useContext, useState } from "react";
 import { departments, status, statusColor } from ".";
+import { DrawerContext } from "../../utils/context";
 import { UserCardSmall } from "../shared/UserCardSmall";
+import { TaskDescription } from "./TaskDescription";
 
 export const TableLayout = (props: any) => {
 	const [filters, setFilters] = useState<any>(null);
@@ -62,6 +63,8 @@ export const TableLayout = (props: any) => {
 		setSorters(sorter);
 	};
 
+	const { setDrawerComponent } = useContext(DrawerContext);
+
 	return (
 		<Table
 			dataSource={props.data}
@@ -71,6 +74,11 @@ export const TableLayout = (props: any) => {
 			onChange={handleOnChange}
 			pagination={false}
 			size="middle"
+			onRow={(record) => ({
+				onClick() {
+					setDrawerComponent!(<TaskDescription data={record} />);
+				}
+			})}
 		/>
 	);
 };
