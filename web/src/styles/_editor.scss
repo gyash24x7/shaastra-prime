@@ -21,6 +21,8 @@
 
 .editor-btn {
 	border: none;
+	display: flex;
+	justify-content: center;
 
 	&:hover {
 		background: #303030;
