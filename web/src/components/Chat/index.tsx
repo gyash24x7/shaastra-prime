@@ -1,12 +1,13 @@
 import { MenuOutlined, UploadOutlined } from "@ant-design/icons";
-import { Button, Card, Mentions, Typography } from "antd";
+import { Button, Card, Typography } from "antd";
 import React, { useState } from "react";
+import Editor from "../Editor";
 import { PrivateLayout } from "../shared/PrivateLayout";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
 import { ChannelDrawer } from "./ChannelDrawer";
 import { MessageComponent } from "./Message";
 
-const { Option } = Mentions;
+// const { Option } = Mentions;
 const { Title } = Typography;
 
 export const ChatScreen = () => {
@@ -35,17 +36,7 @@ export const ChatScreen = () => {
 			</Card>
 			<div className="message-input-box">
 				<div className="message-input">
-					<Mentions
-						autoFocus
-						placement="top"
-						onChange={() => {}}
-						onSelect={() => {}}
-						rows={3}
-					>
-						<Option value="afc163">afc163</Option>
-						<Option value="zombieJ">zombieJ</Option>
-						<Option value="yesmeck">yesmeck</Option>
-					</Mentions>
+					<Editor />
 				</div>
 				<Button className="file-upload-btn button default">
 					<UploadOutlined className="icon" />

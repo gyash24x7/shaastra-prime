@@ -12,6 +12,7 @@ import React, { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { ModalContext } from "../../utils/context";
 import { AvatarHeader } from "../shared/AvatarHeader";
+import { UpdateForm } from "../Updates/UpdateForm";
 
 const { Title } = Typography;
 
@@ -40,8 +41,12 @@ export const SecondaryNav = () => {
 				<Menu.Item
 					key="sendUpdate"
 					onClick={() => {
-						setModalComponent(<div>Hello</div>);
-						setModalProps({ title: <Title level={4}>Send New Update</Title> });
+						setModalComponent(<UpdateForm />);
+						setModalProps({
+							title: <Title level={4}>Send New Update</Title>,
+							width: "50vw",
+							style: { minWidth: 600 }
+						});
 					}}
 				>
 					<SubnodeOutlined className="icon nav-icon" />
