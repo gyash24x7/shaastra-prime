@@ -1,10 +1,14 @@
 import {
 	AppstoreFilled,
 	AppstoreOutlined,
+	BoldOutlined,
 	BookFilled,
 	BookOutlined,
 	CloseCircleFilled,
 	CloseCircleOutlined,
+	CloudUploadOutlined,
+	CodeFilled,
+	CodeOutlined,
 	DollarCircleFilled,
 	DollarCircleOutlined,
 	EditFilled,
@@ -12,6 +16,7 @@ import {
 	EllipsisOutlined,
 	HomeFilled,
 	HomeOutlined,
+	ItalicOutlined,
 	LayoutFilled,
 	LayoutOutlined,
 	LockFilled,
@@ -21,10 +26,12 @@ import {
 	MessageOutlined,
 	NotificationFilled,
 	NotificationOutlined,
+	OrderedListOutlined,
 	SendOutlined,
 	SettingFilled,
 	SettingOutlined,
 	TableOutlined,
+	UnderlineOutlined,
 	UnorderedListOutlined,
 	UserOutlined
 } from "@ant-design/icons";
@@ -46,5 +53,12 @@ export const ICON_MAP: Record<string, any[]> = {
 	ellipsis: [EllipsisOutlined, EllipsisOutlined],
 	lock: [LockOutlined, LockFilled],
 	user: [UserOutlined, UserOutlined],
-	close: [CloseCircleOutlined, CloseCircleFilled]
+	close: [CloseCircleOutlined, CloseCircleFilled],
+	bold: [BoldOutlined, BoldOutlined],
+	italic: [ItalicOutlined, ItalicOutlined],
+	underline: [UnderlineOutlined, UnderlineOutlined],
+	code: [CodeOutlined, CodeFilled],
+	upload: [CloudUploadOutlined, CloudUploadOutlined],
+	"bulleted-list": [UnorderedListOutlined, UnorderedListOutlined],
+	"numbered-list": [OrderedListOutlined, OrderedListOutlined]
 };
