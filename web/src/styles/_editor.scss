@@ -1,0 +1,40 @@
+.editor-wrapper {
+	border: 1px solid #434343;
+	border-radius: 2px;
+	transition: all 300ms;
+	font-size: 14px;
+
+	&:hover {
+		border-color: #165996;
+	}
+
+	&:focus {
+		border-color: #177ddc;
+		outline: 0;
+		box-shadow: 0 0 0 2px rgba(23, 125, 220, 0.2);
+	}
+}
+
+.editor-text-container {
+	padding: 6.5px 11px;
+}
+
+.editor-btn {
+	border: none;
+
+	&:hover {
+		background: #303030;
+		color: rgba($color: #fff, $alpha: 0.65);
+	}
+}
+
+.editor-toolbar {
+	display: flex;
+	justify-content: space-between;
+	border-top: 1px solid #434343;
+	padding: 5px;
+}
+
+.editor-icon .icon {
+	font-size: 16px !important;
+}
