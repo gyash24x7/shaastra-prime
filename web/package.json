@@ -10,6 +10,7 @@
 		"firebase": "^7.14.1",
 		"graphql": "14.6.0",
 		"graphql-tag": "^2.10.3",
+		"is-hotkey": "^0.1.6",
 		"less": "^3.11.1",
 		"less-loader": "^5.0.0",
 		"lorem-ipsum": "^2.0.3",
@@ -22,6 +23,9 @@
 		"react-scripts": "^3.4.1",
 		"react-stack-grid": "^0.7.1",
 		"react-use": "^14.1.1",
+		"slate": "^0.57.2",
+		"slate-history": "^0.57.2",
+		"slate-react": "^0.57.2",
 		"typescript": "^3.8.3"
 	},
 	"scripts": {
