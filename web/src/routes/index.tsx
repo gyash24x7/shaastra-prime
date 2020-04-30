@@ -37,14 +37,14 @@ export const AppRoutes = () => {
 				<Route exact path="/signup" component={SignupScreen} />
 				<Route exact path="/forgotpassword" component={ForgotPasswordScreen} />
 				<Route exact path="/enterotp" component={OTPScreen} />
-				<Route exact path="/chat/:channel" component={ChatScreen} />
+				<Route exact path="/chat/:channelId" component={ChatScreen} />
 				<Route exact path="/equip" component={EquipScreen} />
 				<Route exact path="/finbooks" component={HomeScreen} />
 				<Route exact path="/updates" component={UpdateScreen} />
 				<Route exact path="/team/:department" component={TeamScreen} />
 				<Route exact path="/verification" component={OTPScreen} />
 				<Redirect from="/profile" to="/" />
-				<Redirect from="/chat" to="/chat/CoreGroup" />
+				<Redirect from="/chat" to="/chat/:channelId" />
 				<Route exact path="/" component={HomeScreen} />
 			</Switch>
 		</BrowserRouter>

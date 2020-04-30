@@ -89,13 +89,13 @@ button {
 }
 
 .ant-menu-item-group {
-	padding-top: 15px;
-	padding-bottom: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
-.ant-menu-item-group {
-	padding-top: 15px;
-	padding-bottom: 20px;
+.ant-menu-item {
+	display: flex;
+	align-items: center;
 }
 
 .title-card {
@@ -110,4 +110,9 @@ button {
 
 .ant-form-item {
 	margin-bottom: 15px;
+}
+
+.ant-layout-sider-children {
+	background: #141414;
+	height: 100vh;
 }

@@ -1,9 +1,10 @@
 import { Layout } from "antd";
 import { ModalProps } from "antd/lib/modal";
 import React, { useState } from "react";
+import { useLocation } from "react-use";
 import { DrawerContext, ModalContext } from "../../utils/context";
 import { PrimaryNav } from "../Navigation/PrimaryNav";
-import { SecondaryNav } from "../Navigation/SecondaryNav";
+import { getSecondaryNav } from "../Navigation/SecondaryNav";
 import { CommonDrawer } from "./CommonDrawer";
 import { CommonModal } from "./CommonModal";
 
@@ -17,6 +18,8 @@ export const PrivateLayout = (props: PrivateLayoutProps) => {
 	const [drawerComponent, setDrawerComponent] = useState<JSX.Element>();
 	const [modalComponent, setModalComponent] = useState<JSX.Element>();
 	const [modalProps, setModalProps] = useState<ModalProps>({});
+	const { pathname } = useLocation();
+	const SecondaryNav = getSecondaryNav(pathname!);
 
 	return (
 		<div className="private-container">
