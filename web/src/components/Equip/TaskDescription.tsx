@@ -46,7 +46,7 @@ export const TaskDescription = ({ data }: any) => {
 				<Button className="action-btn button" type="primary">
 					Mark As Completed
 				</Button>
-				<Button className="action-btn button" type="danger">
+				<Button className="action-btn button" danger>
 					Delete Task
 				</Button>
 				<Button className="action-btn button default">View Conversation</Button>

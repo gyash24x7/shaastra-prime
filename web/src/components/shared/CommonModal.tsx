@@ -1,7 +1,6 @@
 import { Modal } from "antd";
 import { ModalProps } from "antd/lib/modal";
 import React from "react";
-import { SwitchingIcon } from "./SwitchingIcon";
 
 interface CommonModalProps {
 	visible: boolean;
@@ -17,7 +16,7 @@ export const CommonModal = (props: CommonModalProps) => {
 			visible={props.visible}
 			onCancel={props.onCancel}
 			centered
-			closeIcon={<SwitchingIcon name="close" />}
+			closeIcon={<div />}
 		>
 			{props.component}
 		</Modal>
