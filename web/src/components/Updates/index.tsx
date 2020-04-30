@@ -1,4 +1,4 @@
-import { Card, Select, Typography } from "antd";
+import { Card, Pagination, Select, Space, Typography } from "antd";
 import React, { useState } from "react";
 import { PrivateLayout } from "../shared/PrivateLayout";
 import { UpdateListItem } from "./UpdateListItem";
@@ -8,18 +8,26 @@ const { Option } = Select;
 
 export const UpdateScreen = () => {
 	const [filterDepartment, setFilterDepartment] = useState("");
+	const [currentPage, setCurrentPage] = useState(1);
 
 	return (
 		<PrivateLayout>
 			<Card
 				title={<Title level={3}>Updates</Title>}
 				extra={
-					<Select
-						placeholder="Filter by Department"
-						onSelect={(val) => setFilterDepartment(val.toString())}
-					>
-						<Option value="WebOps">WebOps</Option>
-					</Select>
+					<Space size="small">
+						<Select
+							placeholder="Filter by Department"
+							onSelect={(val) => setFilterDepartment(val.toString())}
+						>
+							<Option value="WebOps">WebOps</Option>
+						</Select>
+						<Pagination
+							total={updateList.length}
+							current={currentPage}
+							onChange={setCurrentPage}
+						/>
+					</Space>
 				}
 			>
 				{updateList
