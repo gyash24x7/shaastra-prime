@@ -133,6 +133,7 @@ model SubTask {
 
 model Update {
   id         String     @default(cuid()) @id
+  brief      String
   subject    String
   content    String
   byDept     Department @relation("DeptUpdates", fields: [byDeptId], references: [id])
@@ -142,6 +143,25 @@ model Update {
   byDeptId   String
 }
 
+model Goal {
+  id         String      @default(cuid()) @id
+  title      String
+  dept       Department  @relation("DeptGoals", fields: [deptId], references: [id])
+  deptId     String
+  type       GoalType
+  createdAt  DateTime    @default(now())
+  milestones Milestone[] @relation("GoalMilestones")
+}
+
+model Milestone {
+  id     String          @default(cuid()) @id
+  title  String
+  status MilestoneStatus @default(IN_PROGRESS)
+  goal   Goal            @relation("GoalMilestones", fields: [goalId], references: [id])
+  goalId String
+}
+
+// Kaousheik & Vatsal Start from here
 model Invoice {
   id            String            @default(cuid()) @id
   title         String
@@ -181,22 +201,98 @@ model Vendor {
   invoices      Invoice[] @relation("VendorInvoices")
 }
 
-model Goal {
-  id         String      @default(cuid()) @id
-  title      String
-  dept       Department  @relation("DeptGoals", fields: [deptId], references: [id])
-  deptId     String
-  type       GoalType
-  createdAt  DateTime    @default(now())
-  milestones Milestone[] @relation("GoalMilestones")
+model Vertical {
+  id          String   @default(cuid()) @id
+  name        String
+  info        String
+  image       Media    @relation("VerticalImage", fields: [imageId], references: [id])
+  imageId     String
+  rank        Int      @default(autoincrement())
+  updatedBy   User     @relation("VerticalUpdatedBy", fields: [updatedById], references: [id])
+  updatedById String
+  updatedOn   DateTime @default(now())
+  events      Event[]  @relation("EventsUnderVertical")
 }
 
-model Milestone {
-  id     String          @default(cuid()) @id
-  title  String
-  status MilestoneStatus @default(IN_PROGRESS)
-  goal   Goal            @relation("GoalMilestones", fields: [goalId], references: [id])
-  goalId String
+model Event {
+  id               String           @default(cuid()) @id
+  name             String
+  rank             Int              @default(autoincrement())
+  vertical         Vertical         @relation("EventsUnderVertical", fields: [verticalId], references: [id])
+  verticalId       String
+  info             String
+  eventTabs        EventTab[]       @relation("TabsForEvent")
+  updatedBy        User             @relation("EventUpdatedBy", fields: [updatedById], references: [id])
+  updatedById      String
+  image            Media            @relation("EventImage", fields: [imageId], references: [id])
+  imageId          String
+  approved         Boolean          @default(false)
+  paid             Boolean          @default(false)
+  registrationType RegistrationType
+  registrations    Registration[]   @relation("EventRegistration")
+}
+
+model EventTab {
+  id      String @default(cuid()) @id
+  title   String
+  content String
+  event   Event  @relation("TabsForEvent", fields: [eventId], references: [id])
+  eventId String
+}
+
+model Participant {
+  id            String           @default(cuid()) @id
+  name          String
+  shaastrID     String           @default(autoincrement()) @unique
+  shaastraQR    String
+  email         String           @unique
+  password      String
+  mobile        String
+  gender        String
+  college       String
+  city          String
+  state         String
+  invitations   TeamInvitation[] @relation("InvitationForParticipant")
+  registrations Registration[]   @relation("IndividualRegistration")
+}
+
+model TeamInvitation {
+  id          String       @default(cuid()) @id
+  status      InviteStatus @default(NO_RESPONSE)
+  team        PTeam        @relation("InvitationForTeam", fields: [pTeamId], references: [id])
+  pTeamId     String
+  participant Participant  @relation("InvitationForParticipant", fields: [pId], references: [id])
+  pId         String
+}
+
+model PTeam {
+  id            String           @default(cuid()) @id
+  name          String
+  invitations   TeamInvitation[] @relation("InvitationForTeam")
+  registrations Registration[]   @relation("TeamRegistration")
+}
+
+model Registration {
+  id          String           @default(cuid()) @id
+  type        RegistrationType
+  team        PTeam?           @relation("TeamRegistration", fields: [pTeamId], references: [id])
+  pTeamId     String?
+  participant Participant?     @relation("IndividualRegistration", fields: [pId], references: [id])
+  pId         String?
+  event       Event            @relation("EventRegistration", fields: [eventId], references: [id])
+  eventId     String
+}
+
+enum RegistrationType {
+  INDIVIDUAL
+  TEAM
+  BOTH
+}
+
+enum InviteStatus {
+  ACCEPTED
+  REJECTED
+  NO_RESPONSE
 }
 
 enum MilestoneStatus {
