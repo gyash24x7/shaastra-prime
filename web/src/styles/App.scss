@@ -65,6 +65,10 @@ button {
 	flex-direction: row-reverse;
 }
 
+.ant-card-head {
+	min-height: unset;
+}
+
 .ant-card-head-title {
 	text-transform: capitalize;
 	font-weight: 600;

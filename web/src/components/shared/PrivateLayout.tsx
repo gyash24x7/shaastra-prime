@@ -1,4 +1,5 @@
 import { Layout } from "antd";
+import { DrawerProps } from "antd/lib/drawer";
 import { ModalProps } from "antd/lib/modal";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
@@ -18,12 +19,13 @@ export const PrivateLayout = (props: PrivateLayoutProps) => {
 	const [drawerComponent, setDrawerComponent] = useState<JSX.Element>();
 	const [modalComponent, setModalComponent] = useState<JSX.Element>();
 	const [modalProps, setModalProps] = useState<ModalProps>({});
+	const [drawerProps, setDrawerProps] = useState<DrawerProps>({});
 	const { pathname } = useLocation();
 	const SecondaryNav = getSecondaryNav(pathname!);
 
 	return (
 		<div className="private-container">
-			<DrawerContext.Provider value={{ setDrawerComponent }}>
+			<DrawerContext.Provider value={{ setDrawerComponent, setDrawerProps }}>
 				<ModalContext.Provider value={{ setModalComponent, setModalProps }}>
 					<Layout>
 						<Sider breakpoint="xl" width="270" collapsedWidth="0">
@@ -48,6 +50,7 @@ export const PrivateLayout = (props: PrivateLayoutProps) => {
 				component={drawerComponent}
 				visible={!!drawerComponent}
 				onClose={() => setDrawerComponent(undefined)}
+				drawerProps={drawerProps}
 			/>
 		</div>
 	);

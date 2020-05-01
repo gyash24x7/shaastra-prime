@@ -6,7 +6,6 @@ import { useHistory, useParams } from "react-router-dom";
 export const ChannelsMenu = () => {
 	const { channelId } = useParams();
 	const history = useHistory();
-	console.log(channelId);
 
 	return (
 		<Menu selectedKeys={[channelId!]}>

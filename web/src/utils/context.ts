@@ -1,9 +1,11 @@
+import { DrawerProps } from "antd/lib/drawer";
 import { ModalProps } from "antd/lib/modal";
 import React from "react";
 import { Department, User } from "../generated";
 
 interface IDrawerContext {
 	setDrawerComponent: (comp: JSX.Element) => void;
+	setDrawerProps?: (props: DrawerProps) => void;
 }
 
 export const DrawerContext = React.createContext<IDrawerContext | null>(null);

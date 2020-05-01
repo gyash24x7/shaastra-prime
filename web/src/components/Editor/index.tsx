@@ -15,6 +15,7 @@ import { Element, HOTKEYS, Leaf, toggleMark, withLinks } from "./utils";
 interface EditorProps {
 	toolbarExtra?: JSX.Element;
 	autoFocus?: boolean;
+	style?: React.CSSProperties;
 }
 
 export default (props: EditorProps) => {
@@ -46,6 +47,7 @@ export default (props: EditorProps) => {
 				<div className="editor-text-container">
 					<Editable
 						renderLeaf={renderLeaf}
+						style={props.style}
 						renderElement={renderElement}
 						autoFocus={!!props.autoFocus}
 						placeholder="Enter Text"

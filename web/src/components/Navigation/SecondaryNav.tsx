@@ -24,7 +24,6 @@ export const ChatNav = () => {
 };
 
 export const getSecondaryNav = (pathname: string) => {
-	console.log(pathname.split("/")[1]);
 	switch (pathname.split("/")[1]) {
 		case "":
 			return HomeNav;
