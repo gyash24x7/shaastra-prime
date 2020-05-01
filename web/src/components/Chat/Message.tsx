@@ -1,33 +1,20 @@
 import { ClockCircleFilled, LikeFilled } from "@ant-design/icons";
-import { Comment, Space, Tag, Typography } from "antd";
+import { Comment, Space, Tag } from "antd";
 import React from "react";
-import { stringGen } from "../../utils/lorem";
 
-const { Text } = Typography;
-
-export const Message = () => {
+export const Message = (props: any) => {
 	return (
 		<div className="message-box">
 			<Comment
-				content={
-					<div className="message-content">
-						{stringGen.generateSentences(4)}
-					</div>
-				}
-				author={
-					<div className="sender-name">
-						<Tag color="cyan">
-							<Text strong>{stringGen.generateWords(2)}</Text>
-						</Tag>
-					</div>
-				}
+				content={<div className="message-content">{props.message.content}</div>}
+				author={<Tag color="cyan">{props.message.by}</Tag>}
 				datetime={
 					<Space>
 						<Tag color="lime" icon={<ClockCircleFilled />}>
-							<Text>12:30</Text>
+							{props.message.createdAt}
 						</Tag>
 						<Tag color="pink" icon={<LikeFilled />}>
-							<Text>12</Text>
+							{props.message.likes}
 						</Tag>
 					</Space>
 				}
