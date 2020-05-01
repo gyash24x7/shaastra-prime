@@ -16,6 +16,8 @@ import {
 	EllipsisOutlined,
 	HomeFilled,
 	HomeOutlined,
+	InfoCircleFilled,
+	InfoCircleOutlined,
 	ItalicOutlined,
 	LayoutFilled,
 	LayoutOutlined,
@@ -63,5 +65,6 @@ export const ICON_MAP: Record<string, any[]> = {
 	upload: [CloudUploadOutlined, CloudUploadOutlined],
 	"bulleted-list": [UnorderedListOutlined, UnorderedListOutlined],
 	"numbered-list": [OrderedListOutlined, OrderedListOutlined],
-	plus: [PlusCircleOutlined, PlusCircleFilled]
+	plus: [PlusCircleOutlined, PlusCircleFilled],
+	info: [InfoCircleOutlined, InfoCircleFilled]
 };

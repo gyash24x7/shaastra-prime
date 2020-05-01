@@ -1,67 +1,30 @@
-.screen-wrapper {
-	display: flex;
-	flex-direction: column;
+.message-screen {
+	height: calc(100vh - 10px);
+	overflow: hidden;
+	border-bottom: none;
+
+	.ant-card-body {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		height: calc(100% - 65px);
+	}
 }
 
 .messages-container {
-	height: calc(100vh - 204px);
 	overflow-y: scroll;
+	flex: 1;
+	padding: 14px;
+	width: 100%;
 
 	.message-box {
-		margin-bottom: 20px;
-		max-width: 60%;
+		margin-bottom: 10px;
+		padding: 0;
 	}
 }
 
-.message-input-box {
-	height: 70px;
-	margin-top: 30px;
-	display: flex;
-}
-
-.message-input {
-	flex: 1;
-	background: #141414;
-	height: 70px;
-	border: 2px solid #434343;
-	overflow-y: scroll;
-	font-size: 14px;
-	padding: 10px;
-
-	& > * {
-		height: 100%;
-	}
-
-	textarea {
-		padding: 10px;
-	}
-}
-
-.message-btn-container {
-	display: flex;
-	margin-right: -5px;
-	flex-direction: column;
-}
-
-.send-btn {
-	width: 10vw;
-	margin: 0 0 0 10px !important;
-	height: 70px !important;
-}
-
-.file-upload-btn {
-	height: 70px !important;
-	margin: 0 0 0 10px !important;
-	margin-left: 10px;
-}
-
-.message-box {
-	background-color: #000000;
-	align-items: flex-start;
-
-	.avatar {
-		margin-top: 5px;
-	}
+.message-input-container {
+	width: 100%;
 }
 
 .message-content {
@@ -75,11 +38,6 @@
 	margin-bottom: 5px;
 }
 
-.message-alignment-box {
-	width: 100%;
-	display: flex;
-}
-
 .channel-drawer {
 	.ant-drawer-content-wrapper {
 		width: 450px !important;
@@ -87,14 +45,11 @@
 		.ant-drawer-body {
 			text-transform: capitalize;
 			overflow-x: hidden;
+			padding: 10px;
 
 			.ant-collapse-header {
-				padding: 30px;
-
-				h4.ant-typography {
-					margin-bottom: 0;
-					padding-left: 20px;
-				}
+				padding: 15px;
+				padding-left: 40px;
 			}
 
 			.ant-collapse-content-box {

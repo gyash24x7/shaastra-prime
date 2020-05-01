@@ -44,7 +44,7 @@ export const AppRoutes = () => {
 				<Route exact path="/team/:department" component={TeamScreen} />
 				<Route exact path="/verification" component={OTPScreen} />
 				<Redirect from="/profile" to="/" />
-				<Redirect from="/chat" to="/chat/:channelId" />
+				<Redirect from="/chat" to="/chat/lnvkjfsnv" />
 				<Route exact path="/" component={HomeScreen} />
 			</Switch>
 		</BrowserRouter>
