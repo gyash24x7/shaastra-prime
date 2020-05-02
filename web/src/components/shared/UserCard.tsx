@@ -5,9 +5,10 @@ import { Loader } from "./Loader";
 
 interface UserCardProps {
 	withAvatar?: boolean;
+	avatarSize?: number;
 }
 
-export const UserCard = ({ withAvatar }: UserCardProps) => {
+export const UserCard = ({ withAvatar, avatarSize }: UserCardProps) => {
 	const { setDrawerComponent } = useContext(DrawerContext)!;
 
 	return (
@@ -20,8 +21,8 @@ export const UserCard = ({ withAvatar }: UserCardProps) => {
 			{withAvatar && (
 				<div className="avatar">
 					<Avatar
-						src="https://shaastra-2020.s3.ap-south-1.amazonaws.com/images/user2.svg"
-						size={48}
+						src="https://shaastra-2020.s3.ap-south-1.amazonaws.com/images/user9.svg"
+						size={avatarSize || 48}
 					/>
 				</div>
 			)}

@@ -51,8 +51,8 @@
 }
 
 .user-card {
-	margin: 0px 5px;
-	min-height: calc(100vh - 102px);
+	margin: 0 5px;
+	height: calc(100vh - 10px);
 
 	.ant-card-head-wrapper {
 		display: flex;
@@ -85,6 +85,8 @@
 
 .user-media-container {
 	display: flex;
+	height: calc(100vh - 165px);
+	overflow-y: scroll;
 	flex-wrap: wrap;
 	margin: -10px;
 }
@@ -99,18 +101,21 @@
 }
 
 .profile-card {
-	margin: 0px 5px;
-	margin-bottom: 5px;
+	margin: 0 5px;
+
 	.avatar {
 		position: absolute;
-		bottom: 200px;
-		width: calc(100% - 60px);
+		top: -120px !important;
+		width: calc(100% - 48px);
 		display: flex;
 		justify-content: center;
 	}
 
 	.avatar-container {
 		margin-top: 40px;
+		.ant-card-body {
+			padding-top: 15px;
+		}
 	}
 }
 
