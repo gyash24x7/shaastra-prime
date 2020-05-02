@@ -72,7 +72,7 @@ export const TableLayout = (props: any) => {
 			dataSource={props.data}
 			tableLayout="auto"
 			columns={Object.keys(columns).map((str) => columns[str])}
-			bordered
+			bordered={true}
 			onChange={handleOnChange}
 			pagination={false}
 			size="middle"
