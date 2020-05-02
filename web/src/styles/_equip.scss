@@ -11,7 +11,7 @@
 }
 
 .kanban-item {
-	margin: 5px;
+	margin: 10px;
 	border-radius: 10px;
 	border: 1px solid #303030;
 	padding: 1px;
@@ -25,12 +25,8 @@
 	.ant-card-body {
 		background-color: #000;
 		border-radius: 10px;
+		padding: 15px;
 	}
-}
-
-.equip-view-tab {
-	display: flex;
-	padding: 10px 30px;
 }
 
 .no-padding-drawer {

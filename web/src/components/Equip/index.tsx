@@ -57,7 +57,7 @@ export const EquipScreen = () => {
 		{
 			key: "table",
 			tab: (
-				<div className="equip-view-tab">
+				<div className="tab-title">
 					<SwitchingIcon name="table" />
 					<Typography.Text strong>Table View</Typography.Text>
 				</div>
@@ -66,7 +66,7 @@ export const EquipScreen = () => {
 		{
 			key: "kanban",
 			tab: (
-				<div className="equip-view-tab">
+				<div className="tab-title">
 					<SwitchingIcon name="kanban" />
 					<Typography.Text strong>Kanban View</Typography.Text>
 				</div>
@@ -75,7 +75,7 @@ export const EquipScreen = () => {
 		{
 			key: "grid",
 			tab: (
-				<div className="equip-view-tab">
+				<div className="tab-title">
 					<SwitchingIcon name="grid" />
 					<Typography.Text strong>Grid View</Typography.Text>
 				</div>
@@ -108,7 +108,7 @@ export const EquipScreen = () => {
 						onChange={setCurrentPage}
 					/>
 				}
-				className="equip-card"
+				className="equip-card card-with-tabs"
 			>
 				{tabContent[activeKey]}
 			</Card>

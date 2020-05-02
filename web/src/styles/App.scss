@@ -141,3 +141,30 @@ button {
 .ant-card-body {
 	background: #141414;
 }
+
+.tab-title {
+	display: flex;
+	padding: 0px 15px;
+}
+
+.card-with-tabs {
+	.ant-card-head-wrapper {
+		display: flex;
+		align-items: center;
+		padding-top: 20px;
+		padding-bottom: 10px;
+
+		.ant-card-head-title {
+			padding-top: 0;
+		}
+		.ant-card-extra {
+			padding: 0;
+		}
+	}
+}
+
+.ant-drawer-content {
+	.profile-card {
+		border: none;
+	}
+}
