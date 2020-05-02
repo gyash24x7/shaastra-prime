@@ -17,15 +17,27 @@ interface PrivateLayoutProps {
 
 export const PrivateLayout = (props: PrivateLayoutProps) => {
 	const [drawerComponent, setDrawerComponent] = useState<JSX.Element>();
+	const [childDrawerComponent, setChildDrawerComponent] = useState<
+		JSX.Element
+	>();
 	const [modalComponent, setModalComponent] = useState<JSX.Element>();
 	const [modalProps, setModalProps] = useState<ModalProps>({});
 	const [drawerProps, setDrawerProps] = useState<DrawerProps>({});
+	const [childDrawerProps, setChildDrawerProps] = useState<DrawerProps>({});
 	const { pathname } = useLocation();
 	const SecondaryNav = getSecondaryNav(pathname!);
 
 	return (
 		<div className="private-container">
-			<DrawerContext.Provider value={{ setDrawerComponent, setDrawerProps }}>
+			<DrawerContext.Provider
+				value={{
+					setDrawerComponent,
+					setDrawerProps,
+					setChildDrawerComponent,
+					setChildDrawerProps,
+					isDrawerOpen: !!drawerComponent
+				}}
+			>
 				<ModalContext.Provider value={{ setModalComponent, setModalProps }}>
 					<Layout>
 						<Sider width="270" collapsedWidth="0">
@@ -45,8 +57,10 @@ export const PrivateLayout = (props: PrivateLayoutProps) => {
 					<CommonDrawer
 						component={drawerComponent}
 						visible={!!drawerComponent}
-						onClose={() => setDrawerComponent(undefined)}
 						drawerProps={drawerProps}
+						childDrawerComponent={childDrawerComponent}
+						childDrawerVisible={!!childDrawerComponent}
+						childDrawerProps={childDrawerProps}
 					/>
 				</ModalContext.Provider>
 			</DrawerContext.Provider>

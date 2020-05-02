@@ -4,16 +4,21 @@
 }
 
 .avatar-container {
-	border-radius: 5px;
+	border-radius: 10px;
 	background: #000000 !important;
 	border: 1px solid #303030;
 	width: inherit;
 	justify-content: space-around;
 	align-items: center;
 
+	.ant-card-body {
+		background-color: #000;
+		border-radius: 10px;
+	}
+
 	&.with-avatar {
 		.ant-card-body {
-			padding: 15px;
+			padding: 10px;
 			padding-top: 30px;
 		}
 
@@ -27,27 +32,28 @@
 	}
 }
 
-.user-details,
 .message-details {
 	padding: 5px;
 	width: 100%;
 }
 
-.user-position {
+.user-details {
 	display: flex;
+	flex-wrap: wrap;
 	margin: 0 -5px;
+
+	&.user-name > .ant-tag {
+		font-size: 14px;
+		padding: 5px 30px;
+		cursor: pointer;
+	}
 
 	.ant-tag {
 		flex: 1;
 		text-align: center;
-		margin: 5px !important;
+		margin: 5px;
+		padding: 0px 30px;
 	}
-}
-
-.user-name > .ant-tag {
-	font-size: 14px;
-	width: 100%;
-	text-align: center;
 }
 
 .user-card {
@@ -102,6 +108,7 @@
 
 .profile-card {
 	margin: 0 5px;
+	margin-bottom: 10px;
 
 	.avatar {
 		position: absolute;

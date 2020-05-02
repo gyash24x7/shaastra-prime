@@ -6,6 +6,9 @@ import { Department, User } from "../generated";
 interface IDrawerContext {
 	setDrawerComponent: (comp: JSX.Element | undefined) => void;
 	setDrawerProps: (props: DrawerProps) => void;
+	setChildDrawerComponent: (comp: JSX.Element | undefined) => void;
+	setChildDrawerProps: (props: DrawerProps) => void;
+	isDrawerOpen: boolean;
 }
 
 export const DrawerContext = React.createContext<IDrawerContext | null>(null);

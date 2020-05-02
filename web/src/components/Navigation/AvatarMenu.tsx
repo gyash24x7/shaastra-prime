@@ -7,7 +7,7 @@ export const AvatarMenu = () => {
 		<Menu>
 			<Menu.ItemGroup>
 				<div style={{ padding: "5px 20px" }}>
-					<UserCard withAvatar />
+					<UserCard withAvatar noPadding />
 				</div>
 			</Menu.ItemGroup>
 			<Menu.Divider />

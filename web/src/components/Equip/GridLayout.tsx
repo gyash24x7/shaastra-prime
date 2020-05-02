@@ -1,7 +1,7 @@
 import React from "react";
 import StackGrid from "react-stack-grid";
 import { useWindowSize } from "react-use";
-import { KanbanItem } from "./KanbanLayout";
+import { KanbanItem } from "./KanbanItem";
 
 export const GridLayout = (props: any) => {
 	const { width } = useWindowSize();

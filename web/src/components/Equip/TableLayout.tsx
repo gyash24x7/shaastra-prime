@@ -1,4 +1,4 @@
-import { Tag, Typography } from "antd";
+import { Space, Tag, Typography } from "antd";
 import Table, { ColumnProps } from "antd/lib/table";
 import { Moment } from "moment";
 import React, { useContext, useState } from "react";
@@ -49,11 +49,11 @@ export const TableLayout = (props: any) => {
 			title: <Typography.Text strong>Assigned&nbsp;To</Typography.Text>,
 			dataIndex: "assignedTo",
 			render: (val: string[]) => (
-				<div style={{ display: "flex" }}>
+				<Space size="large">
 					{val.map((_, i) => (
-						<UserCardSmall key={i} />
+						<UserCardSmall key={i} onlyName />
 					))}
-				</div>
+				</Space>
 			)
 		}
 	};
