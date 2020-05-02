@@ -1,55 +1,56 @@
-import { Button, Descriptions, Tag, Typography } from "antd";
+import { Button, Descriptions, Space, Tag, Typography } from "antd";
 import React from "react";
 import { statusColor } from ".";
-import { UserCard } from "../shared/UserCard";
+import { UserCardSmall } from "../shared/UserCardSmall";
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 export const TaskDescription = ({ data }: any) => {
 	return (
 		<Descriptions
-			title={<Title level={3}>{data.brief}</Title>}
-			column={{ xs: 1, sm: 1, md: 2, lg: 2, xl: 3 }}
+			column={{ xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 2 }}
 			bordered
-			size="middle"
-			layout="vertical"
+			layout="horizontal"
 		>
-			<Descriptions.Item label={<strong>Details</strong>} span={3}>
+			<Descriptions.Item label={<Text>Details</Text>} span={3}>
 				<Text strong>{data.details}</Text>
 			</Descriptions.Item>
-			<Descriptions.Item label={<strong>By&nbsp;Department</strong>}>
+			<Descriptions.Item label={<Text>Deadline</Text>}>
+				{data.createdAt.format("DD MMMM")}
+			</Descriptions.Item>
+			<Descriptions.Item label={<Text>By&nbsp;Department</Text>}>
 				<Text strong>{data.byDept}</Text>
 			</Descriptions.Item>
-
-			<Descriptions.Item label={<strong>Deadline</strong>}>
+			<Descriptions.Item label={<Text>Created&nbsp;On</Text>}>
 				{data.createdAt.format("DD MMMM")}
 			</Descriptions.Item>
-			<Descriptions.Item label={<strong>Created&nbsp;On</strong>}>
-				{data.createdAt.format("DD MMMM")}
-			</Descriptions.Item>
-			<Descriptions.Item label={<strong>Assigned To</strong>} span={2}>
-				<div className="grid-row">
-					{data.assignedTo.map((_: any, i: number) => (
-						<UserCard key={i} />
-					))}
-				</div>
-			</Descriptions.Item>
-			<Descriptions.Item label={<strong>Created&nbsp;By</strong>}>
-				<UserCard />
-			</Descriptions.Item>
-			<Descriptions.Item label={<strong>Status</strong>}>
+			<Descriptions.Item label={<Text>Status</Text>}>
 				<Tag color={statusColor[data.status]}>{data.status}</Tag>
 			</Descriptions.Item>
-			<Descriptions.Item label={<strong>Actions</strong>}>
-				<Button className="action-btn button">Assign Task</Button>
-				<Button className="action-btn button">Submit Task</Button>
-				<Button className="action-btn button" type="primary">
-					Mark As Completed
-				</Button>
-				<Button className="action-btn button" danger>
-					Delete Task
-				</Button>
-				<Button className="action-btn button default">View Conversation</Button>
+			<Descriptions.Item label={<Text>Assigned&nbsp;To</Text>} span={2}>
+				<Space size="large">
+					{data.assignedTo.map((_: any, i: number) => (
+						<UserCardSmall key={i} />
+					))}
+				</Space>
+			</Descriptions.Item>
+			<Descriptions.Item label={<Text>Created&nbsp;By</Text>} span={2}>
+				<Space>
+					<UserCardSmall />
+				</Space>
+			</Descriptions.Item>
+			<Descriptions.Item label={<Text>Actions</Text>}>
+				<Space>
+					<Button className="button">Assign Task</Button>
+					<Button className="button">Submit Task</Button>
+					<Button className="button" type="primary">
+						Mark As Completed
+					</Button>
+					<Button className="button" danger>
+						Delete Task
+					</Button>
+					<Button className="button default">View Conversation</Button>
+				</Space>
 			</Descriptions.Item>
 		</Descriptions>
 	);

@@ -11,10 +11,21 @@
 }
 
 .kanban-item {
-	margin: 10px;
-	background-color: #000;
+	margin: 5px;
 	border-radius: 10px;
+	border: 1px solid #303030;
+	padding: 1px;
+	background-color: #000;
 	cursor: pointer;
+
+	.ant-space {
+		margin-top: 10px;
+	}
+
+	.ant-card-body {
+		background-color: #000;
+		border-radius: 10px;
+	}
 }
 
 .equip-view-tab {
@@ -22,6 +33,8 @@
 	padding: 10px 30px;
 }
 
-.action-btn {
-	margin: 5px;
+.no-padding-drawer {
+	.ant-drawer-body {
+		padding: 0;
+	}
 }
