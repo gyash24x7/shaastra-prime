@@ -14,6 +14,7 @@ export const CommonDrawer = (props: CommonDrawerProps) => {
 		<Drawer
 			{...props.drawerProps}
 			visible={props.visible}
+			closable={false}
 			onClose={props.onClose || undefined}
 			width="50vw"
 		>
