@@ -4,6 +4,7 @@ import { Moment } from "moment";
 import React, { useContext, useState } from "react";
 import { departments, status, statusColor } from ".";
 import { DrawerContext } from "../../utils/context";
+import { CommonDrawerTitle } from "../shared/CommonDrawerTitle";
 import { UserCardSmall } from "../shared/UserCardSmall";
 import { TaskDescription } from "./TaskDescription";
 
@@ -63,7 +64,8 @@ export const TableLayout = (props: any) => {
 		setSorters(sorter);
 	};
 
-	const { setDrawerComponent } = useContext(DrawerContext)!;
+	const { setDrawerComponent, setDrawerProps } = useContext(DrawerContext)!;
+	console.log(setDrawerComponent);
 
 	return (
 		<Table
@@ -74,11 +76,22 @@ export const TableLayout = (props: any) => {
 			onChange={handleOnChange}
 			pagination={false}
 			size="middle"
-			onRow={(record) => ({
-				onClick() {
-					setDrawerComponent!(<TaskDescription data={record} />);
+			rowSelection={{
+				type: "radio",
+				onSelect(record) {
+					setDrawerProps({
+						title: (
+							<CommonDrawerTitle
+								title={record.brief}
+								onClose={() => setDrawerComponent(undefined)}
+							/>
+						),
+						width: "75vw",
+						className: "no-padding-drawer"
+					});
+					setDrawerComponent(<TaskDescription data={record} />);
 				}
-			})}
+			}}
 		/>
 	);
 };

@@ -13,9 +13,18 @@ export const UserDataCard = () => {
 	return (
 		<Card
 			title={<Title level={3}>Yash Gupta</Title>}
-			tabList={[{ key: "Media", tab: <Text strong>Media</Text> }]}
+			tabList={[
+				{
+					key: "Media",
+					tab: (
+						<div className="tab-title">
+							<Text strong>Media</Text>
+						</div>
+					)
+				}
+			]}
 			activeTabKey={activeTab}
-			className="user-card"
+			className="user-card card-with-tabs"
 			onTabChange={setActiveTab}
 			tabBarExtraContent={<div />}
 			extra={

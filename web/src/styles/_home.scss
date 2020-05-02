@@ -59,24 +59,6 @@
 .user-card {
 	margin: 0 5px;
 	height: calc(100vh - 10px);
-
-	.ant-card-head-wrapper {
-		display: flex;
-		align-items: center;
-		padding-top: 20px;
-		padding-bottom: 10px;
-
-		.ant-card-head-title {
-			padding-top: 0;
-
-			.ant-typography {
-				margin-bottom: 0;
-			}
-		}
-		.ant-card-extra {
-			padding: 0;
-		}
-	}
 }
 
 .user-details-row {

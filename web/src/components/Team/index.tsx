@@ -8,43 +8,83 @@ const { Title, Text } = Typography;
 export const TeamScreen = () => {
 	const tabList = [
 		{
-			tab: <Text strong>WebOps</Text>,
+			tab: (
+				<div className="tab-title">
+					<Text strong>WebOps</Text>
+				</div>
+			),
 			key: "WebOps"
 		},
 		{
-			tab: <Text strong>C & D</Text>,
+			tab: (
+				<div className="tab-title">
+					<Text strong>C&D</Text>
+				</div>
+			),
 			key: "C&D"
 		},
 		{
-			tab: <Text strong>QMS</Text>,
+			tab: (
+				<div className="tab-title">
+					<Text strong>QMS</Text>
+				</div>
+			),
 			key: "Qms"
 		},
 		{
-			tab: <Text strong>Finance</Text>,
+			tab: (
+				<div className="tab-title">
+					<Text strong>Finance</Text>
+				</div>
+			),
 			key: "fin"
 		},
 		{
-			tab: <Text strong>Publicity</Text>,
+			tab: (
+				<div className="tab-title">
+					<Text strong>Publicity</Text>
+				</div>
+			),
 			key: "publicity"
 		},
 		{
-			tab: <Text strong>O & IP</Text>,
+			tab: (
+				<div className="tab-title">
+					<Text strong>O&IP</Text>
+				</div>
+			),
 			key: "O&IP"
 		},
 		{
-			tab: <Text strong>Spons</Text>,
+			tab: (
+				<div className="tab-title">
+					<Text strong>Spons</Text>
+				</div>
+			),
 			key: "spons"
 		},
 		{
-			tab: <Text strong>Evolve</Text>,
+			tab: (
+				<div className="tab-title">
+					<Text strong>Evolve</Text>
+				</div>
+			),
 			key: "Evolve"
 		},
 		{
-			tab: <Text strong>Envisage</Text>,
+			tab: (
+				<div className="tab-title">
+					<Text strong>Envisage</Text>
+				</div>
+			),
 			key: "Envisage"
 		},
 		{
-			tab: <Text strong>S & E</Text>,
+			tab: (
+				<div className="tab-title">
+					<Text strong>S&E</Text>
+				</div>
+			),
 			key: "S&E"
 		}
 	];
@@ -58,7 +98,7 @@ export const TeamScreen = () => {
 				tabList={tabList}
 				tabBarExtraContent={<div></div>}
 				onTabChange={(tab) => setActiveDept(tab)}
-				className="team-card"
+				className="team-card card-with-tabs "
 			>
 				<TeamComponent team={activeDept} />
 			</Card>
