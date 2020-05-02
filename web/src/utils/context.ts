@@ -4,14 +4,14 @@ import React from "react";
 import { Department, User } from "../generated";
 
 interface IDrawerContext {
-	setDrawerComponent: (comp: JSX.Element) => void;
-	setDrawerProps?: (props: DrawerProps) => void;
+	setDrawerComponent: (comp: JSX.Element | undefined) => void;
+	setDrawerProps: (props: DrawerProps) => void;
 }
 
 export const DrawerContext = React.createContext<IDrawerContext | null>(null);
 
 interface IModalContext {
-	setModalComponent: (comp: JSX.Element) => void;
+	setModalComponent: (comp: JSX.Element | undefined) => void;
 	setModalProps: (props: ModalProps) => void;
 }
 

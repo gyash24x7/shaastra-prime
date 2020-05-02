@@ -36,20 +36,20 @@ export const PrivateLayout = (props: PrivateLayoutProps) => {
 						</Content>
 					</Layout>
 					<PrimaryNav />
+					<CommonModal
+						component={modalComponent}
+						visible={!!modalComponent}
+						onCancel={() => setModalComponent(undefined)}
+						modalProps={modalProps}
+					/>
+					<CommonDrawer
+						component={drawerComponent}
+						visible={!!drawerComponent}
+						onClose={() => setDrawerComponent(undefined)}
+						drawerProps={drawerProps}
+					/>
 				</ModalContext.Provider>
 			</DrawerContext.Provider>
-			<CommonModal
-				component={modalComponent}
-				visible={!!modalComponent}
-				onCancel={() => setModalComponent(undefined)}
-				modalProps={modalProps}
-			/>
-			<CommonDrawer
-				component={drawerComponent}
-				visible={!!drawerComponent}
-				onClose={() => setDrawerComponent(undefined)}
-				drawerProps={drawerProps}
-			/>
 		</div>
 	);
 };

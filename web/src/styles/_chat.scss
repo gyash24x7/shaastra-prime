@@ -35,8 +35,6 @@
 
 .channel-drawer {
 	.ant-drawer-content-wrapper {
-		width: 450px !important;
-
 		.ant-drawer-body {
 			text-transform: capitalize;
 			overflow-x: hidden;
@@ -51,10 +49,8 @@
 				overflow-y: scroll;
 				max-height: 50vh;
 
-				.avatar-container {
-					flex: 1;
-					margin: 5px auto;
-					width: 100%;
+				.grid-col {
+					margin: 5px;
 				}
 
 				.message-box {

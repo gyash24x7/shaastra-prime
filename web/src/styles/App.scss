@@ -129,3 +129,9 @@ button {
 	width: 270px;
 	overflow-y: scroll;
 }
+
+.drawer-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
