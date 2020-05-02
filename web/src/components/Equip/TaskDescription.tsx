@@ -1,7 +1,7 @@
 import { Button, Descriptions, Tag, Typography } from "antd";
 import React from "react";
 import { statusColor } from ".";
-import { AvatarHeader } from "../shared/AvatarHeader";
+import { UserCard } from "../shared/UserCard";
 
 const { Text, Title } = Typography;
 
@@ -30,12 +30,12 @@ export const TaskDescription = ({ data }: any) => {
 			<Descriptions.Item label={<strong>Assigned To</strong>} span={2}>
 				<div className="grid-row">
 					{data.assignedTo.map((_: any, i: number) => (
-						<AvatarHeader key={i} />
+						<UserCard key={i} />
 					))}
 				</div>
 			</Descriptions.Item>
 			<Descriptions.Item label={<strong>Created&nbsp;By</strong>}>
-				<AvatarHeader />
+				<UserCard />
 			</Descriptions.Item>
 			<Descriptions.Item label={<strong>Status</strong>}>
 				<Tag color={statusColor[data.status]}>{data.status}</Tag>

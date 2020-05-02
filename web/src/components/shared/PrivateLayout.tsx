@@ -28,14 +28,12 @@ export const PrivateLayout = (props: PrivateLayoutProps) => {
 			<DrawerContext.Provider value={{ setDrawerComponent, setDrawerProps }}>
 				<ModalContext.Provider value={{ setModalComponent, setModalProps }}>
 					<Layout>
-						<Sider breakpoint="xl" width="270" collapsedWidth="0">
+						<Sider width="270" collapsedWidth="0">
 							<SecondaryNav />
 						</Sider>
-						<Layout>
-							<Content>
-								<div className="screen-wrapper">{props.children}</div>
-							</Content>
-						</Layout>
+						<Content>
+							<div className="screen-wrapper">{props.children}</div>
+						</Content>
 					</Layout>
 					<PrimaryNav />
 				</ModalContext.Provider>

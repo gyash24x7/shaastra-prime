@@ -116,7 +116,16 @@ button {
 	margin-bottom: 15px;
 }
 
+.ant-layout {
+	height: 100vh;
+}
+
 .ant-layout-sider-children {
 	background: #141414;
-	height: 100vh;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 60px;
+	width: 270px;
+	overflow-y: scroll;
 }
