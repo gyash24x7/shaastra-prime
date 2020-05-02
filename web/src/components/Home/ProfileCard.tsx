@@ -1,9 +1,8 @@
 import { Avatar, Card } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
-
-import { AvatarHeader } from "../shared/AvatarHeader";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
+import { UserCard } from "../shared/UserCard";
 
 export const ProfileCard = () => {
 	return (
@@ -24,7 +23,7 @@ export const ProfileCard = () => {
 					size={100}
 				/>
 			</div>
-			<AvatarHeader />
+			<UserCard />
 		</Card>
 	);
 };

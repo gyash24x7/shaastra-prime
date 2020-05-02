@@ -1,6 +1,6 @@
 import { Card, Collapse } from "antd";
 import React from "react";
-import { AvatarHeader } from "../shared/AvatarHeader";
+import { UserCard } from "../shared/UserCard";
 import { Message } from "./Message";
 
 export const ChannelDescription = () => {
@@ -8,7 +8,7 @@ export const ChannelDescription = () => {
 		<Collapse accordion defaultActiveKey="members">
 			<Collapse.Panel key="members" header="Members">
 				{[...Array(6)].map((_, i) => (
-					<AvatarHeader key={i} />
+					<UserCard key={i} />
 				))}
 			</Collapse.Panel>
 			<Collapse.Panel key="pinned" header="Pinned Messages">

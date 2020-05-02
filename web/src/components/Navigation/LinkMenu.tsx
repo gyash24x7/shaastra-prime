@@ -16,13 +16,13 @@ export const LinkMenu = () => {
 	return (
 		<Menu selectedKeys={[pathname!]}>
 			<Menu.ItemGroup title="Links">
-				<Menu.Item key="/">
+				<Menu.Item key="/" onClick={() => history.push("/")}>
 					<ProfileOutlined className="icon nav-icon" />
 					<span>Profile</span>
 				</Menu.Item>
-				<Menu.Item key="/team/Webops">
+				<Menu.Item key="/team" onClick={() => history.push("/team")}>
 					<TeamOutlined className="icon nav-icon" />
-					<span>My Team</span>
+					<span>Team Shaastra</span>
 				</Menu.Item>
 				<Menu.Item key="/issues">
 					<IssuesCloseOutlined className="icon nav-icon" />

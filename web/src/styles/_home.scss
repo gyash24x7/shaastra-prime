@@ -1,18 +1,53 @@
 .screen-wrapper {
 	padding: 10px;
-	height: calc(100vh - 20px);
+	height: 100vh;
 }
 
-.team-card {
-	margin: 30px 10px;
+.avatar-container {
+	border-radius: 5px;
+	background: #000000;
+	border: 1px solid #303030;
+	width: inherit;
+	justify-content: space-around;
+	align-items: center;
 
-	.ant-card-body {
-		padding: 0;
-	}
+	&.with-avatar {
+		.ant-card-body {
+			padding: 15px;
+			padding-top: 30px;
+		}
 
-	.avatar-container.with-avatar .avatar {
-		top: -25px;
+		.avatar {
+			position: absolute;
+			width: calc(100% - 30px);
+			display: flex;
+			justify-content: center;
+			top: -25px;
+		}
 	}
+}
+
+.user-details,
+.message-details {
+	padding: 5px;
+	width: 100%;
+}
+
+.user-position {
+	display: flex;
+	margin: 0 -5px;
+
+	.ant-tag {
+		flex: 1;
+		text-align: center;
+		margin: 5px !important;
+	}
+}
+
+.user-name > .ant-tag {
+	font-size: 14px;
+	width: 100%;
+	text-align: center;
 }
 
 .user-card {
@@ -68,17 +103,29 @@
 	margin-bottom: 5px;
 	.avatar {
 		position: absolute;
-		bottom: 170px;
+		bottom: 200px;
 		width: calc(100% - 60px);
 		display: flex;
 		justify-content: center;
 	}
 
 	.avatar-container {
-		margin-top: 20px;
+		margin-top: 40px;
+	}
+}
+
+.team-card {
+	.ant-card-body {
+		padding: 0;
+		margin-left: -1px;
 	}
 }
 
 .team-card-grid {
 	width: 100%;
+}
+
+.team-member {
+	padding: 10px;
+	padding-top: 40px;
 }

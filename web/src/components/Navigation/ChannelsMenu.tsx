@@ -1,6 +1,6 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
-import React from "react";
+import React, { Fragment } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { stringGen } from "../../utils/lorem";
 
@@ -9,24 +9,28 @@ export const ChannelsMenu = () => {
 	const history = useHistory();
 
 	return (
-		<Menu selectedKeys={[channelId!]} mode="inline">
-			<Menu.ItemGroup title="Actions">
-				<Menu.Item>
-					<PlusCircleOutlined className="icon nav-icon" />
-					<span>New Channel</span>
-				</Menu.Item>
-			</Menu.ItemGroup>
-			<Menu.SubMenu title="Channels">
-				{channels.map((channel) => (
-					<Menu.Item
-						key={channel.id}
-						onClick={() => history.push(`/chat/${channel.id}`)}
-					>
-						<span>{channel.name}</span>
+		<Fragment>
+			<Menu>
+				<Menu.ItemGroup title="Actions">
+					<Menu.Item>
+						<PlusCircleOutlined className="icon nav-icon" />
+						<span>New Channel</span>
 					</Menu.Item>
-				))}
-			</Menu.SubMenu>
-		</Menu>
+				</Menu.ItemGroup>
+			</Menu>
+			<Menu mode="inline" selectedKeys={[channelId!]}>
+				<Menu.SubMenu title="Channels">
+					{channels.map((channel) => (
+						<Menu.Item
+							key={channel.id}
+							onClick={() => history.push(`/chat/${channel.id}`)}
+						>
+							<span>{channel.name}</span>
+						</Menu.Item>
+					))}
+				</Menu.SubMenu>
+			</Menu>
+		</Fragment>
 	);
 };
 

@@ -41,7 +41,7 @@ export const AppRoutes = () => {
 				<Route exact path="/equip" component={EquipScreen} />
 				<Route exact path="/finbooks" component={HomeScreen} />
 				<Route exact path="/updates" component={UpdateScreen} />
-				<Route exact path="/team/:department" component={TeamScreen} />
+				<Route exact path="/team" component={TeamScreen} />
 				<Route exact path="/verification" component={OTPScreen} />
 				<Redirect from="/profile" to="/" />
 				<Redirect from="/chat" to="/chat/lnvkjfsnv" />

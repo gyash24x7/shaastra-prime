@@ -44,29 +44,6 @@
 	}
 }
 
-.avatar-container {
-	display: flex;
-	padding: 12px;
-	border-radius: 10px;
-	background: #000000;
-	border: 1px solid #303030;
-	width: inherit;
-	justify-content: space-around;
-	align-items: center;
-
-	&.with-avatar {
-		padding-top: 30px;
-
-		.avatar {
-			position: absolute;
-			width: 100%;
-			display: flex;
-			justify-content: center;
-			top: 12px;
-		}
-	}
-}
-
 .profile-card .avatar-container {
 	margin: 0;
 }
@@ -76,38 +53,8 @@
 	padding: 15px;
 }
 
-.user-details,
-.message-details {
-	padding: 5px;
-	width: 100%;
-}
-
-.user-position {
-	display: flex;
-	margin: 0 -5px;
-
-	.ant-tag {
-		flex: 1;
-		text-align: center;
-		margin: 5px !important;
-	}
-}
-
-.user-name > .ant-tag {
-	font-size: 14px;
-	width: 100%;
-	text-align: center;
-}
-
 .ant-layout-sider-collapsed .avatar-container {
 	display: none;
-}
-
-.avatar-item-group {
-	padding-bottom: 20px;
-	& > .ant-menu-item {
-		padding: 0 20px;
-	}
 }
 
 .user-card-small {
