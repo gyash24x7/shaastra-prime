@@ -21,7 +21,7 @@ export class Task {
 	@Field(() => TaskStatus) status: TaskStatus;
 	@Field() createdAt: string;
 	@Field() deadline: string;
-	@Field(() => Channel, { nullable: true }) channel?: Channel;
+	@Field(() => [Channel]) channels: Channel[];
 	@Field(() => [Media]) media: Media[];
 	@Field(() => [SubTask]) SubTasks: SubTask[];
 	@Field(() => [TaskActivity]) taskActivity: TaskActivity[];

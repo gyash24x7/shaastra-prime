@@ -101,5 +101,7 @@ export enum TaskActivityType {
 export enum MessageType {
 	SYSTEM = "SYSTEM",
 	TEXT = "TEXT",
-	MEDIA = "MEDIA"
+	MEDIA = "MEDIA",
+	TASK_ACTIVITY = "TASK_ACTIVITY",
+	INVOICE_ACTIVITY = "INVOICE_ACTIVITY"
 }
