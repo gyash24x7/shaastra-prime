@@ -1,10 +1,11 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import { MessageStatus } from "../utils";
+import { MessageType } from "./../utils/index";
 import { Channel } from "./Channel";
+import { Media } from "./Media";
 import { Reaction } from "./Reaction";
 import { User } from "./User";
 
-registerEnumType(MessageStatus, { name: "MessageStatus" });
+registerEnumType(MessageType, { name: "MessageType" });
 
 @ObjectType()
 export class Message {
@@ -15,4 +16,6 @@ export class Message {
 	@Field(() => Channel) channel: Channel;
 	@Field() starred: boolean;
 	@Field(() => [Reaction]) reactions: Reaction[];
+	@Field(() => [Media]) media: Media[];
+	@Field(() => MessageType) type: MessageType;
 }

@@ -1,8 +1,11 @@
-import { Field, ID, ObjectType } from "type-graphql";
-import { Media } from "./Media";
+import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
+import { ChannelType } from "./../utils/index";
 import { Message } from "./Message";
 import { Task } from "./Task";
+import { TaskActivity } from "./TaskActivity";
 import { User } from "./User";
+
+registerEnumType(ChannelType, { name: "ChannelType" });
 
 @ObjectType()
 export class Channel {
@@ -11,9 +14,10 @@ export class Channel {
 	@Field() description: string;
 	@Field() createdAt: string;
 	@Field() archived: boolean;
+	@Field(() => ChannelType) type: ChannelType;
 	@Field(() => [Message]) messages: Message[];
 	@Field(() => User) createdBy: User;
 	@Field(() => [User]) members: User[];
-	@Field(() => [Media]) media: Media[];
-	@Field(() => Task) task?: Task;
+	@Field(() => [Task]) tasks: Task[];
+	@Field(() => [TaskActivity]) taskActivity: TaskActivity[];
 }

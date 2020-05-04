@@ -10,5 +10,4 @@ export class SubTask {
 	@Field() title: string;
 	@Field(() => SubTaskStatus) status: SubTaskStatus;
 	@Field(() => Task) task: Task;
-	@Field() isTemplate: boolean;
 }

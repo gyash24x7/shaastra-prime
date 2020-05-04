@@ -14,14 +14,6 @@ export interface GraphQLContext {
 	res: Response;
 }
 
-export enum MessageStatus {
-	NOT_SENT = "NOT_SENT",
-	SENT = "SENT",
-	DELIVERED = "DELIVERED",
-	RECEIVED = "RECEIVED",
-	READ = "READ"
-}
-
 export enum MediaType {
 	IMAGE = "IMAGE",
 	AUDIO = "AUDIO",
@@ -39,11 +31,11 @@ export enum ReactionType {
 }
 
 export enum TaskStatus {
-	COORD = "COORD",
-	HEAD = "HEAD",
-	CORE = "CORE",
-	COCAS = "COCAS",
-	COCAD = "COCAD"
+	NOT_ASSIGNED = "NOT_ASSIGNED",
+	ASSIGNED = "ASSIGNED",
+	IN_PROGRESS = "IN_PROGRESS",
+	SUBMITTED = "SUBMITTED",
+	COMPLETED = "COMPLETED"
 }
 
 export interface Upload {
@@ -91,4 +83,23 @@ export enum InvoiceStatus {
 	FIN_MANAGER = "FIN_MANAGER",
 	FIN_CORE = "FIN_CORE",
 	COCAD = "COCAD"
+}
+
+export enum ChannelType {
+	GROUP = "GROUP",
+	DIRECT = "DIRECT"
+}
+
+export enum TaskActivityType {
+	NOT_ASSIGNED = "NOT_ASSIGNED",
+	ASSIGNED = "ASSIGNED",
+	IN_PROGRESS = "IN_PROGRESS",
+	SUBMITTED = "SUBMITTED",
+	COMPLETED = "COMPLETED"
+}
+
+export enum MessageType {
+	SYSTEM = "SYSTEM",
+	TEXT = "TEXT",
+	MEDIA = "MEDIA"
 }
