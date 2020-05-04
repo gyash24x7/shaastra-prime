@@ -1,9 +1,9 @@
-import { ChannelResolver } from "./Channel";
-import { DepartmentResolver } from "./Department";
+import ChannelResolvers from "./Channel";
+import DepartmentResolvers from "./Department";
 import UserResolvers from "./User";
 
 export const resolvers = [
-	DepartmentResolver,
+	...DepartmentResolvers,
 	...UserResolvers,
-	ChannelResolver
+	...ChannelResolvers
 ];

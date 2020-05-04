@@ -1,5 +1,11 @@
-import { Resolver } from "type-graphql";
-import { Department } from "../../models/Department";
+import { AddSubDepartmentResolver } from "./AddSubDepartment";
+import { CreateDepartmentResolver } from "./CreateDepartment";
+import { DepartmentFieldResolvers } from "./FieldResolvers";
+import { GetDepartmentResolver } from "./GetDepartments";
 
-@Resolver(Department)
-export class DepartmentResolver {}
+export default [
+	AddSubDepartmentResolver,
+	CreateDepartmentResolver,
+	DepartmentFieldResolvers,
+	GetDepartmentResolver
+];
