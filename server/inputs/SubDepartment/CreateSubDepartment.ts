@@ -1,8 +1,7 @@
 import { Field, InputType } from "type-graphql";
 
 @InputType()
-export class CreateChannelInput {
+export class CreateSubDepartmentInput {
 	@Field() name: string;
-	@Field() description: string;
 	@Field(() => [String]) members: string[];
 }

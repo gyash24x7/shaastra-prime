@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -62,7 +62,7 @@ model User {
 
 model Channel {
   id          String      @default(cuid()) @id
-  name        String      @unique
+  name        String
   description String
   type        ChannelType
   createdAt   DateTime    @default(now())
