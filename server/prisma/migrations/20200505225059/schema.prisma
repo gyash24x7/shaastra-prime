@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -96,22 +96,22 @@ model Media {
 }
 
 model Task {
-  id          String         @default(cuid()) @id
-  brief       String
-  details     String
-  byDept      Department     @relation("TasksByDept", fields: [byDeptId], references: [id])
-  forDept     Department     @relation("TasksForDept", fields: [forDeptId], references: [id])
-  createdBy   User           @relation("TasksByUser", fields: [createdById], references: [id])
-  assignedTo  User[]         @relation("TasksForUser", references: [id])
-  status      TaskStatus     @default(NOT_ASSIGNED)
-  createdAt   DateTime       @default(now())
-  deadline    DateTime
-  media       Media[]        @relation("TaskMedia")
-  byDeptId    String
-  forDeptId   String
-  createdById String
-  channelId   String?
-  activity    TaskActivity[] @relation("TaskActivity")
+  id           String         @default(cuid()) @id
+  brief        String
+  details      String
+  byDept       Department     @relation("TasksByDept", fields: [byDeptId], references: [id])
+  forDept      Department     @relation("TasksForDept", fields: [forDeptId], references: [id])
+  createdBy    User           @relation("TasksByUser", fields: [createdById], references: [id])
+  assignedTo   User[]         @relation("TasksForUser", references: [id])
+  status       TaskStatus     @default(NOT_ASSIGNED)
+  createdAt    DateTime       @default(now())
+  deadline     DateTime
+  media        Media[]        @relation("TaskMedia")
+  byDeptId     String
+  forDeptId    String
+  createdById  String
+  channelId    String?
+  taskActivity TaskActivity[] @relation("TaskActivity")
 }
 
 model TaskActivity {

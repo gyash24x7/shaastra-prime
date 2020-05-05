@@ -17,11 +17,6 @@ export class DepartmentFieldResolvers {
 	}
 
 	@FieldResolver(() => [User])
-	async goals(@Root() { id }: Department) {
-		return prisma.department.findOne({ where: { id } }).goals();
-	}
-
-	@FieldResolver(() => [User])
 	async tasksCreated(@Root() { id }: Department) {
 		return prisma.department.findOne({ where: { id } }).tasksCreated();
 	}
@@ -29,11 +24,6 @@ export class DepartmentFieldResolvers {
 	@FieldResolver(() => [User])
 	async tasksAssigned(@Root() { id }: Department) {
 		return prisma.department.findOne({ where: { id } }).tasksAssigned();
-	}
-
-	@FieldResolver(() => [User])
-	async subDepartments(@Root() { id }: Department) {
-		return prisma.department.findOne({ where: { id } }).subDepartments();
 	}
 
 	@FieldResolver(() => [Invoice])

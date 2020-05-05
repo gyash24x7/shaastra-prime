@@ -1,5 +1,4 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { Goal } from "./Goal";
 import { Invoice } from "./Invoice";
 import { Task } from "./Task";
 import { Update } from "./Update";
@@ -16,5 +15,4 @@ export class Department {
 	@Field(() => [Update]) updates: Update[];
 	@Field(() => [Invoice]) invoicesSubmitted: Invoice[];
 	@Field(() => [String]) subDepartments: string[];
-	@Field(() => [Goal]) goals: Goal[];
 }

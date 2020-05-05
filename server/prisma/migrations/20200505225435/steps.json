@@ -1,0 +1,42 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "Task",
+      "field": "activity",
+      "type": "TaskActivity",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Task",
+          "field": "activity"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Task",
+          "field": "activity"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"TaskActivity\""
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Task",
+      "field": "taskActivity"
+    }
+  ]
+}
