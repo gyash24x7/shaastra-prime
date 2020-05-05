@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -8,22 +8,30 @@ generator client {
 }
 
 model Department {
-  id                String    @default(cuid()) @id
+  id                String          @default(cuid()) @id
   name              String
-  shortName         String    @default("")
-  subDepartments    String[]
-  members           User[]    @relation("DeptMembers")
-  tasksAssigned     Task[]    @relation("TasksForDept")
-  tasksCreated      Task[]    @relation("TasksByDept")
-  updates           Update[]  @relation("DeptUpdates")
-  invoicesSubmitted Invoice[] @relation("InvoicesByDept")
-  goals             Goal[]    @relation("DeptGoals")
+  shortName         String          @default("")
+  subDepartments    SubDepartment[] @relation("SubDept")
+  members           User[]          @relation("DeptMembers")
+  tasksAssigned     Task[]          @relation("TasksForDept")
+  tasksCreated      Task[]          @relation("TasksByDept")
+  updates           Update[]        @relation("DeptUpdates")
+  invoicesSubmitted Invoice[]       @relation("InvoicesByDept")
+  goals             Goal[]          @relation("DeptGoals")
+}
+
+model SubDepartment {
+  id         String     @default(cuid()) @id
+  name       String
+  members    User[]     @relation("SubDeptMembers", references: [id])
+  department Department @relation("SubDept", fields: [deptId], references: [id])
+  deptId     String
 }
 
 model User {
-  id                String     @default(cuid()) @id
+  id                String          @default(cuid()) @id
   name              String
-  email             String     @unique
+  email             String          @unique
   password          String
   rollNumber        String
   profilePic        String
@@ -31,24 +39,25 @@ model User {
   mobile            String
   upi               String
   about             String
-  role              UserRole   @default(COORD)
-  verified          Boolean    @default(false)
+  role              UserRole        @default(COORD)
+  verified          Boolean         @default(false)
   verificationOTP   String
   passwordOTP       String?
-  department        Department @relation("DeptMembers", fields: [deptId], references: [id])
+  department        Department      @relation("DeptMembers", fields: [deptId], references: [id])
   deptId            String
   // Fields to be fetched separately if needed: Omit in API
-  channels          Channel[]  @relation("ChannelMembers", references: [id])
-  media             Media[]    @relation("MediaByUser")
-  tasksAssigned     Task[]     @relation("TasksForUser", references: [id])
-  invoicesSubmitted Invoice[]  @relation("InvoicesByUser")
-  messages          Message[]  @relation("MessagesByUser")
-  channelsCreated   Channel[]  @relation("ChannelsByUser")
-  tasksCreated      Task[]     @relation("TasksByUser")
-  likedMessages     Message[]  @relation("LikesByUser", references: [id])
-  Update            Update[]   @relation("UserUpdate")
-  Vertical          Vertical[] @relation("VerticalUpdatedBy")
-  Event             Event[]    @relation("EventUpdatedBy")
+  channels          Channel[]       @relation("ChannelMembers", references: [id])
+  media             Media[]         @relation("MediaByUser")
+  tasksAssigned     Task[]          @relation("TasksForUser", references: [id])
+  invoicesSubmitted Invoice[]       @relation("InvoicesByUser")
+  subDepartments    SubDepartment[] @relation("SubDeptMembers", references: [id])
+  messages          Message[]       @relation("MessagesByUser")
+  channelsCreated   Channel[]       @relation("ChannelsByUser")
+  tasksCreated      Task[]          @relation("TasksByUser")
+  likedMessages     Message[]       @relation("LikesByUser", references: [id])
+  Update            Update[]        @relation("UserUpdate")
+  Vertical          Vertical[]      @relation("VerticalUpdatedBy")
+  Event             Event[]         @relation("EventUpdatedBy")
 }
 
 model Channel {
@@ -61,8 +70,9 @@ model Channel {
   createdBy   User        @relation("ChannelsByUser", fields: [createdById], references: [id])
   members     User[]      @relation("ChannelMembers", references: [id])
   createdById String
+  tasks       Task[]      @relation("TaskUpdateChannels", references: [id])
   // Fields to be fetched separately if needed: Omit in API
-  messages    Message[]   @relation("ChannelMessages")
+  messages    Message[]   @relation("ChannelMessages", references: [id])
 }
 
 model Message {
@@ -75,9 +85,8 @@ model Message {
   createdById String
   type        MessageType
   media       Media[]     @relation("MessageMedia")
-  // Omit in API
-  channel     Channel     @relation("ChannelMessages", fields: [channelId], references: [id])
-  channelId   String
+  // Not useful for a particular message
+  channels    Channel[]   @relation("ChannelMessages", references: [id])
 }
 
 model Media {
@@ -107,6 +116,7 @@ model Task {
   status       TaskStatus     @default(NOT_ASSIGNED)
   createdAt    DateTime       @default(now())
   deadline     DateTime
+  channels     Channel[]      @relation("TaskUpdateChannels", references: [id])
   media        Media[]        @relation("TaskMedia")
   byDeptId     String
   forDeptId    String

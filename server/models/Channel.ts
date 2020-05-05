@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import { ChannelType } from "./../utils/index";
-import { Task } from "./Task";
 import { User } from "./User";
 
 registerEnumType(ChannelType, { name: "ChannelType" });
@@ -14,5 +13,5 @@ export class Channel {
 	@Field() archived: boolean;
 	@Field(() => ChannelType) type: ChannelType;
 	@Field(() => [User]) members: User[];
-	@Field(() => [Task]) tasks: Task[];
+	@Field(() => User) createdBy: User;
 }

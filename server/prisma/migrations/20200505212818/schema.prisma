@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -61,8 +61,9 @@ model Channel {
   createdBy   User        @relation("ChannelsByUser", fields: [createdById], references: [id])
   members     User[]      @relation("ChannelMembers", references: [id])
   createdById String
+  tasks       Task[]      @relation("TaskUpdateChannels", references: [id])
   // Fields to be fetched separately if needed: Omit in API
-  messages    Message[]   @relation("ChannelMessages")
+  messages    Message[]   @relation("ChannelMessages", references: [id])
 }
 
 model Message {
@@ -75,9 +76,8 @@ model Message {
   createdById String
   type        MessageType
   media       Media[]     @relation("MessageMedia")
-  // Omit in API
-  channel     Channel     @relation("ChannelMessages", fields: [channelId], references: [id])
-  channelId   String
+  // Not useful for a particular message
+  channels    Channel[]   @relation("ChannelMessages", references: [id])
 }
 
 model Media {
@@ -107,6 +107,7 @@ model Task {
   status       TaskStatus     @default(NOT_ASSIGNED)
   createdAt    DateTime       @default(now())
   deadline     DateTime
+  channels     Channel[]      @relation("TaskUpdateChannels", references: [id])
   media        Media[]        @relation("TaskMedia")
   byDeptId     String
   forDeptId    String

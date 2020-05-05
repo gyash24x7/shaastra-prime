@@ -8,4 +8,9 @@ export class ChannelFieldResolvers {
 	createdBy(@Root() { id }: Channel) {
 		return prisma.channel.findOne({ where: { id } }).createdBy();
 	}
+
+	@FieldResolver()
+	members(@Root() { id }: Channel) {
+		return prisma.channel.findOne({ where: { id } }).members();
+	}
 }

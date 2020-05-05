@@ -1,3 +1,4 @@
+import { AddSubDepartmentResolver } from "./AddSubDepartment";
 import { CreateDepartmentResolver } from "./CreateDepartment";
 import { DepartmentFieldResolvers } from "./FieldResolvers";
 import { GetDepartmentResolver } from "./GetDepartments";

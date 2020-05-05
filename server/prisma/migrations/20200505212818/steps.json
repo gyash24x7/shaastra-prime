@@ -1,0 +1,31 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "DeleteModel",
+      "model": "SubDepartment"
+    },
+    {
+      "tag": "UpdateField",
+      "model": "Department",
+      "field": "subDepartments",
+      "type": "String"
+    },
+    {
+      "tag": "DeleteDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Department",
+          "field": "subDepartments"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "DeleteField",
+      "model": "User",
+      "field": "subDepartments"
+    }
+  ]
+}
