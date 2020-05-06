@@ -2,7 +2,7 @@ mutation CreateUser(
 	$name: String!
 	$email: String!
 	$password: String!
-	$departmentId: Int!
+	$departmentId: String!
 	$rollNumber: String!
 	$mobile: String!
 ) {

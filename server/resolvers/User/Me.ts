@@ -10,6 +10,6 @@ export class MeResolver {
 		const id = req.session!.userId;
 		if (!id) return null;
 
-		return prisma.user.findOne(id);
+		return prisma.user.findOne({ where: { id } });
 	}
 }

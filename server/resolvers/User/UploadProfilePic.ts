@@ -1,19 +1,19 @@
-import bcrypt from "bcryptjs";
-import { Arg, Mutation, Resolver } from "type-graphql";
-import { ForgotPasswordInput } from "../../inputs/User/ForgotPassword";
+import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { prisma } from "../../prisma";
+import { GraphQLContext } from "../../utils";
 
 @Resolver()
 export class UploadProfilePicResolver {
 	@Mutation(() => Boolean)
-	async forgotPassword(
-		@Arg("data") { email, passwordOTP, newPassword }: ForgotPasswordInput
+	async uploadProfilePic(
+		@Arg("profilePic") profilePic: string,
+		@Ctx() { req }: GraphQLContext
 	) {
-		const user = await prisma.user.findOne({ where: { email } });
-		if (user && user.passwordOTP === passwordOTP) {
-			const password = await bcrypt.hash(newPassword, 13);
-			await prisma.user.update({ where: { email }, data: { password } });
-			return true;
-		} else return false;
+		const id = req.session!.userId;
+		const user = await prisma.user.update({
+			where: { id },
+			data: { profilePic }
+		});
+		return !!user;
 	}
 }

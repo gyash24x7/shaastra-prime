@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Redirect, Route, RouteProps } from "react-router-dom";
-
+import { PublicLayout } from "../components/shared/PublicLayout";
 import { UserContext } from "../utils/context";
 
 export const VerificationRoute = (props: RouteProps) => {
@@ -10,6 +10,8 @@ export const VerificationRoute = (props: RouteProps) => {
 	) : !isAuthenticated ? (
 		<Redirect to="/login" />
 	) : (
-		<Route {...props} />
+		<PublicLayout>
+			<Route {...props} />
+		</PublicLayout>
 	);
 };

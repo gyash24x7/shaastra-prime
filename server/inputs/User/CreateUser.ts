@@ -1,5 +1,5 @@
 import { IsEmail, Length } from "class-validator";
-import { Field, InputType, Int } from "type-graphql";
+import { Field, InputType } from "type-graphql";
 import { IsExistingUser } from "../../utils/IsExistingUser";
 
 @InputType()
@@ -23,6 +23,6 @@ export class CreateUserInput {
 	@Length(10, 10)
 	mobile: string;
 
-	@Field(() => Int)
+	@Field()
 	departmentId: string;
 }

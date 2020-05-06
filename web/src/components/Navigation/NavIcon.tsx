@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 import { Link, useLocation } from "react-router-dom";
-
 import { SwitchingIcon } from "../shared/SwitchingIcon";
 
 interface NavIconProps {
@@ -9,7 +8,7 @@ interface NavIconProps {
 	onClick?: () => void;
 }
 
-export const NavIcon = ({ name, linkDisabled }: NavIconProps) => {
+export const NavIcon = ({ name, linkDisabled, onClick }: NavIconProps) => {
 	const { pathname } = useLocation();
 	const isActive = pathname.split("/")[1] === name;
 	const WrapperComponent = linkDisabled ? Fragment : Link;
@@ -18,7 +17,12 @@ export const NavIcon = ({ name, linkDisabled }: NavIconProps) => {
 
 	return (
 		<WrapperComponent {...linkProps}>
-			<SwitchingIcon name={name} isActive={isActive} className="app-icon" />
+			<SwitchingIcon
+				name={name}
+				isActive={isActive}
+				className="app-icon"
+				onClick={onClick}
+			/>
 		</WrapperComponent>
 	);
 };

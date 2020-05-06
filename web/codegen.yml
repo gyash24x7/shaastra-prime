@@ -13,3 +13,4 @@ generates:
       withHooks: true
       apolloReactCommonImportFrom: "@apollo/client"
       apolloReactHooksImportFrom: "@apollo/client"
+      withRefetchFn: true

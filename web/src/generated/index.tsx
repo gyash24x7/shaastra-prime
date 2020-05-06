@@ -12,8 +12,13 @@ export type Scalars = {
 };
 
 export type AddSubDepartmentInput = {
-  id: Scalars['String'];
-  subDept: Scalars['String'];
+  deptId: Scalars['String'];
+  subDeptName: Scalars['String'];
+};
+
+export type AddUserToChannelInput = {
+  channelId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type Channel = {
@@ -23,17 +28,27 @@ export type Channel = {
   description: Scalars['String'];
   createdAt: Scalars['String'];
   archived: Scalars['Boolean'];
-  messages: Array<Message>;
-  createdBy: User;
+  type: ChannelType;
   members: Array<User>;
-  media: Array<Media>;
-  task: Task;
+  createdBy: User;
 };
+
+export enum ChannelType {
+  Group = 'GROUP',
+  Direct = 'DIRECT'
+}
 
 export type CreateChannelInput = {
   name: Scalars['String'];
   description: Scalars['String'];
   members: Array<Scalars['String']>;
+};
+
+export type CreateMessageInput = {
+  channelId: Scalars['String'];
+  content: Scalars['String'];
+  media: Array<Scalars['String']>;
+  mediaType: Scalars['String'];
 };
 
 export type CreateUserInput = {
@@ -42,25 +57,32 @@ export type CreateUserInput = {
   password: Scalars['String'];
   rollNumber: Scalars['String'];
   mobile: Scalars['String'];
-  departmentId: Scalars['Int'];
+  departmentId: Scalars['String'];
 };
 
 export type Department = {
    __typename?: 'Department';
   id: Scalars['ID'];
   name: Scalars['String'];
+  shortName: Scalars['String'];
   members: Array<User>;
   tasksAssigned: Array<Task>;
   tasksCreated: Array<Task>;
   updates: Array<Update>;
   invoicesSubmitted: Array<Invoice>;
-  subDepartments: Array<Team>;
+  subDepartments: Array<Scalars['String']>;
 };
 
 export type ForgotPasswordInput = {
   email: Scalars['String'];
   newPassword: Scalars['String'];
   passwordOTP: Scalars['String'];
+};
+
+export type GetMessagesInput = {
+  channelId: Scalars['String'];
+  skip: Scalars['Float'];
+  first: Scalars['Float'];
 };
 
 export type Invoice = {
@@ -121,16 +143,13 @@ export type Media = {
   url: Scalars['String'];
   type: MediaType;
   uploadedBy: User;
-  channel: Channel;
-  task: Task;
 };
 
 export enum MediaType {
   Image = 'IMAGE',
   Audio = 'AUDIO',
   Video = 'VIDEO',
-  Doc = 'DOC',
-  Code = 'CODE'
+  Doc = 'DOC'
 }
 
 export type Message = {
@@ -139,24 +158,43 @@ export type Message = {
   content: Scalars['String'];
   createdAt: Scalars['String'];
   createdBy: User;
-  channel: Channel;
   starred: Scalars['Boolean'];
-  reactions: Array<Reaction>;
+  likes: Scalars['Int'];
+  media: Array<Media>;
+  type: MessageType;
 };
+
+export enum MessageType {
+  System = 'SYSTEM',
+  Text = 'TEXT',
+  Media = 'MEDIA',
+  TaskActivity = 'TASK_ACTIVITY',
+  InvoiceActivity = 'INVOICE_ACTIVITY'
+}
 
 export type Mutation = {
    __typename?: 'Mutation';
-  createChannel: Channel;
+  addUserToChannel: Scalars['Boolean'];
+  createChannel: Scalars['Boolean'];
+  deleteChannel: Scalars['Boolean'];
+  updateChannel: Scalars['Boolean'];
+  addsubDepartment: Scalars['Boolean'];
   createDepartment: Department;
-  addSubDepartment: Scalars['Boolean'];
   createUser: User;
+  forgotPassword: Scalars['Boolean'];
   login?: Maybe<User>;
   logout: Scalars['Boolean'];
-  verifyUser: Scalars['Boolean'];
   sendPasswordOTP: Scalars['Boolean'];
-  forgotPassword: Scalars['Boolean'];
-  uploadProfilePic: Scalars['Boolean'];
   uploadCoverPic: Scalars['Boolean'];
+  uploadProfilePic: Scalars['Boolean'];
+  verifyUser: Scalars['Boolean'];
+  createMessage: Scalars['Boolean'];
+  updateMessage: Scalars['Boolean'];
+};
+
+
+export type MutationAddUserToChannelArgs = {
+  data: AddUserToChannelInput;
 };
 
 
@@ -165,13 +203,23 @@ export type MutationCreateChannelArgs = {
 };
 
 
-export type MutationCreateDepartmentArgs = {
-  name: Scalars['String'];
+export type MutationDeleteChannelArgs = {
+  channelId: Scalars['String'];
 };
 
 
-export type MutationAddSubDepartmentArgs = {
+export type MutationUpdateChannelArgs = {
+  data: UpdateChannelInput;
+};
+
+
+export type MutationAddsubDepartmentArgs = {
   data: AddSubDepartmentInput;
+};
+
+
+export type MutationCreateDepartmentArgs = {
+  name: Scalars['String'];
 };
 
 
@@ -180,13 +228,13 @@ export type MutationCreateUserArgs = {
 };
 
 
-export type MutationLoginArgs = {
-  data: LoginInput;
+export type MutationForgotPasswordArgs = {
+  data: ForgotPasswordInput;
 };
 
 
-export type MutationVerifyUserArgs = {
-  data: VerifyUserInput;
+export type MutationLoginArgs = {
+  data: LoginInput;
 };
 
 
@@ -195,8 +243,8 @@ export type MutationSendPasswordOtpArgs = {
 };
 
 
-export type MutationForgotPasswordArgs = {
-  data: ForgotPasswordInput;
+export type MutationUploadCoverPicArgs = {
+  coverPic: Scalars['String'];
 };
 
 
@@ -205,48 +253,38 @@ export type MutationUploadProfilePicArgs = {
 };
 
 
-export type MutationUploadCoverPicArgs = {
-  coverPic: Scalars['String'];
+export type MutationVerifyUserArgs = {
+  data: VerifyUserInput;
+};
+
+
+export type MutationCreateMessageArgs = {
+  data: CreateMessageInput;
+};
+
+
+export type MutationUpdateMessageArgs = {
+  data: UpdateMessageInput;
 };
 
 export type Query = {
    __typename?: 'Query';
   getChannels: Array<Channel>;
-  getDepartments: Array<Department>;
   getUsers: Array<User>;
   me?: Maybe<User>;
+  getDepartments: Array<Department>;
+  getMessages: Array<Message>;
 };
 
-export type Reaction = {
-   __typename?: 'Reaction';
-  id: Scalars['ID'];
-  type: ReactionType;
-  by: User;
-  message: Message;
+
+export type QueryGetChannelsArgs = {
+  type: Scalars['String'];
 };
 
-export enum ReactionType {
-  Love = 'LOVE',
-  Like = 'LIKE',
-  Haha = 'HAHA',
-  Angry = 'ANGRY',
-  Sad = 'SAD'
-}
 
-export type Sprint = {
-   __typename?: 'Sprint';
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  status: SprintStatus;
-  task: Task;
-  isTemplate: Scalars['Boolean'];
+export type QueryGetMessagesArgs = {
+  data: GetMessagesInput;
 };
-
-export enum SprintStatus {
-  NotStarted = 'NOT_STARTED',
-  InProgress = 'IN_PROGRESS',
-  Completed = 'COMPLETED'
-}
 
 export type Task = {
    __typename?: 'Task';
@@ -260,35 +298,55 @@ export type Task = {
   status: TaskStatus;
   createdAt: Scalars['String'];
   deadline: Scalars['String'];
-  channel: Channel;
   media: Array<Media>;
-  sprints: Array<Sprint>;
+  activity: Array<TaskActivity>;
 };
 
-export enum TaskStatus {
-  Coord = 'COORD',
-  Head = 'HEAD',
-  Core = 'CORE',
-  Cocas = 'COCAS',
-  Cocad = 'COCAD'
+export type TaskActivity = {
+   __typename?: 'TaskActivity';
+  id: Scalars['ID'];
+  type: TaskActivityType;
+  task: Task;
+  createdAt: Scalars['String'];
+};
+
+export enum TaskActivityType {
+  NotAssigned = 'NOT_ASSIGNED',
+  Assigned = 'ASSIGNED',
+  InProgress = 'IN_PROGRESS',
+  Submitted = 'SUBMITTED',
+  Completed = 'COMPLETED'
 }
 
-export type Team = {
-   __typename?: 'Team';
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  members: Array<User>;
-  department: Department;
-};
+export enum TaskStatus {
+  NotAssigned = 'NOT_ASSIGNED',
+  Assigned = 'ASSIGNED',
+  InProgress = 'IN_PROGRESS',
+  Submitted = 'SUBMITTED',
+  Completed = 'COMPLETED'
+}
 
 export type Update = {
    __typename?: 'Update';
   id: Scalars['ID'];
+  brief: Scalars['String'];
   subject: Scalars['String'];
   content: Scalars['String'];
   byDept: Department;
   postedBy: User;
   createdAt: Scalars['String'];
+};
+
+export type UpdateChannelInput = {
+  channelId: Scalars['String'];
+  archived: Scalars['Boolean'];
+  description: Scalars['String'];
+};
+
+export type UpdateMessageInput = {
+  messageId: Scalars['String'];
+  starred: Scalars['Boolean'];
+  like: Scalars['Boolean'];
 };
 
 export type User = {
@@ -304,12 +362,7 @@ export type User = {
   about: Scalars['String'];
   role: UserRole;
   verified: Scalars['Boolean'];
-  department: Array<Department>;
-  messages: Array<Message>;
-  media: Array<Media>;
-  channels: Array<Channel>;
-  invoicesSubmitted: Array<Invoice>;
-  teams: Array<Team>;
+  department: Department;
 };
 
 export enum UserRole {
@@ -341,7 +394,7 @@ export type CreateUserMutationVariables = {
   name: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
-  departmentId: Scalars['Int'];
+  departmentId: Scalars['String'];
   rollNumber: Scalars['String'];
   mobile: Scalars['String'];
 };
@@ -352,10 +405,10 @@ export type CreateUserMutation = (
   & { createUser: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name' | 'email' | 'rollNumber' | 'mobile' | 'role' | 'profilePic' | 'coverPic' | 'about' | 'verified'>
-    & { department: Array<(
+    & { department: (
       { __typename?: 'Department' }
       & Pick<Department, 'id' | 'name'>
-    )> }
+    ) }
   ) }
 );
 
@@ -370,10 +423,10 @@ export type LoginMutation = (
   & { login?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name'>
-    & { department: Array<(
+    & { department: (
       { __typename?: 'Department' }
       & Pick<Department, 'name' | 'id'>
-    )> }
+    ) }
   )> }
 );
 
@@ -423,7 +476,7 @@ export type GetDepartmentsQuery = (
   { __typename?: 'Query' }
   & { getDepartments: Array<(
     { __typename?: 'Department' }
-    & Pick<Department, 'id' | 'name'>
+    & Pick<Department, 'id' | 'name' | 'shortName' | 'subDepartments'>
   )> }
 );
 
@@ -435,16 +488,16 @@ export type MeQuery = (
   & { me?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name' | 'email' | 'rollNumber' | 'mobile' | 'role' | 'profilePic' | 'coverPic' | 'about' | 'verified'>
-    & { department: Array<(
+    & { department: (
       { __typename?: 'Department' }
       & Pick<Department, 'id' | 'name'>
-    )> }
+    ) }
   )> }
 );
 
 
 export const CreateUserDocument = gql`
-    mutation CreateUser($name: String!, $email: String!, $password: String!, $departmentId: Int!, $rollNumber: String!, $mobile: String!) {
+    mutation CreateUser($name: String!, $email: String!, $password: String!, $departmentId: String!, $rollNumber: String!, $mobile: String!) {
   createUser(data: {name: $name, email: $email, password: $password, rollNumber: $rollNumber, mobile: $mobile, departmentId: $departmentId}) {
     id
     name
@@ -656,6 +709,8 @@ export const GetDepartmentsDocument = gql`
   getDepartments {
     id
     name
+    shortName
+    subDepartments
   }
 }
     `;
@@ -684,6 +739,9 @@ export function useGetDepartmentsLazyQuery(baseOptions?: ApolloReactHooks.LazyQu
 export type GetDepartmentsQueryHookResult = ReturnType<typeof useGetDepartmentsQuery>;
 export type GetDepartmentsLazyQueryHookResult = ReturnType<typeof useGetDepartmentsLazyQuery>;
 export type GetDepartmentsQueryResult = ApolloReactCommon.QueryResult<GetDepartmentsQuery, GetDepartmentsQueryVariables>;
+export function refetchGetDepartmentsQuery(variables?: GetDepartmentsQueryVariables) {
+      return { query: GetDepartmentsDocument, variables: variables }
+    }
 export const MeDocument = gql`
     query Me {
   me {
@@ -729,3 +787,6 @@ export function useMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptio
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
+export function refetchMeQuery(variables?: MeQueryVariables) {
+      return { query: MeDocument, variables: variables }
+    }
