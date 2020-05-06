@@ -18,8 +18,7 @@ export enum MediaType {
 	IMAGE = "IMAGE",
 	AUDIO = "AUDIO",
 	VIDEO = "VIDEO",
-	DOC = "DOC",
-	CODE = "CODE"
+	DOC = "DOC"
 }
 
 export enum ReactionType {
@@ -105,3 +104,20 @@ export enum MessageType {
 	TASK_ACTIVITY = "TASK_ACTIVITY",
 	INVOICE_ACTIVITY = "INVOICE_ACTIVITY"
 }
+
+export const getMediaType = (type: string) => {
+	switch (type) {
+		case "IMAGE":
+			return MediaType.IMAGE;
+		case "AUDIO":
+			return MediaType.AUDIO;
+		case "VIDEO":
+			return MediaType.VIDEO;
+		default:
+			return MediaType.DOC;
+	}
+};
+
+export const getChannelType = (type: string) => {
+	return type === "DIRECT" ? ChannelType.DIRECT : ChannelType.GROUP;
+};

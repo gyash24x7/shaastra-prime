@@ -25,7 +25,7 @@ export class AddUserToChannelResolver {
 				messages: {
 					create: {
 						type: MessageType.SYSTEM,
-						content: `${currentUser?.name} added ${userToBeAdded?.name}`,
+						content: `${currentUser!.name} added ${userToBeAdded!.name}`,
 						createdBy: { connect: { id } }
 					}
 				}
