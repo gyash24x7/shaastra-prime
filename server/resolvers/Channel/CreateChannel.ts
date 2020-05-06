@@ -1,19 +1,18 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { CreateChannelInput } from "../../inputs/Channel/CreateChannel";
-import { Channel } from "../../models/Channel";
 import { prisma } from "../../prisma";
 import { ChannelType, GraphQLContext } from "../../utils";
 
 @Resolver()
 export class CreateChannelResolver {
 	@Authorized()
-	@Mutation(() => Channel)
+	@Mutation(() => Boolean)
 	async createChannel(
 		@Arg("data") { members, name, description }: CreateChannelInput,
 		@Ctx() { req }: GraphQLContext
 	) {
 		let userId: string = req.session!.userId;
-		return prisma.channel.create({
+		const channel = await prisma.channel.create({
 			data: {
 				name,
 				type: ChannelType.GROUP,
@@ -22,5 +21,7 @@ export class CreateChannelResolver {
 				createdBy: { connect: { id: userId } }
 			}
 		});
+
+		return !!channel;
 	}
 }

@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
+import { Field, ID, Int, ObjectType, registerEnumType } from "type-graphql";
 import { MessageType } from "./../utils/index";
 import { Media } from "./Media";
 import { User } from "./User";
@@ -12,7 +12,7 @@ export class Message {
 	@Field() createdAt: string;
 	@Field(() => User) createdBy: User;
 	@Field() starred: boolean;
-	@Field() likes: number;
+	@Field(() => Int) likes: number;
 	@Field(() => [Media]) media: Media[];
 	@Field(() => MessageType) type: MessageType;
 }
