@@ -10,6 +10,6 @@ export class GetUpdatesResolver {
 		const updates = await prisma.update.findMany({
 			orderBy: { createdAt: "desc" }
 		});
-		return updates;
+		return new Promise((resolve) => setTimeout(() => resolve(updates), 1000));
 	}
 }

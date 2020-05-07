@@ -3,7 +3,7 @@
 		"strict": true,
 		"lib": ["ES2016", "ES2018.AsyncIterable"],
 		"esModuleInterop": true,
-		"target": "ESNext",
+		"target": "ES2018",
 		"allowJs": true,
 		"skipLibCheck": true,
 		"allowSyntheticDefaultImports": true,

@@ -12,7 +12,7 @@ export class AddUserToChannelResolver {
 		@Arg("data") { channelId, userId }: AddUserToChannelInput,
 		@Ctx() { req }: GraphQLContext
 	) {
-		const id = req.session!.id;
+		const id = req.session!.userId;
 		const [currentUser, userToBeAdded] = await Promise.all([
 			prisma.user.findOne({ where: { id } }),
 			prisma.user.findOne({ where: { id: userId } })

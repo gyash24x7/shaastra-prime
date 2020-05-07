@@ -8,7 +8,7 @@ export class GetTasksResolver {
 	@Authorized()
 	@Query(() => [Task])
 	async getTasks(@Ctx() { req }: GraphQLContext) {
-		const id = req.session!.id;
+		const id = req.session!.userId;
 		const user = await prisma.user.findOne({ where: { id } });
 
 		switch (user?.role) {

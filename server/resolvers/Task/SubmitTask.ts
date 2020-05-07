@@ -11,7 +11,7 @@ export class SubmitTaskResolver {
 		@Arg("taskId") taskId: string,
 		@Ctx() { req }: GraphQLContext
 	) {
-		const id = req.session!.id;
+		const id = req.session!.userId;
 		const user = await prisma.user.findOne({ where: { id } });
 
 		const task = await prisma.task.update({

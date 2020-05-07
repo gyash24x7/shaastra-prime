@@ -12,7 +12,7 @@ export class UpdateMessageResolver {
 		@Arg("data") { messageId, starred, like }: UpdateMessageInput,
 		@Ctx() { req }: GraphQLContext
 	) {
-		const id = req.session!.id;
+		const id = req.session!.userId;
 		const data: MessageUpdateInput = {
 			starred,
 			likedBy:

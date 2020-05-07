@@ -13,7 +13,7 @@ export class UpdateChannelResolver {
 		@Ctx() { req }: GraphQLContext
 	) {
 		const { id, name } = (await prisma.user.findOne({
-			where: { id: req.session!.id }
+			where: { id: req.session!.userId }
 		}))!;
 
 		let updateData: ChannelUpdateInput = {};

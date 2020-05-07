@@ -8,7 +8,7 @@ export class GetChannelsResolver {
 	@Authorized()
 	@Query(() => [Channel])
 	async getChannels(@Arg("type") type: string, @Ctx() { req }: GraphQLContext) {
-		const id = req.session!.id;
+		const id = req.session!.userId;
 
 		const channels = await prisma.user
 			.findOne({ where: { id } })

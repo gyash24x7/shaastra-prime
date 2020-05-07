@@ -12,7 +12,7 @@ export class AssignTaskResolver {
 		@Arg("data") { taskId, assignedTo }: AssignTaskInput,
 		@Ctx() { req }: GraphQLContext
 	) {
-		const id = req.session!.id;
+		const id = req.session!.userId;
 		const [user, assignedUser] = await Promise.all([
 			prisma.user.findOne({ where: { id } }),
 			prisma.user.findMany({ where: { id: { in: assignedTo } } })

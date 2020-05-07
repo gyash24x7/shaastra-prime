@@ -11,7 +11,7 @@ export class CreateUpdateResolver {
 		@Arg("data") { brief, subject, content }: CreateUpdateInput,
 		@Ctx() { req }: GraphQLContext
 	) {
-		const id = req.session!.id;
+		const id = req.session!.userId;
 		const user = await prisma.user.findOne({ where: { id } });
 
 		const update = await prisma.update.create({

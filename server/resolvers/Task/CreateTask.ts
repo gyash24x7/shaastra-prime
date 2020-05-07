@@ -13,7 +13,7 @@ export class CreateTaskResolver {
 		@Arg("data") { brief, deadline, details, forDeptId }: CreateTaskInput,
 		@Ctx() { req }: GraphQLContext
 	) {
-		const id = req.session!.id;
+		const id = req.session!.userId;
 		const user = await prisma.user.findOne({ where: { id } });
 
 		const task = prisma.task.create({

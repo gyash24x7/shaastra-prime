@@ -12,7 +12,7 @@ export class CreateMessageResolver {
 		@Arg("data") { channelId, content, media, mediaType }: CreateMessageInput,
 		@Ctx() { req }: GraphQLContext
 	) {
-		const id = req.session!.id;
+		const id = req.session!.userId;
 		let message = await prisma.message.create({
 			data: {
 				channel: { connect: { id: channelId } },

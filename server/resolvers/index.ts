@@ -2,6 +2,8 @@ import ChannelResolvers from "./Channel";
 import DepartmentResolvers from "./Department";
 import MediaResolvers from "./Media";
 import MessageResolvers from "./Message";
+import TaskResolvers from "./Task";
+import UpdateResolvers from "./Update";
 import UserResolvers from "./User";
 
 export const resolvers = [
@@ -9,5 +11,7 @@ export const resolvers = [
 	...UserResolvers,
 	...ChannelResolvers,
 	...MessageResolvers,
-	...MediaResolvers
+	...MediaResolvers,
+	...UpdateResolvers,
+	...TaskResolvers
 ];
