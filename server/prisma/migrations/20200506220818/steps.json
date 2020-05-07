@@ -3,6 +3,52 @@
   "steps": [
     {
       "tag": "CreateEnum",
+      "enum": "MessageType",
+      "values": [
+        "SYSTEM",
+        "TEXT",
+        "MEDIA"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "RegistrationType",
+      "values": [
+        "INDIVIDUAL",
+        "TEAM",
+        "BOTH"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "ChannelType",
+      "values": [
+        "GROUP",
+        "DIRECT"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "TaskActivityType",
+      "values": [
+        "CREATED",
+        "ASSIGNED",
+        "IN_PROGRESS",
+        "SUBMITTED",
+        "COMPLETED"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
+      "enum": "InviteStatus",
+      "values": [
+        "ACCEPTED",
+        "REJECTED",
+        "NO_RESPONSE"
+      ]
+    },
+    {
+      "tag": "CreateEnum",
       "enum": "MilestoneStatus",
       "values": [
         "IN_PROGRESS",
@@ -21,7 +67,7 @@
     },
     {
       "tag": "CreateEnum",
-      "enum": "SprintStatus",
+      "enum": "SubTaskStatus",
       "values": [
         "NOT_STARTED",
         "IN_PROGRESS",
@@ -88,8 +134,7 @@
         "IMAGE",
         "AUDIO",
         "VIDEO",
-        "DOC",
-        "CODE"
+        "DOC"
       ]
     },
     {
@@ -182,9 +227,9 @@
     {
       "tag": "CreateField",
       "model": "Department",
-      "field": "subDepartments",
-      "type": "Team",
-      "arity": "List"
+      "field": "shortName",
+      "type": "String",
+      "arity": "Required"
     },
     {
       "tag": "CreateDirective",
@@ -192,9 +237,9 @@
         "path": {
           "tag": "Field",
           "model": "Department",
-          "field": "subDepartments"
+          "field": "shortName"
         },
-        "directive": "relation"
+        "directive": "default"
       }
     },
     {
@@ -204,12 +249,19 @@
         "path": {
           "tag": "Field",
           "model": "Department",
-          "field": "subDepartments"
+          "field": "shortName"
         },
-        "directive": "relation"
+        "directive": "default"
       },
       "argument": "",
-      "value": "\"DeptTeams\""
+      "value": "\"\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Department",
+      "field": "subDepartments",
+      "type": "String",
+      "arity": "List"
     },
     {
       "tag": "CreateField",
@@ -241,7 +293,7 @@
         "directive": "relation"
       },
       "argument": "",
-      "value": "\"DepartmentMembers\""
+      "value": "\"DeptMembers\""
     },
     {
       "tag": "CreateField",
@@ -370,173 +422,6 @@
       },
       "argument": "",
       "value": "\"InvoicesByDept\""
-    },
-    {
-      "tag": "CreateModel",
-      "model": "Team"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Team",
-      "field": "id",
-      "type": "String",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Team",
-          "field": "id"
-        },
-        "directive": "default"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Team",
-          "field": "id"
-        },
-        "directive": "default"
-      },
-      "argument": "",
-      "value": "cuid()"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Team",
-          "field": "id"
-        },
-        "directive": "id"
-      }
-    },
-    {
-      "tag": "CreateField",
-      "model": "Team",
-      "field": "name",
-      "type": "String",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Team",
-      "field": "members",
-      "type": "User",
-      "arity": "List"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Team",
-          "field": "members"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Team",
-          "field": "members"
-        },
-        "directive": "relation"
-      },
-      "argument": "",
-      "value": "\"TeamMembers\""
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Team",
-          "field": "members"
-        },
-        "directive": "relation"
-      },
-      "argument": "references",
-      "value": "[id]"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Team",
-      "field": "department",
-      "type": "Department",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Team",
-          "field": "department"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Team",
-          "field": "department"
-        },
-        "directive": "relation"
-      },
-      "argument": "",
-      "value": "\"DeptTeams\""
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Team",
-          "field": "department"
-        },
-        "directive": "relation"
-      },
-      "argument": "fields",
-      "value": "[deptId]"
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Team",
-          "field": "department"
-        },
-        "directive": "relation"
-      },
-      "argument": "references",
-      "value": "[id]"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Team",
-      "field": "deptId",
-      "type": "String",
-      "arity": "Required"
     },
     {
       "tag": "CreateModel",
@@ -767,7 +652,7 @@
         "directive": "relation"
       },
       "argument": "",
-      "value": "\"DepartmentMembers\""
+      "value": "\"DeptMembers\""
     },
     {
       "tag": "CreateArgument",
@@ -781,7 +666,7 @@
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[departmentId]"
+      "value": "[deptId]"
     },
     {
       "tag": "CreateArgument",
@@ -800,7 +685,7 @@
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "departmentId",
+      "field": "deptId",
       "type": "String",
       "arity": "Required"
     },
@@ -853,70 +738,6 @@
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "channelsCreated",
-      "type": "Channel",
-      "arity": "List"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "User",
-          "field": "channelsCreated"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "User",
-          "field": "channelsCreated"
-        },
-        "directive": "relation"
-      },
-      "argument": "",
-      "value": "\"ChannelsByUser\""
-    },
-    {
-      "tag": "CreateField",
-      "model": "User",
-      "field": "messages",
-      "type": "Message",
-      "arity": "List"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "User",
-          "field": "messages"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "User",
-          "field": "messages"
-        },
-        "directive": "relation"
-      },
-      "argument": "",
-      "value": "\"MessagesByUser\""
-    },
-    {
-      "tag": "CreateField",
-      "model": "User",
       "field": "media",
       "type": "Media",
       "arity": "List"
@@ -945,38 +766,6 @@
       },
       "argument": "",
       "value": "\"MediaByUser\""
-    },
-    {
-      "tag": "CreateField",
-      "model": "User",
-      "field": "tasksCreated",
-      "type": "Task",
-      "arity": "List"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "User",
-          "field": "tasksCreated"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "User",
-          "field": "tasksCreated"
-        },
-        "directive": "relation"
-      },
-      "argument": "",
-      "value": "\"TasksByUser\""
     },
     {
       "tag": "CreateField",
@@ -1027,52 +816,6 @@
     {
       "tag": "CreateField",
       "model": "User",
-      "field": "teams",
-      "type": "Team",
-      "arity": "List"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "User",
-          "field": "teams"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "User",
-          "field": "teams"
-        },
-        "directive": "relation"
-      },
-      "argument": "",
-      "value": "\"TeamMembers\""
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "User",
-          "field": "teams"
-        },
-        "directive": "relation"
-      },
-      "argument": "references",
-      "value": "[id]"
-    },
-    {
-      "tag": "CreateField",
-      "model": "User",
       "field": "invoicesSubmitted",
       "type": "Invoice",
       "arity": "List"
@@ -1101,6 +844,244 @@
       },
       "argument": "",
       "value": "\"InvoicesByUser\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "messages",
+      "type": "Message",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "messages"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "messages"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"MessagesByUser\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "channelsCreated",
+      "type": "Channel",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "channelsCreated"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "channelsCreated"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"ChannelsByUser\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "tasksCreated",
+      "type": "Task",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "tasksCreated"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "tasksCreated"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"TasksByUser\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "likedMessages",
+      "type": "Message",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "likedMessages"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "likedMessages"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"LikesByUser\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "likedMessages"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "Update",
+      "type": "Update",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "Update"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "Update"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"UserUpdate\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "Vertical",
+      "type": "Vertical",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "Vertical"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "Vertical"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"VerticalUpdatedBy\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "Event",
+      "type": "Event",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "Event"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "Event"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"EventUpdatedBy\""
     },
     {
       "tag": "CreateModel",
@@ -1157,10 +1138,28 @@
       "arity": "Required"
     },
     {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Channel",
+          "field": "name"
+        },
+        "directive": "unique"
+      }
+    },
+    {
       "tag": "CreateField",
       "model": "Channel",
       "field": "description",
       "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Channel",
+      "field": "type",
+      "type": "ChannelType",
       "arity": "Required"
     },
     {
@@ -1226,38 +1225,6 @@
       },
       "argument": "",
       "value": "false"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Channel",
-      "field": "messages",
-      "type": "Message",
-      "arity": "List"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Channel",
-          "field": "messages"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Channel",
-          "field": "messages"
-        },
-        "directive": "relation"
-      },
-      "argument": "",
-      "value": "\"ChannelMessages\""
     },
     {
       "tag": "CreateField",
@@ -1368,8 +1335,15 @@
     {
       "tag": "CreateField",
       "model": "Channel",
-      "field": "media",
-      "type": "Media",
+      "field": "createdById",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Channel",
+      "field": "messages",
+      "type": "Message",
       "arity": "List"
     },
     {
@@ -1378,7 +1352,7 @@
         "path": {
           "tag": "Field",
           "model": "Channel",
-          "field": "media"
+          "field": "messages"
         },
         "directive": "relation"
       }
@@ -1390,58 +1364,12 @@
         "path": {
           "tag": "Field",
           "model": "Channel",
-          "field": "media"
+          "field": "messages"
         },
         "directive": "relation"
       },
       "argument": "",
-      "value": "\"ChannelMedia\""
-    },
-    {
-      "tag": "CreateField",
-      "model": "Channel",
-      "field": "task",
-      "type": "Task",
-      "arity": "Optional"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Channel",
-          "field": "task"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Channel",
-          "field": "task"
-        },
-        "directive": "relation"
-      },
-      "argument": "",
-      "value": "\"ChannelTask\""
-    },
-    {
-      "tag": "CreateField",
-      "model": "Channel",
-      "field": "createdById",
-      "type": "String",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Channel",
-      "field": "taskId",
-      "type": "String",
-      "arity": "Optional"
+      "value": "\"ChannelMessages\""
     },
     {
       "tag": "CreateModel",
@@ -1592,6 +1520,130 @@
     {
       "tag": "CreateField",
       "model": "Message",
+      "field": "starred",
+      "type": "Boolean",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Message",
+          "field": "starred"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Message",
+          "field": "starred"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "false"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Message",
+      "field": "likedBy",
+      "type": "User",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Message",
+          "field": "likedBy"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Message",
+          "field": "likedBy"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"LikesByUser\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Message",
+          "field": "likedBy"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Message",
+      "field": "createdById",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Message",
+      "field": "type",
+      "type": "MessageType",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Message",
+      "field": "media",
+      "type": "Media",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Message",
+          "field": "media"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Message",
+          "field": "media"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"MessageMedia\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Message",
       "field": "channel",
       "type": "Channel",
       "arity": "Required"
@@ -1648,77 +1700,6 @@
       },
       "argument": "references",
       "value": "[id]"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Message",
-      "field": "starred",
-      "type": "Boolean",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Message",
-          "field": "starred"
-        },
-        "directive": "default"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Message",
-          "field": "starred"
-        },
-        "directive": "default"
-      },
-      "argument": "",
-      "value": "false"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Message",
-      "field": "reactions",
-      "type": "Reaction",
-      "arity": "List"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Message",
-          "field": "reactions"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Message",
-          "field": "reactions"
-        },
-        "directive": "relation"
-      },
-      "argument": "",
-      "value": "\"MessageReactions\""
-    },
-    {
-      "tag": "CreateField",
-      "model": "Message",
-      "field": "createdById",
-      "type": "String",
-      "arity": "Required"
     },
     {
       "tag": "CreateField",
@@ -1851,6 +1832,77 @@
     {
       "tag": "CreateField",
       "model": "Media",
+      "field": "uploadedById",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Media",
+      "field": "invoice",
+      "type": "Invoice",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Media",
+          "field": "invoice"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Media",
+          "field": "invoice"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"InvoiceMedia\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Media",
+      "field": "vertical",
+      "type": "Vertical",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Media",
+          "field": "vertical"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Media",
+          "field": "vertical"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"VerticalImage\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Media",
       "field": "task",
       "type": "Task",
       "arity": "Optional"
@@ -1918,8 +1970,8 @@
     {
       "tag": "CreateField",
       "model": "Media",
-      "field": "channel",
-      "type": "Channel",
+      "field": "event",
+      "type": "Event",
       "arity": "Optional"
     },
     {
@@ -1928,7 +1980,7 @@
         "path": {
           "tag": "Field",
           "model": "Media",
-          "field": "channel"
+          "field": "event"
         },
         "directive": "relation"
       }
@@ -1940,182 +1992,26 @@
         "path": {
           "tag": "Field",
           "model": "Media",
-          "field": "channel"
+          "field": "event"
         },
         "directive": "relation"
       },
       "argument": "",
-      "value": "\"ChannelMedia\""
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Media",
-          "field": "channel"
-        },
-        "directive": "relation"
-      },
-      "argument": "fields",
-      "value": "[channelId]"
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Media",
-          "field": "channel"
-        },
-        "directive": "relation"
-      },
-      "argument": "references",
-      "value": "[id]"
+      "value": "\"EventImage\""
     },
     {
       "tag": "CreateField",
       "model": "Media",
-      "field": "uploadedById",
-      "type": "String",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Media",
-      "field": "channelId",
-      "type": "String",
-      "arity": "Optional"
-    },
-    {
-      "tag": "CreateModel",
-      "model": "Reaction"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Reaction",
-      "field": "id",
-      "type": "String",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Reaction",
-          "field": "id"
-        },
-        "directive": "default"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Reaction",
-          "field": "id"
-        },
-        "directive": "default"
-      },
-      "argument": "",
-      "value": "cuid()"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Reaction",
-          "field": "id"
-        },
-        "directive": "id"
-      }
-    },
-    {
-      "tag": "CreateField",
-      "model": "Reaction",
-      "field": "type",
-      "type": "ReactionType",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Reaction",
-      "field": "by",
-      "type": "User",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Reaction",
-          "field": "by"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Reaction",
-          "field": "by"
-        },
-        "directive": "relation"
-      },
-      "argument": "",
-      "value": "\"UserReactions\""
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Reaction",
-          "field": "by"
-        },
-        "directive": "relation"
-      },
-      "argument": "fields",
-      "value": "[byId]"
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Reaction",
-          "field": "by"
-        },
-        "directive": "relation"
-      },
-      "argument": "references",
-      "value": "[id]"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Reaction",
       "field": "message",
       "type": "Message",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateDirective",
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Reaction",
+          "model": "Media",
           "field": "message"
         },
         "directive": "relation"
@@ -2127,13 +2023,13 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Reaction",
+          "model": "Media",
           "field": "message"
         },
         "directive": "relation"
       },
       "argument": "",
-      "value": "\"MessageReactions\""
+      "value": "\"MessageMedia\""
     },
     {
       "tag": "CreateArgument",
@@ -2141,7 +2037,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Reaction",
+          "model": "Media",
           "field": "message"
         },
         "directive": "relation"
@@ -2155,7 +2051,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Reaction",
+          "model": "Media",
           "field": "message"
         },
         "directive": "relation"
@@ -2165,17 +2061,10 @@
     },
     {
       "tag": "CreateField",
-      "model": "Reaction",
-      "field": "byId",
-      "type": "String",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Reaction",
+      "model": "Media",
       "field": "messageId",
       "type": "String",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateModel",
@@ -2538,66 +2427,6 @@
     {
       "tag": "CreateField",
       "model": "Task",
-      "field": "channel",
-      "type": "Channel",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Task",
-          "field": "channel"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Task",
-          "field": "channel"
-        },
-        "directive": "relation"
-      },
-      "argument": "",
-      "value": "\"ChannelTask\""
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Task",
-          "field": "channel"
-        },
-        "directive": "relation"
-      },
-      "argument": "fields",
-      "value": "[channelId]"
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Task",
-          "field": "channel"
-        },
-        "directive": "relation"
-      },
-      "argument": "references",
-      "value": "[id]"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Task",
       "field": "media",
       "type": "Media",
       "arity": "List"
@@ -2630,38 +2459,6 @@
     {
       "tag": "CreateField",
       "model": "Task",
-      "field": "sprints",
-      "type": "Sprint",
-      "arity": "List"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Task",
-          "field": "sprints"
-        },
-        "directive": "relation"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Task",
-          "field": "sprints"
-        },
-        "directive": "relation"
-      },
-      "argument": "",
-      "value": "\"SprintsForTask\""
-    },
-    {
-      "tag": "CreateField",
-      "model": "Task",
       "field": "byDeptId",
       "type": "String",
       "arity": "Required"
@@ -2685,15 +2482,47 @@
       "model": "Task",
       "field": "channelId",
       "type": "String",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateModel",
-      "model": "Sprint"
+      "arity": "Optional"
     },
     {
       "tag": "CreateField",
-      "model": "Sprint",
+      "model": "Task",
+      "field": "activity",
+      "type": "TaskActivity",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Task",
+          "field": "activity"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Task",
+          "field": "activity"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"TaskActivity\""
+    },
+    {
+      "tag": "CreateModel",
+      "model": "TaskActivity"
+    },
+    {
+      "tag": "CreateField",
+      "model": "TaskActivity",
       "field": "id",
       "type": "String",
       "arity": "Required"
@@ -2703,7 +2532,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Sprint",
+          "model": "TaskActivity",
           "field": "id"
         },
         "directive": "default"
@@ -2715,7 +2544,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Sprint",
+          "model": "TaskActivity",
           "field": "id"
         },
         "directive": "default"
@@ -2728,7 +2557,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Sprint",
+          "model": "TaskActivity",
           "field": "id"
         },
         "directive": "id"
@@ -2736,46 +2565,7 @@
     },
     {
       "tag": "CreateField",
-      "model": "Sprint",
-      "field": "title",
-      "type": "String",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Sprint",
-      "field": "status",
-      "type": "SprintStatus",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateDirective",
-      "location": {
-        "path": {
-          "tag": "Field",
-          "model": "Sprint",
-          "field": "status"
-        },
-        "directive": "default"
-      }
-    },
-    {
-      "tag": "CreateArgument",
-      "location": {
-        "tag": "Directive",
-        "path": {
-          "tag": "Field",
-          "model": "Sprint",
-          "field": "status"
-        },
-        "directive": "default"
-      },
-      "argument": "",
-      "value": "NOT_STARTED"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Sprint",
+      "model": "TaskActivity",
       "field": "task",
       "type": "Task",
       "arity": "Required"
@@ -2785,7 +2575,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Sprint",
+          "model": "TaskActivity",
           "field": "task"
         },
         "directive": "relation"
@@ -2797,13 +2587,13 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Sprint",
+          "model": "TaskActivity",
           "field": "task"
         },
         "directive": "relation"
       },
       "argument": "",
-      "value": "\"SprintsForTask\""
+      "value": "\"TaskActivity\""
     },
     {
       "tag": "CreateArgument",
@@ -2811,7 +2601,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Sprint",
+          "model": "TaskActivity",
           "field": "task"
         },
         "directive": "relation"
@@ -2825,7 +2615,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Sprint",
+          "model": "TaskActivity",
           "field": "task"
         },
         "directive": "relation"
@@ -2835,16 +2625,23 @@
     },
     {
       "tag": "CreateField",
-      "model": "Sprint",
+      "model": "TaskActivity",
       "field": "taskId",
       "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
-      "model": "Sprint",
-      "field": "isTemplate",
-      "type": "Boolean",
+      "model": "TaskActivity",
+      "field": "type",
+      "type": "TaskActivityType",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "TaskActivity",
+      "field": "on",
+      "type": "DateTime",
       "arity": "Required"
     },
     {
@@ -2852,8 +2649,8 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Sprint",
-          "field": "isTemplate"
+          "model": "TaskActivity",
+          "field": "on"
         },
         "directive": "default"
       }
@@ -2864,13 +2661,13 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Sprint",
-          "field": "isTemplate"
+          "model": "TaskActivity",
+          "field": "on"
         },
         "directive": "default"
       },
       "argument": "",
-      "value": "false"
+      "value": "now()"
     },
     {
       "tag": "CreateModel",
@@ -2918,6 +2715,13 @@
         },
         "directive": "id"
       }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Update",
+      "field": "brief",
+      "type": "String",
+      "arity": "Required"
     },
     {
       "tag": "CreateField",
@@ -3771,11 +3575,11 @@
     },
     {
       "tag": "CreateModel",
-      "model": "Goal"
+      "model": "Vertical"
     },
     {
       "tag": "CreateField",
-      "model": "Goal",
+      "model": "Vertical",
       "field": "id",
       "type": "String",
       "arity": "Required"
@@ -3785,7 +3589,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Goal",
+          "model": "Vertical",
           "field": "id"
         },
         "directive": "default"
@@ -3797,7 +3601,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Goal",
+          "model": "Vertical",
           "field": "id"
         },
         "directive": "default"
@@ -3810,7 +3614,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Goal",
+          "model": "Vertical",
           "field": "id"
         },
         "directive": "id"
@@ -3818,16 +3622,23 @@
     },
     {
       "tag": "CreateField",
-      "model": "Goal",
-      "field": "title",
+      "model": "Vertical",
+      "field": "name",
       "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
-      "model": "Goal",
-      "field": "dept",
-      "type": "Department",
+      "model": "Vertical",
+      "field": "info",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Vertical",
+      "field": "image",
+      "type": "Media",
       "arity": "Required"
     },
     {
@@ -3835,8 +3646,8 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Goal",
-          "field": "dept"
+          "model": "Vertical",
+          "field": "image"
         },
         "directive": "relation"
       }
@@ -3847,13 +3658,13 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Goal",
-          "field": "dept"
+          "model": "Vertical",
+          "field": "image"
         },
         "directive": "relation"
       },
       "argument": "",
-      "value": "\"DeptGoals\""
+      "value": "\"VerticalImage\""
     },
     {
       "tag": "CreateArgument",
@@ -3861,13 +3672,13 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Goal",
-          "field": "dept"
+          "model": "Vertical",
+          "field": "image"
         },
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[deptId]"
+      "value": "[imageId]"
     },
     {
       "tag": "CreateArgument",
@@ -3875,8 +3686,8 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Goal",
-          "field": "dept"
+          "model": "Vertical",
+          "field": "image"
         },
         "directive": "relation"
       },
@@ -3885,22 +3696,114 @@
     },
     {
       "tag": "CreateField",
-      "model": "Goal",
-      "field": "deptId",
+      "model": "Vertical",
+      "field": "imageId",
       "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
-      "model": "Goal",
-      "field": "type",
-      "type": "GoalType",
+      "model": "Vertical",
+      "field": "rank",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Vertical",
+          "field": "rank"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Vertical",
+          "field": "rank"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "autoincrement()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Vertical",
+      "field": "updatedBy",
+      "type": "User",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Vertical",
+          "field": "updatedBy"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Vertical",
+          "field": "updatedBy"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"VerticalUpdatedBy\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Vertical",
+          "field": "updatedBy"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[updatedById]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Vertical",
+          "field": "updatedBy"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Vertical",
+      "field": "updatedById",
+      "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
-      "model": "Goal",
-      "field": "createdAt",
+      "model": "Vertical",
+      "field": "updatedOn",
       "type": "DateTime",
       "arity": "Required"
     },
@@ -3909,8 +3812,8 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Goal",
-          "field": "createdAt"
+          "model": "Vertical",
+          "field": "updatedOn"
         },
         "directive": "default"
       }
@@ -3921,8 +3824,8 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Goal",
-          "field": "createdAt"
+          "model": "Vertical",
+          "field": "updatedOn"
         },
         "directive": "default"
       },
@@ -3931,9 +3834,9 @@
     },
     {
       "tag": "CreateField",
-      "model": "Goal",
-      "field": "milestones",
-      "type": "Milestone",
+      "model": "Vertical",
+      "field": "events",
+      "type": "Event",
       "arity": "List"
     },
     {
@@ -3941,8 +3844,8 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Goal",
-          "field": "milestones"
+          "model": "Vertical",
+          "field": "events"
         },
         "directive": "relation"
       }
@@ -3953,21 +3856,21 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Goal",
-          "field": "milestones"
+          "model": "Vertical",
+          "field": "events"
         },
         "directive": "relation"
       },
       "argument": "",
-      "value": "\"GoalMilestones\""
+      "value": "\"EventsUnderVertical\""
     },
     {
       "tag": "CreateModel",
-      "model": "Milestone"
+      "model": "Event"
     },
     {
       "tag": "CreateField",
-      "model": "Milestone",
+      "model": "Event",
       "field": "id",
       "type": "String",
       "arity": "Required"
@@ -3977,7 +3880,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Milestone",
+          "model": "Event",
           "field": "id"
         },
         "directive": "default"
@@ -3989,7 +3892,7 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Milestone",
+          "model": "Event",
           "field": "id"
         },
         "directive": "default"
@@ -4002,7 +3905,7 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Milestone",
+          "model": "Event",
           "field": "id"
         },
         "directive": "id"
@@ -4010,16 +3913,16 @@
     },
     {
       "tag": "CreateField",
-      "model": "Milestone",
-      "field": "title",
+      "model": "Event",
+      "field": "name",
       "type": "String",
       "arity": "Required"
     },
     {
       "tag": "CreateField",
-      "model": "Milestone",
-      "field": "status",
-      "type": "MilestoneStatus",
+      "model": "Event",
+      "field": "rank",
+      "type": "Int",
       "arity": "Required"
     },
     {
@@ -4027,8 +3930,8 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Milestone",
-          "field": "status"
+          "model": "Event",
+          "field": "rank"
         },
         "directive": "default"
       }
@@ -4039,19 +3942,19 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Milestone",
-          "field": "status"
+          "model": "Event",
+          "field": "rank"
         },
         "directive": "default"
       },
       "argument": "",
-      "value": "IN_PROGRESS"
+      "value": "autoincrement()"
     },
     {
       "tag": "CreateField",
-      "model": "Milestone",
-      "field": "goal",
-      "type": "Goal",
+      "model": "Event",
+      "field": "vertical",
+      "type": "Vertical",
       "arity": "Required"
     },
     {
@@ -4059,8 +3962,8 @@
       "location": {
         "path": {
           "tag": "Field",
-          "model": "Milestone",
-          "field": "goal"
+          "model": "Event",
+          "field": "vertical"
         },
         "directive": "relation"
       }
@@ -4071,13 +3974,13 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Milestone",
-          "field": "goal"
+          "model": "Event",
+          "field": "vertical"
         },
         "directive": "relation"
       },
       "argument": "",
-      "value": "\"GoalMilestones\""
+      "value": "\"EventsUnderVertical\""
     },
     {
       "tag": "CreateArgument",
@@ -4085,13 +3988,13 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Milestone",
-          "field": "goal"
+          "model": "Event",
+          "field": "vertical"
         },
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[goalId]"
+      "value": "[verticalId]"
     },
     {
       "tag": "CreateArgument",
@@ -4099,8 +4002,8 @@
         "tag": "Directive",
         "path": {
           "tag": "Field",
-          "model": "Milestone",
-          "field": "goal"
+          "model": "Event",
+          "field": "vertical"
         },
         "directive": "relation"
       },
@@ -4109,8 +4012,1226 @@
     },
     {
       "tag": "CreateField",
-      "model": "Milestone",
-      "field": "goalId",
+      "model": "Event",
+      "field": "verticalId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Event",
+      "field": "info",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Event",
+      "field": "eventTabs",
+      "type": "EventTab",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "eventTabs"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "eventTabs"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"TabsForEvent\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Event",
+      "field": "updatedBy",
+      "type": "User",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "updatedBy"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "updatedBy"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"EventUpdatedBy\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "updatedBy"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[updatedById]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "updatedBy"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Event",
+      "field": "updatedById",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Event",
+      "field": "image",
+      "type": "Media",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "image"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "image"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"EventImage\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "image"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[imageId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "image"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Event",
+      "field": "imageId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Event",
+      "field": "approved",
+      "type": "Boolean",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "approved"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "approved"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "false"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Event",
+      "field": "paid",
+      "type": "Boolean",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "paid"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "paid"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "false"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Event",
+      "field": "registrationType",
+      "type": "RegistrationType",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Event",
+      "field": "registrations",
+      "type": "Registration",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "registrations"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Event",
+          "field": "registrations"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"EventRegistration\""
+    },
+    {
+      "tag": "CreateModel",
+      "model": "EventTab"
+    },
+    {
+      "tag": "CreateField",
+      "model": "EventTab",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "EventTab",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "EventTab",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "EventTab",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "EventTab",
+      "field": "title",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "EventTab",
+      "field": "content",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "EventTab",
+      "field": "event",
+      "type": "Event",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "EventTab",
+          "field": "event"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "EventTab",
+          "field": "event"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"TabsForEvent\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "EventTab",
+          "field": "event"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[eventId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "EventTab",
+          "field": "event"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "EventTab",
+      "field": "eventId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Participant"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Participant",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Participant",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Participant",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Participant",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Participant",
+      "field": "name",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Participant",
+      "field": "shaastrID",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Participant",
+          "field": "shaastrID"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Participant",
+          "field": "shaastrID"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "autoincrement()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Participant",
+          "field": "shaastrID"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Participant",
+      "field": "shaastraQR",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Participant",
+      "field": "email",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Participant",
+          "field": "email"
+        },
+        "directive": "unique"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Participant",
+      "field": "password",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Participant",
+      "field": "mobile",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Participant",
+      "field": "gender",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Participant",
+      "field": "college",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Participant",
+      "field": "city",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Participant",
+      "field": "state",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Participant",
+      "field": "invitations",
+      "type": "TeamInvitation",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Participant",
+          "field": "invitations"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Participant",
+          "field": "invitations"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"InvitationForParticipant\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Participant",
+      "field": "registrations",
+      "type": "Registration",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Participant",
+          "field": "registrations"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Participant",
+          "field": "registrations"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"IndividualRegistration\""
+    },
+    {
+      "tag": "CreateModel",
+      "model": "TeamInvitation"
+    },
+    {
+      "tag": "CreateField",
+      "model": "TeamInvitation",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "TeamInvitation",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "TeamInvitation",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "TeamInvitation",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "TeamInvitation",
+      "field": "status",
+      "type": "InviteStatus",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "TeamInvitation",
+          "field": "status"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "TeamInvitation",
+          "field": "status"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "NO_RESPONSE"
+    },
+    {
+      "tag": "CreateField",
+      "model": "TeamInvitation",
+      "field": "team",
+      "type": "Team",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "TeamInvitation",
+          "field": "team"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "TeamInvitation",
+          "field": "team"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"InvitationForTeam\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "TeamInvitation",
+          "field": "team"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[teamId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "TeamInvitation",
+          "field": "team"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "TeamInvitation",
+      "field": "teamId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "TeamInvitation",
+      "field": "participant",
+      "type": "Participant",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "TeamInvitation",
+          "field": "participant"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "TeamInvitation",
+          "field": "participant"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"InvitationForParticipant\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "TeamInvitation",
+          "field": "participant"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[pId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "TeamInvitation",
+          "field": "participant"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "TeamInvitation",
+      "field": "pId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Team"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Team",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Team",
+      "field": "name",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Team",
+      "field": "invitations",
+      "type": "TeamInvitation",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "invitations"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "invitations"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"InvitationForTeam\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "Team",
+      "field": "registrations",
+      "type": "Registration",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "registrations"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Team",
+          "field": "registrations"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"TeamRegistration\""
+    },
+    {
+      "tag": "CreateModel",
+      "model": "Registration"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Registration",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "Registration",
+      "field": "type",
+      "type": "RegistrationType",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Registration",
+      "field": "team",
+      "type": "Team",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "team"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "team"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"TeamRegistration\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "team"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[teamId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "team"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Registration",
+      "field": "teamId",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Registration",
+      "field": "participant",
+      "type": "Participant",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "participant"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "participant"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"IndividualRegistration\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "participant"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[pId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "participant"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Registration",
+      "field": "pId",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Registration",
+      "field": "event",
+      "type": "Event",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "event"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "event"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"EventRegistration\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "event"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[eventId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Registration",
+          "field": "event"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Registration",
+      "field": "eventId",
       "type": "String",
       "arity": "Required"
     }

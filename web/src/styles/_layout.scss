@@ -1,6 +1,6 @@
 .wrapper {
 	min-height: 100vh;
-	background: url(https://source.unsplash.com/featured);
+	background: url("https://source.unsplash.com/featured?tech,bright");
 	background-size: cover;
 	background-position: center center;
 	background-repeat: no-repeat no-repeat;
@@ -32,4 +32,14 @@
 
 .form-title {
 	text-align: center;
+}
+
+.fixed-logo {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+
+	img {
+		width: 200px;
+	}
 }

@@ -1,7 +1,7 @@
 import { CreateUserResolver } from "./CreateUser";
 import { UserFieldResolvers } from "./FieldResolvers";
 import { ForgotPasswordResolver } from "./ForgotPassword";
-import { GetUsersResolver } from "./getUsers";
+import { GetUsersResolver } from "./GetUsers";
 import { LoginResolver } from "./Login";
 import { logoutResolver } from "./Logout";
 import { MeResolver } from "./Me";

@@ -12,6 +12,6 @@ export const PublicRoute = (props: RouteProps) => {
 	) : !isVerified ? (
 		<Redirect to="/verification" />
 	) : (
-		<Redirect to="/login" />
+		<Redirect to="/" />
 	);
 };

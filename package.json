@@ -13,9 +13,12 @@
 		"dev:web": "yarn workspace web dev",
 		"dev:server": "yarn workspace server dev",
 		"build:web": "yarn workspace web build",
+		"build:server": "yarn workspace server build",
 		"gen:client": "yarn workspace web gen",
 		"gen:server": "yarn workspace server gen",
 		"db:migrate": "cd server && npx prisma migrate save --experimental && npx prisma migrate up --experimental && cd ..",
-		"db:studio": "cd server && npx prisma studio --experimental"
+		"db:studio": "cd server && npx prisma studio --experimental",
+		"build": "yarn build:server",
+		"start": "cd server && ts-node index.ts"
 	}
 }

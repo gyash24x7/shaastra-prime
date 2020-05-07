@@ -3,7 +3,6 @@ import React from "react";
 import { Link, Redirect } from "react-router-dom";
 import { refetchMeQuery, useLoginMutation } from "../../generated";
 import { ShowError } from "../shared/ShowError";
-import { SwitchingIcon } from "../shared/SwitchingIcon";
 
 // eslint-disable-next-line
 const emailRegex = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
@@ -52,11 +51,7 @@ export const LoginScreen = () => {
 						{ pattern: emailRegex, message: "Enter Valid Email" }
 					]}
 				>
-					<Input
-						placeholder="Enter Roll Number"
-						type="text"
-						prefix={<SwitchingIcon name="user" className="icon input-icon" />}
-					/>
+					<Input placeholder="Enter Email" type="text" />
 				</Form.Item>
 				<Form.Item
 					name="password"
@@ -66,11 +61,7 @@ export const LoginScreen = () => {
 						{ required: true, message: "Password is required!" }
 					]}
 				>
-					<Input
-						placeholder="Enter Password"
-						type="password"
-						prefix={<SwitchingIcon name="lock" className="icon input-icon" />}
-					/>
+					<Input placeholder="Enter Password" type="password" />
 				</Form.Item>
 				<Form.Item>
 					<Button
