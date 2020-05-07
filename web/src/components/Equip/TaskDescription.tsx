@@ -1,11 +1,14 @@
 import { Button, Descriptions, Space, Tag, Typography } from "antd";
-import React from "react";
+import React, { useContext } from "react";
 import { statusColor } from ".";
+import { UserContext } from "../../utils/context";
 import { UserCardSmall } from "../shared/UserCardSmall";
 
 const { Text } = Typography;
 
 export const TaskDescription = ({ data }: any) => {
+	const { user } = useContext(UserContext);
+
 	return (
 		<Descriptions
 			column={{ xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 2 }}
@@ -30,13 +33,13 @@ export const TaskDescription = ({ data }: any) => {
 			<Descriptions.Item label={<Text>Assigned&nbsp;To</Text>} span={2}>
 				<Space size="large">
 					{data.assignedTo.map((_: any, i: number) => (
-						<UserCardSmall key={i} />
+						<UserCardSmall key={i} user={user} />
 					))}
 				</Space>
 			</Descriptions.Item>
 			<Descriptions.Item label={<Text>Created&nbsp;By</Text>} span={2}>
 				<Space>
-					<UserCardSmall />
+					<UserCardSmall user={user} />
 				</Space>
 			</Descriptions.Item>
 			<Descriptions.Item label={<Text>Actions</Text>}>

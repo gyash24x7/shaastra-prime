@@ -3,7 +3,7 @@ import Table, { ColumnProps } from "antd/lib/table";
 import { Moment } from "moment";
 import React, { useContext, useState } from "react";
 import { departments, status, statusColor } from ".";
-import { DrawerContext } from "../../utils/context";
+import { DrawerContext, UserContext } from "../../utils/context";
 import { CommonDrawerTitle } from "../shared/CommonDrawerTitle";
 import { UserCardSmall } from "../shared/UserCardSmall";
 import { TaskDescription } from "./TaskDescription";
@@ -11,6 +11,8 @@ import { TaskDescription } from "./TaskDescription";
 export const TableLayout = (props: any) => {
 	const [filters, setFilters] = useState<any>(null);
 	const [sorters, setSorters] = useState<any>(null);
+
+	const { user } = useContext(UserContext);
 
 	const columns: Record<string, ColumnProps<any>> = {
 		brief: {
@@ -52,7 +54,7 @@ export const TableLayout = (props: any) => {
 			render: (val: string[]) => (
 				<Space size="large">
 					{val.map((_, i) => (
-						<UserCardSmall key={i} onlyName />
+						<UserCardSmall key={i} onlyName user={user} />
 					))}
 				</Space>
 			)

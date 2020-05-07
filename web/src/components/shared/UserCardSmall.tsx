@@ -7,9 +7,14 @@ import { CommonDrawerTitle } from "./CommonDrawerTitle";
 interface UserCardSmallProps {
 	onlyName?: boolean;
 	noPadding?: boolean;
+	user: any;
 }
 
-export const UserCardSmall = ({ onlyName, noPadding }: UserCardSmallProps) => {
+export const UserCardSmall = ({
+	onlyName,
+	noPadding,
+	user
+}: UserCardSmallProps) => {
 	const {
 		setDrawerComponent,
 		isDrawerOpen,
@@ -36,25 +41,25 @@ export const UserCardSmall = ({ onlyName, noPadding }: UserCardSmallProps) => {
 
 		if (isDrawerOpen) {
 			setChildDrawerProps(drawerProps);
-			setChildDrawerComponent(<ProfileCard />);
+			setChildDrawerComponent(<ProfileCard userId={user!.id} />);
 		} else {
 			setDrawerProps(drawerProps);
-			setDrawerComponent(<ProfileCard />);
+			setDrawerComponent(<ProfileCard userId={user!.id} />);
 		}
 	};
 
 	return (
 		<Fragment>
 			<div className="user-details user-name" onClick={handleNameClick}>
-				<Tag color="cyan">Yash Gupta</Tag>
+				<Tag color="cyan">{user?.name}</Tag>
 			</div>
 			{!onlyName && (
 				<div className="user-details">
 					<Tag color="red" style={noPadding ? { padding: 0 } : {}}>
-						WEBOPS
+						{user?.department.name}
 					</Tag>
 					<Tag color="gold" style={noPadding ? { padding: 0 } : {}}>
-						CORE
+						{user?.role}
 					</Tag>
 				</div>
 			)}

@@ -1,0 +1,109 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "User",
+      "field": "TaskActivity",
+      "type": "TaskActivity",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "TaskActivity"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "User",
+          "field": "TaskActivity"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"TaskActivityByUser\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "TaskActivity",
+      "field": "by",
+      "type": "User",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "TaskActivity",
+          "field": "by"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "TaskActivity",
+          "field": "by"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "value": "\"TaskActivityByUser\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "TaskActivity",
+          "field": "by"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[byId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "TaskActivity",
+          "field": "by"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "TaskActivity",
+      "field": "byId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "TaskActivity",
+      "field": "description"
+    }
+  ]
+}

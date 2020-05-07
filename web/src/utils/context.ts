@@ -1,7 +1,7 @@
 import { DrawerProps } from "antd/lib/drawer";
 import { ModalProps } from "antd/lib/modal";
 import React from "react";
-import { Department, User } from "../generated";
+import { Department } from "../generated";
 
 interface IDrawerContext {
 	setDrawerComponent: (comp: JSX.Element | undefined) => void;
@@ -21,22 +21,7 @@ interface IModalContext {
 export const ModalContext = React.createContext<IModalContext | null>(null);
 
 interface IUserContext {
-	user?:
-		| Pick<
-				User,
-				| "id"
-				| "name"
-				| "email"
-				| "rollNumber"
-				| "mobile"
-				| "role"
-				| "profilePic"
-				| "coverPic"
-				| "about"
-				| "verified"
-		  >
-		| null
-		| undefined;
+	user?: any;
 	isAuthenticated: boolean;
 	isVerified: boolean;
 }

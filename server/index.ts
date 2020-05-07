@@ -1,4 +1,3 @@
-import { PrismaClient } from "@prisma/client";
 import { ApolloServer } from "apollo-server-express";
 import bodyParser from "body-parser";
 import connectRedis from "connect-redis";
@@ -15,10 +14,9 @@ dotenv.config();
 
 const startServer = async () => {
 	const schema = await buildSchema({ resolvers, authChecker } as any);
-	const prisma = new PrismaClient();
 	const server = new ApolloServer({
 		schema,
-		context: ({ req, res }) => ({ req, res, prisma } as GraphQLContext)
+		context: ({ req, res }) => ({ req, res } as GraphQLContext)
 	});
 
 	const app = express();

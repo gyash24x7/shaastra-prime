@@ -6,6 +6,7 @@ interface UserCardProps {
 	withAvatar?: boolean;
 	avatarSize?: number;
 	noPadding?: boolean;
+	user?: any;
 }
 
 export const UserCard = (props: UserCardProps) => {
@@ -24,7 +25,7 @@ export const UserCard = (props: UserCardProps) => {
 					/>
 				</div>
 			)}
-			<UserCardSmall noPadding={props.noPadding} />
+			<UserCardSmall noPadding={props.noPadding} user={props.user} />
 		</Card>
 	);
 };

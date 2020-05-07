@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -115,14 +115,13 @@ model Task {
 }
 
 model TaskActivity {
-  id          String           @default(cuid()) @id
-  task        Task             @relation("TaskActivity", fields: [taskId], references: [id])
-  taskId      String
-  type        TaskActivityType
-  on          DateTime         @default(now())
-  by          User             @relation("TaskActivityByUser", fields: [byId], references: [id])
-  byId        String
-  description String
+  id     String           @default(cuid()) @id
+  task   Task             @relation("TaskActivity", fields: [taskId], references: [id])
+  taskId String
+  type   TaskActivityType
+  on     DateTime         @default(now())
+  by     User             @relation("TaskActivityByUser", fields: [byId], references: [id])
+  byId   String
 }
 
 model Update {

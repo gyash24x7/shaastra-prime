@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -20,9 +20,9 @@ model Department {
 }
 
 model User {
-  id                String         @default(cuid()) @id
+  id                String     @default(cuid()) @id
   name              String
-  email             String         @unique
+  email             String     @unique
   password          String
   rollNumber        String
   profilePic        String
@@ -30,25 +30,24 @@ model User {
   mobile            String
   upi               String
   about             String
-  role              UserRole       @default(COORD)
-  verified          Boolean        @default(false)
+  role              UserRole   @default(COORD)
+  verified          Boolean    @default(false)
   verificationOTP   String
   passwordOTP       String?
-  department        Department     @relation("DeptMembers", fields: [deptId], references: [id])
+  department        Department @relation("DeptMembers", fields: [deptId], references: [id])
   deptId            String
   // Fields to be fetched separately if needed: Omit in API
-  channels          Channel[]      @relation("ChannelMembers", references: [id])
-  media             Media[]        @relation("MediaByUser")
-  tasksAssigned     Task[]         @relation("TasksForUser", references: [id])
-  invoicesSubmitted Invoice[]      @relation("InvoicesByUser")
-  messages          Message[]      @relation("MessagesByUser")
-  channelsCreated   Channel[]      @relation("ChannelsByUser")
-  tasksCreated      Task[]         @relation("TasksByUser")
-  likedMessages     Message[]      @relation("LikesByUser", references: [id])
-  Update            Update[]       @relation("UserUpdate")
-  Vertical          Vertical[]     @relation("VerticalUpdatedBy")
-  Event             Event[]        @relation("EventUpdatedBy")
-  TaskActivity      TaskActivity[] @relation("TaskActivityByUser")
+  channels          Channel[]  @relation("ChannelMembers", references: [id])
+  media             Media[]    @relation("MediaByUser")
+  tasksAssigned     Task[]     @relation("TasksForUser", references: [id])
+  invoicesSubmitted Invoice[]  @relation("InvoicesByUser")
+  messages          Message[]  @relation("MessagesByUser")
+  channelsCreated   Channel[]  @relation("ChannelsByUser")
+  tasksCreated      Task[]     @relation("TasksByUser")
+  likedMessages     Message[]  @relation("LikesByUser", references: [id])
+  Update            Update[]   @relation("UserUpdate")
+  Vertical          Vertical[] @relation("VerticalUpdatedBy")
+  Event             Event[]    @relation("EventUpdatedBy")
 }
 
 model Channel {
@@ -120,8 +119,6 @@ model TaskActivity {
   taskId      String
   type        TaskActivityType
   on          DateTime         @default(now())
-  by          User             @relation("TaskActivityByUser", fields: [byId], references: [id])
-  byId        String
   description String
 }
 
