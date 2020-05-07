@@ -21,6 +21,11 @@ export type AddUserToChannelInput = {
   userId: Scalars['String'];
 };
 
+export type AssignTaskInput = {
+  taskId: Scalars['String'];
+  assignedTo: Array<Scalars['String']>;
+};
+
 export type Channel = {
    __typename?: 'Channel';
   id: Scalars['ID'];
@@ -49,6 +54,19 @@ export type CreateMessageInput = {
   content: Scalars['String'];
   media: Array<Scalars['String']>;
   mediaType: Scalars['String'];
+};
+
+export type CreateTaskInput = {
+  brief: Scalars['String'];
+  details: Scalars['String'];
+  forDeptId: Scalars['String'];
+  deadline: Scalars['String'];
+};
+
+export type CreateUpdateInput = {
+  brief: Scalars['String'];
+  subject: Scalars['String'];
+  content: Scalars['String'];
 };
 
 export type CreateUserInput = {
@@ -190,6 +208,13 @@ export type Mutation = {
   verifyUser: Scalars['Boolean'];
   createMessage: Scalars['Boolean'];
   updateMessage: Scalars['Boolean'];
+  acceptTask: Scalars['Boolean'];
+  assignTask: Scalars['Boolean'];
+  completeTask: Scalars['Boolean'];
+  createTask: Scalars['Boolean'];
+  deleteTask: Scalars['Boolean'];
+  submitTask: Scalars['Boolean'];
+  createUpdate: Scalars['Boolean'];
 };
 
 
@@ -267,6 +292,41 @@ export type MutationUpdateMessageArgs = {
   data: UpdateMessageInput;
 };
 
+
+export type MutationAcceptTaskArgs = {
+  taskId: Scalars['String'];
+};
+
+
+export type MutationAssignTaskArgs = {
+  data: AssignTaskInput;
+};
+
+
+export type MutationCompleteTaskArgs = {
+  taskId: Scalars['String'];
+};
+
+
+export type MutationCreateTaskArgs = {
+  data: CreateTaskInput;
+};
+
+
+export type MutationDeleteTaskArgs = {
+  taskId: Scalars['String'];
+};
+
+
+export type MutationSubmitTaskArgs = {
+  taskId: Scalars['String'];
+};
+
+
+export type MutationCreateUpdateArgs = {
+  data: CreateUpdateInput;
+};
+
 export type Query = {
    __typename?: 'Query';
   getChannels: Array<Channel>;
@@ -275,6 +335,7 @@ export type Query = {
   me?: Maybe<User>;
   getDepartments: Array<Department>;
   getMessages: Array<Message>;
+  getUpdates: Array<Update>;
 };
 
 
@@ -396,6 +457,18 @@ export type VerifyUserInput = {
   otp: Scalars['String'];
 };
 
+export type CreateUpdateMutationVariables = {
+  brief: Scalars['String'];
+  subject: Scalars['String'];
+  content: Scalars['String'];
+};
+
+
+export type CreateUpdateMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'createUpdate'>
+);
+
 export type CreateUserMutationVariables = {
   name: Scalars['String'];
   email: Scalars['String'];
@@ -486,6 +559,24 @@ export type GetDepartmentsQuery = (
   )> }
 );
 
+export type GetUpdatesQueryVariables = {};
+
+
+export type GetUpdatesQuery = (
+  { __typename?: 'Query' }
+  & { getUpdates: Array<(
+    { __typename?: 'Update' }
+    & Pick<Update, 'id' | 'brief' | 'subject' | 'content' | 'createdAt'>
+    & { postedBy: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    ), byDept: (
+      { __typename?: 'Department' }
+      & Pick<Department, 'id' | 'name'>
+    ) }
+  )> }
+);
+
 export type GetUserQueryVariables = {
   userId: Scalars['String'];
 };
@@ -519,6 +610,38 @@ export type MeQuery = (
 );
 
 
+export const CreateUpdateDocument = gql`
+    mutation CreateUpdate($brief: String!, $subject: String!, $content: String!) {
+  createUpdate(data: {brief: $brief, subject: $subject, content: $content})
+}
+    `;
+export type CreateUpdateMutationFn = ApolloReactCommon.MutationFunction<CreateUpdateMutation, CreateUpdateMutationVariables>;
+
+/**
+ * __useCreateUpdateMutation__
+ *
+ * To run a mutation, you first call `useCreateUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUpdateMutation, { data, loading, error }] = useCreateUpdateMutation({
+ *   variables: {
+ *      brief: // value for 'brief'
+ *      subject: // value for 'subject'
+ *      content: // value for 'content'
+ *   },
+ * });
+ */
+export function useCreateUpdateMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateUpdateMutation, CreateUpdateMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateUpdateMutation, CreateUpdateMutationVariables>(CreateUpdateDocument, baseOptions);
+      }
+export type CreateUpdateMutationHookResult = ReturnType<typeof useCreateUpdateMutation>;
+export type CreateUpdateMutationResult = ApolloReactCommon.MutationResult<CreateUpdateMutation>;
+export type CreateUpdateMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateUpdateMutation, CreateUpdateMutationVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($name: String!, $email: String!, $password: String!, $departmentId: String!, $rollNumber: String!, $mobile: String!) {
   createUser(data: {name: $name, email: $email, password: $password, rollNumber: $rollNumber, mobile: $mobile, departmentId: $departmentId}) {
@@ -764,6 +887,53 @@ export type GetDepartmentsLazyQueryHookResult = ReturnType<typeof useGetDepartme
 export type GetDepartmentsQueryResult = ApolloReactCommon.QueryResult<GetDepartmentsQuery, GetDepartmentsQueryVariables>;
 export function refetchGetDepartmentsQuery(variables?: GetDepartmentsQueryVariables) {
       return { query: GetDepartmentsDocument, variables: variables }
+    }
+export const GetUpdatesDocument = gql`
+    query GetUpdates {
+  getUpdates {
+    id
+    brief
+    subject
+    content
+    postedBy {
+      id
+      name
+    }
+    byDept {
+      id
+      name
+    }
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetUpdatesQuery__
+ *
+ * To run a query within a React component, call `useGetUpdatesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUpdatesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUpdatesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUpdatesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetUpdatesQuery, GetUpdatesQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetUpdatesQuery, GetUpdatesQueryVariables>(GetUpdatesDocument, baseOptions);
+      }
+export function useGetUpdatesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUpdatesQuery, GetUpdatesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetUpdatesQuery, GetUpdatesQueryVariables>(GetUpdatesDocument, baseOptions);
+        }
+export type GetUpdatesQueryHookResult = ReturnType<typeof useGetUpdatesQuery>;
+export type GetUpdatesLazyQueryHookResult = ReturnType<typeof useGetUpdatesLazyQuery>;
+export type GetUpdatesQueryResult = ApolloReactCommon.QueryResult<GetUpdatesQuery, GetUpdatesQueryVariables>;
+export function refetchGetUpdatesQuery(variables?: GetUpdatesQueryVariables) {
+      return { query: GetUpdatesDocument, variables: variables }
     }
 export const GetUserDocument = gql`
     query GetUser($userId: String!) {

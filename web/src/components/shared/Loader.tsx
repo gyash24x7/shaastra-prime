@@ -10,6 +10,7 @@ export const Loader = () => (
 			justifyContent: "center",
 			alignItems: "center"
 		}}
+		className="loading-wrapper"
 	>
 		<Spin size="large" />
 	</div>

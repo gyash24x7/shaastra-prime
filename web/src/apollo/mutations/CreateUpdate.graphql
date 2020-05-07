@@ -1,0 +1,3 @@
+mutation CreateUpdate($brief: String!, $subject: String!, $content: String!) {
+	createUpdate(data: { brief: $brief, subject: $subject, content: $content })
+}

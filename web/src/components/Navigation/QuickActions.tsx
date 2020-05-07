@@ -3,14 +3,14 @@ import {
 	PlusOutlined,
 	SubnodeOutlined
 } from "@ant-design/icons";
-import { Menu, Typography } from "antd";
+import { Menu } from "antd";
 import React, { useContext } from "react";
 import { ModalContext } from "../../utils/context";
+import { CommonDrawerTitle } from "../shared/CommonDrawerTitle";
 import { UpdateForm } from "../Updates/UpdateForm";
 
 export const QuickActions = () => {
 	const { setModalComponent, setModalProps } = useContext(ModalContext)!;
-	const { Title } = Typography;
 
 	return (
 		<Menu>
@@ -28,9 +28,15 @@ export const QuickActions = () => {
 					onClick={() => {
 						setModalComponent(<UpdateForm />);
 						setModalProps({
-							title: <Title level={4}>Send New Update</Title>,
+							title: (
+								<CommonDrawerTitle
+									title="Send New Update"
+									onClose={() => setModalComponent(undefined)}
+								/>
+							),
 							width: "50vw",
-							style: { minWidth: 600 }
+							style: { minWidth: 600 },
+							footer: null
 						});
 					}}
 				>

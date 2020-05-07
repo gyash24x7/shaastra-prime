@@ -1,6 +1,10 @@
 import { Card, Pagination, Select, Space, Typography } from "antd";
-import React, { useState } from "react";
-import { PrivateLayout } from "../shared/PrivateLayout";
+import React, { useContext, useState } from "react";
+import { useGetUpdatesQuery } from "../../generated";
+import { DepartmentContext } from "../../utils/context";
+import { Loader } from "../shared/Loader";
+import { NoData } from "../shared/NoData";
+import { ShowError } from "../shared/ShowError";
 import { UpdateListItem } from "./UpdateListItem";
 
 const { Title } = Typography;
@@ -9,55 +13,49 @@ const { Option } = Select;
 export const UpdateScreen = () => {
 	const [filterDepartment, setFilterDepartment] = useState("");
 	const [currentPage, setCurrentPage] = useState(1);
+	const { departments } = useContext(DepartmentContext);
 
+	const { data, error, loading } = useGetUpdatesQuery();
+
+	if (error) {
+		return <ShowError />;
+	}
 	return (
-		<PrivateLayout>
-			<Card
-				title={<Title level={3}>Updates</Title>}
-				extra={
-					<Space size="small">
-						<Select
-							placeholder="Filter by Department"
-							onSelect={(val) => setFilterDepartment(val.toString())}
-						>
-							<Option value="WebOps">WebOps</Option>
-						</Select>
-						<Pagination
-							total={updateList.length}
-							current={currentPage}
-							onChange={setCurrentPage}
-						/>
-					</Space>
-				}
-			>
-				{updateList
-					.filter(({ byDept }) =>
-						filterDepartment ? byDept === filterDepartment : true
-					)
-					.map((update, i) => (
-						<Card.Grid style={{ width: "100%" }} key={i}>
-							<UpdateListItem update={update} />
-						</Card.Grid>
-					))}
-			</Card>
-		</PrivateLayout>
+		<Card
+			title={<Title level={3}>Updates</Title>}
+			extra={
+				<Space size="small">
+					<Select
+						placeholder="Filter by Department"
+						onSelect={(val) => setFilterDepartment(val.toString())}
+					>
+						{departments.map((dept) => (
+							<Option value={dept.id} key={dept.id}>
+								{dept.name}
+							</Option>
+						))}
+					</Select>
+					<Pagination
+						total={data?.getUpdates.length}
+						current={currentPage}
+						onChange={setCurrentPage}
+					/>
+				</Space>
+			}
+		>
+			{data?.getUpdates
+				.filter(({ byDept }) =>
+					filterDepartment ? byDept.name === filterDepartment : true
+				)
+				.map((update, i) => (
+					<Card.Grid style={{ width: "100%" }} key={i}>
+						<UpdateListItem update={update} />
+					</Card.Grid>
+				))}
+			{data?.getUpdates.filter(({ byDept }) =>
+				filterDepartment ? byDept.name === filterDepartment : true
+			).length === 0 && <NoData />}
+			{loading && <Loader />}
+		</Card>
 	);
 };
-
-const updateList = [
-	{ byDept: "WebOps", postedBy: "Yash Gupta" },
-	{ byDept: "O & IP", postedBy: "Yash Gupta" },
-	{ byDept: "Spons", postedBy: "Yash Gupta" },
-	{ byDept: "S & E", postedBy: "Yash Gupta" },
-	{ byDept: "Evolve", postedBy: "Yash Gupta" },
-	{ byDept: "Envisage", postedBy: "Yash Gupta" },
-	{ byDept: "E & W", postedBy: "Yash Gupta" },
-	{ byDept: "C & D", postedBy: "Yash Gupta" },
-	{ byDept: "WebOps", postedBy: "Yash Gupta" },
-	{ byDept: "WebOps", postedBy: "Yash Gupta" },
-	{ byDept: "WebOps", postedBy: "Yash Gupta" },
-	{ byDept: "WebOps", postedBy: "Yash Gupta" },
-	{ byDept: "WebOps", postedBy: "Yash Gupta" },
-	{ byDept: "WebOps", postedBy: "Yash Gupta" },
-	{ byDept: "WebOps", postedBy: "Yash Gupta" }
-];

@@ -2,13 +2,12 @@ import { ClockCircleFilled } from "@ant-design/icons";
 import { Button, Space, Tag, Typography } from "antd";
 import React, { Fragment, useContext } from "react";
 import { DrawerContext } from "../../utils/context";
-import { stringGen } from "../../utils/lorem";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
 
 const { Text, Paragraph, Title } = Typography;
 
 interface UpdateListItemProps {
-	update: { byDept: string; postedBy: string };
+	update: any;
 }
 
 export const UpdateListItem = ({ update }: UpdateListItemProps) => {
@@ -22,7 +21,7 @@ export const UpdateListItem = ({ update }: UpdateListItemProps) => {
 					title: (
 						<Fragment>
 							<div className="drawer-header">
-								<Title level={4}>{stringGen.generateWords(4)}</Title>
+								<Title level={4}>{update.subject}</Title>
 								<Button
 									icon={<SwitchingIcon name="close" className="editor-icon" />}
 									className="editor-btn"
@@ -30,8 +29,8 @@ export const UpdateListItem = ({ update }: UpdateListItemProps) => {
 								/>
 							</div>
 							<Space size={0} style={{ marginTop: 10 }}>
-								<Tag color="red">{update.byDept}</Tag>
-								<Tag color="cyan">Yash Gupta</Tag>
+								<Tag color="red">{update.byDept.name}</Tag>
+								<Tag color="cyan">{update.postedBy.name}</Tag>
 								<Tag icon={<ClockCircleFilled />} color="lime">
 									6 Days Ago
 								</Tag>
@@ -39,18 +38,16 @@ export const UpdateListItem = ({ update }: UpdateListItemProps) => {
 						</Fragment>
 					)
 				});
-				setDrawerComponent!(
-					<Paragraph>{stringGen.generateParagraphs(4)}</Paragraph>
-				);
+				setDrawerComponent!(<Paragraph>{update.content}</Paragraph>);
 			}}
 		>
 			<div className="update-brief">
-				<Text strong>{stringGen.generateWords(4)}</Text>
-				<Paragraph>{stringGen.generateSentences(2)}</Paragraph>
+				<Text strong>{update.subject}</Text>
+				<Paragraph>{update.brief}</Paragraph>
 			</div>
 			<div className="update-actions">
-				<Tag color="red">{update.byDept}</Tag>
-				<Tag color="cyan">Yash Gupta</Tag>
+				<Tag color="red">{update.byDept.name}</Tag>
+				<Tag color="cyan">{update.postedBy.name}</Tag>
 				<Tag icon={<ClockCircleFilled />} color="lime">
 					6 Days Ago
 				</Tag>
