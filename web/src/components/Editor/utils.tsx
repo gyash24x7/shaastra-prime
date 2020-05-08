@@ -159,7 +159,6 @@ export const serialize = (node: Node): string => {
 	if (Text.isText(node)) return serializeMarks(node);
 
 	const children = node.children.map((n) => serialize(n)).join("");
-	console.log(node);
 
 	switch (node.type as string) {
 		case "bulleted-list":
@@ -171,7 +170,9 @@ export const serialize = (node: Node): string => {
 		case "paragraph":
 			return `<p>${children}</p>`;
 		case "link":
-			return `<a href="${escapeHTML(node.url as string)}">${children}</a>`;
+			return `<a href="${escapeHTML(
+				node.url as string
+			)}" target="_blank" >${children}</a>`;
 		default:
 			return children;
 	}

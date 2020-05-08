@@ -1,17 +1,18 @@
-import { Button, Form, Input, Space } from "antd";
+import { ThunderboltFilled } from "@ant-design/icons";
+import { Button, Form, Input, Result } from "antd";
 import React from "react";
 import {
 	refetchGetUpdatesQuery,
 	useCreateUpdateMutation
 } from "../../generated";
-import { stringGen } from "../../utils/lorem";
+import { EDITOR_NULL_VALUES } from "../../utils/constants";
 import Editor from "../Editor";
 import { ShowError } from "../shared/ShowError";
 
 const { useForm, Item } = Form;
 
 export const UpdateForm = () => {
-	const [createUpdate, { loading, error }] = useCreateUpdateMutation({
+	const [createUpdate, { loading, error, data }] = useCreateUpdateMutation({
 		refetchQueries: [refetchGetUpdatesQuery()]
 	});
 
@@ -20,12 +21,11 @@ export const UpdateForm = () => {
 	const handleFinish = async () => {
 		try {
 			const values = await form.validateFields();
-			console.log(values);
 			createUpdate({
 				variables: {
 					subject: values["subject"],
 					brief: values["brief"],
-					content: stringGen.generateParagraphs(5)
+					content: values["content"]
 				}
 			});
 		} catch (error) {
@@ -36,6 +36,12 @@ export const UpdateForm = () => {
 	if (error) {
 		console.log(error);
 		return <ShowError />;
+	}
+
+	if (data && data.createUpdate) {
+		return (
+			<Result icon={<ThunderboltFilled />} title="Update Sent Successfully!" />
+		);
 	}
 
 	return (
@@ -54,23 +60,31 @@ export const UpdateForm = () => {
 			>
 				<Input placeholder="Brief" />
 			</Item>
-			<Item name="subject" required>
-				<Editor placeholder="Content" />
+			<Item
+				name="content"
+				required
+				rules={[{ required: true, message: "Content is Required!" }]}
+			>
+				<Editor
+					placeholder="Content"
+					setSerializedValue={(content) => {
+						if (EDITOR_NULL_VALUES.includes(content)) {
+							content = "";
+						}
+						form.setFieldsValue({ ...form.getFieldsValue(), content });
+					}}
+					style={{ maxHeight: 150, overflowY: "scroll" }}
+				/>
 			</Item>
 			<Item>
-				<Space>
-					<Button
-						loading={loading}
-						type="primary"
-						className="button"
-						htmlType="submit"
-					>
-						Send Update
-					</Button>
-					<Button className="button" htmlType="reset">
-						Cancel
-					</Button>
-				</Space>
+				<Button
+					loading={loading}
+					type="primary"
+					className="button"
+					htmlType="submit"
+				>
+					Send Update
+				</Button>
 			</Item>
 		</Form>
 	);

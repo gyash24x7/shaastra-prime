@@ -38,7 +38,9 @@ export const UpdateListItem = ({ update }: UpdateListItemProps) => {
 						</Fragment>
 					)
 				});
-				setDrawerComponent!(<Paragraph>{update.content}</Paragraph>);
+				setDrawerComponent(
+					<div dangerouslySetInnerHTML={{ __html: update.content }} />
+				);
 			}}
 		>
 			<div className="update-brief">

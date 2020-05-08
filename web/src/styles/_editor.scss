@@ -15,6 +15,12 @@
 	}
 }
 
+.ant-form-item-has-error {
+	.editor-wrapper {
+		border: 1px solid #a61d24;
+	}
+}
+
 .editor-text-container {
 	padding: 6.5px 11px;
 }

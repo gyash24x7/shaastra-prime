@@ -1,9 +1,12 @@
 import { Button, Space } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import Editor from "../Editor";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
 
 export const MessageInput = () => {
+	const [value, setValue] = useState("");
+	console.log(value);
+
 	return (
 		<Editor
 			style={{
@@ -22,6 +25,7 @@ export const MessageInput = () => {
 					/>
 				</Space>
 			}
+			setSerializedValue={setValue}
 		/>
 	);
 };

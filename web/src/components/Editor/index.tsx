@@ -10,13 +10,21 @@ import {
 	withReact
 } from "slate-react";
 import { Toolbar } from "./Toolbar";
-import { Element, HOTKEYS, Leaf, toggleMark, withLinks } from "./utils";
+import {
+	Element,
+	HOTKEYS,
+	Leaf,
+	serialize,
+	toggleMark,
+	withLinks
+} from "./utils";
 
 interface EditorProps {
 	toolbarExtra?: JSX.Element;
 	autoFocus?: boolean;
 	style?: React.CSSProperties;
 	placeholder?: string;
+	setSerializedValue: (val: string) => void;
 }
 
 export default (props: EditorProps) => {
@@ -44,7 +52,14 @@ export default (props: EditorProps) => {
 
 	return (
 		<div className="editor-wrapper">
-			<Slate value={value} editor={editor} onChange={(val) => setValue(val)}>
+			<Slate
+				value={value}
+				editor={editor}
+				onChange={(val) => {
+					setValue(val);
+					props.setSerializedValue(serialize(editor));
+				}}
+			>
 				<div className="editor-text-container">
 					<Editable
 						renderLeaf={renderLeaf}
