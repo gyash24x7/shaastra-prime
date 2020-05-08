@@ -1,8 +1,8 @@
 import { Card, Space, Typography } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { DrawerContext } from "../../utils/context";
 import { stringGen } from "../../utils/lorem";
-import { PrivateLayout } from "../shared/PrivateLayout";
+import { CommonDrawerTitle } from "../shared/CommonDrawerTitle";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
 import { ChannelDescription } from "./ChannelDescription";
 import { Message } from "./Message";
@@ -19,6 +19,7 @@ const defaultMessages = [...Array(1)].map(() => ({
 
 export const ChatScreen = () => {
 	const [messages, setMessages] = useState(defaultMessages);
+	const { setDrawerComponent, setDrawerProps } = useContext(DrawerContext)!;
 
 	const scrollToBottom = () => {
 		const container = document.querySelector(".messages-container")!;
@@ -37,55 +38,54 @@ export const ChatScreen = () => {
 	}, [messages]);
 
 	return (
-		<PrivateLayout>
-			<DrawerContext.Consumer>
-				{(props) => (
-					<Card
-						extra={
-							<Space>
-								<span
-									onClick={() =>
-										setMessages(
-											messages.concat([
-												{
-													content: stringGen.generateSentences(4),
-													by: stringGen.generateWords(2),
-													createdAt: "12:30",
-													likes: Math.round(Math.random() * 10)
-												}
-											])
-										)
+		<Card
+			extra={
+				<Space>
+					<span
+						onClick={() =>
+							setMessages(
+								messages.concat([
+									{
+										content: stringGen.generateSentences(4),
+										by: stringGen.generateWords(2),
+										createdAt: "12:30",
+										likes: Math.round(Math.random() * 10)
 									}
-								>
-									New Message
-								</span>
-								<span
-									onClick={() => {
-										props!.setDrawerProps!({
-											title: <Title level={4}>House Of Lords</Title>,
-											className: "channel-drawer"
-										});
-										props!.setDrawerComponent(<ChannelDescription />);
-									}}
-								>
-									<SwitchingIcon className="icon" name="info" />
-								</span>
-							</Space>
+								])
+							)
 						}
-						title={<Title level={3}>House Of Lords</Title>}
-						className="message-screen"
 					>
-						<Card.Grid className="messages-container" hoverable={false}>
-							{messages.map((message) => (
-								<Message key={message.by} message={message} />
-							))}
-						</Card.Grid>
-						<Card.Grid className="message-input-container" hoverable={false}>
-							<MessageInput />
-						</Card.Grid>
-					</Card>
-				)}
-			</DrawerContext.Consumer>
-		</PrivateLayout>
+						New Message
+					</span>
+					<span
+						onClick={() => {
+							setDrawerProps({
+								title: (
+									<CommonDrawerTitle
+										title="House of Lords"
+										onClose={() => setDrawerComponent(undefined)}
+									/>
+								),
+								className: "channel-drawer"
+							});
+							setDrawerComponent(<ChannelDescription />);
+						}}
+					>
+						<SwitchingIcon className="icon" name="info" />
+					</span>
+				</Space>
+			}
+			title={<Title level={3}>House Of Lords</Title>}
+			className="message-screen"
+		>
+			<Card.Grid className="messages-container" hoverable={false}>
+				{messages.map((message) => (
+					<Message key={message.by} message={message} />
+				))}
+			</Card.Grid>
+			<Card.Grid className="message-input-container" hoverable={false}>
+				<MessageInput />
+			</Card.Grid>
+		</Card>
 	);
 };

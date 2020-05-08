@@ -2,7 +2,6 @@ import { Card, Pagination, Typography } from "antd";
 import moment from "moment";
 import React, { useState } from "react";
 import { stringGen } from "../../utils/lorem";
-import { PrivateLayout } from "../shared/PrivateLayout";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
 import { GridLayout } from "./GridLayout";
 import { KanbanLayout } from "./KanbanLayout";
@@ -95,23 +94,21 @@ export const EquipScreen = () => {
 	};
 
 	return (
-		<PrivateLayout>
-			<Card
-				title={<Title level={3}>My Tasks</Title>}
-				tabList={tablist}
-				activeTabKey={activeKey}
-				onTabChange={setActiveKey}
-				tabBarExtraContent={
-					<Pagination
-						total={datasource.length}
-						current={currentPage}
-						onChange={setCurrentPage}
-					/>
-				}
-				className="equip-card card-with-tabs"
-			>
-				{tabContent[activeKey]}
-			</Card>
-		</PrivateLayout>
+		<Card
+			title={<Title level={3}>My Tasks</Title>}
+			tabList={tablist}
+			activeTabKey={activeKey}
+			onTabChange={setActiveKey}
+			tabBarExtraContent={
+				<Pagination
+					total={datasource.length}
+					current={currentPage}
+					onChange={setCurrentPage}
+				/>
+			}
+			className="equip-card card-with-tabs"
+		>
+			{tabContent[activeKey]}
+		</Card>
 	);
 };

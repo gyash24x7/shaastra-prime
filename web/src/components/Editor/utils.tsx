@@ -1,13 +1,20 @@
+import escapeHTML from "escape-html";
 import isUrl from "is-url";
 import React from "react";
-import { Editor, Element as SlateElement, Range, Transforms } from "slate";
+import {
+	Editor,
+	Element as SlateElement,
+	Node,
+	Range,
+	Text,
+	Transforms
+} from "slate";
 import { RenderElementProps, RenderLeafProps } from "slate-react";
 
 export const HOTKEYS: Record<string, string> = {
 	"mod+b": "bold",
 	"mod+i": "italic",
-	"mod+u": "underline",
-	"mod+`": "code"
+	"mod+u": "underline"
 };
 
 export const toggleMark = (editor: Editor, format: string) => {
@@ -30,10 +37,6 @@ export const Leaf = (props: RenderLeafProps) => {
 		children = <em>{children}</em>;
 	}
 
-	if (props.leaf.code) {
-		children = <code>{children}</code>;
-	}
-
 	if (props.leaf.underline) {
 		children = <u>{children}</u>;
 	}
@@ -48,7 +51,7 @@ export const toggleBlock = (editor: Editor, format: string) => {
 	const isList = LIST_TYPES.includes(format);
 
 	Transforms.unwrapNodes(editor, {
-		match: (n) => LIST_TYPES.includes(n.type),
+		match: (n) => LIST_TYPES.includes(n.type as string),
 		split: true
 	});
 
@@ -71,8 +74,6 @@ export const isBlockActive = (editor: Editor, format: string) => {
 
 export const Element = (props: RenderElementProps) => {
 	switch (props.element.type) {
-		case "block-quote":
-			return <blockquote {...props.attributes}>{props.children}</blockquote>;
 		case "bulleted-list":
 			return <ul {...props.attributes}>{props.children}</ul>;
 		case "numbered-list":
@@ -81,7 +82,7 @@ export const Element = (props: RenderElementProps) => {
 			return <li {...props.attributes}>{props.children}</li>;
 		case "link":
 			return (
-				<a {...props.attributes} href={props.element.url}>
+				<a {...props.attributes} href={props.element.url as string}>
 					{props.children}
 				</a>
 			);
@@ -152,4 +153,58 @@ export const insertLink = (editor: Editor, url: string) => {
 	if (editor.selection) {
 		wrapLink(editor, url);
 	}
+};
+
+export const serialize = (node: Node): string => {
+	if (Text.isText(node)) return serializeMarks(node);
+
+	const children = node.children.map((n) => serialize(n)).join("");
+	console.log(node);
+
+	switch (node.type as string) {
+		case "bulleted-list":
+			return `<ul>${children}</ul>`;
+		case "numbered-list":
+			return `<ol>${children}</ol>`;
+		case "list-item":
+			return `<li>${children}</li>`;
+		case "paragraph":
+			return `<p>${children}</p>`;
+		case "link":
+			return `<a href="${escapeHTML(node.url as string)}">${children}</a>`;
+		default:
+			return children;
+	}
+};
+
+export const serializeMarks = (node: Node) => {
+	if (node.bold && node.italic && node.underline) {
+		return `<strong><em><u>${node.text}</u></em></strong>`;
+	}
+
+	if (node.bold && node.italic) {
+		return `<strong><em>${node.text}</em></strong>`;
+	}
+
+	if (node.bold && node.underline) {
+		return `<strong><u>${node.text}</u></strong>`;
+	}
+
+	if (node.underline && node.italic) {
+		return `<em><u>${node.text}</u></em>`;
+	}
+
+	if (node.bold) {
+		return `<strong>${node.text}</strong>`;
+	}
+
+	if (node.italic) {
+		return `<em>${node.text}</em>`;
+	}
+
+	if (node.underline) {
+		return `<u>${node.text}</u>`;
+	}
+
+	return node.text as string;
 };

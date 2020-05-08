@@ -45,7 +45,7 @@ export const UpdateScreen = () => {
 		>
 			{data?.getUpdates
 				.filter(({ byDept }) =>
-					filterDepartment ? byDept.name === filterDepartment : true
+					filterDepartment ? byDept.id === filterDepartment : true
 				)
 				.map((update, i) => (
 					<Card.Grid style={{ width: "100%" }} key={i}>
@@ -53,7 +53,7 @@ export const UpdateScreen = () => {
 					</Card.Grid>
 				))}
 			{data?.getUpdates.filter(({ byDept }) =>
-				filterDepartment ? byDept.name === filterDepartment : true
+				filterDepartment ? byDept.id === filterDepartment : true
 			).length === 0 && <NoData />}
 			{loading && <Loader />}
 		</Card>

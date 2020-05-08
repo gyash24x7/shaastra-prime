@@ -1,6 +1,5 @@
 import { Card, Typography } from "antd";
 import React, { useState } from "react";
-import { PrivateLayout } from "../shared/PrivateLayout";
 import { TeamComponent } from "./TeamComponent";
 
 const { Title, Text } = Typography;
@@ -92,16 +91,14 @@ export const TeamScreen = () => {
 	const [activeDept, setActiveDept] = useState("WebOps");
 
 	return (
-		<PrivateLayout>
-			<Card
-				title={<Title level={3}>Team Shaastra</Title>}
-				tabList={tabList}
-				tabBarExtraContent={<div></div>}
-				onTabChange={(tab) => setActiveDept(tab)}
-				className="team-card card-with-tabs "
-			>
-				<TeamComponent team={activeDept} />
-			</Card>
-		</PrivateLayout>
+		<Card
+			title={<Title level={3}>Team Shaastra</Title>}
+			tabList={tabList}
+			tabBarExtraContent={<div></div>}
+			onTabChange={(tab) => setActiveDept(tab)}
+			className="team-card card-with-tabs "
+		>
+			<TeamComponent team={activeDept} />
+		</Card>
 	);
 };

@@ -16,6 +16,7 @@ interface EditorProps {
 	toolbarExtra?: JSX.Element;
 	autoFocus?: boolean;
 	style?: React.CSSProperties;
+	placeholder?: string;
 }
 
 export default (props: EditorProps) => {
@@ -50,7 +51,7 @@ export default (props: EditorProps) => {
 						style={props.style}
 						renderElement={renderElement}
 						autoFocus={!!props.autoFocus}
-						placeholder="Enter Text"
+						placeholder={props.placeholder}
 						onKeyDown={(e: any) => {
 							for (const hotkey in HOTKEYS) {
 								if (isHotkey(hotkey, e)) {

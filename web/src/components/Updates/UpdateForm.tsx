@@ -55,7 +55,7 @@ export const UpdateForm = () => {
 				<Input placeholder="Brief" />
 			</Item>
 			<Item name="subject" required>
-				<Editor />
+				<Editor placeholder="Content" />
 			</Item>
 			<Item>
 				<Space>
