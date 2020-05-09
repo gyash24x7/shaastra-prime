@@ -7,7 +7,8 @@
 	"private": true,
 	"workspaces": [
 		"./server",
-		"./web"
+		"./web",
+		"./app"
 	],
 	"scripts": {
 		"dev:web": "yarn workspace web dev",
@@ -19,6 +20,7 @@
 		"db:migrate": "cd server && npx prisma migrate save --experimental && npx prisma migrate up --experimental && cd ..",
 		"db:studio": "cd server && npx prisma studio --experimental",
 		"build": "yarn build:server",
-		"start": "cd server && ts-node index.ts"
+		"start": "cd server && ts-node index.ts",
+		"dev:app": "cd app && ionic serve"
 	}
 }

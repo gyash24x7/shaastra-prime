@@ -1,0 +1,8 @@
+{
+	"name": "shaastra-prime",
+	"integrations": {
+		"capacitor": {}
+	},
+	"type": "react",
+	"id": "6bdb39c6"
+}
