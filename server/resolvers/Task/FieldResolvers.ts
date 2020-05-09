@@ -33,4 +33,9 @@ export class TaskFieldResolvers {
 	assignedTo(@Root() { id }: Task) {
 		return prisma.task.findOne({ where: { id } }).assignedTo();
 	}
+
+	@FieldResolver()
+	channels(@Root() { id }: Task) {
+		return prisma.task.findOne({ where: { id } }).channels();
+	}
 }

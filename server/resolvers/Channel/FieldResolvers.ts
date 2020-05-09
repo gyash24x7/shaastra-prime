@@ -13,4 +13,9 @@ export class ChannelFieldResolvers {
 	members(@Root() { id }: Channel) {
 		return prisma.channel.findOne({ where: { id } }).members();
 	}
+
+	@FieldResolver()
+	connectedTasks(@Root() { id }: Channel) {
+		return prisma.channel.findOne({ where: { id } }).connectedTasks();
+	}
 }

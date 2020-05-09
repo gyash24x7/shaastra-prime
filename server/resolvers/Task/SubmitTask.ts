@@ -1,4 +1,4 @@
-import { TaskActivityType, TaskStatus } from "@prisma/client";
+import { MessageType, TaskActivityType, TaskStatus } from "@prisma/client";
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { prisma } from "../../prisma";
 import { GraphQLContext } from "../../utils";
@@ -25,7 +25,25 @@ export class SubmitTaskResolver {
 						description: `${user?.name} submitted the task.`
 					}
 				}
-			}
+			},
+			include: { channels: { select: { id: true } } }
+		});
+
+		Promise.all(
+			task.channels.map((channel) =>
+				prisma.message.create({
+					data: {
+						channel: { connect: { id: channel.id } },
+						content: `
+							<p><strong>[TASK UPDATE: ${task.brief}]</strong></p>
+							<p>${user?.name} submitted the task.</p>`,
+						type: MessageType.TASK_UPDATE,
+						createdBy: { connect: { id } }
+					}
+				})
+			)
+		).then(() => {
+			console.log("Task Update Messages Sent!");
 		});
 
 		return !!task;

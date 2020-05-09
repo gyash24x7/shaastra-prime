@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import { TaskStatus } from "../utils";
+import { Channel } from "./Channel";
 import { Department } from "./Department";
 import { Media } from "./Media";
 import { TaskActivity } from "./TaskActivity";
@@ -21,4 +22,5 @@ export class Task {
 	@Field() deadline: string;
 	@Field(() => [Media]) media: Media[];
 	@Field(() => [TaskActivity]) activity: TaskActivity[];
+	@Field(() => [Channel]) channels: Channel[];
 }

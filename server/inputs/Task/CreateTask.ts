@@ -6,4 +6,5 @@ export class CreateTaskInput {
 	@Field() details: string;
 	@Field() forDeptId: string;
 	@Field() deadline: string;
+	@Field(() => [String]) channelIds: string[];
 }

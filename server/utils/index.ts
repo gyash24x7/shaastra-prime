@@ -56,12 +56,6 @@ export enum GoalType {
 	END_GOAL = "END_GOAL"
 }
 
-export enum SubTaskStatus {
-	NOT_STARTED = "NOT_STARTED",
-	IN_PROGRESS = "IN_PROGRESS",
-	COMPLETED = "COMPLETED"
-}
-
 export enum InvoiceActivityType {
 	UPLOADED = "UPLOADED",
 	EDITED = "EDITED",
@@ -94,7 +88,9 @@ export enum TaskActivityType {
 	ASSIGNED = "ASSIGNED",
 	IN_PROGRESS = "IN_PROGRESS",
 	SUBMITTED = "SUBMITTED",
-	COMPLETED = "COMPLETED"
+	COMPLETED = "COMPLETED",
+	CONNECT_CHANNEL = "CONNECT_CHANNEL",
+	ATTACH_MEDIA = "ATTACH_MEDIA"
 }
 
 export enum MessageType {

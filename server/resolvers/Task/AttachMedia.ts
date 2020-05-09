@@ -1,14 +1,15 @@
-import { MessageType, TaskActivityType, TaskStatus } from "@prisma/client";
+import { MediaType, MessageType, TaskActivityType } from "@prisma/client";
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
+import { AttachMediaToTaskInput } from "../../inputs/Task/AttachMedia";
 import { prisma } from "../../prisma";
 import { GraphQLContext } from "../../utils";
 
 @Resolver()
-export class AcceptTaskResolver {
+export class AttachMediaToTaskResolver {
 	@Authorized()
 	@Mutation(() => Boolean)
-	async acceptTask(
-		@Arg("taskId") taskId: string,
+	async attachMediaToTask(
+		@Arg("data") { taskId, urls }: AttachMediaToTaskInput,
 		@Ctx() { req }: GraphQLContext
 	) {
 		const id = req.session!.userId;
@@ -17,16 +18,22 @@ export class AcceptTaskResolver {
 		const task = await prisma.task.update({
 			where: { id: taskId },
 			data: {
-				status: TaskStatus.IN_PROGRESS,
+				media: {
+					create: urls.map((url) => ({
+						url,
+						uploadedBy: { connect: { id } },
+						type: MediaType.IMAGE
+					}))
+				},
 				activity: {
 					create: {
-						type: TaskActivityType.IN_PROGRESS,
+						description: `${user?.name} attached ${urls.length} media files to this task.`,
 						by: { connect: { id } },
-						description: `${user?.name} started working on the task.`
+						type: TaskActivityType.ATTACH_MEDIA
 					}
 				}
 			},
-			include: { channels: { select: { id } } }
+			include: { channels: { select: { id: true } } }
 		});
 
 		Promise.all(
@@ -36,7 +43,7 @@ export class AcceptTaskResolver {
 						channel: { connect: { id: channel.id } },
 						content: `
 							<p><strong>[TASK UPDATE: ${task.brief}]</strong></p>
-							<p>${user?.name} started working on the task.</p>`,
+							<p>${user?.name} attached ${urls.length} media files to this task.</p>`,
 						type: MessageType.TASK_UPDATE,
 						createdBy: { connect: { id } }
 					}
