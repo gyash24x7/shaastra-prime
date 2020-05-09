@@ -1,0 +1,11 @@
+query GetDeptmembers($deptId: String!) {
+	getDeptMembers(deptId: $deptId) {
+		id
+		name
+		role
+		profilePic
+		department {
+			name
+		}
+	}
+}

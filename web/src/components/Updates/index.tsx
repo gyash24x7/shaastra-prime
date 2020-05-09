@@ -47,6 +47,7 @@ export const UpdateScreen = () => {
 				.filter(({ byDept }) =>
 					filterDepartment ? byDept.id === filterDepartment : true
 				)
+				.slice(currentPage * 10 - 10, currentPage * 10)
 				.map((update, i) => (
 					<Card.Grid style={{ width: "100%" }} key={i}>
 						<UpdateListItem update={update} />

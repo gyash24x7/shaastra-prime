@@ -32,7 +32,10 @@ export const UserContext = React.createContext<IUserContext>({
 });
 
 interface IDepartmentContext {
-	departments: Pick<Department, "id" | "name">[];
+	departments: Pick<
+		Department,
+		"id" | "name" | "shortName" | "subDepartments"
+	>[];
 }
 
 export const DepartmentContext = React.createContext<IDepartmentContext>({

@@ -122,4 +122,8 @@
 .team-member {
 	padding: 10px;
 	padding-top: 40px;
+
+	.avatar-container {
+		max-width: 500px;
+	}
 }

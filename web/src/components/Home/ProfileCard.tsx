@@ -20,7 +20,6 @@ export const ProfileCard = ({ userId }: ProfileCardProps) => {
 	}
 
 	if (data && data.getUser) {
-		console.log(data);
 		return (
 			<Card
 				className="profile-card"

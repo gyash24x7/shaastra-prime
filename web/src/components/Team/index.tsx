@@ -1,104 +1,31 @@
 import { Card, Typography } from "antd";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { DepartmentContext } from "../../utils/context";
 import { TeamComponent } from "./TeamComponent";
 
 const { Title, Text } = Typography;
 
 export const TeamScreen = () => {
-	const tabList = [
-		{
-			tab: (
-				<div className="tab-title">
-					<Text strong>WebOps</Text>
-				</div>
-			),
-			key: "WebOps"
-		},
-		{
-			tab: (
-				<div className="tab-title">
-					<Text strong>C&D</Text>
-				</div>
-			),
-			key: "C&D"
-		},
-		{
-			tab: (
-				<div className="tab-title">
-					<Text strong>QMS</Text>
-				</div>
-			),
-			key: "Qms"
-		},
-		{
-			tab: (
-				<div className="tab-title">
-					<Text strong>Finance</Text>
-				</div>
-			),
-			key: "fin"
-		},
-		{
-			tab: (
-				<div className="tab-title">
-					<Text strong>Publicity</Text>
-				</div>
-			),
-			key: "publicity"
-		},
-		{
-			tab: (
-				<div className="tab-title">
-					<Text strong>O&IP</Text>
-				</div>
-			),
-			key: "O&IP"
-		},
-		{
-			tab: (
-				<div className="tab-title">
-					<Text strong>Spons</Text>
-				</div>
-			),
-			key: "spons"
-		},
-		{
-			tab: (
-				<div className="tab-title">
-					<Text strong>Evolve</Text>
-				</div>
-			),
-			key: "Evolve"
-		},
-		{
-			tab: (
-				<div className="tab-title">
-					<Text strong>Envisage</Text>
-				</div>
-			),
-			key: "Envisage"
-		},
-		{
-			tab: (
-				<div className="tab-title">
-					<Text strong>S&E</Text>
-				</div>
-			),
-			key: "S&E"
-		}
-	];
+	const { departments } = useContext(DepartmentContext);
 
-	const [activeDept, setActiveDept] = useState("WebOps");
+	const [activeDept, setActiveDept] = useState(departments[0].id);
 
 	return (
 		<Card
 			title={<Title level={3}>Team Shaastra</Title>}
-			tabList={tabList}
+			tabList={departments.map((dept) => ({
+				tab: (
+					<div className="tab-title">
+						<Text strong>{dept.shortName}</Text>
+					</div>
+				),
+				key: dept.id
+			}))}
 			tabBarExtraContent={<div></div>}
 			onTabChange={(tab) => setActiveDept(tab)}
 			className="team-card card-with-tabs "
 		>
-			<TeamComponent team={activeDept} />
+			<TeamComponent deptId={activeDept} />
 		</Card>
 	);
 };
