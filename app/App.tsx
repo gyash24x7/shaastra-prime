@@ -4,7 +4,7 @@ import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { useFonts } from "@use-expo/font";
 import { AppLoading } from "expo";
 import React, { Fragment } from "react";
-import { LoginScreen } from "./components/Login";
+import { AppNavigation } from "./navigation";
 import { default as theme } from "./utils/theme.json";
 
 export default function App() {
@@ -17,7 +17,7 @@ export default function App() {
 			<Fragment>
 				<IconRegistry icons={EvaIconsPack} />
 				<ApplicationProvider {...eva} theme={{ ...eva.dark, ...theme }}>
-					<LoginScreen />
+					<AppNavigation />
 				</ApplicationProvider>
 			</Fragment>
 		);
