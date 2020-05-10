@@ -4,6 +4,7 @@ http://ionicframework.com/docs/theming/ */
 /** Ionic CSS Variables **/
 :root {
 	/** primary **/
+	--ion-default-font: "Montserrat" !important;
 	--ion-color-primary: #0052cc;
 	--ion-color-primary-rgb: 0, 82, 204;
 	--ion-color-primary-contrast: #ffffff;
@@ -162,13 +163,13 @@ http://ionicframework.com/docs/theming/ */
    */
 
 	.ios body {
-		--ion-background-color: #141414;
+		--ion-background-color: #000000;
 		--ion-background-color-rgb: 20, 20, 20;
 
 		--ion-text-color: #ffffff;
 		--ion-text-color-rgb: 255, 255, 255;
 
-		--ion-color-step-50: #1f1f1f;
+		--ion-color-step-50: #141414;
 		--ion-color-step-100: #262626;
 		--ion-color-step-150: #3a3a3a;
 		--ion-color-step-200: #434343;
@@ -199,7 +200,7 @@ http://ionicframework.com/docs/theming/ */
    */
 
 	.md body {
-		--ion-background-color: #141414;
+		--ion-background-color: #000000;
 		--ion-background-color-rgb: 20, 20, 20;
 
 		--ion-text-color: #ffffff;
@@ -207,7 +208,7 @@ http://ionicframework.com/docs/theming/ */
 
 		--ion-border-color: #303030;
 
-		--ion-color-step-50: #1f1f1f;
+		--ion-color-step-50: #141414;
 		--ion-color-step-100: #262626;
 		--ion-color-step-150: #3a3a3a;
 		--ion-color-step-200: #434343;
@@ -233,4 +234,16 @@ http://ionicframework.com/docs/theming/ */
 
 		--ion-tab-bar-background: #141414;
 	}
+}
+
+body {
+	font-family: "Montserrat", serif;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+input,
+button {
+	font-size: 14px !important;
+	font-weight: 600 !important;
 }

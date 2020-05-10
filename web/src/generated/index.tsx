@@ -24,11 +24,6 @@ export type Query = {
 };
 
 
-export type QueryGetChannelsArgs = {
-  type: Scalars['String'];
-};
-
-
 export type QueryGetUserArgs = {
   userId: Scalars['String'];
 };
@@ -581,6 +576,17 @@ export type VerifyUserMutation = (
   & Pick<Mutation, 'verifyUser'>
 );
 
+export type GetChannelsQueryVariables = {};
+
+
+export type GetChannelsQuery = (
+  { __typename?: 'Query' }
+  & { getChannels: Array<(
+    { __typename?: 'Channel' }
+    & Pick<Channel, 'id' | 'name'>
+  )> }
+);
+
 export type GetDepartmentsQueryVariables = {};
 
 
@@ -900,6 +906,42 @@ export function useVerifyUserMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type VerifyUserMutationHookResult = ReturnType<typeof useVerifyUserMutation>;
 export type VerifyUserMutationResult = ApolloReactCommon.MutationResult<VerifyUserMutation>;
 export type VerifyUserMutationOptions = ApolloReactCommon.BaseMutationOptions<VerifyUserMutation, VerifyUserMutationVariables>;
+export const GetChannelsDocument = gql`
+    query GetChannels {
+  getChannels {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetChannelsQuery__
+ *
+ * To run a query within a React component, call `useGetChannelsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetChannelsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetChannelsQuery, GetChannelsQueryVariables>(GetChannelsDocument, baseOptions);
+      }
+export function useGetChannelsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetChannelsQuery, GetChannelsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetChannelsQuery, GetChannelsQueryVariables>(GetChannelsDocument, baseOptions);
+        }
+export type GetChannelsQueryHookResult = ReturnType<typeof useGetChannelsQuery>;
+export type GetChannelsLazyQueryHookResult = ReturnType<typeof useGetChannelsLazyQuery>;
+export type GetChannelsQueryResult = ApolloReactCommon.QueryResult<GetChannelsQuery, GetChannelsQueryVariables>;
+export function refetchGetChannelsQuery(variables?: GetChannelsQueryVariables) {
+      return { query: GetChannelsDocument, variables: variables }
+    }
 export const GetDepartmentsDocument = gql`
     query GetDepartments {
   getDepartments {

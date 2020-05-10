@@ -1,8 +1,8 @@
 {
 	"appId": "org.shaastra.prime",
-	"appName": "shaastra-prime",
+	"appName": "Shaastra Prime",
 	"bundledWebRuntime": false,
-	"npmClient": "npm",
+	"npmClient": "yarn",
 	"webDir": "build",
 	"plugins": {
 		"SplashScreen": {
