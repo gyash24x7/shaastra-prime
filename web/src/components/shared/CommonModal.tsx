@@ -17,6 +17,9 @@ export const CommonModal = (props: CommonModalProps) => {
 			onCancel={props.onCancel}
 			centered
 			closeIcon={<div />}
+			width="50vw"
+			style={{ ...props.modalProps?.style, minWidth: 600 }}
+			footer={null}
 		>
 			{props.component}
 		</Modal>

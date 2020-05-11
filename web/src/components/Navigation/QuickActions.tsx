@@ -33,10 +33,7 @@ export const QuickActions = () => {
 									title="Send New Update"
 									onClose={() => setModalComponent(undefined)}
 								/>
-							),
-							width: "50vw",
-							style: { minWidth: 600 },
-							footer: null
+							)
 						});
 					}}
 				>

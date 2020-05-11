@@ -1,14 +1,18 @@
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useGetChannelsQuery } from "../../generated";
+import { ModalContext } from "../../utils/context";
+import { CreateChannel } from "../Chat/CreateChannel";
+import { CommonDrawerTitle } from "../shared/CommonDrawerTitle";
 import { Loader } from "../shared/Loader";
 import { ShowError } from "../shared/ShowError";
 
 export const ChannelsMenu = () => {
 	const { channelId } = useParams();
 	const history = useHistory();
+	const { setModalComponent, setModalProps } = useContext(ModalContext)!;
 
 	const { data, error } = useGetChannelsQuery();
 
@@ -22,7 +26,20 @@ export const ChannelsMenu = () => {
 			<Fragment>
 				<Menu>
 					<Menu.ItemGroup title="Actions">
-						<Menu.Item>
+						<Menu.Item
+							onClick={() => {
+								setModalProps({
+									title: (
+										<CommonDrawerTitle
+											title="Create New Channel"
+											onClose={() => setModalComponent(undefined)}
+										/>
+									),
+									footer: null
+								});
+								setModalComponent(<CreateChannel />);
+							}}
+						>
 							<PlusCircleOutlined className="icon nav-icon" />
 							<span>New Channel</span>
 						</Menu.Item>

@@ -17,6 +17,7 @@ export type Query = {
   getUsers: Array<User>;
   getUser: User;
   me?: Maybe<User>;
+  searchUser: Array<User>;
   getDepartments: Array<Department>;
   getDeptMembers: Array<User>;
   getMessages: Array<Message>;
@@ -26,6 +27,11 @@ export type Query = {
 
 export type QueryGetUserArgs = {
   userId: Scalars['String'];
+};
+
+
+export type QuerySearchUserArgs = {
+  searchStr: Scalars['String'];
 };
 
 
@@ -485,6 +491,18 @@ export type CreateUpdateInput = {
   content: Scalars['String'];
 };
 
+export type CreateChannelMutationVariables = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+  members: Array<Scalars['String']>;
+};
+
+
+export type CreateChannelMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'createChannel'>
+);
+
 export type CreateUpdateMutationVariables = {
   brief: Scalars['String'];
   subject: Scalars['String'];
@@ -665,7 +683,52 @@ export type MeQuery = (
   )> }
 );
 
+export type SearchUserQueryVariables = {
+  searchStr: Scalars['String'];
+};
 
+
+export type SearchUserQuery = (
+  { __typename?: 'Query' }
+  & { searchUser: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name'>
+  )> }
+);
+
+
+export const CreateChannelDocument = gql`
+    mutation CreateChannel($name: String!, $description: String!, $members: [String!]!) {
+  createChannel(data: {name: $name, description: $description, members: $members})
+}
+    `;
+export type CreateChannelMutationFn = ApolloReactCommon.MutationFunction<CreateChannelMutation, CreateChannelMutationVariables>;
+
+/**
+ * __useCreateChannelMutation__
+ *
+ * To run a mutation, you first call `useCreateChannelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateChannelMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createChannelMutation, { data, loading, error }] = useCreateChannelMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      description: // value for 'description'
+ *      members: // value for 'members'
+ *   },
+ * });
+ */
+export function useCreateChannelMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateChannelMutation, CreateChannelMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateChannelMutation, CreateChannelMutationVariables>(CreateChannelDocument, baseOptions);
+      }
+export type CreateChannelMutationHookResult = ReturnType<typeof useCreateChannelMutation>;
+export type CreateChannelMutationResult = ApolloReactCommon.MutationResult<CreateChannelMutation>;
+export type CreateChannelMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateChannelMutation, CreateChannelMutationVariables>;
 export const CreateUpdateDocument = gql`
     mutation CreateUpdate($brief: String!, $subject: String!, $content: String!) {
   createUpdate(data: {brief: $brief, subject: $subject, content: $content})
@@ -1163,4 +1226,41 @@ export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
 export function refetchMeQuery(variables?: MeQueryVariables) {
       return { query: MeDocument, variables: variables }
+    }
+export const SearchUserDocument = gql`
+    query SearchUser($searchStr: String!) {
+  searchUser(searchStr: $searchStr) {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useSearchUserQuery__
+ *
+ * To run a query within a React component, call `useSearchUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchUserQuery({
+ *   variables: {
+ *      searchStr: // value for 'searchStr'
+ *   },
+ * });
+ */
+export function useSearchUserQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SearchUserQuery, SearchUserQueryVariables>) {
+        return ApolloReactHooks.useQuery<SearchUserQuery, SearchUserQueryVariables>(SearchUserDocument, baseOptions);
+      }
+export function useSearchUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SearchUserQuery, SearchUserQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<SearchUserQuery, SearchUserQueryVariables>(SearchUserDocument, baseOptions);
+        }
+export type SearchUserQueryHookResult = ReturnType<typeof useSearchUserQuery>;
+export type SearchUserLazyQueryHookResult = ReturnType<typeof useSearchUserLazyQuery>;
+export type SearchUserQueryResult = ApolloReactCommon.QueryResult<SearchUserQuery, SearchUserQueryVariables>;
+export function refetchSearchUserQuery(variables?: SearchUserQueryVariables) {
+      return { query: SearchUserDocument, variables: variables }
     }
