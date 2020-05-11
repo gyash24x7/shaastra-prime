@@ -5,7 +5,8 @@ import { SwitchingIcon } from "../shared/SwitchingIcon";
 
 export const MessageInput = () => {
 	const [value, setValue] = useState("");
-	console.log(value);
+
+	if (false) return <div>{value}</div>;
 
 	return (
 		<Editor

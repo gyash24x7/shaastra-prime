@@ -13,6 +13,7 @@ export type Scalars = {
 
 export type Query = {
    __typename?: 'Query';
+  getChannelDetails: Channel;
   getChannels: Array<Channel>;
   getUsers: Array<User>;
   getUser: User;
@@ -22,6 +23,11 @@ export type Query = {
   getDeptMembers: Array<User>;
   getMessages: Array<Message>;
   getUpdates: Array<Update>;
+};
+
+
+export type QueryGetChannelDetailsArgs = {
+  channelId: Scalars['String'];
 };
 
 
@@ -594,6 +600,33 @@ export type VerifyUserMutation = (
   & Pick<Mutation, 'verifyUser'>
 );
 
+export type GetChannelDetailsQueryVariables = {
+  channelId: Scalars['String'];
+};
+
+
+export type GetChannelDetailsQuery = (
+  { __typename?: 'Query' }
+  & { getChannelDetails: (
+    { __typename?: 'Channel' }
+    & Pick<Channel, 'id' | 'name' | 'description'>
+    & { createdBy: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    ), members: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name' | 'role'>
+      & { department: (
+        { __typename?: 'Department' }
+        & Pick<Department, 'id' | 'name'>
+      ) }
+    )>, connectedTasks: Array<(
+      { __typename?: 'Task' }
+      & Pick<Task, 'id' | 'brief' | 'status'>
+    )> }
+  ) }
+);
+
 export type GetChannelsQueryVariables = {};
 
 
@@ -969,6 +1002,62 @@ export function useVerifyUserMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type VerifyUserMutationHookResult = ReturnType<typeof useVerifyUserMutation>;
 export type VerifyUserMutationResult = ApolloReactCommon.MutationResult<VerifyUserMutation>;
 export type VerifyUserMutationOptions = ApolloReactCommon.BaseMutationOptions<VerifyUserMutation, VerifyUserMutationVariables>;
+export const GetChannelDetailsDocument = gql`
+    query GetChannelDetails($channelId: String!) {
+  getChannelDetails(channelId: $channelId) {
+    id
+    name
+    description
+    createdBy {
+      id
+      name
+    }
+    members {
+      id
+      name
+      role
+      department {
+        id
+        name
+      }
+    }
+    connectedTasks {
+      id
+      brief
+      status
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetChannelDetailsQuery__
+ *
+ * To run a query within a React component, call `useGetChannelDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetChannelDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetChannelDetailsQuery({
+ *   variables: {
+ *      channelId: // value for 'channelId'
+ *   },
+ * });
+ */
+export function useGetChannelDetailsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetChannelDetailsQuery, GetChannelDetailsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetChannelDetailsQuery, GetChannelDetailsQueryVariables>(GetChannelDetailsDocument, baseOptions);
+      }
+export function useGetChannelDetailsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetChannelDetailsQuery, GetChannelDetailsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetChannelDetailsQuery, GetChannelDetailsQueryVariables>(GetChannelDetailsDocument, baseOptions);
+        }
+export type GetChannelDetailsQueryHookResult = ReturnType<typeof useGetChannelDetailsQuery>;
+export type GetChannelDetailsLazyQueryHookResult = ReturnType<typeof useGetChannelDetailsLazyQuery>;
+export type GetChannelDetailsQueryResult = ApolloReactCommon.QueryResult<GetChannelDetailsQuery, GetChannelDetailsQueryVariables>;
+export function refetchGetChannelDetailsQuery(variables?: GetChannelDetailsQueryVariables) {
+      return { query: GetChannelDetailsDocument, variables: variables }
+    }
 export const GetChannelsDocument = gql`
     query GetChannels {
   getChannels {

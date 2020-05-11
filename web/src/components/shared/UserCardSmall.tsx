@@ -8,13 +8,10 @@ interface UserCardSmallProps {
 	onlyName?: boolean;
 	noPadding?: boolean;
 	user: any;
+	noNamePadding?: boolean;
 }
 
-export const UserCardSmall = ({
-	onlyName,
-	noPadding,
-	user
-}: UserCardSmallProps) => {
+export const UserCardSmall = (props: UserCardSmallProps) => {
 	const {
 		setDrawerComponent,
 		isDrawerOpen,
@@ -41,25 +38,29 @@ export const UserCardSmall = ({
 
 		if (isDrawerOpen) {
 			setChildDrawerProps(drawerProps);
-			setChildDrawerComponent(<ProfileCard userId={user!.id} />);
+			setChildDrawerComponent(<ProfileCard userId={props.user!.id} />);
 		} else {
 			setDrawerProps(drawerProps);
-			setDrawerComponent(<ProfileCard userId={user!.id} />);
+			setDrawerComponent(<ProfileCard userId={props.user!.id} />);
 		}
 	};
 
+	let className = !!props.noNamePadding
+		? "user-details"
+		: "user-details user-name";
+
 	return (
 		<Fragment>
-			<div className="user-details user-name" onClick={handleNameClick}>
-				<Tag color="cyan">{user?.name}</Tag>
+			<div className={className} onClick={handleNameClick}>
+				<Tag color="cyan">{props.user?.name}</Tag>
 			</div>
-			{!onlyName && (
+			{!props.onlyName && (
 				<div className="user-details">
-					<Tag color="red" style={noPadding ? { padding: 0 } : {}}>
-						{user?.department.name}
+					<Tag color="red" style={props.noPadding ? { padding: 0 } : {}}>
+						{props.user?.department.name}
 					</Tag>
-					<Tag color="gold" style={noPadding ? { padding: 0 } : {}}>
-						{user?.role}
+					<Tag color="gold" style={props.noPadding ? { padding: 0 } : {}}>
+						{props.user?.role}
 					</Tag>
 				</div>
 			)}

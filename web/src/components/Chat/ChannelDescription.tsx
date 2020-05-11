@@ -1,7 +1,10 @@
-import { Card, Collapse } from "antd";
+import { ClockCircleFilled } from "@ant-design/icons";
+import { Card, Collapse, List, Tag, Typography } from "antd";
 import React from "react";
+import { Channel } from "../../generated";
 import { stringGen } from "../../utils/lorem";
 import { UserCard } from "../shared/UserCard";
+import { UserCardSmall } from "../shared/UserCardSmall";
 import { Message } from "./Message";
 
 const defaultMessages = [...Array(8)].map(() => ({
@@ -11,14 +14,52 @@ const defaultMessages = [...Array(8)].map(() => ({
 	likes: Math.round(Math.random() * 10)
 }));
 
-export const ChannelDescription = () => {
+interface ChannelDescriptionProps {
+	channel: Partial<Channel>;
+}
+
+const { Text, Paragraph } = Typography;
+
+export const ChannelDescription = ({ channel }: ChannelDescriptionProps) => {
 	return (
-		<Collapse accordion defaultActiveKey="members">
+		<Collapse accordion defaultActiveKey="description">
+			<Collapse.Panel key="description" header="Description">
+				<List
+					itemLayout="horizontal"
+					dataSource={[
+						{ label: channel.description, value: "" },
+						{
+							label: "Created By",
+							value: (
+								<UserCardSmall
+									user={channel.createdBy}
+									onlyName
+									noNamePadding
+								/>
+							)
+						},
+						{
+							label: "Created On",
+							value: (
+								<Tag color="lime" icon={<ClockCircleFilled />}>
+									4th May, 2020, 12:45 AM
+								</Tag>
+							)
+						}
+					]}
+					renderItem={(item) => (
+						<List.Item>
+							<Text strong>{item.label}</Text>
+							<Paragraph>{item.value}</Paragraph>
+						</List.Item>
+					)}
+				/>
+			</Collapse.Panel>
 			<Collapse.Panel key="members" header="Members">
 				<div className="grid-row">
-					{[...Array(6)].map((_, i) => (
-						<div className="grid-col" key={i}>
-							<UserCard />
+					{channel.members!.map((member) => (
+						<div className="grid-col" key={member.id}>
+							<UserCard user={member} />
 						</div>
 					))}
 				</div>
