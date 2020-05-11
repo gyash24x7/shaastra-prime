@@ -6,5 +6,9 @@ const ICON_MAP: Record<string, string> = {
 	Home: "home",
 	Equip: "book",
 	Chat: "message",
-	Finbooks: "dollar-circle"
+	Finbooks: "dollar-circle",
+	Mobile: "phone",
+	Email: "mail",
+	UPI: "bank",
+	"Roll Number": "number"
 };

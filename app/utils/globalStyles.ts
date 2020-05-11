@@ -77,11 +77,18 @@ export default StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		height: "100%",
-		backgroundColor: "#000000"
+		backgroundColor: "#000000",
+		padding: 10
 	},
 
 	topNavigation: {
 		borderBottomColor: "#303030",
 		borderBottomWidth: 2
+	},
+
+	heading: {
+		fontFamily: "montserrat-bold",
+		textTransform: "uppercase",
+		fontSize: 12
 	}
 });

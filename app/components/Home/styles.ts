@@ -1,11 +1,16 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
-	wrapper: {
+	profileCard: {
 		display: "flex",
-		justifyContent: "center",
-		alignItems: "center",
-		height: "100%",
-		backgroundColor: "#000000"
+		justifyContent: "space-between",
+		width: "100%",
+		borderWidth: 2,
+		borderColor: "#303030",
+		flex: 1
+	},
+
+	userCard: {
+		flex: 5
 	}
 });

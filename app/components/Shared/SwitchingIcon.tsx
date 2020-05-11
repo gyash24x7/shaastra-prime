@@ -3,7 +3,7 @@ import React from "react";
 
 interface SwitchingIconProps extends IconProps {
 	name: string;
-	isActive: boolean;
+	isActive?: boolean;
 }
 
 export const SwitchingIcon = ({
