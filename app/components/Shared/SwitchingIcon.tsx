@@ -1,7 +1,3 @@
-const ICON_MAP: Record<string, string[]> = {
-	file: ["file-outline", "file"],
-	info: ["info-outline", "info"]
-};
 import { Icon, IconProps } from "@ui-kitten/components";
 import React from "react";
 
@@ -15,6 +11,11 @@ export const SwitchingIcon = ({
 	name,
 	...rest
 }: SwitchingIconProps) => {
-	if (isActive) return <Icon name={ICON_MAP[name][1]} {...rest} />;
-	else return <Icon name={ICON_MAP[name][0]} {...rest} />;
+	return (
+		<Icon
+			name={name}
+			{...rest}
+			pack={isActive ? "ant-filled" : "ant-outlined"}
+		/>
+	);
 };

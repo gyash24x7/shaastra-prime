@@ -21,6 +21,6 @@
 		"db:studio": "cd server && npx prisma studio --experimental",
 		"build": "yarn build:server",
 		"start": "cd server && ts-node index.ts",
-		"dev:app": "yarn workspace app android"
+		"dev:app": "yarn workspace app start"
 	}
 }

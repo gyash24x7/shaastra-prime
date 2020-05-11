@@ -24,7 +24,7 @@ export const HomeScreen = () => {
 	return (
 		<Fragment>
 			<TopNavigation
-				style={[globalStyles.darkBg]}
+				style={[globalStyles.darkBg, globalStyles.topNavigation]}
 				title="Shaastra Prime"
 				alignment="center"
 				accessoryLeft={() => (
@@ -54,13 +54,17 @@ const BottomTabBar = ({ navigation, state }: BottomTabBarProps) => (
 		<BottomNavigationTab
 			title="DETAILS"
 			icon={(props) => (
-				<SwitchingIcon name="info" {...props} isActive={state.index === 0} />
+				<SwitchingIcon name="profile" {...props} isActive={state.index === 0} />
 			)}
 		/>
 		<BottomNavigationTab
 			title="MEDIA"
 			icon={(props) => (
-				<SwitchingIcon name="file" {...props} isActive={state.index === 1} />
+				<SwitchingIcon
+					name="file-image"
+					{...props}
+					isActive={state.index === 1}
+				/>
 			)}
 		/>
 	</BottomNavigation>
