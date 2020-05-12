@@ -1,10 +1,10 @@
 import { ClockCircleFilled } from "@ant-design/icons";
-import { Button, Space, Tag, Typography } from "antd";
-import React, { Fragment, useContext } from "react";
+import { Space, Tag, Typography } from "antd";
+import React, { useContext } from "react";
 import { DrawerContext } from "../../utils/context";
-import { SwitchingIcon } from "../shared/SwitchingIcon";
+import { CommonDrawerTitle } from "../shared/CommonDrawerTitle";
 
-const { Text, Paragraph, Title } = Typography;
+const { Text, Paragraph } = Typography;
 
 interface UpdateListItemProps {
 	update: any;
@@ -19,23 +19,19 @@ export const UpdateListItem = ({ update }: UpdateListItemProps) => {
 			onClick={() => {
 				setDrawerProps({
 					title: (
-						<Fragment>
-							<div className="drawer-header">
-								<Title level={4}>{update.subject}</Title>
-								<Button
-									icon={<SwitchingIcon name="close" className="editor-icon" />}
-									className="editor-btn"
-									onClick={() => setDrawerComponent(undefined)}
-								/>
-							</div>
-							<Space size={0} style={{ marginTop: 10 }}>
-								<Tag color="red">{update.byDept.name}</Tag>
-								<Tag color="cyan">{update.postedBy.name}</Tag>
-								<Tag icon={<ClockCircleFilled />} color="lime">
-									6 Days Ago
-								</Tag>
-							</Space>
-						</Fragment>
+						<CommonDrawerTitle
+							title={update.subject}
+							onClose={() => setDrawerComponent(undefined)}
+							extra={
+								<Space size={0} style={{ marginTop: 10 }}>
+									<Tag color="red">{update.byDept.name}</Tag>
+									<Tag color="cyan">{update.postedBy.name}</Tag>
+									<Tag icon={<ClockCircleFilled />} color="lime">
+										6 Days Ago
+									</Tag>
+								</Space>
+							}
+						/>
 					)
 				});
 				setDrawerComponent(

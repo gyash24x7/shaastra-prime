@@ -27,7 +27,6 @@ export const ChannelDescription = ({ channel }: ChannelDescriptionProps) => {
 				<List
 					itemLayout="horizontal"
 					dataSource={[
-						{ label: channel.description, value: "" },
 						{
 							label: "Created By",
 							value: (

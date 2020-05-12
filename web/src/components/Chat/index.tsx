@@ -12,7 +12,7 @@ import { ChannelDescription } from "./ChannelDescription";
 import { Message } from "./Message";
 import { MessageInput } from "./MessageInput";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const defaultMessages = [...Array(1)].map(() => ({
 	content: stringGen.generateSentences(4),
@@ -61,6 +61,7 @@ export const ChatScreen = () => {
 									<CommonDrawerTitle
 										title={channel.name}
 										onClose={() => setDrawerComponent(undefined)}
+										extra={<Text>{channel.description}</Text>}
 									/>
 								),
 								className: "channel-drawer"
@@ -80,7 +81,7 @@ export const ChatScreen = () => {
 					))}
 				</Card.Grid>
 				<Card.Grid className="message-input-container" hoverable={false}>
-					<MessageInput />
+					<MessageInput channelId={channelId!} />
 				</Card.Grid>
 			</Card>
 		);

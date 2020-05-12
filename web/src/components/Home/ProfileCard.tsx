@@ -32,10 +32,10 @@ export const ProfileCard = ({ userId }: ProfileCardProps) => {
 				<List
 					itemLayout="horizontal"
 					dataSource={[
-						{ label: "Mobile", value: "7388378834" },
-						{ label: "Email", value: "gyash@shaastra.org" },
-						{ label: "Roll Number", value: "CH16B025" },
-						{ label: "UPI", value: "gyash24x7@okaxis" }
+						{ label: "Mobile", value: data.getUser.mobile },
+						{ label: "Email", value: data.getUser.email },
+						{ label: "Roll Number", value: data.getUser.rollNumber },
+						{ label: "UPI", value: data.getUser.upi }
 					]}
 					renderItem={(item) => (
 						<List.Item>

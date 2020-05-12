@@ -1,0 +1,15 @@
+mutation CreateMessage(
+	$channelId: String!
+	$content: String!
+	$media: [String!]!
+	$mediaType: String
+) {
+	createMessage(
+		data: {
+			channelId: $channelId
+			content: $content
+			media: $media
+			mediaType: $mediaType
+		}
+	)
+}

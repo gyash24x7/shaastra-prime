@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Redirect, Switch } from "react-router-dom";
 import { ChatScreen } from "../components/Chat";
+import { NoChannelScreen } from "../components/Chat/NoChannel";
 import { EquipScreen } from "../components/Equip";
 import { HomeScreen } from "../components/Home";
 import { LoginScreen } from "../components/Login";
@@ -48,6 +49,7 @@ export const AppRoutes = () => {
 								component={ForgotPasswordScreen}
 							/>
 							<PublicRoute exact path="/enterotp" component={OTPScreen} />
+							<PrivateRoute exact path="/chat" component={NoChannelScreen} />
 							<PrivateRoute
 								exact
 								path="/chat/:channelId"
@@ -63,7 +65,6 @@ export const AppRoutes = () => {
 								component={OTPScreen}
 							/>
 							<Redirect from="/profile" to="/" />
-							<Redirect from="/chat" to="/chat/lnvkjfsnv" />
 							<PrivateRoute exact path="/" component={HomeScreen} />
 						</Switch>
 					</BrowserRouter>

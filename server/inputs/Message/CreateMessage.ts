@@ -5,5 +5,5 @@ export class CreateMessageInput {
 	@Field() channelId: string;
 	@Field() content: string;
 	@Field(() => [String]) media: string[];
-	@Field() mediaType?: string;
+	@Field(() => String, { nullable: true }) mediaType?: string;
 }

@@ -13,7 +13,7 @@ export class GetMessagesResolver {
 		const messages = await prisma.channel
 			.findOne({ where: { id: channelId } })
 			.messages({
-				skip: messageCount - skip * first,
+				skip: messageCount - (skip || 0) * (first || 10),
 				first
 			});
 
