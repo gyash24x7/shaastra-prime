@@ -10,7 +10,7 @@ export default StyleSheet.create({
 		flex: 1
 	},
 
-	userCard: {
-		flex: 5
+	detailsList: {
+		height: "100%"
 	}
 });

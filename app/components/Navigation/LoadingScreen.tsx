@@ -9,7 +9,8 @@ export const LoadingScreen = () => {
 	return (
 		<Layout style={globalStyles.wrapper}>
 			<Spinner />
-			<Button onPress={() => navigate("Public")}>Home</Button>
+			<Button onPress={() => navigate("Private")}>Home</Button>
+			<Button onPress={() => navigate("Login")}>Login</Button>
 		</Layout>
 	);
 };

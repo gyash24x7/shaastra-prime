@@ -14,7 +14,7 @@ export const AppNavigation = () => {
 			<NavigationContainer>
 				<Navigator initialRouteName="Loading" headerMode="none">
 					<Screen name="Loading" component={LoadingScreen} />
-					<Screen name="Public" component={PrivateScreen} />
+					<Screen name="Private" component={PrivateScreen} />
 					<Screen name="Login" component={LoginScreen} />
 				</Navigator>
 			</NavigationContainer>

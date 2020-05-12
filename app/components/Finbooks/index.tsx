@@ -16,7 +16,6 @@ export const FinbooksScreen = () => {
 	return (
 		<SafeAreaView>
 			<TopNavigation
-				style={globalStyles.darkBg}
 				title="Shaastra Prime"
 				alignment="center"
 				accessoryLeft={() => (

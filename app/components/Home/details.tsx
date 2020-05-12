@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { getIconNameValue } from "../../utils";
 import globalStyles from "../../utils/globalStyles";
 import { SwitchingIcon } from "../Shared/SwitchingIcon";
+import { UserCard } from "../Shared/UserCard";
 import styles from "./styles";
 
 export const UserDetails = () => {
@@ -12,12 +13,12 @@ export const UserDetails = () => {
 		<SafeAreaView style={{ flex: 1 }}>
 			<StatusBar backgroundColor="#141414" />
 			<Layout style={globalStyles.wrapper}>
-				<Layout style={[styles.profileCard, globalStyles.darkBg]}>
+				<Layout style={[styles.profileCard]}>
 					<Image
 						source={{ uri: "https://source.unsplash.com/featured/600x300" }}
 						style={{ resizeMode: "cover", height: 200, width: "100%" }}
 					/>
-					<Layout style={styles.userCard}></Layout>
+					<UserCard />
 					<List
 						data={[
 							{ label: "Mobile", value: "7388378834" },
@@ -30,8 +31,10 @@ export const UserDetails = () => {
 								title={() => (
 									<Text style={[globalStyles.heading]}>{item.label}</Text>
 								)}
-								style={[globalStyles.darkBg, { marginTop: 2 }]}
-								accessoryRight={() => <Text>{item.value}</Text>}
+								style={[{ marginTop: 2 }]}
+								accessoryRight={() => (
+									<Text style={[globalStyles.text]}>{item.value}</Text>
+								)}
 								accessoryLeft={(props) => (
 									<SwitchingIcon
 										{...props}

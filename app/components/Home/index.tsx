@@ -11,6 +11,7 @@ import {
 	TopNavigationAction
 } from "@ui-kitten/components";
 import React, { Fragment } from "react";
+import { Image } from "react-native";
 import globalStyles from "../../utils/globalStyles";
 import { SwitchingIcon } from "../Shared/SwitchingIcon";
 import { UserDetails } from "./details";
@@ -24,10 +25,21 @@ export const HomeScreen = () => {
 	return (
 		<Fragment>
 			<TopNavigation
-				style={[globalStyles.darkBg, globalStyles.topNavigation]}
-				title="Shaastra Prime"
+				style={[globalStyles.topNavigation]}
+				title={() => (
+					<Image
+						source={require("../../assets/images/LightLogo.png")}
+						style={{ width: 100, resizeMode: "contain" }}
+					/>
+				)}
 				alignment="center"
 				accessoryLeft={() => (
+					<TopNavigationAction
+						icon={(props) => <Icon name="menu" {...props} />}
+						onPress={() => dispatch(DrawerActions.openDrawer)}
+					/>
+				)}
+				accessoryRight={() => (
 					<TopNavigationAction
 						icon={(props) => <Icon name="menu" {...props} />}
 						onPress={() => dispatch(DrawerActions.openDrawer)}
@@ -49,7 +61,7 @@ const BottomTabBar = ({ navigation, state }: BottomTabBarProps) => (
 	<BottomNavigation
 		selectedIndex={state.index}
 		onSelect={(index) => navigation.navigate(state.routeNames[index])}
-		style={[globalStyles.tabBar, globalStyles.darkBg]}
+		style={[globalStyles.tabBar]}
 	>
 		<BottomNavigationTab
 			title="DETAILS"
