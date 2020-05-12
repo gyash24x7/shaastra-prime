@@ -6,11 +6,10 @@ import {
 import { Menu } from "antd";
 import React, { useContext } from "react";
 import { ModalContext } from "../../utils/context";
-import { CommonDrawerTitle } from "../shared/CommonDrawerTitle";
 import { UpdateForm } from "../Updates/UpdateForm";
 
 export const QuickActions = () => {
-	const { setModalComponent, setModalProps } = useContext(ModalContext)!;
+	const { toggleModal } = useContext(ModalContext)!;
 
 	return (
 		<Menu>
@@ -25,17 +24,12 @@ export const QuickActions = () => {
 				</Menu.Item>
 				<Menu.Item
 					key="sendUpdate"
-					onClick={() => {
-						setModalComponent(<UpdateForm />);
-						setModalProps({
-							title: (
-								<CommonDrawerTitle
-									title="Send New Update"
-									onClose={() => setModalComponent(undefined)}
-								/>
-							)
-						});
-					}}
+					onClick={() =>
+						toggleModal({
+							component: <UpdateForm />,
+							props: { title: "Send New Update" }
+						})
+					}
 				>
 					<SubnodeOutlined className="icon nav-icon" />
 					<span>Send Update</span>

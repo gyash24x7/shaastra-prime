@@ -2,7 +2,6 @@ import { Tag } from "antd";
 import React, { Fragment, useContext } from "react";
 import { DrawerContext } from "../../utils/context";
 import { ProfileCard } from "../Home/ProfileCard";
-import { CommonDrawerTitle } from "./CommonDrawerTitle";
 
 interface UserCardSmallProps {
 	onlyName?: boolean;
@@ -12,37 +11,17 @@ interface UserCardSmallProps {
 }
 
 export const UserCardSmall = (props: UserCardSmallProps) => {
-	const {
-		setDrawerComponent,
-		isDrawerOpen,
-		setDrawerProps,
-		setChildDrawerComponent,
-		setChildDrawerProps
-	} = useContext(DrawerContext)!;
+	const { toggleDrawer } = useContext(DrawerContext)!;
 
 	const handleNameClick = () => {
-		const drawerProps = {
-			className: "no-padding-drawer",
-			width: 450,
-			title: (
-				<CommonDrawerTitle
-					title="User Profile"
-					onClose={() => {
-						isDrawerOpen
-							? setChildDrawerComponent(undefined)
-							: setDrawerComponent(undefined);
-					}}
-				/>
-			)
-		};
-
-		if (isDrawerOpen) {
-			setChildDrawerProps(drawerProps);
-			setChildDrawerComponent(<ProfileCard userId={props.user!.id} />);
-		} else {
-			setDrawerProps(drawerProps);
-			setDrawerComponent(<ProfileCard userId={props.user!.id} />);
-		}
+		toggleDrawer({
+			props: {
+				className: "no-padding-drawer",
+				width: 450,
+				title: "User Profile"
+			},
+			component: <ProfileCard userId={props.user!.id} />
+		});
 	};
 
 	let className = !!props.noNamePadding

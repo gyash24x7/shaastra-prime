@@ -5,14 +5,13 @@ import { useHistory, useParams } from "react-router-dom";
 import { useGetChannelsQuery } from "../../generated";
 import { ModalContext } from "../../utils/context";
 import { CreateChannel } from "../Chat/CreateChannel";
-import { CommonDrawerTitle } from "../shared/CommonDrawerTitle";
 import { Loader } from "../shared/Loader";
 import { ShowError } from "../shared/ShowError";
 
 export const ChannelsMenu = () => {
 	const { channelId } = useParams();
 	const history = useHistory();
-	const { setModalComponent, setModalProps } = useContext(ModalContext)!;
+	const { toggleModal } = useContext(ModalContext)!;
 
 	const { data, error } = useGetChannelsQuery();
 
@@ -27,18 +26,15 @@ export const ChannelsMenu = () => {
 				<Menu>
 					<Menu.ItemGroup title="Actions">
 						<Menu.Item
-							onClick={() => {
-								setModalProps({
-									title: (
-										<CommonDrawerTitle
-											title="Create New Channel"
-											onClose={() => setModalComponent(undefined)}
-										/>
-									),
-									footer: null
-								});
-								setModalComponent(<CreateChannel />);
-							}}
+							onClick={() =>
+								toggleModal({
+									props: {
+										title: "Create New Channel",
+										footer: null
+									},
+									component: <CreateChannel />
+								})
+							}
 						>
 							<PlusCircleOutlined className="icon nav-icon" />
 							<span>New Channel</span>

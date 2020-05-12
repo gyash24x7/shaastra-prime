@@ -4,7 +4,6 @@ import { Moment } from "moment";
 import React, { useContext, useState } from "react";
 import { departments, status, statusColor } from ".";
 import { DrawerContext, UserContext } from "../../utils/context";
-import { CommonDrawerTitle } from "../shared/CommonDrawerTitle";
 import { UserCardSmall } from "../shared/UserCardSmall";
 import { TaskDescription } from "./TaskDescription";
 
@@ -66,8 +65,7 @@ export const TableLayout = (props: any) => {
 		setSorters(sorter);
 	};
 
-	const { setDrawerComponent, setDrawerProps } = useContext(DrawerContext)!;
-	console.log(setDrawerComponent);
+	const { toggleDrawer } = useContext(DrawerContext)!;
 
 	return (
 		<Table
@@ -81,17 +79,14 @@ export const TableLayout = (props: any) => {
 			rowSelection={{
 				type: "radio",
 				onSelect(record) {
-					setDrawerProps({
-						title: (
-							<CommonDrawerTitle
-								title={record.brief}
-								onClose={() => setDrawerComponent(undefined)}
-							/>
-						),
-						width: "75vw",
-						className: "no-padding-drawer"
+					toggleDrawer({
+						props: {
+							title: record.brief,
+							width: "75vw",
+							className: "no-padding-drawer"
+						},
+						component: <TaskDescription data={record} />
 					});
-					setDrawerComponent(<TaskDescription data={record} />);
 				}
 			}}
 		/>

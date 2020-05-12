@@ -1,42 +1,39 @@
 import { ClockCircleFilled } from "@ant-design/icons";
 import { Space, Tag, Typography } from "antd";
 import React, { useContext } from "react";
+import { Update } from "../../generated";
 import { DrawerContext } from "../../utils/context";
-import { CommonDrawerTitle } from "../shared/CommonDrawerTitle";
 
 const { Text, Paragraph } = Typography;
 
 interface UpdateListItemProps {
-	update: any;
+	update: Partial<Update>;
 }
 
 export const UpdateListItem = ({ update }: UpdateListItemProps) => {
-	const { setDrawerComponent, setDrawerProps } = useContext(DrawerContext)!;
+	const { toggleDrawer } = useContext(DrawerContext)!;
 
 	return (
 		<div
 			className="update-list-item"
 			onClick={() => {
-				setDrawerProps({
-					title: (
-						<CommonDrawerTitle
-							title={update.subject}
-							onClose={() => setDrawerComponent(undefined)}
-							extra={
-								<Space size={0} style={{ marginTop: 10 }}>
-									<Tag color="red">{update.byDept.name}</Tag>
-									<Tag color="cyan">{update.postedBy.name}</Tag>
-									<Tag icon={<ClockCircleFilled />} color="lime">
-										6 Days Ago
-									</Tag>
-								</Space>
-							}
-						/>
+				toggleDrawer({
+					props: {
+						title: update.subject,
+						extra: (
+							<Space size={0} style={{ marginTop: 10 }}>
+								<Tag color="red">{update.byDept?.name}</Tag>
+								<Tag color="cyan">{update.postedBy?.name}</Tag>
+								<Tag icon={<ClockCircleFilled />} color="lime">
+									6 Days Ago
+								</Tag>
+							</Space>
+						)
+					},
+					component: (
+						<div dangerouslySetInnerHTML={{ __html: update.content! }} />
 					)
 				});
-				setDrawerComponent(
-					<div dangerouslySetInnerHTML={{ __html: update.content }} />
-				);
 			}}
 		>
 			<div className="update-brief">
@@ -44,8 +41,8 @@ export const UpdateListItem = ({ update }: UpdateListItemProps) => {
 				<Paragraph>{update.brief}</Paragraph>
 			</div>
 			<div className="update-actions">
-				<Tag color="red">{update.byDept.name}</Tag>
-				<Tag color="cyan">{update.postedBy.name}</Tag>
+				<Tag color="red">{update.byDept?.name}</Tag>
+				<Tag color="cyan">{update.postedBy?.name}</Tag>
 				<Tag icon={<ClockCircleFilled />} color="lime">
 					6 Days Ago
 				</Tag>

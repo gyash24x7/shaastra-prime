@@ -1,22 +1,21 @@
-import { Drawer } from "antd";
-import { DrawerProps } from "antd/lib/drawer";
-import React, { useContext } from "react";
-import { DrawerContext } from "../../utils/context";
+import { Button, Drawer, Typography } from "antd";
+import React, { Fragment, useContext } from "react";
+import { DrawerContext, DrawerPropsExtended } from "../../utils/context";
+import { SwitchingIcon } from "./SwitchingIcon";
 
 interface CommonDrawerProps {
 	component?: JSX.Element;
 	visible: boolean;
-	drawerProps?: DrawerProps;
+	drawerProps?: DrawerPropsExtended;
 	childDrawerComponent?: JSX.Element;
 	childDrawerVisible?: boolean;
-	childDrawerProps?: DrawerProps;
+	childDrawerProps?: DrawerPropsExtended;
 }
 
-export const CommonDrawer = (props: CommonDrawerProps) => {
-	const { setDrawerComponent, setChildDrawerComponent } = useContext(
-		DrawerContext!
-	)!;
+const { Title } = Typography;
 
+export const CommonDrawer = (props: CommonDrawerProps) => {
+	const { toggleDrawer } = useContext(DrawerContext)!;
 	return (
 		<Drawer
 			width="50vw"
@@ -24,7 +23,19 @@ export const CommonDrawer = (props: CommonDrawerProps) => {
 			visible={props.visible}
 			closable={false}
 			maskClosable
-			onClose={() => setDrawerComponent(undefined)}
+			title={
+				<Fragment>
+					<div className="drawer-header">
+						<Title level={4}>{props.drawerProps?.title}</Title>
+						<Button
+							icon={<SwitchingIcon name="close" className="editor-icon" />}
+							className="editor-btn"
+							onClick={() => toggleDrawer()}
+						/>
+					</div>
+					{props.drawerProps?.extra}
+				</Fragment>
+			}
 		>
 			{props.component}
 			<Drawer
@@ -32,7 +43,19 @@ export const CommonDrawer = (props: CommonDrawerProps) => {
 				visible={props.childDrawerVisible}
 				closable={false}
 				maskClosable
-				onClose={() => setChildDrawerComponent(undefined)}
+				title={
+					<Fragment>
+						<div className="drawer-header">
+							<Title level={4}>{props.drawerProps?.title}</Title>
+							<Button
+								icon={<SwitchingIcon name="close" className="editor-icon" />}
+								className="editor-btn"
+								onClick={() => toggleDrawer()}
+							/>
+						</div>
+						{props.drawerProps?.extra}
+					</Fragment>
+				}
 			>
 				{props.childDrawerComponent}
 			</Drawer>

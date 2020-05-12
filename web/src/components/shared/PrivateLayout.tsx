@@ -3,7 +3,12 @@ import { DrawerProps } from "antd/lib/drawer";
 import { ModalProps } from "antd/lib/modal";
 import React, { useState } from "react";
 import { useLocation } from "react-use";
-import { DrawerContext, ModalContext } from "../../utils/context";
+import {
+	DrawerContext,
+	ModalContext,
+	ToggleDrawerOptions,
+	ToggleModalOptions
+} from "../../utils/context";
 import { PrimaryNav } from "../Navigation/PrimaryNav";
 import { getSecondaryNav } from "../Navigation/SecondaryNav";
 import { CommonDrawer } from "./CommonDrawer";
@@ -16,29 +21,53 @@ interface PrivateLayoutProps {
 }
 
 export const PrivateLayout = (props: PrivateLayoutProps) => {
-	const [drawerComponent, setDrawerComponent] = useState<JSX.Element>();
-	const [childDrawerComponent, setChildDrawerComponent] = useState<
-		JSX.Element
-	>();
+	const [drawerComponent, setDrawerComponent] = useState(<div />);
+	const [drawerProps, setDrawerProps] = useState<DrawerProps>({});
+	const [isDrawerVisible, setIsDrawerVisible] = useState(false);
+
+	const [childDrawerProps, setChildDrawerProps] = useState<DrawerProps>({});
+	const [isChildDrawerVisible, setIsChildDrawerVisible] = useState(false);
+	const [childDrawerComponent, setChildDrawerComponent] = useState(<div />);
+
 	const [modalComponent, setModalComponent] = useState<JSX.Element>();
 	const [modalProps, setModalProps] = useState<ModalProps>({});
-	const [drawerProps, setDrawerProps] = useState<DrawerProps>({});
-	const [childDrawerProps, setChildDrawerProps] = useState<DrawerProps>({});
+	const [isModalVisible, setIsModalVisible] = useState(false);
+
 	const { pathname } = useLocation();
 	const SecondaryNav = getSecondaryNav(pathname!);
 
+	const toggleModal = (options?: ToggleModalOptions) => {
+		setIsModalVisible(!!options);
+		if (options) {
+			setModalProps(options.props);
+			setModalComponent(options.component);
+		}
+	};
+
+	const toggleDrawer = (options?: ToggleDrawerOptions) => {
+		if (!!options) {
+			if (isDrawerVisible) {
+				setIsChildDrawerVisible(true);
+				setChildDrawerProps(options.props);
+				setChildDrawerComponent(options.component);
+			} else {
+				setIsDrawerVisible(true);
+				setDrawerProps(options.props);
+				setDrawerComponent(options.component);
+			}
+		} else {
+			if (isChildDrawerVisible) {
+				setIsChildDrawerVisible(false);
+			} else {
+				setIsDrawerVisible(false);
+			}
+		}
+	};
+
 	return (
 		<div className="private-container">
-			<DrawerContext.Provider
-				value={{
-					setDrawerComponent,
-					setDrawerProps,
-					setChildDrawerComponent,
-					setChildDrawerProps,
-					isDrawerOpen: !!drawerComponent
-				}}
-			>
-				<ModalContext.Provider value={{ setModalComponent, setModalProps }}>
+			<DrawerContext.Provider value={{ toggleDrawer }}>
+				<ModalContext.Provider value={{ toggleModal }}>
 					<Layout>
 						<Sider width="270" collapsedWidth="0">
 							<SecondaryNav />
@@ -50,16 +79,16 @@ export const PrivateLayout = (props: PrivateLayoutProps) => {
 					<PrimaryNav />
 					<CommonModal
 						component={modalComponent}
-						visible={!!modalComponent}
-						onCancel={() => setModalComponent(undefined)}
+						visible={!!isModalVisible}
+						onCancel={() => toggleModal()}
 						modalProps={modalProps}
 					/>
 					<CommonDrawer
 						component={drawerComponent}
-						visible={!!drawerComponent}
+						visible={isDrawerVisible}
 						drawerProps={drawerProps}
 						childDrawerComponent={childDrawerComponent}
-						childDrawerVisible={!!childDrawerComponent}
+						childDrawerVisible={isChildDrawerVisible}
 						childDrawerProps={childDrawerProps}
 					/>
 				</ModalContext.Provider>

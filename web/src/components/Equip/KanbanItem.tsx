@@ -3,26 +3,22 @@ import { Card, Space, Tag, Typography } from "antd";
 import React, { useContext } from "react";
 import { statusColor } from ".";
 import { DrawerContext } from "../../utils/context";
-import { CommonDrawerTitle } from "../shared/CommonDrawerTitle";
 import { TaskDescription } from "./TaskDescription";
 
 const { Title } = Typography;
 
 export const KanbanItem = (props: any) => {
-	const { setDrawerComponent, setDrawerProps } = useContext(DrawerContext)!;
+	const { toggleDrawer } = useContext(DrawerContext)!;
 
 	const handleItemClick = () => {
-		setDrawerProps({
-			title: (
-				<CommonDrawerTitle
-					title={props.task.brief}
-					onClose={() => setDrawerComponent(undefined)}
-				/>
-			),
-			className: "no-padding-drawer",
-			width: "75vw"
+		toggleDrawer({
+			props: {
+				title: props.task.brief,
+				className: "no-padding-drawer",
+				width: "75vw"
+			},
+			component: <TaskDescription data={props.task} />
 		});
-		setDrawerComponent!(<TaskDescription data={props.task} />);
 	};
 
 	return (
