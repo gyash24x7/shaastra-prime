@@ -1,6 +1,6 @@
 import { Layout, List, ListItem, Text } from "@ui-kitten/components";
 import React from "react";
-import { Image, StatusBar } from "react-native";
+import { StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getIconNameValue } from "../../utils";
 import globalStyles from "../../utils/globalStyles";
@@ -14,11 +14,7 @@ export const UserDetails = () => {
 			<StatusBar backgroundColor="#141414" />
 			<Layout style={globalStyles.wrapper}>
 				<Layout style={[styles.profileCard]}>
-					<Image
-						source={{ uri: "https://source.unsplash.com/featured/600x300" }}
-						style={{ resizeMode: "cover", height: 200, width: "100%" }}
-					/>
-					<UserCard />
+					<UserCard size="large" />
 					<List
 						data={[
 							{ label: "Mobile", value: "7388378834" },
@@ -28,8 +24,10 @@ export const UserDetails = () => {
 						]}
 						renderItem={({ item }: any) => (
 							<ListItem
-								title={() => (
-									<Text style={[globalStyles.heading]}>{item.label}</Text>
+								title={(props) => (
+									<Text style={[props?.style, globalStyles.heading]}>
+										{item.label}
+									</Text>
 								)}
 								style={[{ marginTop: 2 }]}
 								accessoryRight={() => (

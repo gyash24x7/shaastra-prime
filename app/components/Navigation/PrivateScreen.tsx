@@ -7,11 +7,9 @@ import {
 	DrawerGroup,
 	DrawerItem,
 	IndexPath,
-	Layout,
 	Text
 } from "@ui-kitten/components";
 import React from "react";
-import { Image } from "react-native";
 import { getIconNameValue } from "../../utils";
 import globalStyles from "../../utils/globalStyles";
 import { ChatScreen } from "../Chat";
@@ -19,6 +17,7 @@ import { EquipScreen } from "../Equip";
 import { FinbooksScreen } from "../Finbooks";
 import { HomeScreen } from "../Home";
 import { SwitchingIcon } from "../Shared/SwitchingIcon";
+import { UserCard } from "../Shared/UserCard";
 
 const { Navigator, Screen } = createDrawerNavigator();
 
@@ -36,16 +35,10 @@ export const PrivateScreen = () => {
 const DrawerContent = ({ state, navigation }: DrawerContentComponentProps) => {
 	return (
 		<Drawer
-			header={() => (
-				<Layout style={[globalStyles.drawerLogoContainer]}>
-					<Image
-						source={require("../../assets/images/LightLogo.png")}
-						style={{ width: 186, height: 108 }}
-					/>
-				</Layout>
-			)}
+			header={() => <UserCard size="small" />}
 			selectedIndex={new IndexPath(state.index, 0)}
 			onSelect={(index) => navigation.navigate(state.routeNames[index.row])}
+			style={globalStyles.drawerNavigation}
 		>
 			<DrawerGroup
 				title={(props) => (

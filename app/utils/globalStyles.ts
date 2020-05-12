@@ -14,23 +14,12 @@ export default StyleSheet.create({
 		height: "100%"
 	},
 
-	drawerLogoContainer: {
-		display: "flex",
-		justifyContent: "center",
-		height: 160,
-		alignItems: "center",
-		width: "100%",
-		borderBottomColor: "#303030",
-		borderBottomWidth: 2
-	},
-
 	tabIcon: {
-		margin: 10
+		margin: 5
 	},
 
 	wrapper: {
 		display: "flex",
-		justifyContent: "center",
 		alignItems: "center",
 		height: "100%",
 		backgroundColor: "#000000",
@@ -41,6 +30,12 @@ export default StyleSheet.create({
 		borderBottomColor: "#303030",
 		borderBottomWidth: 2,
 		height: 70
+	},
+
+	drawerNavigation: {
+		backgroundColor: "#141414",
+		borderRightColor: "#303030",
+		borderRightWidth: 2
 	},
 
 	heading: {
