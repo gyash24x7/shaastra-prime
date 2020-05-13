@@ -1,5 +1,6 @@
 import { Card } from "antd";
 import React from "react";
+import { useNewMessageSubscription } from "../../generated";
 import { stringGen } from "../../utils/lorem";
 import { Message } from "./Message";
 
@@ -11,6 +12,12 @@ const defaultMessages = [...Array(1)].map(() => ({
 }));
 
 export const MessageList = () => {
+	const { data } = useNewMessageSubscription();
+
+	if (data?.newMessage) {
+		console.log(data.newMessage);
+	}
+
 	return (
 		<Card.Grid className="messages-container" hoverable={false}>
 			{defaultMessages.map((message) => (

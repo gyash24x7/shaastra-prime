@@ -15,6 +15,7 @@ interface MessageInputProps {
 
 export const MessageInput = ({ channelId }: MessageInputProps) => {
 	const [content, setContent] = useState("");
+	const [editorReset, setEditorReset] = useState(false);
 
 	const [createMessage, { error, loading }] = useCreateMessageMutation({
 		refetchQueries: [refetchGetMessagesQuery({ channelId })]
@@ -22,7 +23,9 @@ export const MessageInput = ({ channelId }: MessageInputProps) => {
 
 	const handleSubmit = () => {
 		if (content && !EDITOR_NULL_VALUES.includes(content)) {
-			createMessage({ variables: { channelId, content, media: [] } });
+			createMessage({ variables: { channelId, content, media: [] } }).then(() =>
+				setEditorReset(true)
+			);
 		} else {
 			console.log("here!");
 		}
@@ -54,6 +57,8 @@ export const MessageInput = ({ channelId }: MessageInputProps) => {
 				</Space>
 			}
 			setSerializedValue={setContent}
+			reset={editorReset}
+			setReset={setEditorReset}
 		/>
 	);
 };

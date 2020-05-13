@@ -4,6 +4,7 @@ import connectRedis from "connect-redis";
 import dotenv from "dotenv";
 import express from "express";
 import session from "express-session";
+import http from "http";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { resolvers } from "./resolvers";
@@ -16,7 +17,12 @@ const startServer = async () => {
 	const schema = await buildSchema({ resolvers, authChecker } as any);
 	const server = new ApolloServer({
 		schema,
-		context: ({ req, res }) => ({ req, res } as GraphQLContext)
+		context: ({ req, res }) => ({ req, res } as GraphQLContext),
+		subscriptions: {
+			onConnect(val) {
+				console.log(val);
+			}
+		}
 	});
 
 	const app = express();
@@ -50,7 +56,10 @@ const startServer = async () => {
 		cors: { credentials: true, origin: "http://localhost:3000" }
 	});
 
-	app.listen(process.env.PORT || 8000, async () => {
+	const httpServer = http.createServer(app);
+	server.installSubscriptionHandlers(httpServer);
+
+	httpServer.listen(process.env.PORT || 8000, async () => {
 		console.log("Server running on localhost:8000!");
 	});
 };

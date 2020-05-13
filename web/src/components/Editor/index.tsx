@@ -1,5 +1,5 @@
 import { isHotkey } from "is-hotkey";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { createEditor, Node } from "slate";
 import { withHistory } from "slate-history";
 import {
@@ -25,20 +25,26 @@ interface EditorProps {
 	style?: React.CSSProperties;
 	placeholder?: string;
 	setSerializedValue: (val: string) => void;
+	reset?: boolean;
+	setReset?: (val: boolean) => void;
 }
 
+const defaultEditorValue: Node[] = [
+	{
+		type: "paragraph",
+		children: [{ text: "" }]
+	}
+];
+
 export default (props: EditorProps) => {
+	const { setReset, reset } = props;
+
 	const editor = useMemo(
 		() => withLinks(withHistory(withReact(createEditor()))),
 		[]
 	);
 
-	const [value, setValue] = useState<Node[]>([
-		{
-			type: "paragraph",
-			children: [{ text: "" }]
-		}
-	]);
+	const [value, setValue] = useState(defaultEditorValue);
 
 	const renderLeaf = useCallback(
 		(props: RenderLeafProps) => <Leaf {...props} />,
@@ -49,6 +55,13 @@ export default (props: EditorProps) => {
 		(props: RenderElementProps) => <Element {...props} />,
 		[]
 	);
+
+	useEffect(() => {
+		if (reset) {
+			setValue(defaultEditorValue);
+			setReset && setReset(false);
+		}
+	}, [reset, setReset]);
 
 	return (
 		<div className="editor-wrapper">
