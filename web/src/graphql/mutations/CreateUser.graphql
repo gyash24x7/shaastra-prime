@@ -15,20 +15,5 @@ mutation CreateUser(
 			mobile: $mobile
 			departmentId: $departmentId
 		}
-	) {
-		id
-		name
-		email
-		rollNumber
-		mobile
-		role
-		profilePic
-		coverPic
-		about
-		verified
-		department {
-			id
-			name
-		}
-	}
+	)
 }

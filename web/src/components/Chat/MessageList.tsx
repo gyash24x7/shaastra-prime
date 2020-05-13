@@ -1,5 +1,6 @@
 import { Card } from "antd";
 import React from "react";
+import { useParams } from "react-router-dom";
 import { useNewMessageSubscription } from "../../generated";
 import { stringGen } from "../../utils/lorem";
 import { Message } from "./Message";
@@ -12,10 +13,17 @@ const defaultMessages = [...Array(1)].map(() => ({
 }));
 
 export const MessageList = () => {
-	const { data } = useNewMessageSubscription();
+	const { channelId } = useParams();
+	const { data, error } = useNewMessageSubscription({
+		variables: { channelId: channelId! }
+	});
 
 	if (data?.newMessage) {
 		console.log(data.newMessage);
+	}
+
+	if (error) {
+		console.log(error);
 	}
 
 	return (

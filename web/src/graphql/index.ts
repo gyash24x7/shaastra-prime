@@ -4,12 +4,19 @@ import { WebSocketLink } from "@apollo/link-ws";
 
 const wsLink = new WebSocketLink({
 	uri: "ws://localhost:8000",
-	options: { reconnect: true }
+	options: {
+		reconnect: true,
+		connectionParams: {
+			Authorization: `Bearer ${localStorage.getItem("authToken")}`
+		}
+	}
 });
 
 const httpLink = new HttpLink({
 	uri: "http://localhost:8000",
-	credentials: "include"
+	headers: {
+		authorization: `Bearer ${localStorage.getItem("authToken")}`
+	}
 });
 
 const splitLink = split(

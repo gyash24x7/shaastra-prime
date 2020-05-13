@@ -21,7 +21,7 @@ export const SignupScreen = () => {
 	}
 
 	if (data?.createUser) {
-		localStorage.setItem("user", JSON.stringify(data.createUser));
+		localStorage.setItem("authToken", data.createUser);
 		return <Redirect to="/" />;
 	}
 

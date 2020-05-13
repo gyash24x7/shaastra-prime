@@ -233,6 +233,12 @@ export type Vendor = {
   invoices: Array<Invoice>;
 };
 
+export type GetMessagesInput = {
+  channelId: Scalars['String'];
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+};
+
 export type Message = {
    __typename?: 'Message';
   id: Scalars['ID'];
@@ -253,23 +259,17 @@ export enum MessageType {
   InvoiceActivity = 'INVOICE_ACTIVITY'
 }
 
-export type GetMessagesInput = {
-  channelId: Scalars['String'];
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-};
-
 export type Mutation = {
    __typename?: 'Mutation';
   addUserToChannel: Scalars['Boolean'];
   createChannel: Scalars['Boolean'];
   deleteChannel: Scalars['Boolean'];
   updateChannel: Scalars['Boolean'];
-  addsubDepartment: Scalars['Boolean'];
+  addSubDepartment: Scalars['Boolean'];
   createDepartment: Department;
-  createUser: User;
+  createUser: Scalars['String'];
   forgotPassword: Scalars['Boolean'];
-  login?: Maybe<User>;
+  login?: Maybe<Scalars['String']>;
   logout: Scalars['Boolean'];
   sendPasswordOTP: Scalars['Boolean'];
   uploadCoverPic: Scalars['Boolean'];
@@ -290,7 +290,7 @@ export type Mutation = {
 
 
 export type MutationAddUserToChannelArgs = {
-  data: AddUserToChannelInput;
+  data: AddUsersToChannelInput;
 };
 
 
@@ -309,7 +309,7 @@ export type MutationUpdateChannelArgs = {
 };
 
 
-export type MutationAddsubDepartmentArgs = {
+export type MutationAddSubDepartmentArgs = {
   data: AddSubDepartmentInput;
 };
 
@@ -408,9 +408,9 @@ export type MutationCreateUpdateArgs = {
   data: CreateUpdateInput;
 };
 
-export type AddUserToChannelInput = {
+export type AddUsersToChannelInput = {
   channelId: Scalars['String'];
-  userId: Scalars['String'];
+  userIds: Array<Scalars['String']>;
 };
 
 export type CreateChannelInput = {
@@ -556,14 +556,7 @@ export type CreateUserMutationVariables = {
 
 export type CreateUserMutation = (
   { __typename?: 'Mutation' }
-  & { createUser: (
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name' | 'email' | 'rollNumber' | 'mobile' | 'role' | 'profilePic' | 'coverPic' | 'about' | 'verified'>
-    & { department: (
-      { __typename?: 'Department' }
-      & Pick<Department, 'id' | 'name'>
-    ) }
-  ) }
+  & Pick<Mutation, 'createUser'>
 );
 
 export type LoginMutationVariables = {
@@ -574,14 +567,7 @@ export type LoginMutationVariables = {
 
 export type LoginMutation = (
   { __typename?: 'Mutation' }
-  & { login?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
-    & { department: (
-      { __typename?: 'Department' }
-      & Pick<Department, 'name' | 'id'>
-    ) }
-  )> }
+  & Pick<Mutation, 'login'>
 );
 
 export type LogoutMutationVariables = {};
@@ -880,22 +866,7 @@ export type CreateUpdateMutationResult = ApolloReactCommon.MutationResult<Create
 export type CreateUpdateMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateUpdateMutation, CreateUpdateMutationVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($name: String!, $email: String!, $password: String!, $departmentId: String!, $rollNumber: String!, $mobile: String!) {
-  createUser(data: {name: $name, email: $email, password: $password, rollNumber: $rollNumber, mobile: $mobile, departmentId: $departmentId}) {
-    id
-    name
-    email
-    rollNumber
-    mobile
-    role
-    profilePic
-    coverPic
-    about
-    verified
-    department {
-      id
-      name
-    }
-  }
+  createUser(data: {name: $name, email: $email, password: $password, rollNumber: $rollNumber, mobile: $mobile, departmentId: $departmentId})
 }
     `;
 export type CreateUserMutationFn = ApolloReactCommon.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
@@ -930,14 +901,7 @@ export type CreateUserMutationResult = ApolloReactCommon.MutationResult<CreateUs
 export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
-  login(data: {email: $email, password: $password}) {
-    id
-    name
-    department {
-      name
-      id
-    }
-  }
+  login(data: {email: $email, password: $password})
 }
     `;
 export type LoginMutationFn = ApolloReactCommon.MutationFunction<LoginMutation, LoginMutationVariables>;

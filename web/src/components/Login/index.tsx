@@ -19,7 +19,8 @@ export const LoginScreen = () => {
 	if (error) return <ShowError />;
 
 	if (data?.login) {
-		localStorage.setItem("user", JSON.stringify(data.login));
+		console.log(data.login);
+		localStorage.setItem("authToken", data.login);
 		return <Redirect to="/verification" />;
 	}
 

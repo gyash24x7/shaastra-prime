@@ -2,9 +2,9 @@ import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { Arg, Mutation, Resolver } from "type-graphql";
-import mailjet from "utils/mailjet";
 import { CreateUserInput } from "../../inputs/User/CreateUser";
 import { prisma } from "../../prisma";
+import mailjet from "../../utils/mailjet";
 dotenv.config();
 
 @Resolver()
