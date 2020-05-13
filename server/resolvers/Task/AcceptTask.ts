@@ -9,11 +9,8 @@ export class AcceptTaskResolver {
 	@Mutation(() => Boolean)
 	async acceptTask(
 		@Arg("taskId") taskId: string,
-		@Ctx() { req }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const id = req.session!.userId;
-		const user = await prisma.user.findOne({ where: { id } });
-
 		const task = await prisma.task.update({
 			where: { id: taskId },
 			data: {
@@ -21,12 +18,12 @@ export class AcceptTaskResolver {
 				activity: {
 					create: {
 						type: TaskActivityType.IN_PROGRESS,
-						by: { connect: { id } },
-						description: `${user?.name} started working on the task.`
+						by: { connect: { id: user!.id } },
+						description: `${user!.name} started working on the task.`
 					}
 				}
 			},
-			include: { channels: { select: { id } } }
+			include: { channels: { select: { id: true } } }
 		});
 
 		Promise.all(
@@ -38,7 +35,7 @@ export class AcceptTaskResolver {
 							<p><strong>[TASK UPDATE: ${task.brief}]</strong></p>
 							<p>${user?.name} started working on the task.</p>`,
 						type: MessageType.TASK_UPDATE,
-						createdBy: { connect: { id } }
+						createdBy: { connect: { id: user!.id } }
 					}
 				})
 			)

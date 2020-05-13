@@ -1,14 +1,17 @@
+import dotenv from "dotenv";
 import { AuthChecker } from "type-graphql";
+import { GraphQLContext } from "utils";
+dotenv.config();
 
-import { GraphQLContext } from ".";
-import { prisma } from "../prisma";
-
-export const authChecker: AuthChecker<GraphQLContext> = async ({ context }) => {
-	const id = context.req.session!.userId;
-	if (!id) return false;
-
-	const user = await prisma.user.findOne({ where: { id } });
+export const authChecker: AuthChecker<GraphQLContext> = async (
+	{ context: { user } },
+	roles
+) => {
 	if (!user) return false;
 
-	return true;
+	if (roles.length === 0) return true;
+
+	if (roles.includes(user.role)) return true;
+
+	return false;
 };

@@ -1,17 +1,16 @@
 import bcrypt from "bcryptjs";
-import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+import { Arg, Mutation, Resolver } from "type-graphql";
+import mailjet from "utils/mailjet";
 import { CreateUserInput } from "../../inputs/User/CreateUser";
-import { User } from "../../models/User";
 import { prisma } from "../../prisma";
-import { GraphQLContext } from "../../utils";
+dotenv.config();
 
 @Resolver()
 export class CreateUserResolver {
-	@Mutation(() => User)
-	async createUser(
-		@Arg("data") { departmentId, ...data }: CreateUserInput,
-		@Ctx() { req }: GraphQLContext
-	) {
+	@Mutation(() => String)
+	async createUser(@Arg("data") { departmentId, ...data }: CreateUserInput) {
 		const password = await bcrypt.hash(data.password, 13);
 		const verificationOTP = Math.round(Math.random() * 1000000).toString();
 		const user = await prisma.user.create({
@@ -29,17 +28,28 @@ export class CreateUserResolver {
 			}
 		});
 
-		// const mailOptions = {
-		// 	from: "webops@shaastra.org",
-		// 	to: `${user.rollNumber.toLowerCase()}@smail.iitm.ac.in`,
-		// 	subject: "Verify Your Email | Shaastra Prime",
-		// 	html: `<p>Your verification code for Shaastra Prime is <strong>${verificationOTP}</strong> </p>`
-		// };
+		let token = "";
 
 		if (!!user) {
-			// await sendgrid.send(mailOptions);
-			req.session!.userId = user.id;
+			await mailjet.post("send", { version: "v3.1" }).request({
+				Messages: [
+					{
+						From: {
+							Email: "prime@shaastra.org",
+							Name: "Shaastra Prime Bot"
+						},
+						To: {
+							Email: `${user.rollNumber.toLowerCase()}@smail.iitm.ac.in`,
+							Name: user.name
+						},
+						Subject: "Complete Smail Verification | Shaastra Prime",
+						HTMLPart: `<p>You verification code is <strong>${verificationOTP}</strong></p>`
+					}
+				]
+			});
+			token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
 		}
-		return user;
+
+		return token;
 	}
 }

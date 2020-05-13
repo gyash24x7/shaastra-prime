@@ -4,9 +4,9 @@ import { prisma } from "../../prisma";
 
 @Resolver()
 export class AddSubDepartmentResolver {
-	@Authorized()
+	@Authorized(["CORE"])
 	@Mutation(() => Boolean)
-	async addsubDepartment(
+	async addSubDepartment(
 		@Arg("data") { subDeptName, deptId }: AddSubDepartmentInput
 	) {
 		let dept = await prisma.department.update({

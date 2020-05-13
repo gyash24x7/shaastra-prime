@@ -8,13 +8,12 @@ export class UploadCoverPicResolver {
 	@Mutation(() => Boolean)
 	async uploadCoverPic(
 		@Arg("coverPic") coverPic: string,
-		@Ctx() { req }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const id = req.session!.userId;
-		const user = await prisma.user.update({
-			where: { id },
+		const updatedUser = await prisma.user.update({
+			where: { id: user?.id },
 			data: { coverPic }
 		});
-		return !!user;
+		return !!updatedUser;
 	}
 }

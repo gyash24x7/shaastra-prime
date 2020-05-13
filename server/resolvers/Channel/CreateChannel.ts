@@ -9,16 +9,15 @@ export class CreateChannelResolver {
 	@Mutation(() => Boolean)
 	async createChannel(
 		@Arg("data") { members, name, description }: CreateChannelInput,
-		@Ctx() { req }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		let userId: string = req.session!.userId;
 		const channel = await prisma.channel.create({
 			data: {
 				name,
 				type: ChannelType.GROUP,
 				description,
 				members: { connect: members.map((id) => ({ id })) },
-				createdBy: { connect: { id: userId } }
+				createdBy: { connect: { id: user!.id } }
 			}
 		});
 

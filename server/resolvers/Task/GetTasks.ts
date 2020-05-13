@@ -7,10 +7,7 @@ import { GraphQLContext } from "../../utils";
 export class GetTasksResolver {
 	@Authorized()
 	@Query(() => [Task])
-	async getTasks(@Ctx() { req }: GraphQLContext) {
-		const id = req.session!.userId;
-		const user = await prisma.user.findOne({ where: { id } });
-
+	async getTasks(@Ctx() { user }: GraphQLContext) {
 		switch (user?.role) {
 			case "COCAD":
 			case "COCAS":
@@ -27,7 +24,7 @@ export class GetTasksResolver {
 
 			default:
 				const coordTasks = await prisma.user
-					.findOne({ where: { id } })
+					.findOne({ where: { id: user?.id } })
 					.tasksAssigned({ orderBy: { createdAt: "desc" } });
 				return coordTasks;
 		}

@@ -7,11 +7,9 @@ import { GraphQLContext } from "../../utils";
 export class GetChannelsResolver {
 	@Authorized()
 	@Query(() => [Channel])
-	async getChannels(@Ctx() { req }: GraphQLContext) {
-		const id = req.session!.userId;
-
+	async getChannels(@Ctx() { user }: GraphQLContext) {
 		const channels = await prisma.user
-			.findOne({ where: { id } })
+			.findOne({ where: { id: user!.id } })
 			.channels({ where: { archived: false } });
 
 		return channels;

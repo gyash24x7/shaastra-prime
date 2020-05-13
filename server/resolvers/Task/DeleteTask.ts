@@ -9,15 +9,11 @@ export class DeleteTaskResolver {
 	@Mutation(() => Boolean)
 	async deleteTask(
 		@Arg("taskId") taskId: string,
-		@Ctx() { req }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
 		const task = await prisma.task.delete({
 			where: { id: taskId },
 			include: { channels: { select: { id: true } } }
-		});
-
-		const user = await prisma.user.findOne({
-			where: { id: req.session!.userId }
 		});
 
 		Promise.all(

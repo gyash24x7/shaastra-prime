@@ -9,11 +9,8 @@ export class CompleteTaskResolver {
 	@Mutation(() => Boolean)
 	async completeTask(
 		@Arg("taskId") taskId: string,
-		@Ctx() { req }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const id = req.session!.userId;
-		const user = await prisma.user.findOne({ where: { id } });
-
 		const task = await prisma.task.update({
 			where: { id: taskId },
 			data: {
@@ -21,7 +18,7 @@ export class CompleteTaskResolver {
 				activity: {
 					create: {
 						type: TaskActivityType.COMPLETED,
-						by: { connect: { id } },
+						by: { connect: { id: user?.id } },
 						description: `${user?.name} marked the task as completed.`
 					}
 				}
@@ -38,7 +35,7 @@ export class CompleteTaskResolver {
 							<p><strong>[TASK UPDATE: ${task.brief}]</strong></p>
 							<p>${user?.name} marked the task as completed..</p>`,
 						type: MessageType.TASK_UPDATE,
-						createdBy: { connect: { id } }
+						createdBy: { connect: { id: user?.id } }
 					}
 				})
 			)

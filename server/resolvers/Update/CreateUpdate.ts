@@ -9,17 +9,14 @@ export class CreateUpdateResolver {
 	@Mutation(() => Boolean)
 	async createUpdate(
 		@Arg("data") { brief, subject, content }: CreateUpdateInput,
-		@Ctx() { req }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const id = req.session!.userId;
-		const user = await prisma.user.findOne({ where: { id } });
-
 		const update = await prisma.update.create({
 			data: {
 				brief,
 				subject,
 				content,
-				postedBy: { connect: { id } },
+				postedBy: { connect: { id: user?.id } },
 				byDept: { connect: { id: user?.deptId } }
 			}
 		});

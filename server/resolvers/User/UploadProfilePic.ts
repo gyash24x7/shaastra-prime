@@ -7,13 +7,12 @@ export class UploadProfilePicResolver {
 	@Mutation(() => Boolean)
 	async uploadProfilePic(
 		@Arg("profilePic") profilePic: string,
-		@Ctx() { req }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const id = req.session!.userId;
-		const user = await prisma.user.update({
-			where: { id },
+		const updatedUser = await prisma.user.update({
+			where: { id: user?.id },
 			data: { profilePic }
 		});
-		return !!user;
+		return !!updatedUser;
 	}
 }

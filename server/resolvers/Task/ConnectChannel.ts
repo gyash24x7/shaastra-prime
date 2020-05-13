@@ -10,12 +10,11 @@ export class ConnectChannelsResolver {
 	@Mutation(() => Boolean)
 	async connectChannels(
 		@Arg("data") { channelIds, taskId }: ConnectChannelsInput,
-		@Ctx() { req }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const [user, channels] = await Promise.all([
-			prisma.user.findOne({ where: { id: req.session!.userId } }),
-			prisma.channel.findMany({ where: { id: { in: channelIds } } })
-		]);
+		const channels = await prisma.channel.findMany({
+			where: { id: { in: channelIds } }
+		});
 
 		const task = await prisma.task.update({
 			where: { id: taskId },

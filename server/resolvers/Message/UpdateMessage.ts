@@ -10,16 +10,15 @@ export class UpdateMessageResolver {
 	@Mutation(() => Boolean)
 	async updateMessage(
 		@Arg("data") { messageId, starred, like }: UpdateMessageInput,
-		@Ctx() { req }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const id = req.session!.userId;
 		const data: MessageUpdateInput = {
 			starred,
 			likedBy:
 				typeof like !== undefined
 					? like
-						? { connect: { id } }
-						: { disconnect: { id } }
+						? { connect: { id: user!.id } }
+						: { disconnect: { id: user!.id } }
 					: undefined
 		};
 

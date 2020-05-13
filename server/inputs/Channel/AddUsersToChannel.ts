@@ -1,7 +1,7 @@
 import { Field, InputType } from "type-graphql";
 
 @InputType()
-export class AddUserToChannelInput {
+export class AddUsersToChannelInput {
 	@Field() channelId: string;
-	@Field() userId: string;
+	@Field(() => [String]) userIds: string[];
 }

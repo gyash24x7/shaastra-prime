@@ -10,21 +10,19 @@ export class UpdateChannelResolver {
 	@Mutation(() => Boolean)
 	async updateChannel(
 		@Arg("data") { description, channelId, archived }: UpdateChannelInput,
-		@Ctx() { req }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const { id, name } = (await prisma.user.findOne({
-			where: { id: req.session!.userId }
-		}))!;
-
 		let updateData: ChannelUpdateInput = {};
 		let messageContent: string = "";
 
 		if (typeof archived !== undefined) {
 			updateData = { archived };
-			messageContent = `${name} archived this channel.`;
+			messageContent = `${user!.name} archived this channel.`;
 		} else {
 			updateData = { description };
-			messageContent = `${name} changed the Channel Description. Click to View.`;
+			messageContent = `${
+				user!.name
+			} changed the Channel Description. Click to View.`;
 		}
 
 		const channel = await prisma.channel.update({
@@ -35,7 +33,7 @@ export class UpdateChannelResolver {
 					create: {
 						type: MessageType.SYSTEM,
 						content: messageContent,
-						createdBy: { connect: { id } }
+						createdBy: { connect: { id: user!.id } }
 					}
 				}
 			}

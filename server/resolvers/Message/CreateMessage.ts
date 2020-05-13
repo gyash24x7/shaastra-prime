@@ -14,27 +14,24 @@ import { getMediaType, GraphQLContext } from "../../utils";
 
 @Resolver()
 export class CreateMessageResolver {
-	private autoIncrement: number = 0;
-
 	@Authorized()
 	@Mutation(() => Boolean)
 	async createMessage(
 		@Arg("data") { channelId, content, media, mediaType }: CreateMessageInput,
-		@Ctx() { req }: GraphQLContext,
+		@Ctx() { user }: GraphQLContext,
 		@PubSub() pubsub: PubSubEngine
 	) {
-		const id = req.session!.userId;
 		let message = await prisma.message.create({
 			data: {
 				channel: { connect: { id: channelId } },
-				createdBy: { connect: { id } },
+				createdBy: { connect: { id: user!.id } },
 				content,
 				type: mediaType ? MessageType.MEDIA : MessageType.TEXT,
 				media: {
 					create: media.map((url) => ({
 						url,
 						type: getMediaType(mediaType!),
-						uploadedBy: { connect: { id } }
+						uploadedBy: { connect: { id: user!.id } }
 					}))
 				}
 			}

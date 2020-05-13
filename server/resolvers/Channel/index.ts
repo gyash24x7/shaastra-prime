@@ -1,4 +1,4 @@
-import { AddUserToChannelResolver } from "./AddUserToChannel";
+import { AddUsersToChannelResolver } from "./AddUsersToChannel";
 import { CreateChannelResolver } from "./CreateChannel";
 import { DeleteChannelResolver } from "./DeleteChannel";
 import { ChannelFieldResolvers } from "./FieldResolvers";
@@ -10,7 +10,7 @@ export default [
 	CreateChannelResolver,
 	GetChannelsResolver,
 	ChannelFieldResolvers,
-	AddUserToChannelResolver,
+	AddUsersToChannelResolver,
 	DeleteChannelResolver,
 	UpdateChannelResolver,
 	GetChannelDetailsResolver

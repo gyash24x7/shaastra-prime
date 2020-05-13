@@ -12,23 +12,20 @@ export class CreateTaskResolver {
 	async createTask(
 		@Arg("data")
 		{ brief, deadline, details, forDeptId, channelIds }: CreateTaskInput,
-		@Ctx() { req }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const id = req.session!.userId;
-		const user = await prisma.user.findOne({ where: { id } });
-
 		const task = await prisma.task.create({
 			data: {
 				brief,
 				deadline: moment(deadline, "DD/MM/YYYY").toDate(),
 				details,
 				forDept: { connect: { id: forDeptId } },
-				createdBy: { connect: { id } },
+				createdBy: { connect: { id: user?.id } },
 				byDept: { connect: { id: user?.deptId } },
 				activity: {
 					create: {
 						type: TaskActivityType.CREATED,
-						by: { connect: { id } },
+						by: { connect: { id: user?.id } },
 						description: `${user?.name} created the task.`
 					}
 				},
@@ -47,7 +44,7 @@ export class CreateTaskResolver {
 							<p>${user?.name} created the task.</p>
 						`,
 						type: MessageType.TASK_UPDATE,
-						createdBy: { connect: { id } }
+						createdBy: { connect: { id: user?.id } }
 					}
 				})
 			)

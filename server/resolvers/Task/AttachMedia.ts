@@ -10,25 +10,22 @@ export class AttachMediaToTaskResolver {
 	@Mutation(() => Boolean)
 	async attachMediaToTask(
 		@Arg("data") { taskId, urls }: AttachMediaToTaskInput,
-		@Ctx() { req }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const id = req.session!.userId;
-		const user = await prisma.user.findOne({ where: { id } });
-
 		const task = await prisma.task.update({
 			where: { id: taskId },
 			data: {
 				media: {
 					create: urls.map((url) => ({
 						url,
-						uploadedBy: { connect: { id } },
+						uploadedBy: { connect: { id: user?.id } },
 						type: MediaType.IMAGE
 					}))
 				},
 				activity: {
 					create: {
 						description: `${user?.name} attached ${urls.length} media files to this task.`,
-						by: { connect: { id } },
+						by: { connect: { id: user?.id } },
 						type: TaskActivityType.ATTACH_MEDIA
 					}
 				}
@@ -45,7 +42,7 @@ export class AttachMediaToTaskResolver {
 							<p><strong>[TASK UPDATE: ${task.brief}]</strong></p>
 							<p>${user?.name} attached ${urls.length} media files to this task.</p>`,
 						type: MessageType.TASK_UPDATE,
-						createdBy: { connect: { id } }
+						createdBy: { connect: { id: user?.id } }
 					}
 				})
 			)

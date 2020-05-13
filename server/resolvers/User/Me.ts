@@ -1,15 +1,13 @@
+import dotenv from "dotenv";
 import { Ctx, Query, Resolver } from "type-graphql";
 import { User } from "../../models/User";
-import { prisma } from "../../prisma";
 import { GraphQLContext } from "../../utils";
+dotenv.config();
 
 @Resolver()
 export class MeResolver {
 	@Query(() => User, { nullable: true })
-	async me(@Ctx() { req }: GraphQLContext) {
-		const id = req.session!.userId;
-		if (!id) return null;
-
-		return prisma.user.findOne({ where: { id } });
+	async me(@Ctx() { user }: GraphQLContext) {
+		return user;
 	}
 }

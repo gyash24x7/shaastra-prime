@@ -10,13 +10,11 @@ export class AssignTaskResolver {
 	@Mutation(() => Boolean)
 	async assignTask(
 		@Arg("data") { taskId, assignedTo }: AssignTaskInput,
-		@Ctx() { req }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const id = req.session!.userId;
-		const [user, assignedUser] = await Promise.all([
-			prisma.user.findOne({ where: { id } }),
-			prisma.user.findMany({ where: { id: { in: assignedTo } } })
-		]);
+		const assignedUsers = await prisma.user.findMany({
+			where: { id: { in: assignedTo } }
+		});
 
 		const task = await prisma.task.update({
 			where: { id: taskId },
@@ -26,10 +24,10 @@ export class AssignTaskResolver {
 				activity: {
 					create: {
 						type: TaskActivityType.ASSIGNED,
-						by: { connect: { id } },
+						by: { connect: { id: user?.id } },
 						description: `${
 							user?.name
-						} assigned the task to ${assignedUser?.map(
+						} assigned the task to ${assignedUsers?.map(
 							(user) => user.name + ", "
 						)}`
 					}
@@ -49,10 +47,10 @@ export class AssignTaskResolver {
 							<p><strong>[TASK UPDATE: ${task.brief}]</strong></p>
 							<p>
 								${user?.name} assigned the task to
-								${assignedUser?.map(({ name }) => name + ", ")}
+								${assignedUsers?.map(({ name }) => name + ", ")}
 							</p>`,
 						type: MessageType.TASK_UPDATE,
-						createdBy: { connect: { id } }
+						createdBy: { connect: { id: user?.id } }
 					}
 				})
 			)

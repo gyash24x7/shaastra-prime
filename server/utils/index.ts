@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { User } from "@prisma/client";
 import { Stream } from "stream";
 
 export enum UserRole {
@@ -10,8 +10,7 @@ export enum UserRole {
 }
 
 export interface GraphQLContext {
-	req: Request;
-	res: Response;
+	user: User | null;
 }
 
 export enum MediaType {
