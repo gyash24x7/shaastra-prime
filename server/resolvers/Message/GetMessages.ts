@@ -10,12 +10,12 @@ export class GetMessagesResolver {
 	async getMessages(@Arg("data") { channelId, skip, first }: GetMessagesInput) {
 		const messageCount = await prisma.message.count({ where: { channelId } });
 
-		const messages = await prisma.channel
-			.findOne({ where: { id: channelId } })
-			.messages({
-				skip: messageCount - (skip || 1) * (first || 10),
-				first: first || 10
-			});
+		const messages = await prisma.message.findMany({
+			where: {
+				channelId
+			},
+			orderBy: { createdAt: "desc" }
+		});
 
 		return messages;
 	}

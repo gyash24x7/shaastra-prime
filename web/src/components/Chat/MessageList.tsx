@@ -1,5 +1,5 @@
 import { Card } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	GetMessagesDocument,
 	useGetMessagesQuery,
@@ -23,14 +23,30 @@ export const MessageList = ({ channelId }: MessageListProps) => {
 				query: GetMessagesDocument,
 				variables: { channelId },
 				data: {
-					getMessages: data?.getMessages.concat(
-						subscriptionData.data!.newMessage
-					)
+					getMessages: [subscriptionData.data?.newMessage, ...data!.getMessages]
 				}
 			});
 		},
 		variables: { channelId }
 	});
+
+	const scrollToBottom = () => {
+		const container = document.querySelector(".messages-container");
+		if (container) {
+			const { clientHeight, scrollTop, scrollHeight } = container;
+			const newMessage = container.children[container.children.length - 1];
+			if (
+				clientHeight + scrollTop + 2 * newMessage.clientHeight >=
+				scrollHeight
+			) {
+				container.scrollTop = container.scrollHeight;
+			}
+		}
+	};
+
+	useEffect(() => {
+		scrollToBottom();
+	}, [data]);
 
 	if (error) {
 		console.log(error);

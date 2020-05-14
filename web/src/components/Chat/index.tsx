@@ -21,20 +21,6 @@ export const ChatScreen = () => {
 		variables: { channelId: channelId || "" }
 	});
 
-	// const scrollToBottom = () => {
-	// 	const container = document.querySelector(".messages-container");
-	// 	if (container) {
-	// 		const { clientHeight, scrollTop, scrollHeight } = container;
-	// 		const newMessage = container.children[container.children.length - 1];
-	// 		if (
-	// 			clientHeight + scrollTop + 2 * newMessage.clientHeight >=
-	// 			scrollHeight
-	// 		) {
-	// 			container.scrollTop = container.scrollHeight;
-	// 		}
-	// 	}
-	// };
-
 	if (error) {
 		console.log(error);
 		return <ShowError />;

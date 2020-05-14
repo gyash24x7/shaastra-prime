@@ -14,6 +14,8 @@
 .messages-container {
 	overflow-y: scroll;
 	flex: 1;
+	display: flex;
+	flex-direction: column-reverse;
 	padding: 14px;
 	width: 100%;
 
