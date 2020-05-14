@@ -21,9 +21,9 @@ export default StyleSheet.create({
 	wrapper: {
 		display: "flex",
 		alignItems: "center",
-		height: "100%",
 		backgroundColor: "#000000",
-		padding: 10
+		padding: 10,
+		flex: 1
 	},
 
 	topNavigation: {
@@ -45,6 +45,7 @@ export default StyleSheet.create({
 	},
 
 	text: {
-		fontFamily: "montserrat-regular"
+		fontFamily: "montserrat-regular",
+		textTransform: "capitalize"
 	}
 });

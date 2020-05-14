@@ -16,7 +16,13 @@
 		},
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
-			"supportsTablet": true
+			"supportsTablet": true,
+			"bundleIdentifier": "org.shaastra.prime",
+			"buildNumber": "1.0.0"
+		},
+		"android": {
+			"package": "org.shaastra.prime",
+			"versionCode": 1
 		}
 	}
 }

@@ -10,5 +10,8 @@ const ICON_MAP: Record<string, string> = {
 	Mobile: "phone",
 	Email: "mail",
 	UPI: "bank",
-	"Roll Number": "number"
+	"Roll Number": "number",
+	Updates: "inbox",
+	Details: "profile",
+	Media: "file-image"
 };
