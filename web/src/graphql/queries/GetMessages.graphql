@@ -1,5 +1,18 @@
 query GetMessages($channelId: String!, $skip: Int, $first: Int) {
 	getMessages(data: { channelId: $channelId, skip: $skip, first: $first }) {
 		id
+		content
+		type
+		createdBy {
+			id
+			name
+		}
+		createdAt
+		media {
+			id
+			url
+			type
+		}
+		likes
 	}
 }

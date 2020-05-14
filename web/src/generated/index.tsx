@@ -686,7 +686,14 @@ export type GetMessagesQuery = (
   { __typename?: 'Query' }
   & { getMessages: Array<(
     { __typename?: 'Message' }
-    & Pick<Message, 'id'>
+    & Pick<Message, 'id' | 'content' | 'type' | 'createdAt' | 'likes'>
+    & { createdBy: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    ), media: Array<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'id' | 'url' | 'type'>
+    )> }
   )> }
 );
 
@@ -762,7 +769,14 @@ export type NewMessageSubscription = (
   { __typename?: 'Subscription' }
   & { newMessage: (
     { __typename?: 'Message' }
-    & Pick<Message, 'id'>
+    & Pick<Message, 'id' | 'content' | 'type' | 'createdAt' | 'likes'>
+    & { createdBy: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
+    ), media: Array<(
+      { __typename?: 'Media' }
+      & Pick<Media, 'id' | 'url' | 'type'>
+    )> }
   ) }
 );
 
@@ -1226,6 +1240,19 @@ export const GetMessagesDocument = gql`
     query GetMessages($channelId: String!, $skip: Int, $first: Int) {
   getMessages(data: {channelId: $channelId, skip: $skip, first: $first}) {
     id
+    content
+    type
+    createdBy {
+      id
+      name
+    }
+    createdAt
+    media {
+      id
+      url
+      type
+    }
+    likes
   }
 }
     `;
@@ -1443,6 +1470,19 @@ export const NewMessageDocument = gql`
     subscription NewMessage($channelId: String!) {
   newMessage(channelId: $channelId) {
     id
+    content
+    type
+    createdBy {
+      id
+      name
+    }
+    createdAt
+    media {
+      id
+      url
+      type
+    }
+    likes
   }
 }
     `;

@@ -1,6 +1,6 @@
 import { Button, Form, Input, Typography } from "antd";
 import React from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { refetchMeQuery, useLoginMutation } from "../../generated";
 import { ShowError } from "../shared/ShowError";
 
@@ -19,9 +19,8 @@ export const LoginScreen = () => {
 	if (error) return <ShowError />;
 
 	if (data?.login) {
-		console.log(data.login);
 		localStorage.setItem("authToken", data.login);
-		return <Redirect to="/verification" />;
+		window.location.pathname = "verification";
 	}
 
 	const handleSubmit = async () => {

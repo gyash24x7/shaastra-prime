@@ -63,7 +63,7 @@ export const ChatScreen = () => {
 				title={<Title level={3}>{channel.name}</Title>}
 				className="message-screen"
 			>
-				<MessageList />
+				<MessageList channelId={channelId!} />
 				<Card.Grid className="message-input-container" hoverable={false}>
 					<MessageInput channelId={channelId!} />
 				</Card.Grid>

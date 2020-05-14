@@ -5,7 +5,7 @@ import { Channel } from "../../generated";
 import { stringGen } from "../../utils/lorem";
 import { UserCard } from "../shared/UserCard";
 import { UserCardSmall } from "../shared/UserCardSmall";
-import { Message } from "./Message";
+import { MessageItem } from "./MessageItem";
 
 const defaultMessages = [...Array(8)].map(() => ({
 	content: stringGen.generateSentences(4),
@@ -65,7 +65,7 @@ export const ChannelDescription = ({ channel }: ChannelDescriptionProps) => {
 			</Collapse.Panel>
 			<Collapse.Panel key="pinned" header="Pinned Messages">
 				{defaultMessages.map((message, i) => (
-					<Message key={i} message={message} />
+					<MessageItem key={i} message={message} />
 				))}
 			</Collapse.Panel>
 			<Collapse.Panel key="media" header="Media">

@@ -15,12 +15,13 @@ export const getAuthUser = async ({ req, connection }: AuthParams) => {
 		: connection!.context.Authorization;
 
 	let user: User | null = null;
-
 	if (!!header) {
 		const token: string = header.split(" ")[1];
-		const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-		user = await prisma.user.findOne({ where: { id: decoded.id } });
-	}
 
+		if (!!token) {
+			const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+			user = await prisma.user.findOne({ where: { id: decoded.id } });
+		}
+	}
 	return user;
 };

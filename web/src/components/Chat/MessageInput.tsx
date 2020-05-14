@@ -1,9 +1,6 @@
 import { Button, Space } from "antd";
 import React, { useState } from "react";
-import {
-	refetchGetMessagesQuery,
-	useCreateMessageMutation
-} from "../../generated";
+import { useCreateMessageMutation } from "../../generated";
 import { EDITOR_NULL_VALUES } from "../../utils/constants";
 import Editor from "../Editor";
 import { ShowError } from "../shared/ShowError";
@@ -17,9 +14,7 @@ export const MessageInput = ({ channelId }: MessageInputProps) => {
 	const [content, setContent] = useState("");
 	const [editorReset, setEditorReset] = useState(false);
 
-	const [createMessage, { error, loading }] = useCreateMessageMutation({
-		refetchQueries: [refetchGetMessagesQuery({ channelId })]
-	});
+	const [createMessage, { error, loading }] = useCreateMessageMutation();
 
 	const handleSubmit = () => {
 		if (content && !EDITOR_NULL_VALUES.includes(content)) {
@@ -59,6 +54,7 @@ export const MessageInput = ({ channelId }: MessageInputProps) => {
 			setSerializedValue={setContent}
 			reset={editorReset}
 			setReset={setEditorReset}
+			placeholder="Start Typing..."
 		/>
 	);
 };

@@ -15,7 +15,9 @@ const wsLink = new WebSocketLink({
 const httpLink = new HttpLink({
 	uri: "http://localhost:8000",
 	headers: {
-		authorization: `Bearer ${localStorage.getItem("authToken")}`
+		authorization: localStorage.getItem("authToken")
+			? `Bearer ${localStorage.getItem("authToken")}`
+			: undefined
 	}
 });
 

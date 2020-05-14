@@ -1,36 +1,50 @@
 import { Card } from "antd";
 import React from "react";
-import { useParams } from "react-router-dom";
-import { useNewMessageSubscription } from "../../generated";
-import { stringGen } from "../../utils/lorem";
-import { Message } from "./Message";
+import {
+	GetMessagesDocument,
+	useGetMessagesQuery,
+	useNewMessageSubscription
+} from "../../generated";
+import { Loader } from "../shared/Loader";
+import { MessageItem } from "./MessageItem";
 
-const defaultMessages = [...Array(1)].map(() => ({
-	content: stringGen.generateSentences(4),
-	by: stringGen.generateWords(2),
-	createdAt: "12:30",
-	likes: Math.round(Math.random() * 10)
-}));
+interface MessageListProps {
+	channelId: string;
+}
 
-export const MessageList = () => {
-	const { channelId } = useParams();
-	const { data, error } = useNewMessageSubscription({
-		variables: { channelId: channelId! }
+export const MessageList = ({ channelId }: MessageListProps) => {
+	const { data, error } = useGetMessagesQuery({
+		variables: { channelId }
 	});
 
-	if (data?.newMessage) {
-		console.log(data.newMessage);
-	}
+	useNewMessageSubscription({
+		onSubscriptionData({ subscriptionData, client }) {
+			client.writeQuery({
+				query: GetMessagesDocument,
+				variables: { channelId },
+				data: {
+					getMessages: data?.getMessages.concat(
+						subscriptionData.data!.newMessage
+					)
+				}
+			});
+		},
+		variables: { channelId }
+	});
 
 	if (error) {
 		console.log(error);
 	}
 
-	return (
-		<Card.Grid className="messages-container" hoverable={false}>
-			{defaultMessages.map((message) => (
-				<Message key={message.by} message={message} />
-			))}
-		</Card.Grid>
-	);
+	if (data?.getMessages) {
+		return (
+			<Card.Grid className="messages-container" hoverable={false}>
+				{data.getMessages.map((message) => (
+					<MessageItem key={message.id} message={message} />
+				))}
+			</Card.Grid>
+		);
+	}
+
+	return <Loader />;
 };

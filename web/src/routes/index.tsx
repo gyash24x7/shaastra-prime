@@ -23,11 +23,11 @@ export const AppRoutes = () => {
 	const { data: deptData, error: deptError } = useGetDepartmentsQuery();
 
 	if (error || deptError) {
-		console.log(error, deptError);
+		console.log(error || deptError);
 		return <ShowError />;
 	}
 
-	if (data && deptData)
+	if (data && deptData) {
 		return (
 			<DepartmentContext.Provider
 				value={{ departments: deptData.getDepartments }}
@@ -71,6 +71,7 @@ export const AppRoutes = () => {
 				</UserContext.Provider>
 			</DepartmentContext.Provider>
 		);
+	}
 
 	return <Loader />;
 };
