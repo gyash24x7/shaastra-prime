@@ -4,7 +4,7 @@ import React from "react";
 interface SwitchingIconProps extends IconProps {
 	name: string;
 	isActive?: boolean;
-	color: string;
+	color?: string;
 }
 
 export const SwitchingIcon = ({

@@ -25,7 +25,7 @@ export const UpdateItem = () => {
 								<Text
 									style={[
 										globalStyles.heading,
-										{ color: "#de350b", marginBottom: 10 }
+										{ color: "#b3b3b3", marginBottom: 10 }
 									]}
 								>
 									{update.brief}

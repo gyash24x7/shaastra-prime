@@ -35,11 +35,7 @@ export const DrawerNav = ({
 							<Text style={[props?.style, globalStyles.heading]}>{name}</Text>
 						)}
 						accessoryLeft={(props) => (
-							<SwitchingIcon
-								{...props}
-								isActive={false}
-								name={getIconNameValue(name)}
-							/>
+							<SwitchingIcon {...props} name={getIconNameValue(name)} />
 						)}
 					/>
 				))}

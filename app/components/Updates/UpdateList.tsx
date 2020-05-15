@@ -48,7 +48,7 @@ export const UpdateList = () => {
 									style={[
 										props?.style,
 										globalStyles.text,
-										{ color: "#de350b" }
+										{ color: "#b3b3b3" }
 									]}
 								>
 									{update.brief}
@@ -57,12 +57,7 @@ export const UpdateList = () => {
 							style={{ borderBottomWidth: 2, borderBottomColor: "#303030" }}
 							onPress={() => navigate("UpdateItem", { update })}
 							accessoryRight={(props) => (
-								<SwitchingIcon
-									name="info-circle"
-									isActive
-									{...props}
-									color="#fff"
-								/>
+								<SwitchingIcon name="right" {...props} color="#B3B3B3" />
 							)}
 						/>
 					)}
