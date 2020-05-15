@@ -18,7 +18,13 @@ export const BottomNav = ({ navigation, state }: BottomTabBarProps) => (
 		{state.routes.map((route, i) => (
 			<BottomNavigationTab
 				title={(props) => (
-					<Text style={[props?.style, globalStyles.heading]}>
+					<Text
+						style={[
+							props?.style,
+							globalStyles.heading,
+							{ color: state.index === i ? "#0052CC" : "#b3b3b3" }
+						]}
+					>
 						{route.name.toUpperCase()}
 					</Text>
 				)}

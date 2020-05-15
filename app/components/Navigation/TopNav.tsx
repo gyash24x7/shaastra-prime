@@ -22,7 +22,11 @@ export const TopNav = ({ title, isSmall }: TopNavProps) => {
 			style={[globalStyles.topNavigation]}
 			title={() => {
 				if (isSmall) {
-					return <Text style={globalStyles.heading}>{title}</Text>;
+					return (
+						<Text style={[globalStyles.heading, { color: "#36b37e" }]}>
+							{title}
+						</Text>
+					);
 				} else {
 					return <PageTitle text={title} />;
 				}
