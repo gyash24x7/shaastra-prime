@@ -1,18 +1,9 @@
 import { ClockCircleFilled } from "@ant-design/icons";
-import { Card, Collapse, List, Tag, Typography } from "antd";
+import { Card, Collapse, Empty, List, Tag, Typography } from "antd";
 import React from "react";
 import { Channel } from "../../generated";
-import { stringGen } from "../../utils/lorem";
-import { UserCard } from "../shared/UserCard";
 import { UserCardSmall } from "../shared/UserCardSmall";
 import { MessageItem } from "./MessageItem";
-
-const defaultMessages = [...Array(8)].map(() => ({
-	content: stringGen.generateSentences(4),
-	by: stringGen.generateWords(2),
-	createdAt: "12:30",
-	likes: Math.round(Math.random() * 10)
-}));
 
 interface ChannelDescriptionProps {
 	channel: Partial<Channel>;
@@ -23,7 +14,11 @@ const { Text, Paragraph } = Typography;
 export const ChannelDescription = ({ channel }: ChannelDescriptionProps) => {
 	return (
 		<Collapse accordion defaultActiveKey="description">
-			<Collapse.Panel key="description" header="Description">
+			<Collapse.Panel
+				key="description"
+				header="Description"
+				className="channel-description-panel"
+			>
 				<List
 					itemLayout="horizontal"
 					dataSource={[
@@ -58,15 +53,20 @@ export const ChannelDescription = ({ channel }: ChannelDescriptionProps) => {
 				<div className="grid-row">
 					{channel.members!.map((member) => (
 						<div className="grid-col" key={member.id}>
-							<UserCard user={member} />
+							<UserCardSmall user={member} />
 						</div>
 					))}
 				</div>
 			</Collapse.Panel>
-			<Collapse.Panel key="pinned" header="Pinned Messages">
-				{defaultMessages.map((message, i) => (
+			<Collapse.Panel key="starred" header="Starred Messages">
+				{channel.starredMsgs?.map((message, i) => (
 					<MessageItem key={i} message={message} />
 				))}
+				{!channel.starredMsgs?.length && (
+					<div className="grid-row">
+						<Empty description="No Messages" />
+					</div>
+				)}
 			</Collapse.Panel>
 			<Collapse.Panel key="media" header="Media">
 				<div className="media-box-container">

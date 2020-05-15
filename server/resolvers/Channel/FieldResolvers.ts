@@ -18,4 +18,11 @@ export class ChannelFieldResolvers {
 	connectedTasks(@Root() { id }: Channel) {
 		return prisma.channel.findOne({ where: { id } }).connectedTasks();
 	}
+
+	@FieldResolver()
+	starredMsgs(@Root() { id }: Channel) {
+		return prisma.channel
+			.findOne({ where: { id } })
+			.messages({ where: { starred: true } });
+	}
 }

@@ -3,6 +3,7 @@ query GetMessages($channelId: String!, $skip: Int, $first: Int) {
 		id
 		content
 		type
+		starred
 		createdBy {
 			id
 			name

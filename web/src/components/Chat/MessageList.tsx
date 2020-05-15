@@ -1,4 +1,4 @@
-import { Button, Spin } from "antd";
+import { Empty, Spin } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import {
 	GetMessagesDocument,
@@ -15,6 +15,7 @@ interface MessageListProps {
 export const MessageList = ({ channelId }: MessageListProps) => {
 	const [skip, setSkip] = useState(20);
 	const [hasMore, setHasMore] = useState(true);
+	const [fetchingEnabled, setFetchingEnabled] = useState(true);
 	const scroller = useRef<HTMLDivElement>(null);
 
 	const { data, error, fetchMore, loading } = useGetMessagesQuery({
@@ -40,16 +41,22 @@ export const MessageList = ({ channelId }: MessageListProps) => {
 			const newMessage =
 				scroller.current.children[scroller.current.children.length - 1];
 			if (
-				clientHeight + scrollTop + 2 * newMessage.clientHeight >=
-				scrollHeight
+				newMessage &&
+				clientHeight + scrollTop + 2 * newMessage.clientHeight >= scrollHeight
 			) {
 				scroller.current.scrollTop = scroller.current.scrollHeight;
 			}
 		}
 	};
 
-	const loadMoreMessages = () => {
-		if (hasMore) {
+	const handleScroll = () => {
+		if (
+			scroller.current &&
+			scroller.current.scrollTop < 10 &&
+			hasMore &&
+			fetchingEnabled
+		) {
+			setFetchingEnabled(false);
 			fetchMore({
 				variables: { channelId, skip },
 				updateQuery(prev, { fetchMoreResult }) {
@@ -57,13 +64,14 @@ export const MessageList = ({ channelId }: MessageListProps) => {
 					if (fetchMoreResult?.getMessages?.length! < 20) {
 						setHasMore(false);
 					}
-
-					setSkip(skip + 20);
 					return {
 						...prev,
 						getMessages: [...prev.getMessages, ...fetchMoreResult.getMessages]
 					};
 				}
+			}).then(() => {
+				setFetchingEnabled(true);
+				setSkip(skip + 20);
 			});
 		}
 	};
@@ -78,21 +86,23 @@ export const MessageList = ({ channelId }: MessageListProps) => {
 	}
 
 	return (
-		<div className="messages-container" ref={scroller}>
+		<div className="messages-container" ref={scroller} onScroll={handleScroll}>
 			{data?.getMessages.map((message) => (
 				<MessageItem key={message.id} message={message} />
 			))}
-			<Button
-				className="button"
-				style={{ width: "fit-content", alignSelf: "center" }}
-				onClick={loadMoreMessages}
-				type="link"
-			>
-				{hasMore ? "Load More Messages" : "You've reached the top"}
-			</Button>
-			{loading && (
-				<div style={{ padding: 20 }}>
+			{(loading || !fetchingEnabled) && (
+				<div style={{ padding: 20, alignSelf: "center" }}>
 					<Spin />
+				</div>
+			)}
+			{!hasMore && (
+				<div style={{ padding: 20, alignSelf: "center" }}>
+					You've reached the top
+				</div>
+			)}
+			{data?.getMessages.length === 0 && (
+				<div className="grid-row">
+					<Empty description="No Messages" />
 				</div>
 			)}
 		</div>

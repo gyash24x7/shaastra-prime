@@ -61,6 +61,7 @@ export type Channel = {
   members: Array<User>;
   createdBy: User;
   connectedTasks: Array<Task>;
+  starredMsgs: Array<Message>;
 };
 
 export enum ChannelType {
@@ -233,12 +234,6 @@ export type Vendor = {
   invoices: Array<Invoice>;
 };
 
-export type GetMessagesInput = {
-  channelId: Scalars['String'];
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
-};
-
 export type Message = {
    __typename?: 'Message';
   id: Scalars['ID'];
@@ -258,6 +253,12 @@ export enum MessageType {
   TaskActivity = 'TASK_ACTIVITY',
   InvoiceActivity = 'INVOICE_ACTIVITY'
 }
+
+export type GetMessagesInput = {
+  channelId: Scalars['String'];
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+};
 
 export type Mutation = {
    __typename?: 'Mutation';
@@ -632,6 +633,13 @@ export type GetChannelDetailsQuery = (
     )>, connectedTasks: Array<(
       { __typename?: 'Task' }
       & Pick<Task, 'id' | 'brief' | 'status'>
+    )>, starredMsgs: Array<(
+      { __typename?: 'Message' }
+      & Pick<Message, 'id' | 'content' | 'type' | 'starred' | 'createdAt' | 'likes'>
+      & { createdBy: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'name'>
+      ) }
     )> }
   ) }
 );
@@ -686,7 +694,7 @@ export type GetMessagesQuery = (
   { __typename?: 'Query' }
   & { getMessages: Array<(
     { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'content' | 'type' | 'createdAt' | 'likes'>
+    & Pick<Message, 'id' | 'content' | 'type' | 'starred' | 'createdAt' | 'likes'>
     & { createdBy: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'name'>
@@ -769,7 +777,7 @@ export type NewMessageSubscription = (
   { __typename?: 'Subscription' }
   & { newMessage: (
     { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'content' | 'type' | 'createdAt' | 'likes'>
+    & Pick<Message, 'id' | 'content' | 'type' | 'starred' | 'createdAt' | 'likes'>
     & { createdBy: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'name'>
@@ -1088,6 +1096,18 @@ export const GetChannelDetailsDocument = gql`
       brief
       status
     }
+    starredMsgs {
+      id
+      content
+      type
+      starred
+      createdBy {
+        id
+        name
+      }
+      createdAt
+      likes
+    }
   }
 }
     `;
@@ -1242,6 +1262,7 @@ export const GetMessagesDocument = gql`
     id
     content
     type
+    starred
     createdBy {
       id
       name
@@ -1472,6 +1493,7 @@ export const NewMessageDocument = gql`
     id
     content
     type
+    starred
     createdBy {
       id
       name

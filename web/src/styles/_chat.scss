@@ -18,21 +18,21 @@
 	flex-direction: column-reverse;
 	padding: 24px;
 	width: 100%;
+}
 
-	.message-box {
-		margin-bottom: 5px;
-		padding: 0;
-		border-bottom: 1px solid #303030;
+.message-box {
+	margin-bottom: 5px;
+	padding: 0;
+	border-bottom: 1px solid #303030;
 
-		.ant-comment-content-author-time {
-			width: 100%;
-			display: flex;
-			justify-content: space-between;
+	.ant-comment-content-author-time {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
 
-			.sender-name {
-				font-size: 14px;
-				color: #13a8a8;
-			}
+		.sender-name {
+			font-size: 14px;
+			color: #13a8a8;
 		}
 	}
 }
@@ -79,5 +79,12 @@
 				}
 			}
 		}
+	}
+}
+
+.channel-description-panel {
+	.ant-collapse-content-box {
+		padding-top: 0px;
+		padding-bottom: 5px;
 	}
 }

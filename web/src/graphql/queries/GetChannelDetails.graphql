@@ -21,5 +21,17 @@ query GetChannelDetails($channelId: String!) {
 			brief
 			status
 		}
+		starredMsgs {
+			id
+			content
+			type
+			starred
+			createdBy {
+				id
+				name
+			}
+			createdAt
+			likes
+		}
 	}
 }

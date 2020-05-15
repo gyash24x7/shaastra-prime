@@ -3,6 +3,7 @@ subscription NewMessage($channelId: String!) {
 		id
 		content
 		type
+		starred
 		createdBy {
 			id
 			name

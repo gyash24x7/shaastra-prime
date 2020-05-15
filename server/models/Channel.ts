@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import { ChannelType } from "./../utils/index";
+import { Message } from "./Message";
 import { Task } from "./Task";
 import { User } from "./User";
 
@@ -16,4 +17,5 @@ export class Channel {
 	@Field(() => [User]) members: User[];
 	@Field(() => User) createdBy: User;
 	@Field(() => [Task]) connectedTasks: Task[];
+	@Field(() => [Message]) starredMsgs: Message[];
 }

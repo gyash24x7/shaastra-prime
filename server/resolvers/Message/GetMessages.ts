@@ -15,6 +15,6 @@ export class GetMessagesResolver {
 			orderBy: { createdAt: "desc" }
 		});
 
-		return messages;
+		return new Promise((resolve) => setTimeout(() => resolve(messages), 200));
 	}
 }
