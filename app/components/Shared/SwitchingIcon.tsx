@@ -12,13 +12,11 @@ export const SwitchingIcon = ({
 	name,
 	color,
 	...rest
-}: SwitchingIconProps) => {
-	return (
-		<Icon
-			name={name}
-			{...rest}
-			pack={isActive ? "ant-filled" : "ant-outlined"}
-			color={color}
-		/>
-	);
-};
+}: SwitchingIconProps) => (
+	<Icon
+		name={name}
+		{...rest}
+		pack={isActive ? "ant-filled" : "ant-outlined"}
+		color={color}
+	/>
+);

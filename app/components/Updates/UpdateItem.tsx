@@ -4,7 +4,7 @@ import React from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyles from "../../utils/globalStyles";
-import { PageTitle } from "../Shared/PageTitle";
+import { TopNav } from "../Navigation/TopNav";
 
 export const UpdateItem = () => {
 	const { params }: any = useRoute();
@@ -12,22 +12,17 @@ export const UpdateItem = () => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
+			<TopNav title="Update" />
 			<Layout style={globalStyles.wrapper}>
-				<PageTitle text="Update" />
 				<ScrollView>
 					<Card
-						style={{ width: "100%", borderColor: "#303030", borderWidth: 2 }}
+						style={{ width: "100%", borderColor: "#303030", borderWidth: 1 }}
 						header={(props) => (
 							<Layout {...props}>
 								<Text style={[globalStyles.title, { color: "#ffab00" }]}>
 									{update.subject}
 								</Text>
-								<Text
-									style={[
-										globalStyles.heading,
-										{ color: "#b3b3b3", marginBottom: 10 }
-									]}
-								>
+								<Text style={[globalStyles.heading, { marginBottom: 10 }]}>
 									{update.brief}
 								</Text>
 								<Text
@@ -37,7 +32,7 @@ export const UpdateItem = () => {
 											fontSize: 12,
 											color: "#bae637",
 											borderTopColor: "#303030",
-											borderTopWidth: 2,
+											borderTopWidth: 1,
 											paddingTop: 10
 										}
 									]}

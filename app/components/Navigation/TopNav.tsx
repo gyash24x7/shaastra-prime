@@ -1,25 +1,32 @@
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import {
 	Icon,
+	Text,
 	TopNavigation,
 	TopNavigationAction
 } from "@ui-kitten/components";
 import React from "react";
-import { Image } from "react-native";
 import globalStyles from "../../utils/globalStyles";
+import { PageTitle } from "../Shared/PageTitle";
 
-export const TopNav = () => {
+interface TopNavProps {
+	title: string;
+	isSmall?: boolean;
+}
+
+export const TopNav = ({ title, isSmall }: TopNavProps) => {
 	const { dispatch } = useNavigation();
 
 	return (
 		<TopNavigation
 			style={[globalStyles.topNavigation]}
-			title={() => (
-				<Image
-					source={require("../../assets/images/LightLogo.png")}
-					style={{ width: 100, resizeMode: "contain" }}
-				/>
-			)}
+			title={() => {
+				if (isSmall) {
+					return <Text style={globalStyles.heading}>{title}</Text>;
+				} else {
+					return <PageTitle text={title} />;
+				}
+			}}
 			alignment="center"
 			accessoryLeft={() => (
 				<TopNavigationAction

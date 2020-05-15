@@ -11,7 +11,6 @@ export const PageTitle = (props: PageTitleProps) => {
 		<Layout
 			style={{
 				width: "100%",
-				paddingBottom: 10,
 				backgroundColor: "transparent"
 			}}
 		>

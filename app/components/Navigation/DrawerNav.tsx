@@ -18,7 +18,7 @@ export const DrawerNav = ({
 }: DrawerContentComponentProps) => {
 	return (
 		<Drawer
-			header={() => <UserCard size="small" />}
+			header={() => <UserCard size="small" logo />}
 			selectedIndex={new IndexPath(state.index, 0)}
 			onSelect={(index) => navigation.navigate(state.routeNames[index.row])}
 			style={globalStyles.drawerNavigation}
@@ -28,14 +28,19 @@ export const DrawerNav = ({
 					<Text style={[props?.style, globalStyles.heading]}>Apps</Text>
 				)}
 			>
-				{state.routes.map(({ key, name }) => (
+				{state.routes.map(({ key, name }, i) => (
 					<DrawerItem
 						key={key}
 						title={(props) => (
 							<Text style={[props?.style, globalStyles.heading]}>{name}</Text>
 						)}
 						accessoryLeft={(props) => (
-							<SwitchingIcon {...props} name={getIconNameValue(name)} />
+							<SwitchingIcon
+								{...props}
+								isActive={state.index === i}
+								color="#0052CC"
+								name={getIconNameValue(name)}
+							/>
 						)}
 					/>
 				))}

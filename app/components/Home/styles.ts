@@ -4,7 +4,7 @@ export default StyleSheet.create({
 	profileCard: {
 		display: "flex",
 		width: "100%",
-		borderWidth: 2,
+		borderWidth: 1,
 		borderColor: "#303030",
 		borderRadius: 5,
 		justifyContent: "space-between",

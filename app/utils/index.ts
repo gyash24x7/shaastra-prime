@@ -11,7 +11,7 @@ const ICON_MAP: Record<string, string> = {
 	Email: "mail",
 	UPI: "bank",
 	"Roll Number": "number",
-	Updates: "inbox",
+	Updates: "build",
 	Details: "profile",
 	Media: "file-image"
 };

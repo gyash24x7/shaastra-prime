@@ -4,7 +4,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyles from "../../utils/globalStyles";
 import { stringGen } from "../../utils/lorem";
-import { PageTitle } from "../Shared/PageTitle";
+import { TopNav } from "../Navigation/TopNav";
 import { SwitchingIcon } from "../Shared/SwitchingIcon";
 
 const updates = [...Array(15)].map(() => ({
@@ -18,49 +18,35 @@ const updates = [...Array(15)].map(() => ({
 
 export const UpdateList = () => {
 	const { navigate } = useNavigation();
+
+	const renderUpdateItem = ({ item: update }: any) => (
+		<ListItem
+			title={(props) => (
+				<Text style={[props?.style, globalStyles.heading, { color: "#fa0" }]}>
+					{update.subject}
+				</Text>
+			)}
+			description={(props) => (
+				<Text style={[props?.style, globalStyles.text, { color: "#b3b3b3" }]}>
+					{update.brief}
+				</Text>
+			)}
+			style={{ borderBottomWidth: 1, borderBottomColor: "#303030" }}
+			onPress={() => navigate("UpdateItem", { update })}
+			accessoryRight={(props) => (
+				<SwitchingIcon name="right" {...props} color="#B3B3B3" />
+			)}
+		/>
+	);
+
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
+			<TopNav title="Updates" />
 			<Layout style={globalStyles.wrapper}>
-				<PageTitle text="Updates" />
 				<List
-					style={{
-						width: "100%",
-						flex: 1,
-						borderWidth: 2,
-						borderColor: "#303030"
-					}}
+					style={globalStyles.list}
 					data={updates}
-					renderItem={({ item: update }: any) => (
-						<ListItem
-							title={(props) => (
-								<Text
-									style={[
-										props?.style,
-										globalStyles.heading,
-										{ color: "#ffab00" }
-									]}
-								>
-									{update.subject}
-								</Text>
-							)}
-							description={(props) => (
-								<Text
-									style={[
-										props?.style,
-										globalStyles.text,
-										{ color: "#b3b3b3" }
-									]}
-								>
-									{update.brief}
-								</Text>
-							)}
-							style={{ borderBottomWidth: 2, borderBottomColor: "#303030" }}
-							onPress={() => navigate("UpdateItem", { update })}
-							accessoryRight={(props) => (
-								<SwitchingIcon name="right" {...props} color="#B3B3B3" />
-							)}
-						/>
-					)}
+					renderItem={renderUpdateItem}
 				/>
 			</Layout>
 		</SafeAreaView>

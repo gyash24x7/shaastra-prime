@@ -1,13 +1,14 @@
 import { Avatar, Divider, Layout } from "@ui-kitten/components";
 import React from "react";
-import { ImageBackground, StyleSheet } from "react-native";
+import { Image, ImageBackground, StyleSheet } from "react-native";
 import { Tag } from "./Tag";
 
 interface UserCardProps {
 	size: "large" | "small";
+	logo?: boolean;
 }
 
-export const UserCard = ({ size }: UserCardProps) => {
+export const UserCard = ({ size, logo }: UserCardProps) => {
 	const styles = StyleSheet.create({
 		userCard: {
 			paddingHorizontal: 20,
@@ -31,7 +32,7 @@ export const UserCard = ({ size }: UserCardProps) => {
 			paddingTop: size === "large" ? 160 : 120,
 			position: "absolute",
 			borderBottomColor: "#0052cc",
-			borderBottomWidth: 2
+			borderBottomWidth: 1
 		},
 
 		cover: {
@@ -43,7 +44,7 @@ export const UserCard = ({ size }: UserCardProps) => {
 		avatar: {
 			width: size === "large" ? 80 : 60,
 			height: size === "large" ? 80 : 60,
-			borderWidth: 2,
+			borderWidth: 1,
 			borderColor: "#0052cc"
 		}
 	});
@@ -52,7 +53,7 @@ export const UserCard = ({ size }: UserCardProps) => {
 		<Layout
 			style={
 				size === "small"
-					? { borderRightColor: "#303030", borderRightWidth: 2 }
+					? { borderRightColor: "#303030", borderRightWidth: 1 }
 					: {}
 			}
 		>
@@ -61,6 +62,17 @@ export const UserCard = ({ size }: UserCardProps) => {
 				style={styles.cover}
 			>
 				<Layout style={styles.avatarContainer}>
+					{logo && (
+						<Image
+							source={require("../../assets/images/LightLogo.png")}
+							style={{
+								position: "absolute",
+								width: 120,
+								resizeMode: "contain",
+								top: -90
+							}}
+						/>
+					)}
 					<Avatar
 						source={{ uri: "https://source.unsplash.com/featured/300x300" }}
 						shape="round"

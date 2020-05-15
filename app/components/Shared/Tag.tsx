@@ -11,7 +11,7 @@ export const Tag = (props: TagProps) => {
 	const styles = StyleSheet.create({
 		wrapper: {
 			backgroundColor: props.color + "6c",
-			borderWidth: 2,
+			borderWidth: 1,
 			borderColor: props.color,
 			borderRadius: 5,
 			flex: 1,

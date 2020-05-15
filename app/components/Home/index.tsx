@@ -10,7 +10,7 @@ const { Navigator, Screen } = createBottomTabNavigator();
 export const HomeScreen = () => {
 	return (
 		<Fragment>
-			<TopNav />
+			<TopNav title="Profile" />
 			<Navigator
 				initialRouteName="Details"
 				tabBar={(props) => <BottomNav {...props} />}

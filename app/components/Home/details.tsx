@@ -34,7 +34,7 @@ export const UserDetails = () => {
 											{item.label}
 										</Text>
 									)}
-									style={{ borderTopWidth: 2, borderTopColor: "#303030" }}
+									style={{ borderTopWidth: 1, borderTopColor: "#303030" }}
 									accessoryRight={() => (
 										<Text style={[globalStyles.text]}>{item.value}</Text>
 									)}
