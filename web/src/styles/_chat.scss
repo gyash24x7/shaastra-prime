@@ -16,7 +16,7 @@
 	flex: 1;
 	display: flex;
 	flex-direction: column-reverse;
-	padding: 14px;
+	padding: 24px;
 	width: 100%;
 
 	.message-box {
@@ -24,13 +24,14 @@
 		padding: 0;
 		border-bottom: 1px solid #303030;
 
-		.ant-tag {
-			font-size: 12px;
-			margin-bottom: 5px;
-			text-transform: capitalize;
+		.ant-comment-content-author-time {
+			width: 100%;
+			display: flex;
+			justify-content: space-between;
 
-			&.sender-name {
+			.sender-name {
 				font-size: 14px;
+				color: #13a8a8;
 			}
 		}
 	}

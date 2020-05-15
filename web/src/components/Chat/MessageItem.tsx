@@ -1,7 +1,7 @@
-import { ClockCircleFilled, LikeFilled } from "@ant-design/icons";
-import { Comment, Space, Tag } from "antd";
+import { ClockCircleFilled, LikeFilled, StarOutlined } from "@ant-design/icons";
+import { Avatar, Comment, Space } from "antd";
 import moment from "moment";
-import React from "react";
+import React, { Fragment } from "react";
 import { Message } from "../../generated";
 
 interface MessageItemProps {
@@ -12,26 +12,30 @@ export const MessageItem = ({ message }: MessageItemProps) => {
 	return (
 		<div className="message-box">
 			<Comment
+				avatar={<Avatar src="https://source.unsplash.com/featured" />}
 				content={
 					<div
 						className="message-content"
 						dangerouslySetInnerHTML={{ __html: message.content! }}
 					/>
 				}
-				author={
-					<Tag color="cyan" className="sender-name">
-						{message.createdBy?.name}
-					</Tag>
-				}
 				datetime={
-					<Space>
-						<Tag color="lime" icon={<ClockCircleFilled />}>
-							{moment(parseInt(message.createdAt!)).format("hh:mm A")}
-						</Tag>
-						<Tag color="pink" icon={<LikeFilled />}>
-							{message.likes}
-						</Tag>
-					</Space>
+					<Fragment>
+						<div className="sender-name">{message.createdBy?.name}</div>
+						<Space size="middle">
+							<Space>
+								<ClockCircleFilled />
+								{moment(parseInt(message.createdAt!)).format("hh:mm A")}
+							</Space>
+							<Space>
+								<StarOutlined />
+							</Space>
+							<Space>
+								<LikeFilled />
+								{message.likes}
+							</Space>
+						</Space>
+					</Fragment>
 				}
 			/>
 		</div>

@@ -1,11 +1,11 @@
-import { Card } from "antd";
-import React, { useEffect } from "react";
+import { Button, Spin } from "antd";
+import React, { useEffect, useRef, useState } from "react";
 import {
 	GetMessagesDocument,
 	useGetMessagesQuery,
 	useNewMessageSubscription
 } from "../../generated";
-import { Loader } from "../shared/Loader";
+import { ShowError } from "../shared/ShowError";
 import { MessageItem } from "./MessageItem";
 
 interface MessageListProps {
@@ -13,7 +13,11 @@ interface MessageListProps {
 }
 
 export const MessageList = ({ channelId }: MessageListProps) => {
-	const { data, error } = useGetMessagesQuery({
+	const [skip, setSkip] = useState(20);
+	const [hasMore, setHasMore] = useState(true);
+	const scroller = useRef<HTMLDivElement>(null);
+
+	const { data, error, fetchMore, loading } = useGetMessagesQuery({
 		variables: { channelId }
 	});
 
@@ -31,16 +35,36 @@ export const MessageList = ({ channelId }: MessageListProps) => {
 	});
 
 	const scrollToBottom = () => {
-		const container = document.querySelector(".messages-container");
-		if (container) {
-			const { clientHeight, scrollTop, scrollHeight } = container;
-			const newMessage = container.children[container.children.length - 1];
+		if (scroller.current) {
+			const { clientHeight, scrollTop, scrollHeight } = scroller.current;
+			const newMessage =
+				scroller.current.children[scroller.current.children.length - 1];
 			if (
 				clientHeight + scrollTop + 2 * newMessage.clientHeight >=
 				scrollHeight
 			) {
-				container.scrollTop = container.scrollHeight;
+				scroller.current.scrollTop = scroller.current.scrollHeight;
 			}
+		}
+	};
+
+	const loadMoreMessages = () => {
+		if (hasMore) {
+			fetchMore({
+				variables: { channelId, skip },
+				updateQuery(prev, { fetchMoreResult }) {
+					if (!fetchMoreResult) return prev;
+					if (fetchMoreResult?.getMessages?.length! < 20) {
+						setHasMore(false);
+					}
+
+					setSkip(skip + 20);
+					return {
+						...prev,
+						getMessages: [...prev.getMessages, ...fetchMoreResult.getMessages]
+					};
+				}
+			});
 		}
 	};
 
@@ -50,17 +74,27 @@ export const MessageList = ({ channelId }: MessageListProps) => {
 
 	if (error) {
 		console.log(error);
+		return <ShowError />;
 	}
 
-	if (data?.getMessages) {
-		return (
-			<Card.Grid className="messages-container" hoverable={false}>
-				{data.getMessages.map((message) => (
-					<MessageItem key={message.id} message={message} />
-				))}
-			</Card.Grid>
-		);
-	}
-
-	return <Loader />;
+	return (
+		<div className="messages-container" ref={scroller}>
+			{data?.getMessages.map((message) => (
+				<MessageItem key={message.id} message={message} />
+			))}
+			<Button
+				className="button"
+				style={{ width: "fit-content", alignSelf: "center" }}
+				onClick={loadMoreMessages}
+				type="link"
+			>
+				{hasMore ? "Load More Messages" : "You've reached the top"}
+			</Button>
+			{loading && (
+				<div style={{ padding: 20 }}>
+					<Spin />
+				</div>
+			)}
+		</div>
+	);
 };

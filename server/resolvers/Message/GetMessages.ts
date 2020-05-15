@@ -7,13 +7,11 @@ import { prisma } from "../../prisma";
 export class GetMessagesResolver {
 	@Authorized()
 	@Query(() => [Message])
-	async getMessages(@Arg("data") { channelId, skip, first }: GetMessagesInput) {
-		const messageCount = await prisma.message.count({ where: { channelId } });
-
+	async getMessages(@Arg("data") { channelId, skip }: GetMessagesInput) {
 		const messages = await prisma.message.findMany({
-			where: {
-				channelId
-			},
+			where: { channelId },
+			skip,
+			first: 20,
 			orderBy: { createdAt: "desc" }
 		});
 
