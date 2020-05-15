@@ -11,7 +11,7 @@ const { Navigator, Screen } = createDrawerNavigator();
 
 export const PrivateScreen = () => {
 	return (
-		<Navigator drawerContent={DrawerNav}>
+		<Navigator drawerContent={DrawerNav} initialRouteName="Updates">
 			<Screen name="Home" component={HomeScreen} />
 			<Screen name="Equip" component={EquipScreen} />
 			<Screen name="Chat" component={ChatScreen} />

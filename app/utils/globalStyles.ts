@@ -40,12 +40,17 @@ export default StyleSheet.create({
 
 	heading: {
 		fontFamily: "montserrat-bold",
-		textTransform: "uppercase",
-		fontSize: 12
+		textTransform: "uppercase"
 	},
 
 	text: {
 		fontFamily: "montserrat-regular",
 		textTransform: "capitalize"
+	},
+
+	title: {
+		fontFamily: "montserrat-bold",
+		textTransform: "uppercase",
+		fontSize: 20
 	}
 });

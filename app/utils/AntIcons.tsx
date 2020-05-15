@@ -33,15 +33,16 @@ const OutlinedIconProvider = (name: string) => ({
 interface AntIconProps {
 	name: string;
 	style: StyleProp<ImageStyle>;
+	color: string;
 }
 
-const AntIconFilled = ({ name, style }: AntIconProps) => {
+const AntIconFilled = ({ name, style, color }: AntIconProps) => {
 	const { height, tintColor, ...iconStyle } = StyleSheet.flatten(style);
 	return (
 		<IconFill
 			name={name as any}
 			size={height ? parseInt(height.toString()) : 16}
-			color={tintColor}
+			color={color}
 			style={iconStyle}
 		/>
 	);

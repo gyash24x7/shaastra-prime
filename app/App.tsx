@@ -3,7 +3,8 @@ import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { useFonts } from "@use-expo/font";
 import { AppLoading } from "expo";
-import React, { Fragment } from "react";
+import React from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppNavigation } from "./components/Navigation";
 import { AntFilledIconsPack, AntOutlinedIconsPack } from "./utils/AntIcons";
 import { default as theme } from "./utils/theme.json";
@@ -19,14 +20,14 @@ export default function App() {
 
 	if (fontsLoaded) {
 		return (
-			<Fragment>
+			<SafeAreaProvider>
 				<IconRegistry
 					icons={[EvaIconsPack, AntFilledIconsPack, AntOutlinedIconsPack]}
 				/>
 				<ApplicationProvider {...eva} theme={{ ...eva.dark, ...theme }}>
 					<AppNavigation />
 				</ApplicationProvider>
-			</Fragment>
+			</SafeAreaProvider>
 		);
 	} else {
 		return <AppLoading />;
