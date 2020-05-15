@@ -3,7 +3,6 @@ import { UserFieldResolvers } from "./FieldResolvers";
 import { ForgotPasswordResolver } from "./ForgotPassword";
 import { GetUsersResolver } from "./GetUsers";
 import { LoginResolver } from "./Login";
-import { logoutResolver } from "./Logout";
 import { MeResolver } from "./Me";
 import { SearchUserResolver } from "./SearchUser";
 import { SendPasswordOTPResolver } from "./SendPasswordOTP";
@@ -17,7 +16,6 @@ export default [
 	ForgotPasswordResolver,
 	GetUsersResolver,
 	LoginResolver,
-	logoutResolver,
 	MeResolver,
 	SendPasswordOTPResolver,
 	UploadCoverPicResolver,
