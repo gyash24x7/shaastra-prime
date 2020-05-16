@@ -34,6 +34,8 @@ import {
 	SendOutlined,
 	SettingFilled,
 	SettingOutlined,
+	SmileFilled,
+	SmileOutlined,
 	TableOutlined,
 	UnderlineOutlined,
 	UnorderedListOutlined,
@@ -63,8 +65,9 @@ export const ICON_MAP: Record<string, any[]> = {
 	underline: [UnderlineOutlined, UnderlineOutlined],
 	code: [CodeOutlined, CodeFilled],
 	upload: [CloudUploadOutlined, CloudUploadOutlined],
-	"bulleted-list": [UnorderedListOutlined, UnorderedListOutlined],
-	"numbered-list": [OrderedListOutlined, OrderedListOutlined],
+	"unordered-list-item": [UnorderedListOutlined, UnorderedListOutlined],
+	"ordered-list-item": [OrderedListOutlined, OrderedListOutlined],
 	plus: [PlusCircleOutlined, PlusCircleFilled],
-	info: [InfoCircleOutlined, InfoCircleFilled]
+	info: [InfoCircleOutlined, InfoCircleFilled],
+	emoji: [SmileOutlined, SmileFilled]
 };

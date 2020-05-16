@@ -109,9 +109,9 @@ export const MessageList = ({ channelId }: MessageListProps) => {
 	return (
 		<div className="messages-container" ref={scroller} onScroll={handleScroll}>
 			{Object.keys(groupedMsgs).map((date) => (
-				<Fragment>
+				<Fragment key={date}>
 					{groupedMsgs[date].map((msg) => (
-						<MessageItem message={msg} />
+						<MessageItem message={msg} key={msg.id} />
 					))}
 					<div className="message-date">
 						{moment(date, "DD/MM/YYYY").format("dddd, Do MMMM")}

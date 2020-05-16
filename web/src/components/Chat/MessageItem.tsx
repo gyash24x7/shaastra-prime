@@ -1,6 +1,7 @@
 import {
 	ClockCircleFilled,
 	LikeFilled,
+	LikeOutlined,
 	StarFilled,
 	StarOutlined
 } from "@ant-design/icons";
@@ -17,7 +18,7 @@ export const MessageItem = ({ message }: MessageItemProps) => {
 	return (
 		<div className="message-box">
 			<Comment
-				avatar={<Avatar src="https://source.unsplash.com/featured" />}
+				avatar={<Avatar src="https://source.unsplash.com/featured/100x100" />}
 				content={
 					<div
 						className="message-content"
@@ -36,7 +37,7 @@ export const MessageItem = ({ message }: MessageItemProps) => {
 								{message.starred ? <StarFilled /> : <StarOutlined />}
 							</Space>
 							<Space>
-								<LikeFilled />
+								{message.liked ? <LikeFilled /> : <LikeOutlined />}
 								{message.likes}
 							</Space>
 						</Space>

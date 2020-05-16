@@ -244,6 +244,7 @@ export type Message = {
   likes: Scalars['Int'];
   media: Array<Media>;
   type: MessageType;
+  liked: Scalars['Boolean'];
 };
 
 export enum MessageType {
@@ -271,7 +272,6 @@ export type Mutation = {
   createUser: Scalars['String'];
   forgotPassword: Scalars['Boolean'];
   login?: Maybe<Scalars['String']>;
-  logout: Scalars['Boolean'];
   sendPasswordOTP: Scalars['Boolean'];
   uploadCoverPic: Scalars['Boolean'];
   uploadProfilePic: Scalars['Boolean'];
@@ -571,14 +571,6 @@ export type LoginMutation = (
   & Pick<Mutation, 'login'>
 );
 
-export type LogoutMutationVariables = {};
-
-
-export type LogoutMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'logout'>
-);
-
 export type UploadCoverPicMutationVariables = {
   coverPic: Scalars['String'];
 };
@@ -694,7 +686,7 @@ export type GetMessagesQuery = (
   { __typename?: 'Query' }
   & { getMessages: Array<(
     { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'content' | 'type' | 'starred' | 'createdAt' | 'likes'>
+    & Pick<Message, 'id' | 'content' | 'type' | 'starred' | 'createdAt' | 'likes' | 'liked'>
     & { createdBy: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'name'>
@@ -777,7 +769,7 @@ export type NewMessageSubscription = (
   { __typename?: 'Subscription' }
   & { newMessage: (
     { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'content' | 'type' | 'starred' | 'createdAt' | 'likes'>
+    & Pick<Message, 'id' | 'content' | 'type' | 'starred' | 'liked' | 'createdAt' | 'likes'>
     & { createdBy: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'name'>
@@ -952,35 +944,6 @@ export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOpti
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = ApolloReactCommon.MutationResult<LoginMutation>;
 export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
-export const LogoutDocument = gql`
-    mutation Logout {
-  logout
-}
-    `;
-export type LogoutMutationFn = ApolloReactCommon.MutationFunction<LogoutMutation, LogoutMutationVariables>;
-
-/**
- * __useLogoutMutation__
- *
- * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLogoutMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
- *   variables: {
- *   },
- * });
- */
-export function useLogoutMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
-        return ApolloReactHooks.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, baseOptions);
-      }
-export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
-export type LogoutMutationResult = ApolloReactCommon.MutationResult<LogoutMutation>;
-export type LogoutMutationOptions = ApolloReactCommon.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const UploadCoverPicDocument = gql`
     mutation UploadCoverPic($coverPic: String!) {
   uploadCoverPic(coverPic: $coverPic)
@@ -1274,6 +1237,7 @@ export const GetMessagesDocument = gql`
       type
     }
     likes
+    liked
   }
 }
     `;
@@ -1494,6 +1458,7 @@ export const NewMessageDocument = gql`
     content
     type
     starred
+    liked
     createdBy {
       id
       name

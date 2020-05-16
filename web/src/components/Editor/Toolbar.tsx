@@ -1,22 +1,24 @@
 import { Button, Space } from "antd";
+import { EditorState, RichUtils } from "draft-js";
 import React from "react";
-import { useSlate } from "slate-react";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
-import {
-	HOTKEYS,
-	isBlockActive,
-	isMarkActive,
-	LIST_TYPES,
-	toggleBlock,
-	toggleMark
-} from "./utils";
+import { HOTKEYS, LIST_TYPES } from "./utils";
 
 interface ToolbarProps {
 	extra?: JSX.Element;
+	value: EditorState;
+	setValue: (val: EditorState) => void;
 }
 
-export const Toolbar = ({ extra }: ToolbarProps) => {
-	const editor = useSlate();
+export const Toolbar = ({ extra, value, setValue }: ToolbarProps) => {
+	const selection = value.getSelection();
+
+	const blockType = value
+		.getCurrentContent()
+		.getBlockForKey(selection.getStartKey())
+		.getType();
+
+	const currentStyle = value.getCurrentInlineStyle();
 
 	return (
 		<div className="editor-toolbar">
@@ -27,7 +29,7 @@ export const Toolbar = ({ extra }: ToolbarProps) => {
 							key={key}
 							className="editor-btn"
 							style={
-								isMarkActive(editor, HOTKEYS[key])
+								currentStyle.has(HOTKEYS[key].toUpperCase())
 									? { background: "#303030", color: "rgba(#fff, 0.65)" }
 									: {}
 							}
@@ -36,12 +38,14 @@ export const Toolbar = ({ extra }: ToolbarProps) => {
 								<SwitchingIcon
 									name={HOTKEYS[key]}
 									className="editor-icon"
-									isActive={isMarkActive(editor, HOTKEYS[key])}
+									isActive={false}
 								/>
 							}
 							onMouseDown={(e) => {
 								e.preventDefault();
-								toggleMark(editor, HOTKEYS[key]);
+								setValue(
+									RichUtils.toggleInlineStyle(value, HOTKEYS[key].toUpperCase())
+								);
 							}}
 						/>
 					))}
@@ -50,7 +54,7 @@ export const Toolbar = ({ extra }: ToolbarProps) => {
 							key={list}
 							className="editor-btn"
 							style={
-								isBlockActive(editor, list)
+								list === blockType
 									? { background: "#303030", color: "rgba(#fff, 0.65)" }
 									: {}
 							}
@@ -59,12 +63,12 @@ export const Toolbar = ({ extra }: ToolbarProps) => {
 								<SwitchingIcon
 									name={list}
 									className="editor-icon"
-									isActive={isBlockActive(editor, list)}
+									isActive={false}
 								/>
 							}
 							onMouseDown={(e) => {
 								e.preventDefault();
-								toggleBlock(editor, list);
+								setValue(RichUtils.toggleBlockType(value, list));
 							}}
 						/>
 					))}

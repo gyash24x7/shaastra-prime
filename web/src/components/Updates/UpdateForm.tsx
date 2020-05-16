@@ -5,8 +5,6 @@ import {
 	refetchGetUpdatesQuery,
 	useCreateUpdateMutation
 } from "../../generated";
-import { EDITOR_NULL_VALUES } from "../../utils/constants";
-import Editor from "../Editor";
 import { ShowError } from "../shared/ShowError";
 
 const { useForm, Item } = Form;
@@ -65,7 +63,7 @@ export const UpdateForm = () => {
 				required
 				rules={[{ required: true, message: "Content is Required!" }]}
 			>
-				<Editor
+				{/* <Editor
 					placeholder="Content"
 					setSerializedValue={(content) => {
 						if (EDITOR_NULL_VALUES.includes(content)) {
@@ -74,7 +72,7 @@ export const UpdateForm = () => {
 						form.setFieldsValue({ ...form.getFieldsValue(), content });
 					}}
 					style={{ maxHeight: 150, overflowY: "scroll" }}
-				/>
+				/> */}
 			</Item>
 			<Item>
 				<Button

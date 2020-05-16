@@ -1,98 +1,106 @@
-import { isHotkey } from "is-hotkey";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { createEditor, Node } from "slate";
-import { withHistory } from "slate-history";
+import { Typography } from "antd";
 import {
-	Editable,
-	RenderElementProps,
-	RenderLeafProps,
-	Slate,
-	withReact
-} from "slate-react";
+	DraftHandleValue,
+	EditorState,
+	getDefaultKeyBinding,
+	RichUtils
+} from "draft-js";
+import createLinkifyPlugin from "draft-js-linkify-plugin";
+import Editor from "draft-js-plugins-editor";
+import "draft-js/dist/Draft.css";
+import { Picker } from "emoji-mart";
+import "emoji-mart/css/emoji-mart.css";
+import React, { Fragment, useCallback } from "react";
 import { Toolbar } from "./Toolbar";
-import {
-	Element,
-	HOTKEYS,
-	Leaf,
-	serialize,
-	toggleMark,
-	withLinks
-} from "./utils";
+
+const { Paragraph } = Typography;
+const linkifyPlugin = createLinkifyPlugin();
+const plugins = [linkifyPlugin];
 
 interface EditorProps {
 	toolbarExtra?: JSX.Element;
 	autoFocus?: boolean;
 	style?: React.CSSProperties;
 	placeholder?: string;
-	setSerializedValue: (val: string) => void;
-	reset?: boolean;
-	setReset?: (val: boolean) => void;
+	onShiftEnter?: () => void;
+	value: EditorState;
+	setValue: (val: EditorState) => void;
+	emojiVisible: boolean;
 }
 
-const defaultEditorValue: Node[] = [
-	{
-		type: "paragraph",
-		children: [{ text: "" }]
-	}
-];
-
 export default (props: EditorProps) => {
-	const { setReset, reset } = props;
+	const { setValue, value, placeholder } = props;
 
-	const editor = useMemo(
-		() => withLinks(withHistory(withReact(createEditor()))),
-		[]
+	const handleKeyCommand = useCallback(
+		(command: string, editorState: EditorState) => {
+			const newState = RichUtils.handleKeyCommand(editorState, command);
+			if (newState) {
+				setValue(newState);
+				return "handled" as DraftHandleValue;
+			}
+			return "not-handled" as DraftHandleValue;
+		},
+		[setValue]
 	);
 
-	const [value, setValue] = useState(defaultEditorValue);
-
-	const renderLeaf = useCallback(
-		(props: RenderLeafProps) => <Leaf {...props} />,
-		[]
+	const mapKeyToEditorCommand = useCallback(
+		(e) => {
+			switch (e.keyCode) {
+				case 9:
+					const newEditorState = RichUtils.onTab(e, value, 4);
+					if (newEditorState !== value) {
+						setValue(newEditorState);
+					}
+					return null;
+			}
+			return getDefaultKeyBinding(e);
+		},
+		[value, setValue]
 	);
 
-	const renderElement = useCallback(
-		(props: RenderElementProps) => <Element {...props} />,
-		[]
-	);
-
-	useEffect(() => {
-		if (reset) {
-			setValue(defaultEditorValue);
-			setReset && setReset(false);
+	let className = "";
+	let contentState = value.getCurrentContent();
+	if (!contentState.hasText()) {
+		if (contentState.getBlockMap().first().getType() !== "unstyled") {
+			className += " editor-hide-placeholder";
 		}
-	}, [reset, setReset]);
+	}
 
 	return (
-		<div className="editor-wrapper">
-			<Slate
-				value={value}
-				editor={editor}
-				onChange={(val) => {
-					setValue(val);
-					props.setSerializedValue(serialize(editor));
-				}}
-			>
-				<div className="editor-text-container">
-					<Editable
-						renderLeaf={renderLeaf}
-						style={props.style}
-						renderElement={renderElement}
-						autoFocus={!!props.autoFocus}
-						placeholder={props.placeholder}
-						onKeyDown={(e: any) => {
-							for (const hotkey in HOTKEYS) {
-								if (isHotkey(hotkey, e)) {
-									e.preventDefault();
-									const mark = HOTKEYS[hotkey];
-									toggleMark(editor, mark);
-								}
-							}
-						}}
+		<Fragment>
+			<div className="editor-wrapper">
+				<div style={props.style} className={className}>
+					<Editor
+						editorState={value}
+						onChange={setValue}
+						handleKeyCommand={handleKeyCommand}
+						placeholder={placeholder}
+						keyBindingFn={mapKeyToEditorCommand}
+						plugins={plugins}
 					/>
 				</div>
-				<Toolbar extra={props.toolbarExtra} />
-			</Slate>
-		</div>
+				<Toolbar extra={props.toolbarExtra} value={value} setValue={setValue} />
+			</div>
+			{props.emojiVisible && (
+				<Picker
+					theme="dark"
+					showPreview={false}
+					color="#B3B3B3"
+					style={{
+						backgroundColor: "#141414",
+						border: "1px solid #303030",
+						position: "fixed",
+						bottom: 75,
+						right: 41,
+						boxShadow: "0px 0px 2px 2px #303030"
+					}}
+				/>
+			)}
+			{props.onShiftEnter && (
+				<Paragraph className="editor-help-text">
+					Press SHIFT + ENTER to send
+				</Paragraph>
+			)}
+		</Fragment>
 	);
 };

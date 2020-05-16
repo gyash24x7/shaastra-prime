@@ -15,4 +15,5 @@ export class Message {
 	@Field(() => Int) likes: number;
 	@Field(() => [Media]) media: Media[];
 	@Field(() => MessageType) type: MessageType;
+	@Field() liked: boolean;
 }

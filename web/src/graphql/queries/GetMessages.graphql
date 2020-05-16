@@ -15,5 +15,6 @@ query GetMessages($channelId: String!, $skip: Int, $first: Int) {
 			type
 		}
 		likes
+		liked
 	}
 }

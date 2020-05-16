@@ -1,6 +1,7 @@
-import { FieldResolver, Resolver, Root } from "type-graphql";
+import { Ctx, FieldResolver, Resolver, Root } from "type-graphql";
 import { Message } from "../../models/Message";
 import { prisma } from "../../prisma";
+import { GraphQLContext } from "../../utils";
 
 @Resolver(Message)
 export class MessageFieldResolvers {
@@ -18,5 +19,14 @@ export class MessageFieldResolvers {
 	@FieldResolver()
 	media(@Root() { id }: Message) {
 		return prisma.message.findOne({ where: { id } }).media();
+	}
+
+	@FieldResolver()
+	async liked(@Root() { id }: Message, @Ctx() { user }: GraphQLContext) {
+		const users = await prisma.message
+			.findOne({ where: { id } })
+			.likedBy({ where: { id: user?.id } });
+
+		return users.length !== 0;
 	}
 }

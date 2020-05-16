@@ -1,4 +1,5 @@
 import { Button, Space } from "antd";
+import { EditorState } from "draft-js";
 import React, { useState } from "react";
 import { useCreateMessageMutation } from "../../generated";
 import { EDITOR_NULL_VALUES } from "../../utils/constants";
@@ -11,15 +12,17 @@ interface MessageInputProps {
 }
 
 export const MessageInput = ({ channelId }: MessageInputProps) => {
-	const [content, setContent] = useState("");
-	const [editorReset, setEditorReset] = useState(false);
-
+	const [editorState, setEditorState] = useState(EditorState.createEmpty());
+	const [emojiVisible, setEmojiVisible] = useState(false);
 	const [createMessage, { error, loading }] = useCreateMessageMutation();
 
+	const toggleEmoji = () => setEmojiVisible(!emojiVisible);
+
 	const handleSubmit = () => {
+		const content = "";
 		if (content && !EDITOR_NULL_VALUES.includes(content)) {
 			createMessage({ variables: { channelId, content, media: [] } }).then(() =>
-				setEditorReset(true)
+				setEditorState(EditorState.createEmpty())
 			);
 		} else {
 			console.log("here!");
@@ -33,12 +36,14 @@ export const MessageInput = ({ channelId }: MessageInputProps) => {
 
 	return (
 		<Editor
-			style={{
-				height: 50,
-				overflowY: "scroll"
-			}}
+			style={{ height: 50, margin: 10, overflowY: "scroll" }}
 			toolbarExtra={
 				<Space>
+					<Button
+						className="editor-btn"
+						icon={<SwitchingIcon name="emoji" className="editor-icon" />}
+						onClick={toggleEmoji}
+					/>
 					<Button
 						className="editor-btn"
 						icon={<SwitchingIcon name="upload" className="editor-icon" />}
@@ -51,10 +56,11 @@ export const MessageInput = ({ channelId }: MessageInputProps) => {
 					/>
 				</Space>
 			}
-			setSerializedValue={setContent}
-			reset={editorReset}
-			setReset={setEditorReset}
+			value={editorState}
+			setValue={setEditorState}
 			placeholder="Start Typing..."
+			onShiftEnter={handleSubmit}
+			emojiVisible={emojiVisible}
 		/>
 	);
 };

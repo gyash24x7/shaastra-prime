@@ -4,6 +4,7 @@ subscription NewMessage($channelId: String!) {
 		content
 		type
 		starred
+		liked
 		createdBy {
 			id
 			name
