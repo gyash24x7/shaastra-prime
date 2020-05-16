@@ -1,7 +1,9 @@
 import { Empty, Spin } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import moment from "moment";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import {
 	GetMessagesDocument,
+	Message,
 	useGetMessagesQuery,
 	useNewMessageSubscription
 } from "../../generated";
@@ -76,6 +78,23 @@ export const MessageList = ({ channelId }: MessageListProps) => {
 		}
 	};
 
+	const getGroupedMsgs = (messages: Partial<Message>[]) => {
+		let dates = new Set<string>(
+			messages.map((msg) =>
+				moment(parseInt(msg.createdAt!)).format("DD/MM/YYYY")
+			)
+		);
+		let dateWiseMsgs: Record<string, Partial<Message>[]> = {};
+
+		Array.from(dates).forEach((date) => {
+			dateWiseMsgs[date] = messages.filter(
+				(msg) => moment(parseInt(msg.createdAt!)).format("DD/MM/YYYY") === date
+			);
+		});
+
+		return dateWiseMsgs;
+	};
+
 	useEffect(() => {
 		scrollToBottom();
 	}, [data]);
@@ -85,11 +104,21 @@ export const MessageList = ({ channelId }: MessageListProps) => {
 		return <ShowError />;
 	}
 
+	let groupedMsgs = getGroupedMsgs(data?.getMessages || []);
+
 	return (
 		<div className="messages-container" ref={scroller} onScroll={handleScroll}>
-			{data?.getMessages.map((message) => (
-				<MessageItem key={message.id} message={message} />
+			{Object.keys(groupedMsgs).map((date) => (
+				<Fragment>
+					{groupedMsgs[date].map((msg) => (
+						<MessageItem message={msg} />
+					))}
+					<div className="message-date">
+						{moment(date, "DD/MM/YYYY").format("dddd, Do MMMM")}
+					</div>
+				</Fragment>
 			))}
+
 			{(loading || !fetchingEnabled) && (
 				<div style={{ padding: 20, alignSelf: "center" }}>
 					<Spin />
