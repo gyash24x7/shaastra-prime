@@ -1,15 +1,8 @@
-// import escapeHTML from "escape-html";
-// import isUrl from "is-url";
-// import React from "react";
-// import {
-// 	Editor,
-// 	Element as SlateElement,
-// 	Node,
-// 	Range,
-// 	Text,
-// 	Transforms
-// } from "slate";
-// import { RenderElementProps, RenderLeafProps } from "slate-react";
+import { ContentBlock, ContentState, EditorState, Modifier } from "draft-js";
+import { uncompress } from "emoji-mart/dist-es/utils/data";
+import { getSanitizedData, unifiedToNative } from "emoji-mart/dist/utils";
+import emojiRegexp from "emoji-regex";
+import React from "react";
 
 export const HOTKEYS: Record<string, string> = {
 	"mod+b": "bold",
@@ -17,195 +10,189 @@ export const HOTKEYS: Record<string, string> = {
 	"mod+u": "underline"
 };
 
-// export const toggleMark = (editor: Editor, format: string) => {
-// 	if (isMarkActive(editor, format)) Editor.removeMark(editor, format);
-// 	else Editor.addMark(editor, format, true);
-// };
-
-// export const isMarkActive = (editor: Editor, format: string) => {
-// 	const marks = Editor.marks(editor);
-// 	return marks ? marks[format] === true : false;
-// };
-
-// export const Leaf = (props: RenderLeafProps) => {
-// 	let children = { ...props.children };
-// 	if (props.leaf.bold) {
-// 		children = <strong>{children}</strong>;
-// 	}
-
-// 	if (props.leaf.italic) {
-// 		children = <em>{children}</em>;
-// 	}
-
-// 	if (props.leaf.underline) {
-// 		children = <u>{children}</u>;
-// 	}
-
-// 	return <span {...props.attributes}>{children}</span>;
-// };
-
 export const LIST_TYPES = ["ordered-list-item", "unordered-list-item"];
 
-// export const toggleBlock = (editor: Editor, format: string) => {
-// 	const isActive = isBlockActive(editor, format);
-// 	const isList = LIST_TYPES.includes(format);
+export const linkStrategy = (
+	contentBlock: ContentBlock,
+	callback: (start: number, end: number) => void,
+	contentState: ContentState
+) => {
+	contentBlock.findEntityRanges((character) => {
+		const entityKey = character.getEntity();
+		return (
+			entityKey !== null &&
+			contentState.getEntity(entityKey).getType() === "LINK"
+		);
+	}, callback);
+};
 
-// 	Transforms.unwrapNodes(editor, {
-// 		match: (n) => LIST_TYPES.includes(n.type as string),
-// 		split: true
-// 	});
+export const hashtagStrategy = (
+	contentBlock: ContentBlock,
+	callback: (start: number, end: number) => void
+) => {
+	findWithRegex(HASHTAG_REGEX, contentBlock, callback);
+};
 
-// 	Transforms.setNodes(editor, {
-// 		type: isActive ? "paragraph" : isList ? "list-item" : format
-// 	});
+const findWithRegex = (
+	regex: RegExp,
+	contentBlock: ContentBlock,
+	callback: (start: number, end: number) => void
+) => {
+	const text = contentBlock.getText();
+	let matchArr, start;
+	while ((matchArr = regex.exec(text)) !== null) {
+		start = matchArr.index;
+		callback(start, start + matchArr[0].length);
+	}
+};
 
-// 	if (!isActive && isList) {
-// 		const block = { type: format, children: [] };
-// 		Transforms.wrapNodes(editor, block);
-// 	}
-// };
+export const DraftLink = (props: any) => {
+	const { url } = props.contentState.getEntity(props.entityKey).getData();
+	return (
+		<a href={url} style={styles.link}>
+			{props.children}
+		</a>
+	);
+};
 
-// export const isBlockActive = (editor: Editor, format: string) => {
-// 	const [match] = Editor.nodes(editor, {
-// 		match: (n) => n.type === format
-// 	});
-// 	return !!match;
-// };
+export const DraftHash = (props: any) => {
+	return (
+		<span style={styles.hashtag} data-offset-key={props.offsetKey}>
+			{props.children}
+		</span>
+	);
+};
 
-// export const Element = (props: RenderElementProps) => {
-// 	switch (props.element.type) {
-// 		case "bulleted-list":
-// 			return <ul {...props.attributes}>{props.children}</ul>;
-// 		case "numbered-list":
-// 			return <ol {...props.attributes}>{props.children}</ol>;
-// 		case "list-item":
-// 			return <li {...props.attributes}>{props.children}</li>;
-// 		case "link":
-// 			return (
-// 				<a {...props.attributes} href={props.element.url as string}>
-// 					{props.children}
-// 				</a>
-// 			);
-// 		default:
-// 			return <p {...props.attributes}>{props.children}</p>;
-// 	}
-// };
+const HASHTAG_REGEX = /\B(#[a-zA-Z]+\b)(?!;)/g;
 
-// export const isLinkActive = (editor: Editor) => {
-// 	const [link] = Editor.nodes(editor, { match: (n) => n.type === "link" });
-// 	return !!link;
-// };
+const styles = {
+	link: {
+		color: "#3b5998",
+		textDecoration: "underline"
+	},
+	hashtag: {
+		color: "rgba(95, 184, 138, 1.0)"
+	}
+};
 
-// export const unwrapLink = (editor: Editor) => {
-// 	Transforms.unwrapNodes(editor, { match: (n) => n.type === "link" });
-// };
+export const insertEmoji = (editorState: EditorState, emoji: string) => {
+	const contentState = editorState.getCurrentContent();
+	const contentStateWithEntity = contentState.createEntity(
+		"emoji",
+		"IMMUTABLE",
+		{ emojiUnicode: emoji }
+	);
+	const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+	const currentSelection = editorState.getSelection();
 
-// export const wrapLink = (editor: Editor, url: string) => {
-// 	if (isLinkActive(editor)) {
-// 		unwrapLink(editor);
-// 	}
+	const contentStateAfterSelectionRemoval = Modifier.removeRange(
+		contentState,
+		currentSelection,
+		"backward"
+	);
 
-// 	const { selection } = editor;
-// 	const isCollapsed = selection && Range.isCollapsed(selection);
-// 	const link = {
-// 		type: "link",
-// 		url,
-// 		children: isCollapsed ? [{ text: url }] : []
-// 	};
+	const targetSelection = contentStateAfterSelectionRemoval.getSelectionAfter();
 
-// 	if (isCollapsed) {
-// 		Transforms.insertNodes(editor, link);
-// 	} else {
-// 		Transforms.wrapNodes(editor, link, { split: true });
-// 		Transforms.collapse(editor, { edge: "end" });
-// 	}
-// };
+	let emojiContent = Modifier.insertText(
+		contentStateAfterSelectionRemoval,
+		targetSelection,
+		emoji,
+		undefined,
+		entityKey
+	);
 
-// export const withLinks = (editor: any) => {
-// 	const { insertData, insertText, isInline } = editor;
+	const emojiEndPosition = targetSelection.getAnchorOffset();
+	const blockKey = targetSelection.getAnchorKey();
+	const blockSize = contentState.getBlockForKey(blockKey).getLength();
 
-// 	editor.isInline = (element: SlateElement) => {
-// 		return element.type === "link" ? true : isInline(element);
-// 	};
+	if (emojiEndPosition === blockSize) {
+		emojiContent = Modifier.insertText(
+			emojiContent,
+			emojiContent.getSelectionAfter(),
+			" "
+		);
+	}
 
-// 	editor.insertText = (text: string) => {
-// 		if (text && isUrl(text)) {
-// 			wrapLink(editor, text);
-// 		} else {
-// 			insertText(text);
-// 		}
-// 	};
+	const newEditorState = EditorState.push(
+		editorState,
+		emojiContent,
+		"insert-characters"
+	);
 
-// 	editor.insertData = (data: any) => {
-// 		const text = data.getData("text/plain");
+	return EditorState.forceSelection(
+		newEditorState,
+		emojiContent.getSelectionAfter()
+	);
+};
 
-// 		if (text && isUrl(text)) {
-// 			wrapLink(editor, text);
-// 		} else {
-// 			insertData(data);
-// 		}
-// 	};
+export const emojiStrategy = (
+	contentBlock: ContentBlock,
+	callback: (start: number, end: number) => void
+) => {
+	findWithRegex(emojiRegexp(), contentBlock, callback);
+};
 
-// 	return editor;
-// };
+export const convertShortNameToUnicode = (unicode: string) => {
+	if (unicode.indexOf("-") > -1) {
+		const parts = [];
 
-// export const insertLink = (editor: Editor, url: string) => {
-// 	if (editor.selection) {
-// 		wrapLink(editor, url);
-// 	}
-// };
+		const s = unicode.split("-");
 
-// export const serialize = (node: Node): string => {
-// 	if (Text.isText(node)) return serializeMarks(node);
+		for (let i = 0; i < s.length; i += 1) {
+			let part: any = parseInt(s[i], 16);
 
-// 	const children = node.children.map((n) => serialize(n)).join("");
+			if (part >= 0x10000 && part <= 0x10ffff) {
+				const hi = Math.floor((part - 0x10000) / 0x400) + 0xd800;
+				const lo = ((part - 0x10000) % 0x400) + 0xdc00;
+				part = String.fromCharCode(hi) + String.fromCharCode(lo);
+			} else {
+				part = String.fromCharCode(part);
+			}
 
-// 	switch (node.type as string) {
-// 		case "bulleted-list":
-// 			return `<ul>${children}</ul>`;
-// 		case "numbered-list":
-// 			return `<ol>${children}</ol>`;
-// 		case "list-item":
-// 			return `<li>${children}</li>`;
-// 		case "paragraph":
-// 			return `<p>${children}</p>`;
-// 		case "link":
-// 			return `<a href="${escapeHTML(
-// 				node.url as string
-// 			)}" target="_blank" >${children}</a>`;
-// 		default:
-// 			return children;
-// 	}
-// };
+			parts.push(part);
+		}
 
-// export const serializeMarks = (node: Node) => {
-// 	if (node.bold && node.italic && node.underline) {
-// 		return `<strong><em><u>${node.text}</u></em></strong>`;
-// 	}
+		return parts.join("");
+	}
 
-// 	if (node.bold && node.italic) {
-// 		return `<strong><em>${node.text}</em></strong>`;
-// 	}
+	const s = parseInt(unicode, 16);
 
-// 	if (node.bold && node.underline) {
-// 		return `<strong><u>${node.text}</u></strong>`;
-// 	}
+	if (s >= 0x10000 && s <= 0x10ffff) {
+		const hi = Math.floor((s - 0x10000) / 0x400) + 0xd800;
+		const lo = ((s - 0x10000) % 0x400) + 0xdc00;
 
-// 	if (node.underline && node.italic) {
-// 		return `<em><u>${node.text}</u></em>`;
-// 	}
+		return String.fromCharCode(hi) + String.fromCharCode(lo);
+	}
 
-// 	if (node.bold) {
-// 		return `<strong>${node.text}</strong>`;
-// 	}
+	return String.fromCharCode(s);
+};
 
-// 	if (node.italic) {
-// 		return `<em>${node.text}</em>`;
-// 	}
+type EmojiEntity = {
+	id: string;
+	unified: string;
+	short_names: Array<string>;
+};
 
-// 	if (node.underline) {
-// 		return `<u>${node.text}</u>`;
-// 	}
+export type DataSet = {
+	compressed: boolean;
+	emojis: Record<string, EmojiEntity>;
+};
 
-// 	return node.text as string;
-// };
+export const getEmojiDataFromNative = (data: DataSet, set: string) => (
+	nativeString: string
+) => {
+	if (data.compressed) {
+		uncompress(data as any);
+	}
+
+	const emojiData = Object.values(data.emojis).find(
+		(emoji) => unifiedToNative(emoji.unified) === nativeString
+	);
+
+	if (!emojiData) return null;
+
+	const [id] = emojiData.short_names;
+	emojiData.id = id;
+
+	return getSanitizedData(emojiData, " ", set, data);
+};

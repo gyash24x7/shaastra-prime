@@ -6,19 +6,19 @@ import { HOTKEYS, LIST_TYPES } from "./utils";
 
 interface ToolbarProps {
 	extra?: JSX.Element;
-	value: EditorState;
-	setValue: (val: EditorState) => void;
+	editorState: EditorState;
+	setEditorState: (val: EditorState) => void;
 }
 
-export const Toolbar = ({ extra, value, setValue }: ToolbarProps) => {
-	const selection = value.getSelection();
+export const Toolbar = (props: ToolbarProps) => {
+	const selection = props.editorState.getSelection();
 
-	const blockType = value
+	const blockType = props.editorState
 		.getCurrentContent()
 		.getBlockForKey(selection.getStartKey())
 		.getType();
 
-	const currentStyle = value.getCurrentInlineStyle();
+	const currentStyle = props.editorState.getCurrentInlineStyle();
 
 	return (
 		<div className="editor-toolbar">
@@ -43,8 +43,11 @@ export const Toolbar = ({ extra, value, setValue }: ToolbarProps) => {
 							}
 							onMouseDown={(e) => {
 								e.preventDefault();
-								setValue(
-									RichUtils.toggleInlineStyle(value, HOTKEYS[key].toUpperCase())
+								props.setEditorState(
+									RichUtils.toggleInlineStyle(
+										props.editorState,
+										HOTKEYS[key].toUpperCase()
+									)
 								);
 							}}
 						/>
@@ -68,13 +71,15 @@ export const Toolbar = ({ extra, value, setValue }: ToolbarProps) => {
 							}
 							onMouseDown={(e) => {
 								e.preventDefault();
-								setValue(RichUtils.toggleBlockType(value, list));
+								props.setEditorState(
+									RichUtils.toggleBlockType(props.editorState, list)
+								);
 							}}
 						/>
 					))}
 				</Space>
 			</div>
-			<div className="extra-controls">{extra}</div>
+			<div className="extra-controls">{props.extra}</div>
 		</div>
 	);
 };

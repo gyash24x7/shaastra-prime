@@ -1,9 +1,15 @@
 import { Button, Space } from "antd";
-import { EditorState } from "draft-js";
+import { CompositeDecorator, EditorState } from "draft-js";
 import React, { useState } from "react";
 import { useCreateMessageMutation } from "../../generated";
 import { EDITOR_NULL_VALUES } from "../../utils/constants";
 import Editor from "../Editor";
+import {
+	DraftHash,
+	DraftLink,
+	hashtagStrategy,
+	linkStrategy
+} from "../Editor/utils";
 import { ShowError } from "../shared/ShowError";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
 
@@ -12,7 +18,14 @@ interface MessageInputProps {
 }
 
 export const MessageInput = ({ channelId }: MessageInputProps) => {
-	const [editorState, setEditorState] = useState(EditorState.createEmpty());
+	const decorator = new CompositeDecorator([
+		{ strategy: linkStrategy, component: DraftLink },
+		{ strategy: hashtagStrategy, component: DraftHash }
+	]);
+
+	const [editorState, setEditorState] = useState(
+		EditorState.createEmpty(decorator)
+	);
 	const [emojiVisible, setEmojiVisible] = useState(false);
 	const [createMessage, { error, loading }] = useCreateMessageMutation();
 
@@ -36,7 +49,7 @@ export const MessageInput = ({ channelId }: MessageInputProps) => {
 
 	return (
 		<Editor
-			style={{ height: 50, margin: 10, overflowY: "scroll" }}
+			style={{ height: 50, margin: 10, overflowY: "scroll", zIndex: -1 }}
 			toolbarExtra={
 				<Space>
 					<Button
@@ -56,11 +69,12 @@ export const MessageInput = ({ channelId }: MessageInputProps) => {
 					/>
 				</Space>
 			}
-			value={editorState}
-			setValue={setEditorState}
+			editorState={editorState}
+			setEditorState={setEditorState}
 			placeholder="Start Typing..."
 			onShiftEnter={handleSubmit}
 			emojiVisible={emojiVisible}
+			setEmojiVisible={setEmojiVisible}
 		/>
 	);
 };

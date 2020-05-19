@@ -1,21 +1,19 @@
 import { Typography } from "antd";
 import {
 	DraftHandleValue,
+	Editor,
 	EditorState,
 	getDefaultKeyBinding,
 	RichUtils
 } from "draft-js";
-import createLinkifyPlugin from "draft-js-linkify-plugin";
-import Editor from "draft-js-plugins-editor";
 import "draft-js/dist/Draft.css";
-import { Picker } from "emoji-mart";
+import { BaseEmoji, Picker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
 import React, { Fragment, useCallback } from "react";
 import { Toolbar } from "./Toolbar";
+import { insertEmoji } from "./utils";
 
 const { Paragraph } = Typography;
-const linkifyPlugin = createLinkifyPlugin();
-const plugins = [linkifyPlugin];
 
 interface EditorProps {
 	toolbarExtra?: JSX.Element;
@@ -23,63 +21,73 @@ interface EditorProps {
 	style?: React.CSSProperties;
 	placeholder?: string;
 	onShiftEnter?: () => void;
-	value: EditorState;
-	setValue: (val: EditorState) => void;
+	editorState: EditorState;
+	setEditorState: (val: EditorState) => void;
 	emojiVisible: boolean;
+	setEmojiVisible: (val: boolean) => void;
 }
 
 export default (props: EditorProps) => {
-	const { setValue, value, placeholder } = props;
+	const { setEditorState, editorState, placeholder } = props;
 
 	const handleKeyCommand = useCallback(
 		(command: string, editorState: EditorState) => {
 			const newState = RichUtils.handleKeyCommand(editorState, command);
 			if (newState) {
-				setValue(newState);
+				setEditorState(newState);
 				return "handled" as DraftHandleValue;
 			}
 			return "not-handled" as DraftHandleValue;
 		},
-		[setValue]
+		[setEditorState]
 	);
 
 	const mapKeyToEditorCommand = useCallback(
-		(e) => {
+		(e: React.KeyboardEvent) => {
 			switch (e.keyCode) {
 				case 9:
-					const newEditorState = RichUtils.onTab(e, value, 4);
-					if (newEditorState !== value) {
-						setValue(newEditorState);
+					const newEditorState = RichUtils.onTab(e, editorState, 4);
+					if (newEditorState !== editorState) {
+						setEditorState(newEditorState);
 					}
 					return null;
 			}
 			return getDefaultKeyBinding(e);
 		},
-		[value, setValue]
+		[editorState, setEditorState]
 	);
 
 	let className = "";
-	let contentState = value.getCurrentContent();
+	let contentState = editorState.getCurrentContent();
 	if (!contentState.hasText()) {
 		if (contentState.getBlockMap().first().getType() !== "unstyled") {
 			className += " editor-hide-placeholder";
 		}
 	}
 
+	const handleEmojiSelect = (val: BaseEmoji) => {
+		const newEditorState = insertEmoji(editorState, val.native);
+		setEditorState(newEditorState);
+	};
+
 	return (
 		<Fragment>
 			<div className="editor-wrapper">
 				<div style={props.style} className={className}>
 					<Editor
-						editorState={value}
-						onChange={setValue}
+						onFocus={() => props.setEmojiVisible(false)}
+						editorState={editorState}
+						onChange={setEditorState}
 						handleKeyCommand={handleKeyCommand}
 						placeholder={placeholder}
 						keyBindingFn={mapKeyToEditorCommand}
-						plugins={plugins}
 					/>
 				</div>
-				<Toolbar extra={props.toolbarExtra} value={value} setValue={setValue} />
+				<Toolbar
+					extra={props.toolbarExtra}
+					editorState={editorState}
+					setEditorState={setEditorState}
+				/>
 			</div>
 			{props.emojiVisible && (
 				<Picker
@@ -92,8 +100,10 @@ export default (props: EditorProps) => {
 						position: "fixed",
 						bottom: 75,
 						right: 41,
-						boxShadow: "0px 0px 2px 2px #303030"
+						boxShadow: "0px 0px 2px 2px #303030",
+						zIndex: 100
 					}}
+					onSelect={handleEmojiSelect}
 				/>
 			)}
 			{props.onShiftEnter && (
