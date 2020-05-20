@@ -6,4 +6,4 @@ RUN npm install
 RUN npm run gen
 RUN npm run build
 EXPOSE 8000
-CMD [ "yarn", "start" ]
+CMD [ "npm", "start" ]

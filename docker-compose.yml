@@ -1,13 +1,9 @@
-version: "3"
-env_file:
-  - ./server/.env
+version: "3.3"
 services:
   db:
     image: postgres
-    environment:
-      POSTGRES_USER: ${PG_USER}
-      POSTGRES_PASSWORD: ${PG_PASSWORD}
-      POSTGRES_DB: ${PG_DB}
+    env_file:
+      - ./server/.env
     ports:
       - 5432:5432
 
@@ -16,10 +12,8 @@ services:
     ports:
       - 8000:8000
     depends_on:
-      - postgres
+      - db
+    env_file:
+      - ./server/.env
     environment:
       NODE_ENV: production
-      DATABASE_URL: ${DATABASE_URL}
-      MAILJET_APIKEY: ${MAILJET_APIKEY}
-      MAILJET_APISECRET: ${MAILJET_APISECRET}
-      JWT_SECRET: ${JWT_SECRET}
