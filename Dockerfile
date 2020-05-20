@@ -1,6 +1,5 @@
 FROM node:12-alpine
 RUN mkdir shaastra-prime
-RUN npm i -g yarn
 ADD . /shaastra-prime
 WORKDIR /shaastra-prime
 RUN yarn
