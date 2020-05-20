@@ -7,7 +7,8 @@
 		"dev": "ts-node-dev --respawn ./index.ts",
 		"gen": "npx prisma generate",
 		"build": "tsc",
-		"start": "node ./dist"
+		"start": "node ./dist",
+		"migrate": "npx prisma migrate save --experimental && npx prisma migrate up --experimental"
 	},
 	"keywords": [],
 	"author": "",
