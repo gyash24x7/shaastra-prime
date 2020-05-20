@@ -1,0 +1,17 @@
+query GetUpdates {
+	getUpdates {
+		id
+		brief
+		subject
+		content
+		postedBy {
+			id
+			name
+		}
+		byDept {
+			id
+			name
+		}
+		createdAt
+	}
+}

@@ -1,0 +1,3 @@
+mutation UploadCoverPic($coverPic: String!) {
+	uploadCoverPic(coverPic: $coverPic)
+}

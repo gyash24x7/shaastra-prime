@@ -1,0 +1,19 @@
+mutation CreateUser(
+	$name: String!
+	$email: String!
+	$password: String!
+	$departmentId: String!
+	$rollNumber: String!
+	$mobile: String!
+) {
+	createUser(
+		data: {
+			name: $name
+			email: $email
+			password: $password
+			rollNumber: $rollNumber
+			mobile: $mobile
+			departmentId: $departmentId
+		}
+	)
+}

@@ -1,0 +1,37 @@
+query GetChannelDetails($channelId: String!) {
+	getChannelDetails(channelId: $channelId) {
+		id
+		name
+		description
+		createdBy {
+			id
+			name
+		}
+		members {
+			id
+			name
+			role
+			department {
+				id
+				name
+			}
+		}
+		connectedTasks {
+			id
+			brief
+			status
+		}
+		starredMsgs {
+			id
+			content
+			type
+			starred
+			createdBy {
+				id
+				name
+			}
+			createdAt
+			likes
+		}
+	}
+}

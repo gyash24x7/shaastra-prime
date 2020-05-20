@@ -1,0 +1,20 @@
+subscription NewMessage($channelId: String!) {
+	newMessage(channelId: $channelId) {
+		id
+		content
+		type
+		starred
+		liked
+		createdBy {
+			id
+			name
+		}
+		createdAt
+		media {
+			id
+			url
+			type
+		}
+		likes
+	}
+}

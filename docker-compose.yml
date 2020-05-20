@@ -1,0 +1,25 @@
+version: "3"
+env_file:
+  - ./server/.env
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DB}
+    ports:
+      - 5432:5432
+
+  prime-server:
+    image: gyash24x7/shaastra-prime
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL}
+      MAILJET_APIKEY: ${MAILJET_APIKEY}
+      MAILJET_APISECRET: ${MAILJET_APISECRET}
+      JWT_SECRET: ${JWT_SECRET}

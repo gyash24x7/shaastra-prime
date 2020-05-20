@@ -1,0 +1,9 @@
+mutation CreateChannel(
+	$name: String!
+	$description: String!
+	$members: [String!]!
+) {
+	createChannel(
+		data: { name: $name, description: $description, members: $members }
+	)
+}

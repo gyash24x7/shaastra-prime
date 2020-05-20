@@ -15,13 +15,8 @@ const startServer = async () => {
 			const user = await getAuthUser({ req, connection });
 			return { user };
 		},
-		cors: {
-			origin: "http://localhost:3000",
-			credentials: true
-		},
-		subscriptions: {
-			path: "/"
-		}
+		cors: { origin: "http://localhost:3000", credentials: true },
+		subscriptions: { path: "/" }
 	});
 	server.listen(8000).then(({ url }) => {
 		console.log(`🚀  Server ready at ${url}`);

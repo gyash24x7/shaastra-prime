@@ -1,0 +1,3 @@
+mutation UploadProfilePic($profilePic: String!) {
+	uploadProfilePic(profilePic: $profilePic)
+}

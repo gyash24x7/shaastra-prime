@@ -1,0 +1,8 @@
+query GetDepartments {
+	getDepartments {
+		id
+		name
+		shortName
+		subDepartments
+	}
+}

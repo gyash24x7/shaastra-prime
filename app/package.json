@@ -5,12 +5,15 @@
 		"android": "expo start --android",
 		"ios": "expo start --ios",
 		"web": "expo start --web",
-		"eject": "expo eject"
+		"eject": "expo eject",
+		"gen": "graphql-codegen --watch"
 	},
 	"name": "app",
 	"version": "0.0.1",
 	"dependencies": {
 		"@ant-design/icons-react-native": "^2.2.1",
+		"@apollo/client": "^3.0.0-beta.49",
+		"@apollo/link-ws": "^2.0.0-beta.3",
 		"@eva-design/eva": "^2.0.0",
 		"@react-native-community/masked-view": "0.1.6",
 		"@react-navigation/bottom-tabs": "^5.4.4",
@@ -21,6 +24,8 @@
 		"@ui-kitten/eva-icons": "^5.0.0",
 		"@use-expo/font": "^2.0.0",
 		"expo": "~37.0.11",
+		"graphql": "14.6.0",
+		"graphql-tag": "^2.10.3",
 		"lorem-ipsum": "^2.0.3",
 		"react": "~16.9.0",
 		"react-dom": "~16.9.0",
@@ -30,10 +35,15 @@
 		"react-native-safe-area-context": "0.7.3",
 		"react-native-screens": "~2.2.0",
 		"react-native-svg": "9.13.6",
-		"react-native-web": "~0.12.2"
+		"react-native-web": "~0.12.2",
+		"subscriptions-transport-ws": "^0.9.16"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.8.6",
+		"@graphql-codegen/cli": "^1.14.0",
+		"@graphql-codegen/typescript": "^1.14.0",
+		"@graphql-codegen/typescript-operations": "^1.14.0",
+		"@graphql-codegen/typescript-react-apollo": "^1.14.0",
 		"@types/react": "~16.9.23",
 		"@types/react-native": "~0.61.17",
 		"babel-preset-expo": "~8.1.0",
