@@ -16,7 +16,8 @@ const startServer = async () => {
 			return { user };
 		},
 		cors: { origin: "http://localhost:3000", credentials: true },
-		subscriptions: { path: "/" }
+		subscriptions: { path: "/" },
+		playground: true
 	});
 	server.listen(8000).then(({ url }) => {
 		console.log(`🚀  Server ready at ${url}`);
