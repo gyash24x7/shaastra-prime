@@ -17,6 +17,7 @@ model Department {
   tasksCreated      Task[]    @relation("TasksByDept")
   updates           Update[]  @relation("DeptUpdates")
   invoicesSubmitted Invoice[] @relation("InvoicesByDept")
+  goals             Goal[]    @relation("DeptGoals")
 }
 
 model User {
@@ -139,6 +140,25 @@ model Update {
   byDeptId   String
 }
 
+model Goal {
+  id          String      @default(cuid()) @id
+  title       String
+  dept        Department  @relation("DeptGoals", fields: [deptId], references: [id])
+  deptId      String
+  description String
+  type        GoalType
+  createdAt   DateTime    @default(now())
+  milestones  Milestone[] @relation("GoalMilestones")
+}
+
+model Milestone {
+  id     String          @default(cuid()) @id
+  title  String
+  status MilestoneStatus @default(IN_PROGRESS)
+  goal   Goal            @relation("GoalMilestones", fields: [goalId], references: [id])
+  goalId String
+}
+
 // Kaousheik & Vatsal Start from here
 model Invoice {
   id            String            @default(cuid()) @id
@@ -199,6 +219,7 @@ model Event {
   vertical         Vertical         @relation("EventsUnderVertical", fields: [verticalId], references: [id])
   verticalId       String
   info             String
+  updatedOn        DateTime         @default(now())
   eventTabs        EventTab[]       @relation("TabsForEvent")
   updatedBy        User             @relation("EventUpdatedBy", fields: [updatedById], references: [id])
   updatedById      String

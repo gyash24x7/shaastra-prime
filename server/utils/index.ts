@@ -116,3 +116,17 @@ export const getMediaType = (type: string) => {
 export const getChannelType = (type: string) => {
 	return type === "DIRECT" ? ChannelType.DIRECT : ChannelType.GROUP;
 };
+
+export enum RegistrationType {
+	INDIVIDUAL = "INDIVIDUAL",
+	TEAM = "TEAM",
+	BOTH = "BOTH"
+}
+
+export enum InviteStatus {
+	ACCEPTED = "ACCEPTED",
+	REJECTED = "REJECTED",
+	PENDING = "PENDING"
+}
+
+export const defaultImageUrl = "https://source.unsplash.com/featured/500x500";
