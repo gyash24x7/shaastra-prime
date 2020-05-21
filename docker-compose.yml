@@ -1,4 +1,6 @@
 version: "3.3"
+volumes:
+  prime-db:
 services:
   db:
     image: postgres
@@ -6,6 +8,8 @@ services:
       - ./server/.env
     ports:
       - 5432:5432
+    volumes:
+      - prime-db:/var/lib/postgresql/data
 
   prime-server:
     image: gyash24x7/shaastra-prime

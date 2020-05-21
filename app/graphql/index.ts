@@ -1,24 +1,32 @@
 import { ApolloClient, HttpLink, InMemoryCache, split } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
+import { setContext } from "@apollo/link-context";
 import { WebSocketLink } from "@apollo/link-ws";
+import { AsyncStorage } from "react-native";
 
 const wsLink = new WebSocketLink({
 	uri: "ws://localhost:8000",
 	options: {
 		reconnect: true,
-		connectionParams: {
-			Authorization: `Bearer ${localStorage.getItem("authToken")}`
+		connectionParams: async () => {
+			const token = await AsyncStorage.getItem("authToken");
+			return {
+				Authorization: token ? `Bearer ${token}` : undefined
+			};
 		}
 	}
 });
 
-const httpLink = new HttpLink({
-	uri: "http://localhost:8000",
-	headers: {
-		authorization: localStorage.getItem("authToken")
-			? `Bearer ${localStorage.getItem("authToken")}`
-			: undefined
-	}
+const httpLink = new HttpLink({ uri: "http://localhost:8000" });
+
+const authLink = setContext(async (_, { headers }) => {
+	const token = await AsyncStorage.getItem("authToken");
+	return {
+		headers: {
+			...headers,
+			authorization: token ? `Bearer ${token}` : undefined
+		}
+	};
 });
 
 const splitLink = split(
@@ -35,5 +43,5 @@ const splitLink = split(
 
 export const client = new ApolloClient({
 	cache: new InMemoryCache(),
-	link: splitLink
+	link: authLink.concat(splitLink)
 });
