@@ -21,9 +21,9 @@ model Department {
 }
 
 model User {
-  id                String         @default(cuid()) @id
+  id                String            @default(cuid()) @id
   name              String
-  email             String         @unique
+  email             String            @unique
   password          String
   rollNumber        String
   profilePic        String
@@ -31,40 +31,42 @@ model User {
   mobile            String
   upi               String
   about             String
-  role              UserRole       @default(COORD)
-  verified          Boolean        @default(false)
+  role              UserRole          @default(COORD)
+  verified          Boolean           @default(false)
   verificationOTP   String
   passwordOTP       String?
-  department        Department     @relation("DeptMembers", fields: [deptId], references: [id])
+  department        Department        @relation("DeptMembers", fields: [deptId], references: [id])
   deptId            String
   // Fields to be fetched separately if needed: Omit in API
-  channels          Channel[]      @relation("ChannelMembers", references: [id])
-  media             Media[]        @relation("MediaByUser")
-  tasksAssigned     Task[]         @relation("TasksForUser", references: [id])
-  invoicesSubmitted Invoice[]      @relation("InvoicesByUser")
-  messages          Message[]      @relation("MessagesByUser")
-  channelsCreated   Channel[]      @relation("ChannelsByUser")
-  tasksCreated      Task[]         @relation("TasksByUser")
-  likedMessages     Message[]      @relation("LikesByUser", references: [id])
-  Update            Update[]       @relation("UserUpdate")
-  Vertical          Vertical[]     @relation("VerticalUpdatedBy")
-  Event             Event[]        @relation("EventUpdatedBy")
-  TaskActivity      TaskActivity[] @relation("TaskActivityByUser")
+  channels          Channel[]         @relation("ChannelMembers", references: [id])
+  media             Media[]           @relation("MediaByUser")
+  tasksAssigned     Task[]            @relation("TasksForUser", references: [id])
+  invoicesSubmitted Invoice[]         @relation("InvoicesByUser")
+  messages          Message[]         @relation("MessagesByUser")
+  channelsCreated   Channel[]         @relation("ChannelsByUser")
+  tasksCreated      Task[]            @relation("TasksByUser")
+  likedMessages     Message[]         @relation("LikesByUser", references: [id])
+  Update            Update[]          @relation("UserUpdate")
+  Vertical          Vertical[]        @relation("VerticalUpdatedBy")
+  Event             Event[]           @relation("EventUpdatedBy")
+  TaskActivity      TaskActivity[]    @relation("TaskActivityByUser")
+  InvoiceActivity   InvoiceActivity[] @relation("InvoiceActivityByUser")
 }
 
 model Channel {
-  id             String      @default(cuid()) @id
-  name           String      @unique
-  description    String
-  type           ChannelType
-  createdAt      DateTime    @default(now())
-  archived       Boolean     @default(false)
-  createdBy      User        @relation("ChannelsByUser", fields: [createdById], references: [id])
-  members        User[]      @relation("ChannelMembers", references: [id])
-  createdById    String
+  id                String      @default(cuid()) @id
+  name              String      @unique
+  description       String
+  type              ChannelType
+  createdAt         DateTime    @default(now())
+  archived          Boolean     @default(false)
+  createdBy         User        @relation("ChannelsByUser", fields: [createdById], references: [id])
+  members           User[]      @relation("ChannelMembers", references: [id])
+  createdById       String
   // Fields to be fetched separately if needed: Omit in API
-  messages       Message[]   @relation("ChannelMessages")
-  connectedTasks Task[]      @relation("TaskUpdateChannels", references: [id])
+  messages          Message[]   @relation("ChannelMessages")
+  connectedTasks    Task[]      @relation("TaskUpdateChannels", references: [id])
+  connectedInvoices Invoice[]   @relation("InvoiceUpdateChannels", references: [id])
 }
 
 model Message {
@@ -168,6 +170,7 @@ model Invoice {
   amount        String
   purpose       String
   status        InvoiceStatus
+  createdAt     DateTime          @default(now())
   type          InvoiceType
   vendor        Vendor            @relation("VendorInvoices", fields: [vendorId], references: [id])
   vendorId      String
@@ -178,24 +181,28 @@ model Invoice {
   uploadedById  String
   byDept        Department        @relation("InvoicesByDept", fields: [byDeptId], references: [id])
   byDeptId      String
+  channels      Channel[]         @relation("InvoiceUpdateChannels", references: [id])
 }
 
 model InvoiceActivity {
-  id        String              @default(cuid()) @id
-  type      InvoiceActivityType
-  on        DateTime            @default(now())
-  invoice   Invoice             @relation("InvoiceActivity", fields: [invoiceId], references: [id])
-  invoiceId String
+  id          String              @default(cuid()) @id
+  type        InvoiceActivityType
+  on          DateTime            @default(now())
+  invoice     Invoice             @relation("InvoiceActivity", fields: [invoiceId], references: [id])
+  invoiceId   String
+  by          User                @relation("InvoiceActivityByUser", fields: [byId], references: [id])
+  byId        String
+  description String
 }
 
 model Vendor {
   id            String    @default(cuid()) @id
   name          String
   gstNumber     String
-  accountName   String
-  accountNumber String
-  ifsc          String
-  bankDetails   String
+  accountName   String?
+  accountNumber String?
+  ifsc          String?
+  bankDetails   String?
   invoices      Invoice[] @relation("VendorInvoices")
 }
 
@@ -287,6 +294,7 @@ enum MessageType {
   TEXT
   MEDIA
   TASK_UPDATE
+  INVOICE_UPDATE
 }
 
 enum RegistrationType {

@@ -4,8 +4,8 @@ import { Field, InputType } from "type-graphql";
 export class CreateVendorInput {
 	@Field() name: string;
 	@Field() gstNumber: string;
-	@Field() accountName: string;
-	@Field() accountNumber: string;
-	@Field() ifsc: string;
-	@Field() bankDetails: string;
+	@Field({ nullable: true }) accountName?: string;
+	@Field({ nullable: true }) accountNumber?: string;
+	@Field({ nullable: true }) ifsc?: string;
+	@Field({ nullable: true }) bankDetails?: string;
 }
