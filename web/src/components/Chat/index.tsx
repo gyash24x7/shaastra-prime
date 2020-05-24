@@ -51,7 +51,7 @@ export const ChatScreen = () => {
 			>
 				<MessageList channelId={channelId!} />
 				<Card.Grid className="message-input-container" hoverable={false}>
-					<MessageInput channelId={channelId!} />
+					<MessageInput channelId={channelId!} members={channel.members} />
 				</Card.Grid>
 			</Card>
 		);

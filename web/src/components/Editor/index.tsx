@@ -1,17 +1,13 @@
 import { Typography } from "antd";
-import {
-	DraftHandleValue,
-	Editor,
-	EditorState,
-	getDefaultKeyBinding,
-	RichUtils
-} from "draft-js";
+import { Editor, EditorState, getDefaultKeyBinding, RichUtils } from "draft-js";
 import "draft-js/dist/Draft.css";
 import { BaseEmoji, Picker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
 import React, { Fragment, useCallback } from "react";
+import { insertEmoji } from "./EmojiPlugin";
+import { getMentionState, MentionState } from "./MentionPlugin";
 import { Toolbar } from "./Toolbar";
-import { insertEmoji } from "./utils";
+import { pickerStyle } from "./utils";
 
 const { Paragraph } = Typography;
 
@@ -21,25 +17,36 @@ interface EditorProps {
 	style?: React.CSSProperties;
 	placeholder?: string;
 	onShiftEnter?: () => void;
-	editorState: EditorState;
-	setEditorState: (val: EditorState) => void;
 	emojiVisible: boolean;
 	setEmojiVisible: (val: boolean) => void;
+	editorState: EditorState;
+	setEditorState: (val: EditorState) => void;
+	mentionState?: MentionState | null;
+	setMentionState?: (val: MentionState | null) => void;
+	handleKeyPress: (e: any, type: string) => void;
+	handleMentionSelect: () => void;
 }
 
 export default (props: EditorProps) => {
-	const { setEditorState, editorState, placeholder } = props;
+	const { handleKeyPress, onShiftEnter, editorState, setEditorState } = props;
 
 	const handleKeyCommand = useCallback(
 		(command: string, editorState: EditorState) => {
+			if (command === "message-send") {
+				onShiftEnter && onShiftEnter();
+				return "handled";
+			}
+
+			if (command === "arrow" || command === "escape") return "handled";
+
 			const newState = RichUtils.handleKeyCommand(editorState, command);
 			if (newState) {
 				setEditorState(newState);
-				return "handled" as DraftHandleValue;
+				return "handled";
 			}
-			return "not-handled" as DraftHandleValue;
+			return "not-handled";
 		},
-		[setEditorState]
+		[setEditorState, onShiftEnter]
 	);
 
 	const mapKeyToEditorCommand = useCallback(
@@ -51,10 +58,30 @@ export default (props: EditorProps) => {
 						setEditorState(newEditorState);
 					}
 					return null;
+
+				case 13:
+					e.preventDefault();
+					if (e.shiftKey) return "message-send";
+					break;
+
+				case 38:
+					e.preventDefault();
+					handleKeyPress(e, "UP");
+					return "arrow";
+
+				case 40:
+					e.preventDefault();
+					handleKeyPress(e, "DOWN");
+					return "arrow";
+
+				case 27:
+					e.preventDefault();
+					handleKeyPress(e, "ESC");
+					return "escape";
 			}
 			return getDefaultKeyBinding(e);
 		},
-		[editorState, setEditorState]
+		[editorState, setEditorState, handleKeyPress]
 	);
 
 	let className = "";
@@ -70,17 +97,38 @@ export default (props: EditorProps) => {
 		setEditorState(newEditorState);
 	};
 
+	const handleReturn = () => {
+		if (!!props.mentionState) {
+			props.handleMentionSelect();
+			return "handled";
+		}
+		return "not-handled";
+	};
+
+	const handleOnChange = (val: EditorState) => {
+		setEditorState(val);
+		if (props.setMentionState) {
+			window.requestAnimationFrame(() => {
+				props.setMentionState!(getMentionState(val, props.mentionState));
+			});
+		}
+	};
+
 	return (
 		<Fragment>
 			<div className="editor-wrapper">
-				<div style={props.style} className={className}>
+				<div
+					style={props.style}
+					className={className}
+					onClick={() => props.setEmojiVisible(false)}
+				>
 					<Editor
-						onFocus={() => props.setEmojiVisible(false)}
 						editorState={editorState}
-						onChange={setEditorState}
+						onChange={handleOnChange}
 						handleKeyCommand={handleKeyCommand}
-						placeholder={placeholder}
+						placeholder={props.placeholder}
 						keyBindingFn={mapKeyToEditorCommand}
+						handleReturn={handleReturn}
 					/>
 				</div>
 				<Toolbar
@@ -94,15 +142,7 @@ export default (props: EditorProps) => {
 					theme="dark"
 					showPreview={false}
 					color="#B3B3B3"
-					style={{
-						backgroundColor: "#141414",
-						border: "1px solid #303030",
-						position: "fixed",
-						bottom: 75,
-						right: 41,
-						boxShadow: "0px 0px 2px 2px #303030",
-						zIndex: 100
-					}}
+					style={pickerStyle}
 					onSelect={handleEmojiSelect}
 				/>
 			)}
