@@ -13,7 +13,17 @@ const startServer = async () => {
 	const server = new ApolloServer({
 		schema,
 		context: async ({ req, connection }) => {
-			const prisma = new PrismaClient();
+			const prisma = new PrismaClient({
+				datasources: {
+					db: `postgresql://${process.env.POSTGRES_USER}:${
+						process.env.POSTGRES_PASSWORD
+					}@${
+						process.env.NODE_ENV === "production"
+							? "host.docker.internal"
+							: "localhost"
+					}:5432/${process.env.POSTGRES_DB}`
+				}
+			});
 			const user = await getAuthUser({ req, connection, prisma });
 			return { user, prisma };
 		},

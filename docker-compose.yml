@@ -4,9 +4,6 @@ services:
     image: gyash24x7/shaastra-prime
     ports:
       - 8000:8000
-      - 5432:5432
-    depends_on:
-      - db
     env_file:
       - ./server/.env
     environment:
