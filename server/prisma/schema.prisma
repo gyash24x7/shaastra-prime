@@ -12,6 +12,8 @@ model Department {
   name              String
   shortName         String    @default("")
   subDepartments    String[]
+  finManager        User      @relation("FinManagerForDept", fields: [finManagerId], references: [id])
+  finManagerId      String
   members           User[]    @relation("DeptMembers")
   tasksAssigned     Task[]    @relation("TasksForDept")
   tasksCreated      Task[]    @relation("TasksByDept")
@@ -51,6 +53,7 @@ model User {
   Event             Event[]           @relation("EventUpdatedBy")
   TaskActivity      TaskActivity[]    @relation("TaskActivityByUser")
   InvoiceActivity   InvoiceActivity[] @relation("InvoiceActivityByUser")
+  Department        Department        @relation("FinManagerForDept")
 }
 
 model Channel {
@@ -91,7 +94,8 @@ model Media {
   uploadedBy   User      @relation("MediaByUser", fields: [uploadedById], references: [id])
   uploadedById String
   // Fields to be fetched separately if needed: Omit in API
-  invoice      Invoice?  @relation("InvoiceMedia")
+  invoice      Invoice?  @relation("InvoiceMedia", fields: [invoiceId], references: [id])
+  invoiceId    String?
   vertical     Vertical? @relation("VerticalImage")
   task         Task?     @relation("TaskMedia", fields: [taskId], references: [id])
   taskId       String?
@@ -174,8 +178,7 @@ model Invoice {
   type          InvoiceType
   vendor        Vendor            @relation("VendorInvoices", fields: [vendorId], references: [id])
   vendorId      String
-  media         Media             @relation("InvoiceMedia", fields: [mediaId], references: [id])
-  mediaId       String
+  media         Media[]           @relation("InvoiceMedia")
   activity      InvoiceActivity[] @relation("InvoiceActivity")
   uploadedBy    User              @relation("InvoicesByUser", fields: [uploadedById], references: [id])
   uploadedById  String
@@ -347,6 +350,8 @@ enum InvoiceActivityType {
   EDITED
   APPROVED
   REJECTED
+  CONNECT_CHANNEL
+  ATTACH_MEDIA
 }
 
 enum InvoiceType {
@@ -362,6 +367,7 @@ enum InvoiceStatus {
   FIN_MANAGER
   FIN_CORE
   COCAD
+  REJECTED
 }
 
 enum TaskStatus {

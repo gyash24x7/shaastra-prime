@@ -130,3 +130,12 @@ export enum InviteStatus {
 }
 
 export const defaultImageUrl = "https://source.unsplash.com/featured/500x500";
+
+export const APPROVAL_STAGES = [
+	"COORD",
+	"HEAD",
+	"CORE",
+	"FIN_MANAGER",
+	"FIN_CORE",
+	"COCAD"
+];

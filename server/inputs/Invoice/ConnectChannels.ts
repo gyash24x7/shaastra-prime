@@ -1,7 +1,7 @@
 import { Field, InputType } from "type-graphql";
 
 @InputType()
-export class ConnectChannelsToTaskInput {
-	@Field() taskId: string;
+export class ConnectChannelsToInvoiceInput {
+	@Field() invoiceId: string;
 	@Field(() => [String]) channelIds: string[];
 }

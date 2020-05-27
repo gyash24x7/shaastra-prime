@@ -2,7 +2,7 @@ import { AcceptTaskResolver } from "./AcceptTask";
 import { AssignTaskResolver } from "./AssignTask";
 import { AttachMediaToTaskResolver } from "./AttachMedia";
 import { CompleteTaskResolver } from "./CompleteTask";
-import { ConnectChannelsResolver } from "./ConnectChannel";
+import { ConnectChannelsToTaskResolver } from "./ConnectChannels";
 import { CreateTaskResolver } from "./CreateTask";
 import { DeleteTaskResolver } from "./DeleteTask";
 import { TaskFieldResolvers } from "./FieldResolvers";
@@ -16,6 +16,6 @@ export default [
 	SubmitTaskResolver,
 	CompleteTaskResolver,
 	DeleteTaskResolver,
-	ConnectChannelsResolver,
+	ConnectChannelsToTaskResolver,
 	AttachMediaToTaskResolver
 ];

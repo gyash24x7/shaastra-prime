@@ -1,20 +1,21 @@
 import { InvoiceActivityType, MessageType, UserRole } from "@prisma/client";
 import moment from "moment";
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { SubmitInvoiceInput } from "../../inputs/Invoice/SubmitInvoice";
-import { prisma } from "../../prisma";
+import { EditInvoiceInput } from "../../inputs/Invoice/EditInvoice";
 import { GraphQLContext } from "../../utils";
 import { getInvoiceStatus } from "../../utils/getInvoiceStatus";
+import { prisma } from "./../../prisma";
 
 @Resolver()
-export class SubmitInvoiceResolver {
+export class EditInvoiceResolver {
 	@Authorized()
 	@Mutation(() => Boolean)
-	async submitInvoice(
-		@Arg("data") data: SubmitInvoiceInput,
+	async editInvoice(
+		@Arg("data") data: EditInvoiceInput,
 		@Ctx() { user }: GraphQLContext
 	) {
-		const invoice = await prisma.invoice.create({
+		const invoice = await prisma.invoice.update({
+			where: { id: data.invoiceId },
 			data: {
 				title: data.title,
 				amount: data.amount,
@@ -22,28 +23,18 @@ export class SubmitInvoiceResolver {
 				purpose: data.purpose,
 				invoiceNumber: data.invoiceNumber,
 				date: moment(parseInt(data.date)).toDate(),
-				media: {
-					create: {
-						url: data.fileUrl,
-						type: data.mediaType,
-						uploadedBy: { connect: { id: user?.id } }
-					}
-				},
 				status: getInvoiceStatus(
 					user!.role,
 					user!.role !== UserRole.COORD && user!.department.name === "FINANCE"
 				),
 				vendor: { connect: { id: data.vendorId } },
-				byDept: { connect: { id: user?.department.id } },
-				uploadedBy: { connect: { id: user?.id } },
 				activity: {
 					create: {
-						type: InvoiceActivityType.UPLOADED,
-						description: `${user?.name} uploaded the invoice.`,
+						type: InvoiceActivityType.EDITED,
+						description: `${user?.name} edited the invoice.`,
 						by: { connect: { id: user?.id } }
 					}
-				},
-				channels: { connect: data.channelIds.map((id) => ({ id })) }
+				}
 			},
 			include: { channels: { select: { id: true } } }
 		});
@@ -55,7 +46,7 @@ export class SubmitInvoiceResolver {
 						channel: { connect: { id: channel.id } },
 						content: `
 							<p><strong>[INVOICE UPDATE: ${invoice.title}]</strong></p>
-							<p>${user?.name} uploaded an invoice.</p>
+							<p>${user?.name} edited the invoice.</p>
 						`,
 						type: MessageType.INVOICE_UPDATE,
 						createdBy: { connect: { id: user?.id } }

@@ -28,4 +28,9 @@ export class InvoiceFieldResolvers {
 	media(@Root() { id }: Invoice) {
 		return prisma.invoice.findOne({ where: { id } }).media();
 	}
+
+	@FieldResolver()
+	channels(@Root() {}: Invoice) {
+		return prisma.invoice.findOne({ where: { id } }).channels();
+	}
 }
