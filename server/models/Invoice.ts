@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import { InvoiceStatus, InvoiceType } from "../utils";
+import { Channel } from "./Channel";
 import { Department } from "./Department";
 import { InvoiceActivity } from "./InvoiceActivity";
 import { Media } from "./Media";
@@ -24,4 +25,5 @@ export class Invoice {
 	@Field(() => User) uploadedBy: User;
 	@Field(() => Department) byDept: Department;
 	@Field(() => Vendor) vendor: Vendor;
+	@Field(() => [Channel]) channels: Channel[];
 }

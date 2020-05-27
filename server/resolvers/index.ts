@@ -1,5 +1,7 @@
 import ChannelResolvers from "./Channel";
 import DepartmentResolvers from "./Department";
+import GoalResolvers from "./Goal";
+import InvoiceResolvers from "./Invoice";
 import MediaResolvers from "./Media";
 import MessageResolvers from "./Message";
 import TaskResolvers from "./Task";
@@ -13,5 +15,7 @@ export const resolvers = [
 	...MessageResolvers,
 	...MediaResolvers,
 	...UpdateResolvers,
-	...TaskResolvers
+	...TaskResolvers,
+	...InvoiceResolvers,
+	...GoalResolvers
 ];

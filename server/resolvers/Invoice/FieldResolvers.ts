@@ -30,7 +30,7 @@ export class InvoiceFieldResolvers {
 	}
 
 	@FieldResolver()
-	channels(@Root() {}: Invoice) {
+	channels(@Root() { id }: Invoice) {
 		return prisma.invoice.findOne({ where: { id } }).channels();
 	}
 }
