@@ -1,6 +1,5 @@
 import { IsEmail, Length } from "class-validator";
 import { Field, InputType } from "type-graphql";
-import { IsExistingParticipant } from "../../utils/isExistingParticipant";
 
 @InputType("CreateParticipantInput")
 export class CreateParticipantInput {
@@ -9,7 +8,6 @@ export class CreateParticipantInput {
 
 	@Field()
 	@IsEmail()
-	@IsExistingParticipant({ message: "Participant Already Exists!" })
 	email: string;
 
 	@Field()

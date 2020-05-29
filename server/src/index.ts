@@ -13,23 +13,15 @@ const startServer = async () => {
 	const server = new ApolloServer({
 		schema,
 		context: async ({ req, connection }) => {
-			const prisma = new PrismaClient({
-				datasources: {
-					db: `postgresql://${process.env.POSTGRES_USER}:${
-						process.env.POSTGRES_PASSWORD
-					}@${
-						process.env.NODE_ENV === "production"
-							? "host.docker.internal"
-							: "localhost"
-					}:5432/${process.env.POSTGRES_DB}`
-				}
-			});
+			const prisma = new PrismaClient();
 			const user = await getAuthUser({ req, connection, prisma });
 			return { user, prisma };
 		},
 		cors: { origin: "http://localhost:3000", credentials: true },
 		subscriptions: { path: "/" },
-		playground: true
+		playground: true,
+		introspection: true,
+		engine: { apiKey: process.env.APOLLO_ENGINE_KEY }
 	});
 	server.listen(8000).then(({ url }) => {
 		console.log(`🚀  Server ready at ${url}`);
