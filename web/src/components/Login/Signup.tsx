@@ -21,8 +21,7 @@ export const SignupScreen = () => {
 	}
 
 	if (data?.createUser) {
-		localStorage.setItem("authToken", data.createUser);
-		return <Redirect to="/" />;
+		return <Redirect to="/login" />;
 	}
 
 	const handleSubmit = async () => {

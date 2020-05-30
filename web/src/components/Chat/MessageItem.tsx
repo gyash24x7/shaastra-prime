@@ -8,7 +8,7 @@ import {
 import { Avatar, Comment, Space } from "antd";
 import moment from "moment";
 import React, { Fragment } from "react";
-import { Message } from "../../generated";
+import { Message, MessageType } from "../../generated";
 
 interface MessageItemProps {
 	message: Partial<Message>;
@@ -20,10 +20,23 @@ export const MessageItem = ({ message }: MessageItemProps) => {
 			<Comment
 				avatar={<Avatar src="https://source.unsplash.com/featured/100x100" />}
 				content={
-					<div
-						className="message-content"
-						dangerouslySetInnerHTML={{ __html: message.content! }}
-					/>
+					message.type === MessageType.Media ? (
+						<Fragment>
+							{message.media?.map((image) => (
+								<div
+									className="image-content"
+									onClick={() => window.open(image.url, "_blank")}
+								>
+									<img src={image.url} alt="" />
+								</div>
+							))}
+						</Fragment>
+					) : (
+						<div
+							className="message-content"
+							dangerouslySetInnerHTML={{ __html: message.content! }}
+						/>
+					)
 				}
 				datetime={
 					<Fragment>

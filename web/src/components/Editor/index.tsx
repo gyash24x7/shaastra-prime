@@ -5,7 +5,6 @@ import { BaseEmoji, Picker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
 import React, { Fragment, useCallback } from "react";
 import { insertEmoji } from "./EmojiPlugin";
-import { getMentionState, MentionState } from "./MentionPlugin";
 import { Toolbar } from "./Toolbar";
 import { pickerStyle } from "./utils";
 
@@ -21,14 +20,10 @@ interface EditorProps {
 	setEmojiVisible: (val: boolean) => void;
 	editorState: EditorState;
 	setEditorState: (val: EditorState) => void;
-	mentionState?: MentionState | null;
-	setMentionState?: (val: MentionState | null) => void;
-	handleKeyPress: (e: any, type: string) => void;
-	handleMentionSelect: () => void;
 }
 
 export default (props: EditorProps) => {
-	const { handleKeyPress, onShiftEnter, editorState, setEditorState } = props;
+	const { onShiftEnter, editorState, setEditorState } = props;
 
 	const handleKeyCommand = useCallback(
 		(command: string, editorState: EditorState) => {
@@ -63,25 +58,10 @@ export default (props: EditorProps) => {
 					e.preventDefault();
 					if (e.shiftKey) return "message-send";
 					break;
-
-				case 38:
-					e.preventDefault();
-					handleKeyPress(e, "UP");
-					return "arrow";
-
-				case 40:
-					e.preventDefault();
-					handleKeyPress(e, "DOWN");
-					return "arrow";
-
-				case 27:
-					e.preventDefault();
-					handleKeyPress(e, "ESC");
-					return "escape";
 			}
 			return getDefaultKeyBinding(e);
 		},
-		[editorState, setEditorState, handleKeyPress]
+		[editorState, setEditorState]
 	);
 
 	let className = "";
@@ -97,23 +77,6 @@ export default (props: EditorProps) => {
 		setEditorState(newEditorState);
 	};
 
-	const handleReturn = () => {
-		if (!!props.mentionState) {
-			props.handleMentionSelect();
-			return "handled";
-		}
-		return "not-handled";
-	};
-
-	const handleOnChange = (val: EditorState) => {
-		setEditorState(val);
-		if (props.setMentionState) {
-			window.requestAnimationFrame(() => {
-				props.setMentionState!(getMentionState(val, props.mentionState));
-			});
-		}
-	};
-
 	return (
 		<Fragment>
 			<div className="editor-wrapper">
@@ -124,11 +87,10 @@ export default (props: EditorProps) => {
 				>
 					<Editor
 						editorState={editorState}
-						onChange={handleOnChange}
+						onChange={setEditorState}
 						handleKeyCommand={handleKeyCommand}
 						placeholder={props.placeholder}
 						keyBindingFn={mapKeyToEditorCommand}
-						handleReturn={handleReturn}
 					/>
 				</div>
 				<Toolbar
