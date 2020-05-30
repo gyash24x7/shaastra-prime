@@ -21,7 +21,7 @@ export const MessageItem = ({ message }: MessageItemProps) => {
 				avatar={<Avatar src="https://source.unsplash.com/featured/100x100" />}
 				content={
 					message.type === MessageType.Media ? (
-						<Fragment>
+						<div className="image-content-wrapper">
 							{message.media?.map((image) => (
 								<div
 									className="image-content"
@@ -30,7 +30,15 @@ export const MessageItem = ({ message }: MessageItemProps) => {
 									<img src={image.url} alt="" />
 								</div>
 							))}
-						</Fragment>
+							{message.media?.map((image) => (
+								<div
+									className="image-content"
+									onClick={() => window.open(image.url, "_blank")}
+								>
+									<img src={image.url} alt="" />
+								</div>
+							))}
+						</div>
 					) : (
 						<div
 							className="message-content"

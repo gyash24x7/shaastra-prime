@@ -1,16 +1,20 @@
-import { useNavigation } from "@react-navigation/native";
-import { Button, Layout, Spinner } from "@ui-kitten/components";
+import { Layout, Spinner } from "@ui-kitten/components";
 import React from "react";
-import globalStyles from "../../utils/globalStyles";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const LoadingScreen = () => {
-	const { navigate } = useNavigation();
-
 	return (
-		<Layout style={globalStyles.wrapper}>
-			<Spinner />
-			<Button onPress={() => navigate("Private")}>Home</Button>
-			<Button onPress={() => navigate("Login")}>Login</Button>
-		</Layout>
+		<SafeAreaView style={{ flex: 1 }}>
+			<Layout
+				style={{
+					display: "flex",
+					justifyContent: "center",
+					alignItems: "center",
+					height: "100%"
+				}}
+			>
+				<Spinner />
+			</Layout>
+		</SafeAreaView>
 	);
 };

@@ -1,12 +1,9 @@
+import { useApolloClient } from "@apollo/client";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
-import {
-	Drawer,
-	DrawerGroup,
-	DrawerItem,
-	IndexPath,
-	Text
-} from "@ui-kitten/components";
+import { useNavigation } from "@react-navigation/native";
+import { Drawer, DrawerItem, IndexPath, Text } from "@ui-kitten/components";
 import React from "react";
+import { AsyncStorage } from "react-native";
 import { getIconNameValue } from "../../utils";
 import globalStyles from "../../utils/globalStyles";
 import { SwitchingIcon } from "../Shared/SwitchingIcon";
@@ -22,29 +19,49 @@ export const DrawerNav = ({
 			selectedIndex={new IndexPath(state.index, 0)}
 			onSelect={(index) => navigation.navigate(state.routeNames[index.row])}
 			style={globalStyles.drawerNavigation}
+			footer={DrawerNavFooter}
 		>
-			<DrawerGroup
-				title={(props) => (
-					<Text style={[props?.style, globalStyles.heading]}>Apps</Text>
-				)}
-			>
-				{state.routes.map(({ key, name }, i) => (
-					<DrawerItem
-						key={key}
-						title={(props) => (
-							<Text style={[props?.style, globalStyles.heading]}>{name}</Text>
-						)}
-						accessoryLeft={(props) => (
-							<SwitchingIcon
-								{...props}
-								isActive={state.index === i}
-								color="#0052CC"
-								name={getIconNameValue(name)}
-							/>
-						)}
-					/>
-				))}
-			</DrawerGroup>
+			{state.routes.map(({ key, name }, i) => (
+				<DrawerItem
+					key={key}
+					title={(props) => (
+						<Text style={[props?.style, globalStyles.heading]}>{name}</Text>
+					)}
+					accessoryLeft={(props) => (
+						<SwitchingIcon
+							{...props}
+							isActive={state.index === i}
+							color="#0052CC"
+							name={getIconNameValue(name)}
+						/>
+					)}
+				/>
+			))}
 		</Drawer>
+	);
+};
+
+const DrawerNavFooter = () => {
+	const client = useApolloClient();
+	const { navigate } = useNavigation();
+
+	return (
+		<DrawerItem
+			title={(props) => (
+				<Text style={[props?.style, globalStyles.heading]}>Logout</Text>
+			)}
+			accessoryLeft={(props) => (
+				<SwitchingIcon
+					{...props}
+					color="#0052CC"
+					name={getIconNameValue("Logout")}
+				/>
+			)}
+			onPress={async () => {
+				await AsyncStorage.clear();
+				client.clearStore();
+				navigate("Login");
+			}}
+		/>
 	);
 };

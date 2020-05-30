@@ -13,5 +13,6 @@ const ICON_MAP: Record<string, string> = {
 	"Roll Number": "number",
 	Updates: "build",
 	Details: "profile",
-	Media: "file-image"
+	Media: "file-image",
+	Logout: "logout"
 };

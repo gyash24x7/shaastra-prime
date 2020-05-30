@@ -46,5 +46,14 @@ export default StyleSheet.create({
 		fontFamily: "montserrat-bold",
 		textTransform: "uppercase",
 		fontSize: 20
+	},
+
+	errorMsg: {
+		color: "#de350b",
+		textTransform: "uppercase",
+		fontFamily: "montserrat-bold",
+		fontSize: 11,
+		textAlign: "center",
+		marginTop: 10
 	}
 });
