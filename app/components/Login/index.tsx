@@ -1,8 +1,9 @@
-import { useNavigation } from "@react-navigation/native";
 import { Button, Input, Layout, Spinner, Text } from "@ui-kitten/components";
-import React, { useState } from "react";
-import { AsyncStorage, Image } from "react-native";
+import React, { useContext, useState } from "react";
+import { AsyncStorage, Image, StatusBar } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { refetchMeQuery, useLoginMutation } from "../../generated";
+import { AuthContext } from "../../utils/context";
 import globalStyles from "../../utils/globalStyles";
 import styles from "./styles";
 
@@ -14,20 +15,14 @@ export const LoginScreen = () => {
 		awaitRefetchQueries: true
 	});
 
-	const navigation = useNavigation();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [errorMsg, setErrorMsg] = useState("");
-
-	if (error) navigation.navigate("Error", { message: "Internal Server Error" });
-
-	if (data && !data.login) {
-		navigation.navigate("Error", { message: "User Doesn't Exist" });
-	}
+	const { setIsLoggedIn } = useContext(AuthContext)!;
 
 	if (data?.login) {
 		AsyncStorage.setItem("authToken", data.login).then(() => {
-			navigation.navigate("Private");
+			setIsLoggedIn(true);
 		});
 	}
 
@@ -45,42 +40,53 @@ export const LoginScreen = () => {
 	};
 
 	return (
-		<Layout style={styles.wrapper}>
-			<Image
-				source={require("../../assets/images/LightLogo.png")}
-				style={styles.appLogo}
-			/>
-			<Layout style={styles.container}>
-				<Text category="h3" style={styles.title}>
-					LOGIN
-				</Text>
-				<Input
-					placeholder="Email"
-					textContentType="emailAddress"
-					size="large"
-					value={email}
-					onChangeText={(val) => setEmail(val.trim())}
+		<SafeAreaView style={{ flex: 1 }}>
+			<StatusBar barStyle="light-content" backgroundColor="#141414" />
+			<Layout style={styles.wrapper}>
+				<Image
+					source={require("../../assets/images/LightLogo.png")}
+					style={styles.appLogo}
 				/>
-				<Input
-					placeholder="Password"
-					textContentType="password"
-					secureTextEntry
-					size="large"
-					value={password}
-					onChangeText={setPassword}
-				/>
-				<Button
-					onPress={handleSubmit}
-					children={() =>
-						loading ? (
-							<Spinner status="control" />
-						) : (
-							<Text style={styles.buttonText}>LOGIN</Text>
-						)
-					}
-				/>
-				<Text style={globalStyles.errorMsg}>{errorMsg}</Text>
+				<Layout style={styles.container}>
+					<Text category="h3" style={styles.title}>
+						LOGIN
+					</Text>
+					<Input
+						placeholder="Email"
+						textContentType="emailAddress"
+						size="large"
+						value={email}
+						onChangeText={(val) => setEmail(val.trim())}
+					/>
+					<Input
+						placeholder="Password"
+						textContentType="password"
+						secureTextEntry
+						size="large"
+						value={password}
+						onChangeText={setPassword}
+					/>
+					<Button
+						onPress={handleSubmit}
+						children={() =>
+							loading ? (
+								<Spinner status="control" />
+							) : (
+								<Text style={styles.buttonText}>LOGIN</Text>
+							)
+						}
+					/>
+					<Text style={globalStyles.errorMsg}>{errorMsg}</Text>
+					{error && (
+						<Text style={globalStyles.errorMsg}>Internal Server Error!</Text>
+					)}
+					{data && !data.login && (
+						<Text style={globalStyles.errorMsg}>
+							Please Check the Entered Details
+						</Text>
+					)}
+				</Layout>
 			</Layout>
-		</Layout>
+		</SafeAreaView>
 	);
 };

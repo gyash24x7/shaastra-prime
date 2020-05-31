@@ -1,14 +1,16 @@
 import { Avatar, Divider, Layout } from "@ui-kitten/components";
 import React from "react";
 import { Image, ImageBackground, StyleSheet } from "react-native";
+import { User } from "../../generated";
 import { Tag } from "./Tag";
 
 interface UserCardProps {
 	size: "large" | "small";
 	logo?: boolean;
+	user: Partial<User>;
 }
 
-export const UserCard = ({ size, logo }: UserCardProps) => {
+export const UserCard = ({ size, logo, user }: UserCardProps) => {
 	const styles = StyleSheet.create({
 		userCard: {
 			paddingHorizontal: 20,
@@ -82,7 +84,7 @@ export const UserCard = ({ size, logo }: UserCardProps) => {
 			</ImageBackground>
 			<Layout style={styles.userCard}>
 				<Layout style={styles.userDetails}>
-					<Tag color="#3ADBE8" text="Yash Gupta" />
+					<Tag color="#3ADBE8" text={user.name!} />
 				</Layout>
 				<Layout style={styles.userDetails}>
 					<Tag color="#DE3508" text="WebOps" />

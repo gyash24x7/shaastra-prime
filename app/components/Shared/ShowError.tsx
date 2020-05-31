@@ -1,20 +1,14 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { Button, Layout, Text } from "@ui-kitten/components";
+import { Layout, Text } from "@ui-kitten/components";
 import React from "react";
 import Svg, { G, Path } from "react-native-svg";
 import globalStyles from "../../utils/globalStyles";
 
-interface ShowErrorParams {
+interface ShowErrorProps {
 	message?: string;
 	code?: string;
 }
 
-export const ErrorScreen = () => {
-	const navigation = useNavigation();
-	const route = useRoute();
-
-	const params = route.params as ShowErrorParams;
-
+export const ShowError = (props: ShowErrorProps) => {
 	return (
 		<Layout
 			style={[
@@ -345,7 +339,7 @@ export const ErrorScreen = () => {
 				</G>
 			</Svg>
 			<Text style={{ fontSize: 48, fontFamily: "montserrat-bold" }}>
-				{params?.code || 500}
+				{props.code || 500}
 			</Text>
 			<Text
 				style={{
@@ -354,24 +348,8 @@ export const ErrorScreen = () => {
 					textAlign: "center"
 				}}
 			>
-				{params?.message || "Internal Server Error. Check back later."}
+				{props.message || "Internal Server Error. Check back later."}
 			</Text>
-			{navigation.canGoBack() && (
-				<Button
-					style={{ marginTop: 20 }}
-					onPress={() => navigation.goBack()}
-					children={() => (
-						<Text
-							style={{
-								fontFamily: "montserrat-regular",
-								paddingHorizontal: 20
-							}}
-						>
-							Go Back
-						</Text>
-					)}
-				/>
-			)}
 		</Layout>
 	);
 };

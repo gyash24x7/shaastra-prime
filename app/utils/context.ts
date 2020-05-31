@@ -1,16 +1,11 @@
 import React from "react";
-import { Department } from "../generated";
+import { Department, User } from "../generated";
 
 interface IUserContext {
-	user?: any;
-	isAuthenticated: boolean;
-	isVerified: boolean;
+	user: Partial<User>;
 }
 
-export const UserContext = React.createContext<IUserContext>({
-	isAuthenticated: false,
-	isVerified: false
-});
+export const UserContext = React.createContext<IUserContext | null>(null);
 
 interface IDepartmentContext {
 	departments: Pick<
@@ -22,3 +17,9 @@ interface IDepartmentContext {
 export const DepartmentContext = React.createContext<IDepartmentContext>({
 	departments: []
 });
+
+interface IAuthContext {
+	setIsLoggedIn: (val: boolean) => void;
+}
+
+export const AuthContext = React.createContext<IAuthContext | null>(null);

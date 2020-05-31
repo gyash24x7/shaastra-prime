@@ -1,10 +1,10 @@
 import { useApolloClient } from "@apollo/client";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
-import { useNavigation } from "@react-navigation/native";
 import { Drawer, DrawerItem, IndexPath, Text } from "@ui-kitten/components";
 import React from "react";
 import { AsyncStorage } from "react-native";
 import { getIconNameValue } from "../../utils";
+import { UserContext } from "../../utils/context";
 import globalStyles from "../../utils/globalStyles";
 import { SwitchingIcon } from "../Shared/SwitchingIcon";
 import { UserCard } from "../Shared/UserCard";
@@ -15,7 +15,11 @@ export const DrawerNav = ({
 }: DrawerContentComponentProps) => {
 	return (
 		<Drawer
-			header={() => <UserCard size="small" logo />}
+			header={() => (
+				<UserContext.Consumer>
+					{(ctx) => <UserCard size="small" user={ctx!.user} logo />}
+				</UserContext.Consumer>
+			)}
 			selectedIndex={new IndexPath(state.index, 0)}
 			onSelect={(index) => navigation.navigate(state.routeNames[index.row])}
 			style={globalStyles.drawerNavigation}
@@ -43,7 +47,6 @@ export const DrawerNav = ({
 
 const DrawerNavFooter = () => {
 	const client = useApolloClient();
-	const { navigate } = useNavigation();
 
 	return (
 		<DrawerItem
@@ -59,8 +62,8 @@ const DrawerNavFooter = () => {
 			)}
 			onPress={async () => {
 				await AsyncStorage.clear();
-				client.clearStore();
-				navigate("Login");
+				await client.clearStore();
+				// setIsLoggedIn(false);
 			}}
 		/>
 	);
