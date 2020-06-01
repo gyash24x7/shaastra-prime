@@ -87,8 +87,8 @@ export const UserCard = ({ size, logo, user }: UserCardProps) => {
 					<Tag color="#3ADBE8" text={user.name!} />
 				</Layout>
 				<Layout style={styles.userDetails}>
-					<Tag color="#DE3508" text="WebOps" />
-					<Tag color="#FFAB00" text="Core" />
+					<Tag color="#DE3508" text={user.department?.name!} />
+					<Tag color="#FFAB00" text={user.role!} />
 				</Layout>
 			</Layout>
 			<Divider />

@@ -2,7 +2,7 @@ import { Button, Input, Layout, Spinner, Text } from "@ui-kitten/components";
 import React, { useContext, useState } from "react";
 import { AsyncStorage, Image, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { refetchMeQuery, useLoginMutation } from "../../generated";
+import { useLoginMutation } from "../../generated";
 import { AuthContext } from "../../utils/context";
 import globalStyles from "../../utils/globalStyles";
 import styles from "./styles";
@@ -10,10 +10,7 @@ import styles from "./styles";
 const emailRegex = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 
 export const LoginScreen = () => {
-	const [login, { data, error, loading }] = useLoginMutation({
-		refetchQueries: [refetchMeQuery()],
-		awaitRefetchQueries: true
-	});
+	const [login, { data, error, loading }] = useLoginMutation();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");

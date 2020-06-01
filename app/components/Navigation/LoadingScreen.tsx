@@ -1,10 +1,12 @@
 import { Layout, Spinner } from "@ui-kitten/components";
 import React from "react";
+import { StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export const LoadingScreen = () => {
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
+			<StatusBar backgroundColor="#141414" barStyle="light-content" />
 			<Layout
 				style={{
 					display: "flex",

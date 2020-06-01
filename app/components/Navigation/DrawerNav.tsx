@@ -1,10 +1,10 @@
 import { useApolloClient } from "@apollo/client";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { Drawer, DrawerItem, IndexPath, Text } from "@ui-kitten/components";
-import React from "react";
+import React, { useContext } from "react";
 import { AsyncStorage } from "react-native";
 import { getIconNameValue } from "../../utils";
-import { UserContext } from "../../utils/context";
+import { AuthContext, UserContext } from "../../utils/context";
 import globalStyles from "../../utils/globalStyles";
 import { SwitchingIcon } from "../Shared/SwitchingIcon";
 import { UserCard } from "../Shared/UserCard";
@@ -47,6 +47,7 @@ export const DrawerNav = ({
 
 const DrawerNavFooter = () => {
 	const client = useApolloClient();
+	const { setIsLoggedIn } = useContext(AuthContext)!;
 
 	return (
 		<DrawerItem
@@ -63,7 +64,7 @@ const DrawerNavFooter = () => {
 			onPress={async () => {
 				await AsyncStorage.clear();
 				await client.clearStore();
-				// setIsLoggedIn(false);
+				setIsLoggedIn(false);
 			}}
 		/>
 	);

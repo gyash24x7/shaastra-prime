@@ -17,7 +17,7 @@ export const AppNavigation = () => {
 
 	useEffect(() => {
 		const getTokenAsync = async () => {
-			let authToken = await AsyncStorage.getItem("userToken");
+			let authToken = await AsyncStorage.getItem("authToken");
 			if (!!authToken) setIsLoggedIn(true);
 		};
 

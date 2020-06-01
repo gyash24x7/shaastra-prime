@@ -5,7 +5,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { getIconNameValue } from "../../utils";
 import { UserContext } from "../../utils/context";
 import globalStyles from "../../utils/globalStyles";
-import { stringGen } from "../../utils/lorem";
 import { SwitchingIcon } from "../Shared/SwitchingIcon";
 import { UserCard } from "../Shared/UserCard";
 import styles from "./styles";
@@ -19,16 +18,14 @@ export const UserDetails = () => {
 			<Layout style={globalStyles.wrapper}>
 				<Layout style={[styles.profileCard]}>
 					<UserCard size="large" user={user} />
-					<Text style={[globalStyles.heading, styles.about]}>
-						{stringGen.generateSentences(2)}
-					</Text>
+					<Text style={[globalStyles.heading, styles.about]}>{user.about}</Text>
 					<Layout>
 						<List
 							data={[
-								{ label: "Mobile", value: "7388378834" },
-								{ label: "Email", value: "gyash@shaastra.org" },
-								{ label: "Roll Number", value: "CH16B025" },
-								{ label: "UPI", value: "gyash24x7@okaxis" }
+								{ label: "Mobile", value: user.mobile },
+								{ label: "Email", value: user.email },
+								{ label: "Roll Number", value: user.rollNumber?.toUpperCase() },
+								{ label: "UPI", value: user.upi }
 							]}
 							renderItem={({ item }: any) => (
 								<ListItem
