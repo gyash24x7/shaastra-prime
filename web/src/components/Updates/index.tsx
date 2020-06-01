@@ -1,4 +1,4 @@
-import { Card, Pagination, Select, Space, Typography } from "antd";
+import { Card, Select, Space, Typography } from "antd";
 import React, { useContext, useState } from "react";
 import { useGetUpdatesQuery } from "../../generated";
 import { DepartmentContext } from "../../utils/context";
@@ -12,7 +12,6 @@ const { Option } = Select;
 
 export const UpdateScreen = () => {
 	const [filterDepartment, setFilterDepartment] = useState("");
-	const [currentPage, setCurrentPage] = useState(1);
 	const { departments } = useContext(DepartmentContext);
 
 	const { data, error, loading } = useGetUpdatesQuery();
@@ -35,11 +34,6 @@ export const UpdateScreen = () => {
 							</Option>
 						))}
 					</Select>
-					<Pagination
-						total={data?.getUpdates.length}
-						current={currentPage}
-						onChange={setCurrentPage}
-					/>
 				</Space>
 			}
 		>
@@ -47,7 +41,6 @@ export const UpdateScreen = () => {
 				.filter(({ byDept }) =>
 					filterDepartment ? byDept.id === filterDepartment : true
 				)
-				.slice(currentPage * 10 - 10, currentPage * 10)
 				.map((update, i) => (
 					<Card.Grid style={{ width: "100%" }} key={i}>
 						<UpdateListItem update={update} />

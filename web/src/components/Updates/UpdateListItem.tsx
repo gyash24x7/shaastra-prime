@@ -1,8 +1,11 @@
 import { ClockCircleFilled } from "@ant-design/icons";
 import { Space, Tag, Typography } from "antd";
+import { convertFromRaw, Editor, EditorState } from "draft-js";
+import moment from "moment";
 import React, { useContext } from "react";
 import { Update } from "../../generated";
 import { DrawerContext } from "../../utils/context";
+import { composedDecorator } from "../Editor";
 
 const { Text, Paragraph } = Typography;
 
@@ -25,13 +28,20 @@ export const UpdateListItem = ({ update }: UpdateListItemProps) => {
 								<Tag color="red">{update.byDept?.name}</Tag>
 								<Tag color="cyan">{update.postedBy?.name}</Tag>
 								<Tag icon={<ClockCircleFilled />} color="lime">
-									6 Days Ago
+									{moment(parseInt(update.createdAt!)).fromNow()}
 								</Tag>
 							</Space>
 						)
 					},
 					component: (
-						<div dangerouslySetInnerHTML={{ __html: update.content! }} />
+						<Editor
+							editorState={EditorState.createWithContent(
+								convertFromRaw(JSON.parse(update.content!)),
+								composedDecorator
+							)}
+							onChange={() => {}}
+							readOnly
+						/>
 					)
 				});
 			}}
@@ -44,7 +54,7 @@ export const UpdateListItem = ({ update }: UpdateListItemProps) => {
 				<Tag color="red">{update.byDept?.name}</Tag>
 				<Tag color="cyan">{update.postedBy?.name}</Tag>
 				<Tag icon={<ClockCircleFilled />} color="lime">
-					6 Days Ago
+					{moment(parseInt(update.createdAt!)).fromNow()}
 				</Tag>
 			</div>
 		</div>

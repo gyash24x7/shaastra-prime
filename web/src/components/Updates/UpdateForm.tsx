@@ -1,10 +1,12 @@
 import { ThunderboltFilled } from "@ant-design/icons";
 import { Button, Form, Input, Result } from "antd";
-import React from "react";
+import { convertToRaw, EditorState } from "draft-js";
+import React, { useEffect, useState } from "react";
 import {
 	refetchGetUpdatesQuery,
 	useCreateUpdateMutation
 } from "../../generated";
+import Editor, { composedDecorator } from "../Editor";
 import { ShowError } from "../shared/ShowError";
 
 const { useForm, Item } = Form;
@@ -15,6 +17,9 @@ export const UpdateForm = () => {
 	});
 
 	const [form] = useForm();
+	const [editorState, setEditorState] = useState(
+		EditorState.createEmpty(composedDecorator)
+	);
 
 	const handleFinish = async () => {
 		try {
@@ -30,6 +35,19 @@ export const UpdateForm = () => {
 			console.log(error);
 		}
 	};
+
+	useEffect(() => {
+		const rawContent = convertToRaw(editorState.getCurrentContent());
+		const plainText = rawContent.blocks
+			.map((block) => block.text.trim())
+			.join("");
+
+		let content = "";
+		if (!plainText) content = "";
+		else content = JSON.stringify(rawContent);
+
+		form.setFieldsValue({ ...form.getFieldsValue(), content });
+	}, [editorState, form]);
 
 	if (error) {
 		console.log(error);
@@ -63,16 +81,12 @@ export const UpdateForm = () => {
 				required
 				rules={[{ required: true, message: "Content is Required!" }]}
 			>
-				{/* <Editor
+				<Editor
+					editorState={editorState}
+					setEditorState={setEditorState}
+					style={{ height: 80, margin: 10, overflowY: "scroll", zIndex: -1 }}
 					placeholder="Content"
-					setSerializedValue={(content) => {
-						if (EDITOR_NULL_VALUES.includes(content)) {
-							content = "";
-						}
-						form.setFieldsValue({ ...form.getFieldsValue(), content });
-					}}
-					style={{ maxHeight: 150, overflowY: "scroll" }}
-				/> */}
+				/>
 			</Item>
 			<Item>
 				<Button
