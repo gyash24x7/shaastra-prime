@@ -1,6 +1,8 @@
 import { useRoute } from "@react-navigation/native";
 import { Card, Layout, Text } from "@ui-kitten/components";
+import moment from "moment";
 import React from "react";
+import { StatusBar } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyles from "../../utils/globalStyles";
@@ -12,9 +14,10 @@ export const UpdateItem = () => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
+			<StatusBar barStyle="light-content" backgroundColor="#141414" />
 			<TopNav title="Update" />
 			<Layout style={globalStyles.wrapper}>
-				<ScrollView>
+				<ScrollView style={{ width: "100%" }}>
 					<Card
 						style={{ width: "100%", borderColor: "#303030", borderWidth: 1 }}
 						header={(props) => (
@@ -37,7 +40,9 @@ export const UpdateItem = () => {
 										}
 									]}
 								>
-									{`By ${update.postedBy}  |  ${update.byDept}  |  ${update.createdAt}`}
+									{`By ${update.postedBy.name}  |  ${
+										update.byDept.name
+									}  |  ${moment(parseInt(update.createdAt)).fromNow()}`}
 								</Text>
 							</Layout>
 						)}

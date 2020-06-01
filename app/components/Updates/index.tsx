@@ -5,11 +5,9 @@ import { UpdateList } from "./UpdateList";
 
 const { Navigator, Screen } = createStackNavigator();
 
-export const UpdateScreen = () => {
-	return (
-		<Navigator headerMode="none">
-			<Screen name="UpdateList" component={UpdateList} />
-			<Screen name="UpdateItem" component={UpdateItem} />
-		</Navigator>
-	);
-};
+export const UpdateScreen = () => (
+	<Navigator headerMode="none">
+		<Screen name="UpdateList" component={UpdateList} />
+		<Screen name="UpdateItem" component={UpdateItem} />
+	</Navigator>
+);

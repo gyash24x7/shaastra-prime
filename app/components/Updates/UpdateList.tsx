@@ -1,23 +1,23 @@
 import { useNavigation } from "@react-navigation/native";
 import { Layout, List, ListItem, Text } from "@ui-kitten/components";
 import React from "react";
+import { StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useGetUpdatesQuery } from "../../generated";
 import globalStyles from "../../utils/globalStyles";
-import { stringGen } from "../../utils/lorem";
+import { LoadingScreen } from "../Navigation/LoadingScreen";
 import { TopNav } from "../Navigation/TopNav";
+import { ShowError } from "../Shared/ShowError";
 import { SwitchingIcon } from "../Shared/SwitchingIcon";
 
-const updates = [...Array(15)].map(() => ({
-	subject: stringGen.generateWords(3),
-	brief: stringGen.generateWords(5),
-	content: stringGen.generateParagraphs(6),
-	postedBy: "Yash Gupta",
-	createdAt: "14th May, 12:30 AM",
-	byDept: "WEBOPS"
-}));
-
 export const UpdateList = () => {
-	const { navigate } = useNavigation();
+	const navigation = useNavigation();
+	const { data, error, loading } = useGetUpdatesQuery();
+
+	if (error) {
+		console.log(error);
+		return <ShowError />;
+	}
 
 	const renderUpdateItem = ({ item: update }: any) => (
 		<ListItem
@@ -32,20 +32,23 @@ export const UpdateList = () => {
 				</Text>
 			)}
 			style={{ borderBottomWidth: 1, borderBottomColor: "#303030" }}
-			onPress={() => navigate("UpdateItem", { update })}
+			onPress={() => navigation.navigate("UpdateItem", { update })}
 			accessoryRight={(props) => (
 				<SwitchingIcon name="right" {...props} color="#B3B3B3" />
 			)}
 		/>
 	);
 
+	if (loading) return <LoadingScreen />;
+
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
+			<StatusBar barStyle="light-content" backgroundColor="#141414" />
 			<TopNav title="Updates" />
 			<Layout style={globalStyles.wrapper}>
 				<List
 					style={globalStyles.list}
-					data={updates}
+					data={data?.getUpdates || []}
 					renderItem={renderUpdateItem}
 				/>
 			</Layout>

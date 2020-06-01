@@ -28,15 +28,18 @@
 		"graphql": "14.6.0",
 		"graphql-tag": "^2.10.3",
 		"lorem-ipsum": "^2.0.3",
+		"moment": "^2.26.0",
 		"react": "~16.9.0",
 		"react-dom": "~16.9.0",
 		"react-native": "0.61.4",
 		"react-native-gesture-handler": "~1.6.0",
 		"react-native-reanimated": "~1.7.0",
+		"react-native-render-html": "^4.2.0",
 		"react-native-safe-area-context": "0.7.3",
 		"react-native-screens": "~2.2.0",
 		"react-native-svg": "9.13.6",
 		"react-native-web": "~0.12.2",
+		"react-native-webview": "8.1.1",
 		"subscriptions-transport-ws": "^0.9.16"
 	},
 	"devDependencies": {
