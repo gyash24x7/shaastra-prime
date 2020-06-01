@@ -11,43 +11,36 @@ export type Scalars = {
   Float: number;
 };
 
-export type Query = {
-   __typename?: 'Query';
-  getChannelDetails: Channel;
-  getChannels: Array<Channel>;
-  getUsers: Array<User>;
-  getUser: User;
-  me?: Maybe<User>;
-  searchUser: Array<User>;
-  getDepartments: Array<Department>;
-  getDeptMembers: Array<User>;
-  getMessages: Array<Message>;
-  getUpdates: Array<Update>;
-};
-
-
-export type QueryGetChannelDetailsArgs = {
-  channelId: Scalars['String'];
-};
-
-
-export type QueryGetUserArgs = {
-  userId: Scalars['String'];
-};
-
-
-export type QuerySearchUserArgs = {
-  searchStr: Scalars['String'];
-};
-
-
-export type QueryGetDeptMembersArgs = {
+export type AddSubDepartmentInput = {
   deptId: Scalars['String'];
+  subDeptName: Scalars['String'];
 };
 
+export type AddUsersToChannelInput = {
+  channelId: Scalars['String'];
+  userIds: Array<Scalars['String']>;
+};
 
-export type QueryGetMessagesArgs = {
-  data: GetMessagesInput;
+export type ApproveInvoiceInput = {
+  currentStage: Scalars['String'];
+  invoiceId: Scalars['String'];
+};
+
+export type AssignTaskInput = {
+  taskId: Scalars['String'];
+  assignedTo: Array<Scalars['String']>;
+};
+
+export type AttachMediaToInvoiceInput = {
+  invoiceId: Scalars['String'];
+  mediaId?: Maybe<Scalars['String']>;
+  newUrl: Scalars['String'];
+  mediaType: Scalars['String'];
+};
+
+export type AttachMediaToTaskInput = {
+  taskId: Scalars['String'];
+  urls: Array<Scalars['String']>;
 };
 
 export type Channel = {
@@ -69,29 +62,58 @@ export enum ChannelType {
   Direct = 'DIRECT'
 }
 
-export type User = {
-   __typename?: 'User';
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  email: Scalars['String'];
-  rollNumber: Scalars['String'];
-  profilePic: Scalars['String'];
-  coverPic: Scalars['String'];
-  mobile: Scalars['String'];
-  upi: Scalars['String'];
-  about: Scalars['String'];
-  role: UserRole;
-  verified: Scalars['Boolean'];
-  department: Department;
+export type ConnectChannelsToInvoiceInput = {
+  invoiceId: Scalars['String'];
+  channelIds: Array<Scalars['String']>;
 };
 
-export enum UserRole {
-  Coord = 'COORD',
-  Head = 'HEAD',
-  Core = 'CORE',
-  Cocas = 'COCAS',
-  Cocad = 'COCAD'
-}
+export type ConnectChannelsToTaskInput = {
+  taskId: Scalars['String'];
+  channelIds: Array<Scalars['String']>;
+};
+
+export type CreateChannelInput = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+  members: Array<Scalars['String']>;
+};
+
+export type CreateGoalInput = {
+  title: Scalars['String'];
+  description: Scalars['String'];
+  type: GoalType;
+  milestoneTitles: Array<Scalars['String']>;
+};
+
+export type CreateMessageInput = {
+  channelId: Scalars['String'];
+  content: Scalars['String'];
+  media: Array<Scalars['String']>;
+  mediaType?: Maybe<Scalars['String']>;
+};
+
+export type CreateTaskInput = {
+  brief: Scalars['String'];
+  details: Scalars['String'];
+  forDeptId: Scalars['String'];
+  deadline: Scalars['String'];
+  channelIds: Array<Scalars['String']>;
+};
+
+export type CreateUpdateInput = {
+  brief: Scalars['String'];
+  subject: Scalars['String'];
+  content: Scalars['String'];
+};
+
+export type CreateUserInput = {
+  name: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
+  rollNumber: Scalars['String'];
+  mobile: Scalars['String'];
+  departmentId: Scalars['String'];
+};
 
 export type Department = {
    __typename?: 'Department';
@@ -104,76 +126,52 @@ export type Department = {
   updates: Array<Update>;
   invoicesSubmitted: Array<Invoice>;
   subDepartments: Array<Scalars['String']>;
+  goals: Array<Goal>;
 };
 
-export type Task = {
-   __typename?: 'Task';
+export type EditInvoiceInput = {
+  invoiceId: Scalars['String'];
+  invoiceNumber: Scalars['String'];
+  date: Scalars['String'];
+  amount: Scalars['String'];
+  purpose: Scalars['String'];
+  type: InvoiceType;
+  mediaType: MediaType;
+  fileUrl: Scalars['String'];
+  title: Scalars['String'];
+  vendorId: Scalars['String'];
+  channelIds: Array<Scalars['String']>;
+};
+
+export type ForgotPasswordInput = {
+  email: Scalars['String'];
+  newPassword: Scalars['String'];
+  passwordOTP: Scalars['String'];
+};
+
+export type GetMessagesInput = {
+  channelId: Scalars['String'];
+  skip?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+};
+
+export type Goal = {
+   __typename?: 'Goal';
   id: Scalars['ID'];
-  brief: Scalars['String'];
-  details: Scalars['String'];
-  byDept: Department;
-  forDept: Department;
-  createdBy: User;
-  assignedTo: Array<User>;
-  status: TaskStatus;
+  title: Scalars['String'];
+  description: Scalars['String'];
+  dept: Department;
+  type: GoalType;
   createdAt: Scalars['String'];
-  deadline: Scalars['String'];
-  media: Array<Media>;
-  activity: Array<TaskActivity>;
-  channels: Array<Channel>;
+  milestones: Array<Milestone>;
 };
 
-export enum TaskStatus {
-  NotAssigned = 'NOT_ASSIGNED',
-  Assigned = 'ASSIGNED',
-  InProgress = 'IN_PROGRESS',
-  Submitted = 'SUBMITTED',
-  Completed = 'COMPLETED'
+export enum GoalType {
+  Weekly = 'WEEKLY',
+  BiWeekly = 'BI_WEEKLY',
+  Monthly = 'MONTHLY',
+  EndGoal = 'END_GOAL'
 }
-
-export type Media = {
-   __typename?: 'Media';
-  id: Scalars['ID'];
-  url: Scalars['String'];
-  type: MediaType;
-  uploadedBy: User;
-};
-
-export enum MediaType {
-  Image = 'IMAGE',
-  Audio = 'AUDIO',
-  Video = 'VIDEO',
-  Doc = 'DOC'
-}
-
-export type TaskActivity = {
-   __typename?: 'TaskActivity';
-  id: Scalars['ID'];
-  type: TaskActivityType;
-  task: Task;
-  createdAt: Scalars['String'];
-};
-
-export enum TaskActivityType {
-  NotAssigned = 'NOT_ASSIGNED',
-  Assigned = 'ASSIGNED',
-  InProgress = 'IN_PROGRESS',
-  Submitted = 'SUBMITTED',
-  Completed = 'COMPLETED',
-  ConnectChannel = 'CONNECT_CHANNEL',
-  AttachMedia = 'ATTACH_MEDIA'
-}
-
-export type Update = {
-   __typename?: 'Update';
-  id: Scalars['ID'];
-  brief: Scalars['String'];
-  subject: Scalars['String'];
-  content: Scalars['String'];
-  byDept: Department;
-  postedBy: User;
-  createdAt: Scalars['String'];
-};
 
 export type Invoice = {
    __typename?: 'Invoice';
@@ -190,22 +188,8 @@ export type Invoice = {
   uploadedBy: User;
   byDept: Department;
   vendor: Vendor;
+  channels: Array<Channel>;
 };
-
-export enum InvoiceStatus {
-  Coord = 'COORD',
-  Head = 'HEAD',
-  Core = 'CORE',
-  FinManager = 'FIN_MANAGER',
-  FinCore = 'FIN_CORE',
-  Cocad = 'COCAD'
-}
-
-export enum InvoiceType {
-  Reimbursement = 'REIMBURSEMENT',
-  Settlement = 'SETTLEMENT',
-  DirectPayment = 'DIRECT_PAYMENT'
-}
 
 export type InvoiceActivity = {
    __typename?: 'InvoiceActivity';
@@ -222,17 +206,40 @@ export enum InvoiceActivityType {
   Rejected = 'REJECTED'
 }
 
-export type Vendor = {
-   __typename?: 'Vendor';
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  gstNumber: Scalars['String'];
-  accountName: Scalars['String'];
-  accountNumber: Scalars['String'];
-  ifsc: Scalars['String'];
-  bankDetails: Scalars['String'];
-  invoices: Array<Invoice>;
+export enum InvoiceStatus {
+  Coord = 'COORD',
+  Head = 'HEAD',
+  Core = 'CORE',
+  FinManager = 'FIN_MANAGER',
+  FinCore = 'FIN_CORE',
+  Cocad = 'COCAD'
+}
+
+export enum InvoiceType {
+  Reimbursement = 'REIMBURSEMENT',
+  Settlement = 'SETTLEMENT',
+  DirectPayment = 'DIRECT_PAYMENT'
+}
+
+export type LoginInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
+
+export type Media = {
+   __typename?: 'Media';
+  id: Scalars['ID'];
+  url: Scalars['String'];
+  type: MediaType;
+  uploadedBy: User;
+};
+
+export enum MediaType {
+  Image = 'IMAGE',
+  Audio = 'AUDIO',
+  Video = 'VIDEO',
+  Doc = 'DOC'
+}
 
 export type Message = {
    __typename?: 'Message';
@@ -255,11 +262,18 @@ export enum MessageType {
   InvoiceActivity = 'INVOICE_ACTIVITY'
 }
 
-export type GetMessagesInput = {
-  channelId: Scalars['String'];
-  skip?: Maybe<Scalars['Int']>;
-  first?: Maybe<Scalars['Int']>;
+export type Milestone = {
+   __typename?: 'Milestone';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  status: MilestoneStatus;
+  goal: Goal;
 };
+
+export enum MilestoneStatus {
+  InProgress = 'IN_PROGRESS',
+  Achieved = 'ACHIEVED'
+}
 
 export type Mutation = {
    __typename?: 'Mutation';
@@ -276,13 +290,22 @@ export type Mutation = {
   uploadCoverPic: Scalars['Boolean'];
   uploadProfilePic: Scalars['Boolean'];
   verifyUser: Scalars['Boolean'];
+  completeMilestone: Scalars['Boolean'];
+  createGoal: Scalars['Boolean'];
+  approveInvoice: Scalars['Boolean'];
+  attachMediaToInvoice: Scalars['Boolean'];
+  connectChannelsToInvoice: Scalars['Boolean'];
+  deleteInvoice: Scalars['Boolean'];
+  editInvoice: Scalars['Boolean'];
+  rejectInvoice: Scalars['Boolean'];
+  submitInvoice: Scalars['Boolean'];
   createMessage: Scalars['Boolean'];
   updateMessage: Scalars['Boolean'];
   acceptTask: Scalars['Boolean'];
   assignTask: Scalars['Boolean'];
   attachMediaToTask: Scalars['Boolean'];
   completeTask: Scalars['Boolean'];
-  connectChannels: Scalars['Boolean'];
+  connectChannelsToTask: Scalars['Boolean'];
   createTask: Scalars['Boolean'];
   deleteTask: Scalars['Boolean'];
   submitTask: Scalars['Boolean'];
@@ -355,6 +378,51 @@ export type MutationVerifyUserArgs = {
 };
 
 
+export type MutationCompleteMilestoneArgs = {
+  milestoneId: Scalars['String'];
+};
+
+
+export type MutationCreateGoalArgs = {
+  data: CreateGoalInput;
+};
+
+
+export type MutationApproveInvoiceArgs = {
+  data: ApproveInvoiceInput;
+};
+
+
+export type MutationAttachMediaToInvoiceArgs = {
+  data: AttachMediaToInvoiceInput;
+};
+
+
+export type MutationConnectChannelsToInvoiceArgs = {
+  data: ConnectChannelsToInvoiceInput;
+};
+
+
+export type MutationDeleteInvoiceArgs = {
+  invoiceId: Scalars['String'];
+};
+
+
+export type MutationEditInvoiceArgs = {
+  data: EditInvoiceInput;
+};
+
+
+export type MutationRejectInvoiceArgs = {
+  data: RejectInvoiceInput;
+};
+
+
+export type MutationSubmitInvoiceArgs = {
+  data: SubmitInvoiceInput;
+};
+
+
 export type MutationCreateMessageArgs = {
   data: CreateMessageInput;
 };
@@ -385,8 +453,8 @@ export type MutationCompleteTaskArgs = {
 };
 
 
-export type MutationConnectChannelsArgs = {
-  data: ConnectChannelsInput;
+export type MutationConnectChannelsToTaskArgs = {
+  data: ConnectChannelsToTaskInput;
 };
 
 
@@ -409,93 +477,69 @@ export type MutationCreateUpdateArgs = {
   data: CreateUpdateInput;
 };
 
-export type AddUsersToChannelInput = {
+export type Query = {
+   __typename?: 'Query';
+  getChannelDetails: Channel;
+  getChannels: Array<Channel>;
+  getUsers: Array<User>;
+  getUser: User;
+  me?: Maybe<User>;
+  searchUser: Array<User>;
+  getDepartments: Array<Department>;
+  getDeptMembers: Array<User>;
+  getGoals: Array<Goal>;
+  getInvoices: Array<Invoice>;
+  getMessages: Array<Message>;
+  getTasks: Array<Task>;
+  getUpdates: Array<Update>;
+};
+
+
+export type QueryGetChannelDetailsArgs = {
   channelId: Scalars['String'];
-  userIds: Array<Scalars['String']>;
 };
 
-export type CreateChannelInput = {
-  name: Scalars['String'];
-  description: Scalars['String'];
-  members: Array<Scalars['String']>;
+
+export type QueryGetUserArgs = {
+  userId: Scalars['String'];
 };
 
-export type UpdateChannelInput = {
-  channelId: Scalars['String'];
-  archived: Scalars['Boolean'];
-  description: Scalars['String'];
+
+export type QuerySearchUserArgs = {
+  searchStr: Scalars['String'];
 };
 
-export type AddSubDepartmentInput = {
+
+export type QueryGetDeptMembersArgs = {
   deptId: Scalars['String'];
-  subDeptName: Scalars['String'];
 };
 
-export type CreateUserInput = {
-  name: Scalars['String'];
-  email: Scalars['String'];
-  password: Scalars['String'];
-  rollNumber: Scalars['String'];
-  mobile: Scalars['String'];
-  departmentId: Scalars['String'];
+
+export type QueryGetInvoicesArgs = {
+  type: Scalars['String'];
 };
 
-export type ForgotPasswordInput = {
-  email: Scalars['String'];
-  newPassword: Scalars['String'];
-  passwordOTP: Scalars['String'];
+
+export type QueryGetMessagesArgs = {
+  data: GetMessagesInput;
 };
 
-export type LoginInput = {
-  email: Scalars['String'];
-  password: Scalars['String'];
+export type RejectInvoiceInput = {
+  invoiceId: Scalars['String'];
+  reason: Scalars['String'];
 };
 
-export type VerifyUserInput = {
-  email: Scalars['String'];
-  otp: Scalars['String'];
-};
-
-export type CreateMessageInput = {
-  channelId: Scalars['String'];
-  content: Scalars['String'];
-  media: Array<Scalars['String']>;
-  mediaType?: Maybe<Scalars['String']>;
-};
-
-export type UpdateMessageInput = {
-  messageId: Scalars['String'];
-  starred: Scalars['Boolean'];
-  like: Scalars['Boolean'];
-};
-
-export type AssignTaskInput = {
-  taskId: Scalars['String'];
-  assignedTo: Array<Scalars['String']>;
-};
-
-export type AttachMediaToTaskInput = {
-  taskId: Scalars['String'];
-  urls: Array<Scalars['String']>;
-};
-
-export type ConnectChannelsInput = {
-  taskId: Scalars['String'];
+export type SubmitInvoiceInput = {
+  invoiceNumber: Scalars['String'];
+  date: Scalars['String'];
+  amount: Scalars['String'];
+  purpose: Scalars['String'];
+  type: InvoiceType;
+  mediaType: MediaType;
+  fileUrl: Scalars['String'];
+  title: Scalars['String'];
+  vendorId: Scalars['String'];
   channelIds: Array<Scalars['String']>;
-};
-
-export type CreateTaskInput = {
-  brief: Scalars['String'];
-  details: Scalars['String'];
-  forDeptId: Scalars['String'];
-  deadline: Scalars['String'];
-  channelIds: Array<Scalars['String']>;
-};
-
-export type CreateUpdateInput = {
-  brief: Scalars['String'];
-  subject: Scalars['String'];
-  content: Scalars['String'];
 };
 
 export type Subscription = {
@@ -506,6 +550,113 @@ export type Subscription = {
 
 export type SubscriptionNewMessageArgs = {
   channelId: Scalars['String'];
+};
+
+export type Task = {
+   __typename?: 'Task';
+  id: Scalars['ID'];
+  brief: Scalars['String'];
+  details: Scalars['String'];
+  byDept: Department;
+  forDept: Department;
+  createdBy: User;
+  assignedTo: Array<User>;
+  status: TaskStatus;
+  createdAt: Scalars['String'];
+  deadline: Scalars['String'];
+  media: Array<Media>;
+  activity: Array<TaskActivity>;
+  channels: Array<Channel>;
+};
+
+export type TaskActivity = {
+   __typename?: 'TaskActivity';
+  id: Scalars['ID'];
+  type: TaskActivityType;
+  task: Task;
+  createdAt: Scalars['String'];
+};
+
+export enum TaskActivityType {
+  NotAssigned = 'NOT_ASSIGNED',
+  Assigned = 'ASSIGNED',
+  InProgress = 'IN_PROGRESS',
+  Submitted = 'SUBMITTED',
+  Completed = 'COMPLETED',
+  ConnectChannel = 'CONNECT_CHANNEL',
+  AttachMedia = 'ATTACH_MEDIA'
+}
+
+export enum TaskStatus {
+  NotAssigned = 'NOT_ASSIGNED',
+  Assigned = 'ASSIGNED',
+  InProgress = 'IN_PROGRESS',
+  Submitted = 'SUBMITTED',
+  Completed = 'COMPLETED'
+}
+
+export type Update = {
+   __typename?: 'Update';
+  id: Scalars['ID'];
+  brief: Scalars['String'];
+  subject: Scalars['String'];
+  content: Scalars['String'];
+  byDept: Department;
+  postedBy: User;
+  createdAt: Scalars['String'];
+};
+
+export type UpdateChannelInput = {
+  channelId: Scalars['String'];
+  archived: Scalars['Boolean'];
+  description: Scalars['String'];
+};
+
+export type UpdateMessageInput = {
+  messageId: Scalars['String'];
+  starred: Scalars['Boolean'];
+  like: Scalars['Boolean'];
+};
+
+export type User = {
+   __typename?: 'User';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  email: Scalars['String'];
+  rollNumber: Scalars['String'];
+  profilePic: Scalars['String'];
+  coverPic: Scalars['String'];
+  mobile: Scalars['String'];
+  upi: Scalars['String'];
+  about: Scalars['String'];
+  role: UserRole;
+  verified: Scalars['Boolean'];
+  department: Department;
+};
+
+export enum UserRole {
+  Coord = 'COORD',
+  Head = 'HEAD',
+  Core = 'CORE',
+  Cocas = 'COCAS',
+  Cocad = 'COCAD'
+}
+
+export type Vendor = {
+   __typename?: 'Vendor';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  gstNumber: Scalars['String'];
+  accountName: Scalars['String'];
+  accountNumber: Scalars['String'];
+  ifsc: Scalars['String'];
+  bankDetails: Scalars['String'];
+  invoices: Array<Invoice>;
+};
+
+export type VerifyUserInput = {
+  email: Scalars['String'];
+  otp: Scalars['String'];
 };
 
 export type CreateChannelMutationVariables = {
@@ -531,6 +682,20 @@ export type CreateMessageMutationVariables = {
 export type CreateMessageMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'createMessage'>
+);
+
+export type CreateTaskMutationVariables = {
+  brief: Scalars['String'];
+  details: Scalars['String'];
+  forDeptId: Scalars['String'];
+  deadline: Scalars['String'];
+  channelIds: Array<Scalars['String']>;
+};
+
+
+export type CreateTaskMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'createTask'>
 );
 
 export type CreateUpdateMutationVariables = {
@@ -697,6 +862,35 @@ export type GetMessagesQuery = (
   )> }
 );
 
+export type GetTasksQueryVariables = {};
+
+
+export type GetTasksQuery = (
+  { __typename?: 'Query' }
+  & { getTasks: Array<(
+    { __typename?: 'Task' }
+    & Pick<Task, 'id' | 'brief' | 'details' | 'status' | 'createdAt' | 'deadline'>
+    & { byDept: (
+      { __typename?: 'Department' }
+      & Pick<Department, 'id' | 'name'>
+    ), createdBy: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name' | 'role'>
+      & { department: (
+        { __typename?: 'Department' }
+        & Pick<Department, 'id' | 'name'>
+      ) }
+    ), assignedTo: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name' | 'role'>
+      & { department: (
+        { __typename?: 'Department' }
+        & Pick<Department, 'id' | 'name'>
+      ) }
+    )> }
+  )> }
+);
+
 export type GetUpdatesQueryVariables = {};
 
 
@@ -846,6 +1040,40 @@ export function useCreateMessageMutation(baseOptions?: ApolloReactHooks.Mutation
 export type CreateMessageMutationHookResult = ReturnType<typeof useCreateMessageMutation>;
 export type CreateMessageMutationResult = ApolloReactCommon.MutationResult<CreateMessageMutation>;
 export type CreateMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateMessageMutation, CreateMessageMutationVariables>;
+export const CreateTaskDocument = gql`
+    mutation CreateTask($brief: String!, $details: String!, $forDeptId: String!, $deadline: String!, $channelIds: [String!]!) {
+  createTask(data: {brief: $brief, details: $details, forDeptId: $forDeptId, deadline: $deadline, channelIds: $channelIds})
+}
+    `;
+export type CreateTaskMutationFn = ApolloReactCommon.MutationFunction<CreateTaskMutation, CreateTaskMutationVariables>;
+
+/**
+ * __useCreateTaskMutation__
+ *
+ * To run a mutation, you first call `useCreateTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTaskMutation, { data, loading, error }] = useCreateTaskMutation({
+ *   variables: {
+ *      brief: // value for 'brief'
+ *      details: // value for 'details'
+ *      forDeptId: // value for 'forDeptId'
+ *      deadline: // value for 'deadline'
+ *      channelIds: // value for 'channelIds'
+ *   },
+ * });
+ */
+export function useCreateTaskMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateTaskMutation, CreateTaskMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(CreateTaskDocument, baseOptions);
+      }
+export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
+export type CreateTaskMutationResult = ApolloReactCommon.MutationResult<CreateTaskMutation>;
+export type CreateTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
 export const CreateUpdateDocument = gql`
     mutation CreateUpdate($brief: String!, $subject: String!, $content: String!) {
   createUpdate(data: {brief: $brief, subject: $subject, content: $content})
@@ -1271,6 +1499,68 @@ export type GetMessagesLazyQueryHookResult = ReturnType<typeof useGetMessagesLaz
 export type GetMessagesQueryResult = ApolloReactCommon.QueryResult<GetMessagesQuery, GetMessagesQueryVariables>;
 export function refetchGetMessagesQuery(variables?: GetMessagesQueryVariables) {
       return { query: GetMessagesDocument, variables: variables }
+    }
+export const GetTasksDocument = gql`
+    query GetTasks {
+  getTasks {
+    id
+    brief
+    details
+    status
+    createdAt
+    deadline
+    byDept {
+      id
+      name
+    }
+    createdBy {
+      id
+      name
+      role
+      department {
+        id
+        name
+      }
+    }
+    assignedTo {
+      id
+      name
+      role
+      department {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTasksQuery__
+ *
+ * To run a query within a React component, call `useGetTasksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTasksQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTasksQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTasksQuery, GetTasksQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetTasksQuery, GetTasksQueryVariables>(GetTasksDocument, baseOptions);
+      }
+export function useGetTasksLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTasksQuery, GetTasksQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetTasksQuery, GetTasksQueryVariables>(GetTasksDocument, baseOptions);
+        }
+export type GetTasksQueryHookResult = ReturnType<typeof useGetTasksQuery>;
+export type GetTasksLazyQueryHookResult = ReturnType<typeof useGetTasksLazyQuery>;
+export type GetTasksQueryResult = ApolloReactCommon.QueryResult<GetTasksQuery, GetTasksQueryVariables>;
+export function refetchGetTasksQuery(variables?: GetTasksQueryVariables) {
+      return { query: GetTasksDocument, variables: variables }
     }
 export const GetUpdatesDocument = gql`
     query GetUpdates {

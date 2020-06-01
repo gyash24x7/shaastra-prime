@@ -1,9 +1,17 @@
+import { Empty } from "antd";
 import React from "react";
 import StackGrid from "react-stack-grid";
 import { useWindowSize } from "react-use";
+import { Task } from "../../generated";
+import { Loader } from "../shared/Loader";
 import { KanbanItem } from "./KanbanItem";
 
-export const GridLayout = (props: any) => {
+interface GridLayoutProps {
+	data: Partial<Task>[];
+	loading?: boolean;
+}
+
+export const GridLayout = (props: GridLayoutProps) => {
 	const { width } = useWindowSize();
 	const getColumnWidth = (width: number) => {
 		if (width < 400) return width - 180;
@@ -13,6 +21,10 @@ export const GridLayout = (props: any) => {
 		else return (width - 450) / 3;
 	};
 
+	if (props.loading) {
+		return <Loader />;
+	}
+
 	return (
 		<div style={{ margin: "0px -10px" }}>
 			<StackGrid
@@ -21,10 +33,13 @@ export const GridLayout = (props: any) => {
 				itemComponent="div"
 				style={{ display: "flex" }}
 			>
-				{props.data.map((task: any, i: any) => (
-					<KanbanItem task={task} key={i} />
+				{props.data.map((task) => (
+					<KanbanItem task={task} key={task.id} />
 				))}
 			</StackGrid>
+			{props.data.length === 0 && (
+				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+			)}
 		</div>
 	);
 };

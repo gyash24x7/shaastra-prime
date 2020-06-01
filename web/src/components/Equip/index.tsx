@@ -1,7 +1,7 @@
-import { Card, Pagination, Typography } from "antd";
-import moment from "moment";
+import { Card, Typography } from "antd";
 import React, { useState } from "react";
-import { stringGen } from "../../utils/lorem";
+import { useGetTasksQuery } from "../../generated";
+import { ShowError } from "../shared/ShowError";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
 import { GridLayout } from "./GridLayout";
 import { KanbanLayout } from "./KanbanLayout";
@@ -38,19 +38,14 @@ export const statusColor: Record<string, string> = {
 
 const { Title } = Typography;
 
-export const datasource = [...Array(25)].map((_, i) => ({
-	key: i.toString(),
-	brief: stringGen.generateWords(5),
-	details: stringGen.generateSentences(3),
-	status: status[Math.floor(5 * Math.random())],
-	byDept: departments[Math.floor(10 * Math.random())],
-	createdAt: moment().add(Math.round(7 * Math.random()), "days"),
-	assignedTo: [stringGen.generateWords(2), stringGen.generateWords(2)]
-}));
-
 export const EquipScreen = () => {
-	const [currentPage, setCurrentPage] = useState(1);
 	const [activeKey, setActiveKey] = useState("table");
+	const { data, loading, error } = useGetTasksQuery();
+
+	if (error) {
+		console.log(error);
+		return <ShowError />;
+	}
 
 	const tablist = [
 		{
@@ -83,14 +78,9 @@ export const EquipScreen = () => {
 	];
 
 	const tabContent: Record<string, JSX.Element> = {
-		table: (
-			<TableLayout
-				data={datasource.slice(currentPage * 10 - 10, currentPage * 10)}
-				page={currentPage}
-			/>
-		),
-		kanban: <KanbanLayout data={datasource} />,
-		grid: <GridLayout data={datasource} />
+		table: <TableLayout data={data?.getTasks || []} loading={loading} />,
+		kanban: <KanbanLayout data={data?.getTasks || []} loading={loading} />,
+		grid: <GridLayout data={data?.getTasks || []} loading={loading} />
 	};
 
 	return (
@@ -99,13 +89,7 @@ export const EquipScreen = () => {
 			tabList={tablist}
 			activeTabKey={activeKey}
 			onTabChange={setActiveKey}
-			tabBarExtraContent={
-				<Pagination
-					total={datasource.length}
-					current={currentPage}
-					onChange={setCurrentPage}
-				/>
-			}
+			tabBarExtraContent={<div />}
 			className="equip-card card-with-tabs"
 		>
 			{tabContent[activeKey]}

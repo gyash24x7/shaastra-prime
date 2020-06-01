@@ -1,11 +1,34 @@
-import { Tag, Typography } from "antd";
+import { Empty, Tag, Typography } from "antd";
 import React from "react";
 import { statusColor } from ".";
+import { Task } from "../../generated";
+import { Loader } from "../shared/Loader";
 import { KanbanItem } from "./KanbanItem";
 
-const { Title } = Typography;
+const { Text } = Typography;
 
-export const KanbanLayout = (props: any) => {
+interface KanbanLayoutProps {
+	data: Partial<Task>[];
+	loading?: boolean;
+}
+
+export const KanbanLayout = (props: KanbanLayoutProps) => {
+	const inPipelineData = props.data.filter(({ status }: any) =>
+		["NOT_ASSIGNED", "ASSIGNED"].includes(status)
+	);
+
+	const inProgressData = props.data.filter(({ status }: any) =>
+		["IN_PROGRESS"].includes(status)
+	);
+
+	const finishedData = props.data.filter(({ status }: any) =>
+		["SUBMITTED", "COMPLETED"].includes(status)
+	);
+
+	if (props.loading) {
+		return <Loader />;
+	}
+
 	return (
 		<div className="kanban-container">
 			<div
@@ -16,43 +39,42 @@ export const KanbanLayout = (props: any) => {
 				}}
 			>
 				<Tag color={statusColor["NOT_ASSIGNED"]}>
-					<Title level={4}>IN PIPELINE</Title>
+					<Text style={{ fontSize: 18 }}>IN PIPELINE</Text>
 				</Tag>
-				{props.data
-					.filter(({ status }: any) =>
-						["NOT_ASSIGNED", "ASSIGNED"].includes(status)
-					)
-					.map((task: any) => (
-						<KanbanItem task={task} key={task.key} />
-					))}
+				{inPipelineData.map((task) => (
+					<KanbanItem task={task} key={task.id} />
+				))}
+				{inPipelineData.length === 0 && (
+					<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+				)}
 			</div>
 			<div
 				className="kanban-col"
 				style={{ border: "2px solid", borderColor: statusColor["IN_PROGRESS"] }}
 			>
 				<Tag color={statusColor["IN_PROGRESS"]}>
-					<Title level={4}>WORK IN PROGRESS</Title>
+					<Text style={{ fontSize: 18 }}>WORK IN PROGRESS</Text>
 				</Tag>
-				{props.data
-					.filter(({ status }: any) => ["IN_PROGRESS"].includes(status))
-					.map((task: any) => (
-						<KanbanItem task={task} key={task.key} />
-					))}
+				{inProgressData.map((task) => (
+					<KanbanItem task={task} key={task.id} />
+				))}
+				{inProgressData.length === 0 && (
+					<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+				)}
 			</div>
 			<div
 				className="kanban-col"
 				style={{ border: "2px solid", borderColor: statusColor["COMPLETED"] }}
 			>
 				<Tag color={statusColor["COMPLETED"]}>
-					<Title level={4}>FINISHED</Title>
+					<Text style={{ fontSize: 18 }}>FINISHED</Text>
 				</Tag>
-				{props.data
-					.filter(({ status }: any) =>
-						["SUBMITTED", "COMPLETED"].includes(status)
-					)
-					.map((task: any) => (
-						<KanbanItem task={task} key={task.key} />
-					))}
+				{finishedData.map((task) => (
+					<KanbanItem task={task} key={task.id} />
+				))}
+				{finishedData.length === 0 && (
+					<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+				)}
 			</div>
 		</div>
 	);

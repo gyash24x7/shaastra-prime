@@ -1,36 +1,42 @@
 import { CalendarFilled } from "@ant-design/icons";
-import { Card, Space, Tag, Typography } from "antd";
+import { Card, Tag, Typography } from "antd";
+import moment from "moment";
 import React, { useContext } from "react";
 import { statusColor } from ".";
+import { Task } from "../../generated";
 import { DrawerContext } from "../../utils/context";
 import { TaskDescription } from "./TaskDescription";
 
 const { Title } = Typography;
 
-export const KanbanItem = (props: any) => {
+interface KanbanItemProps {
+	task: Partial<Task>;
+}
+
+export const KanbanItem = ({ task }: KanbanItemProps) => {
 	const { toggleDrawer } = useContext(DrawerContext)!;
 
 	const handleItemClick = () => {
 		toggleDrawer({
 			props: {
-				title: props.task.brief,
+				title: task.brief,
 				className: "no-padding-drawer",
 				width: "75vw"
 			},
-			component: <TaskDescription data={props.task} />
+			component: <TaskDescription data={task} />
 		});
 	};
 
 	return (
 		<Card className="kanban-item" bordered={false} onClick={handleItemClick}>
-			<Title level={4}>{props.task.brief}</Title>
-			<Space>
+			<Title level={4}>{task.brief}</Title>
+			<div className="wrap-row">
 				<Tag icon={<CalendarFilled />} color="lime">
-					{props.task.createdAt.format("DD/MM/YYYY")}
+					{moment(parseInt(task.createdAt!)).format("DD/MM/YYYY")}
 				</Tag>
-				<Tag color="red">{props.task.byDept}</Tag>
-				<Tag color={statusColor[props.task.status]}>{props.task.status}</Tag>
-			</Space>
+				<Tag color="red">{task.byDept?.name}</Tag>
+				<Tag color={statusColor[task.status!]}>{task.status}</Tag>
+			</div>
 		</Card>
 	);
 };

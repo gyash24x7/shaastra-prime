@@ -7,7 +7,7 @@
 .kanban-col {
 	margin: 5px;
 	flex: 1;
-	min-width: 350px;
+	width: calc(33% - 5px);
 }
 
 .kanban-item {
@@ -32,5 +32,15 @@
 .no-padding-drawer {
 	.ant-drawer-body {
 		padding: 0;
+	}
+}
+
+.ant-descriptions table {
+	table-layout: fixed !important;
+}
+
+.equip-card {
+	.ant-card-body {
+		overflow-x: scroll;
 	}
 }

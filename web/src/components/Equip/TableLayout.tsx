@@ -73,6 +73,7 @@ export const TableLayout = (props: any) => {
 			tableLayout="auto"
 			columns={Object.keys(columns).map((str) => columns[str])}
 			bordered
+			loading={props.loading}
 			onChange={handleOnChange}
 			pagination={false}
 			size="middle"

@@ -179,3 +179,13 @@ button {
 	padding-top: 100px;
 	padding-bottom: 100px;
 }
+
+.wrap-row {
+	display: flex;
+	flex-wrap: wrap;
+
+	& > * {
+		margin-top: 10px;
+		margin-right: 10px;
+	}
+}

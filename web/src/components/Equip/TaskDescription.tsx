@@ -10,12 +10,8 @@ export const TaskDescription = ({ data }: any) => {
 	const { user } = useContext(UserContext);
 
 	return (
-		<Descriptions
-			column={{ xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 2 }}
-			bordered
-			layout="horizontal"
-		>
-			<Descriptions.Item label={<Text>Details</Text>} span={3}>
+		<Descriptions column={2} bordered layout="horizontal">
+			<Descriptions.Item label={<Text>Details</Text>} span={2}>
 				<Text strong>{data.details}</Text>
 			</Descriptions.Item>
 			<Descriptions.Item label={<Text>Deadline</Text>}>
