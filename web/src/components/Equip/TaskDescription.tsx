@@ -1,7 +1,10 @@
 import { Button, Descriptions, Space, Tag, Typography } from "antd";
+import { convertFromRaw, Editor, EditorState } from "draft-js";
+import moment from "moment";
 import React, { useContext } from "react";
 import { statusColor } from ".";
 import { UserContext } from "../../utils/context";
+import { composedDecorator } from "../Editor";
 import { UserCardSmall } from "../shared/UserCardSmall";
 
 const { Text } = Typography;
@@ -12,16 +15,27 @@ export const TaskDescription = ({ data }: any) => {
 	return (
 		<Descriptions column={2} bordered layout="horizontal">
 			<Descriptions.Item label={<Text>Details</Text>} span={2}>
-				<Text strong>{data.details}</Text>
+				<Editor
+					editorState={EditorState.createWithContent(
+						convertFromRaw(JSON.parse(data.details)),
+						composedDecorator
+					)}
+					onChange={() => {}}
+					readOnly
+				/>
 			</Descriptions.Item>
 			<Descriptions.Item label={<Text>Deadline</Text>}>
-				{data.createdAt.format("DD MMMM")}
+				<Tag color="lime">
+					{moment(parseInt(data.deadline)).format("DD MMMM")}
+				</Tag>
 			</Descriptions.Item>
 			<Descriptions.Item label={<Text>By&nbsp;Department</Text>}>
-				<Text strong>{data.byDept}</Text>
+				<Tag color="red">{data.byDept.name}</Tag>
 			</Descriptions.Item>
 			<Descriptions.Item label={<Text>Created&nbsp;On</Text>}>
-				{data.createdAt.format("DD MMMM")}
+				<Tag color="lime">
+					{moment(parseInt(data.createdAt)).format("DD MMMM")}
+				</Tag>
 			</Descriptions.Item>
 			<Descriptions.Item label={<Text>Status</Text>}>
 				<Tag color={statusColor[data.status]}>{data.status}</Tag>

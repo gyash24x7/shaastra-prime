@@ -1,12 +1,10 @@
 import { Button, Space } from "antd";
-import { CompositeDecorator, convertToRaw, EditorState } from "draft-js";
+import { convertToRaw, EditorState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import React, { useContext, useState } from "react";
 import { useCreateMessageMutation, User } from "../../generated";
 import { ModalContext } from "../../utils/context";
-import Editor from "../Editor";
-import { DraftHash, HashtagStrategy } from "../Editor/HashtagPlugin";
-import { DraftLink, LinkStrategy } from "../Editor/LinkifyPlugin";
+import Editor, { composedDecorator } from "../Editor";
 import { ShowError } from "../shared/ShowError";
 import { SwitchingIcon } from "../shared/SwitchingIcon";
 import { MediaMessageInput } from "./MediaMessageInput";
@@ -20,13 +18,8 @@ export const MessageInput = ({ channelId }: MessageInputProps) => {
 	const [emojiVisible, setEmojiVisible] = useState(false);
 	const [createMessage, { error, loading }] = useCreateMessageMutation();
 
-	const decorator = new CompositeDecorator([
-		{ strategy: LinkStrategy, component: DraftLink },
-		{ strategy: HashtagStrategy, component: DraftHash }
-	]);
-
 	const [editorState, setEditorState] = useState(
-		EditorState.createEmpty(decorator)
+		EditorState.createEmpty(composedDecorator)
 	);
 
 	const { toggleModal } = useContext(ModalContext)!;

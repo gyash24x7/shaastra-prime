@@ -10,6 +10,7 @@ import { TaskDescription } from "./TaskDescription";
 export const TableLayout = (props: any) => {
 	const [filters, setFilters] = useState<any>(null);
 	const [sorters, setSorters] = useState<any>(null);
+	const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
 	const { user } = useContext(UserContext);
 
@@ -32,9 +33,9 @@ export const TableLayout = (props: any) => {
 			key: "byDept",
 			title: <Typography.Text strong>By&nbsp;Department</Typography.Text>,
 			dataIndex: "byDept",
-			render: (val: any) => val.name,
+			render: (val: any) => <Tag color="red">{val.name}</Tag>,
 			filters: departments.map((dept) => ({ text: dept, value: dept })),
-			onFilter: (value, record) => record.byDept === value,
+			onFilter: (value, record) => record.byDept.name === value,
 			filteredValue: filters?.byDept || null,
 			sorter: (a, b) => a.byDept.name.localeCompare(b.byDept.name),
 			sortOrder: sorters?.columnKey === "byDept" && sorters?.order
@@ -43,7 +44,9 @@ export const TableLayout = (props: any) => {
 			key: "createdAt",
 			title: <Typography.Text strong>Created&nbsp;At</Typography.Text>,
 			dataIndex: "createdAt",
-			render: (val: string) => moment(parseInt(val)).format("DD MMMM"),
+			render: (val: string) => (
+				<Tag color="lime">{moment(parseInt(val)).format("DD MMMM")}</Tag>
+			),
 			sorter: (a, b) => a.createdAt.diff(b.createdAt),
 			sortOrder: sorters?.columnKey === "createdAt" && sorters?.order
 		},
@@ -51,7 +54,9 @@ export const TableLayout = (props: any) => {
 			key: "deadline",
 			title: <Typography.Text strong>Deadline</Typography.Text>,
 			dataIndex: "deadline",
-			render: (val: string) => moment(parseInt(val)).format("DD MMMM"),
+			render: (val: string) => (
+				<Tag color="lime">{moment(parseInt(val)).format("DD MMMM")}</Tag>
+			),
 			sorter: (a, b) => a.deadline.diff(b.deadline),
 			sortOrder: sorters?.columnKey === "createdAt" && sorters?.order
 		},
@@ -88,12 +93,16 @@ export const TableLayout = (props: any) => {
 			size="middle"
 			rowSelection={{
 				type: "radio",
+				selectedRowKeys,
 				onSelect(record) {
 					toggleDrawer({
 						props: {
 							title: record.brief,
 							width: "75vw",
-							className: "no-padding-drawer"
+							className: "no-padding-drawer",
+							onClose() {
+								setSelectedRowKeys([record.key]);
+							}
 						},
 						component: <TaskDescription data={record} />
 					});

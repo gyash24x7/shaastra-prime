@@ -1,10 +1,18 @@
 import { Typography } from "antd";
-import { Editor, EditorState, getDefaultKeyBinding, RichUtils } from "draft-js";
+import {
+	CompositeDecorator,
+	Editor,
+	EditorState,
+	getDefaultKeyBinding,
+	RichUtils
+} from "draft-js";
 import "draft-js/dist/Draft.css";
 import { BaseEmoji, Picker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
 import React, { Fragment, useCallback } from "react";
 import { insertEmoji } from "./EmojiPlugin";
+import { DraftHash, HashtagStrategy } from "./HashtagPlugin";
+import { DraftLink, LinkStrategy } from "./LinkifyPlugin";
 import { Toolbar } from "./Toolbar";
 import { pickerStyle } from "./utils";
 
@@ -116,3 +124,8 @@ export default (props: EditorProps) => {
 		</Fragment>
 	);
 };
+
+export const composedDecorator = new CompositeDecorator([
+	{ strategy: LinkStrategy, component: DraftLink },
+	{ strategy: HashtagStrategy, component: DraftHash }
+]);

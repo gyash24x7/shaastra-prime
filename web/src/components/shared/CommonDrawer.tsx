@@ -50,7 +50,11 @@ export const CommonDrawer = (props: CommonDrawerProps) => {
 							<Button
 								icon={<SwitchingIcon name="close" className="editor-icon" />}
 								className="editor-btn"
-								onClick={() => toggleDrawer()}
+								onClick={() => {
+									props.drawerProps?.onClose &&
+										props.drawerProps.onClose({} as any);
+									toggleDrawer();
+								}}
 							/>
 						</div>
 						{props.drawerProps?.extra}
