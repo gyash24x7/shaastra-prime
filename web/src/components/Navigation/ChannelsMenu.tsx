@@ -4,7 +4,7 @@ import React, { Fragment, useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useGetChannelsQuery } from "../../generated";
 import { ModalContext } from "../../utils/context";
-import { CreateChannel } from "../Chat/CreateChannel";
+import { CreateChannelForm } from "../Chat/CreateChannel";
 import { Loader } from "../shared/Loader";
 import { ShowError } from "../shared/ShowError";
 
@@ -32,7 +32,7 @@ export const ChannelsMenu = () => {
 										title: "Create New Channel",
 										footer: null
 									},
-									component: <CreateChannel />
+									component: <CreateChannelForm />
 								})
 							}
 						>

@@ -12,7 +12,7 @@ import { ShowError } from "../shared/ShowError";
 const { useForm, Item } = Form;
 const { Option } = Select;
 
-export const CreateChannel = () => {
+export const CreateChannelForm = () => {
 	const [form] = useForm();
 	const [searchStr, setSearchStr] = useState("");
 	const [searchUsers, setSearchUsers] = useState<Partial<User>[]>([]);

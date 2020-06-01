@@ -16,8 +16,8 @@ interface EditorProps {
 	style?: React.CSSProperties;
 	placeholder?: string;
 	onShiftEnter?: () => void;
-	emojiVisible: boolean;
-	setEmojiVisible: (val: boolean) => void;
+	emojiVisible?: boolean;
+	setEmojiVisible?: (val: boolean) => void;
 	editorState: EditorState;
 	setEditorState: (val: EditorState) => void;
 }
@@ -83,7 +83,7 @@ export default (props: EditorProps) => {
 				<div
 					style={props.style}
 					className={className}
-					onClick={() => props.setEmojiVisible(false)}
+					onClick={() => props.setEmojiVisible && props.setEmojiVisible(false)}
 				>
 					<Editor
 						editorState={editorState}

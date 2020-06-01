@@ -6,6 +6,7 @@ import {
 import { Menu } from "antd";
 import React, { useContext } from "react";
 import { ModalContext } from "../../utils/context";
+import { CreateTaskForm } from "../Equip/CreateTaskForm";
 import { UpdateForm } from "../Updates/UpdateForm";
 
 export const QuickActions = () => {
@@ -14,7 +15,15 @@ export const QuickActions = () => {
 	return (
 		<Menu>
 			<Menu.ItemGroup title="Quick Actions">
-				<Menu.Item key="createTask">
+				<Menu.Item
+					key="createTask"
+					onClick={() =>
+						toggleModal({
+							component: <CreateTaskForm />,
+							props: { title: "Create New Requirement" }
+						})
+					}
+				>
 					<PlusOutlined className="icon nav-icon" />
 					<span>Create Task</span>
 				</Menu.Item>

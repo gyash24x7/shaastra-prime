@@ -1,6 +1,6 @@
 import { Space, Tag, Typography } from "antd";
 import Table, { ColumnProps } from "antd/lib/table";
-import { Moment } from "moment";
+import moment from "moment";
 import React, { useContext, useState } from "react";
 import { departments, status, statusColor } from ".";
 import { DrawerContext, UserContext } from "../../utils/context";
@@ -32,18 +32,27 @@ export const TableLayout = (props: any) => {
 			key: "byDept",
 			title: <Typography.Text strong>By&nbsp;Department</Typography.Text>,
 			dataIndex: "byDept",
+			render: (val: any) => val.name,
 			filters: departments.map((dept) => ({ text: dept, value: dept })),
 			onFilter: (value, record) => record.byDept === value,
 			filteredValue: filters?.byDept || null,
-			sorter: (a, b) => a.byDept.localeCompare(b.byDept),
+			sorter: (a, b) => a.byDept.name.localeCompare(b.byDept.name),
 			sortOrder: sorters?.columnKey === "byDept" && sorters?.order
 		},
 		createdAt: {
 			key: "createdAt",
 			title: <Typography.Text strong>Created&nbsp;At</Typography.Text>,
 			dataIndex: "createdAt",
-			render: (val: Moment) => val.format("DD MMMM"),
+			render: (val: string) => moment(parseInt(val)).format("DD MMMM"),
 			sorter: (a, b) => a.createdAt.diff(b.createdAt),
+			sortOrder: sorters?.columnKey === "createdAt" && sorters?.order
+		},
+		deadline: {
+			key: "deadline",
+			title: <Typography.Text strong>Deadline</Typography.Text>,
+			dataIndex: "deadline",
+			render: (val: string) => moment(parseInt(val)).format("DD MMMM"),
+			sorter: (a, b) => a.deadline.diff(b.deadline),
 			sortOrder: sorters?.columnKey === "createdAt" && sorters?.order
 		},
 		assignedTo: {
@@ -69,7 +78,7 @@ export const TableLayout = (props: any) => {
 
 	return (
 		<Table
-			dataSource={props.data}
+			dataSource={props.data.map((data: any) => ({ ...data, key: data.id }))}
 			tableLayout="auto"
 			columns={Object.keys(columns).map((str) => columns[str])}
 			bordered
