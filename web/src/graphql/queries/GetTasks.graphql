@@ -2,7 +2,6 @@ query GetTasks {
 	getTasks {
 		id
 		brief
-		details
 		status
 		createdAt
 		deadline
@@ -10,23 +9,9 @@ query GetTasks {
 			id
 			name
 		}
-		createdBy {
-			id
-			name
-			role
-			department {
-				id
-				name
-			}
-		}
 		assignedTo {
 			id
 			name
-			role
-			department {
-				id
-				name
-			}
 		}
 	}
 }

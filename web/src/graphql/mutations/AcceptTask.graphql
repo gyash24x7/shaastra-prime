@@ -1,0 +1,3 @@
+mutation AcceptTask($taskId: String!) {
+	acceptTask(taskId: $taskId)
+}

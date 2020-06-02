@@ -1,0 +1,3 @@
+mutation SubmitTask($taskId: String!) {
+	submitTask(taskId: $taskId)
+}

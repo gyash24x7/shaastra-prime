@@ -21,9 +21,9 @@ export const KanbanItem = ({ task }: KanbanItemProps) => {
 			props: {
 				title: task.brief,
 				className: "no-padding-drawer",
-				width: "75vw"
+				width: "60vw"
 			},
-			component: <TaskDescription data={task} />
+			component: <TaskDescription taskId={task.id!} />
 		});
 	};
 

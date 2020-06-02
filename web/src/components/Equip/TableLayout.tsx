@@ -98,13 +98,13 @@ export const TableLayout = (props: any) => {
 					toggleDrawer({
 						props: {
 							title: record.brief,
-							width: "75vw",
+							width: "60vw",
 							className: "no-padding-drawer",
 							onClose() {
 								setSelectedRowKeys([record.key]);
 							}
 						},
-						component: <TaskDescription data={record} />
+						component: <TaskDescription taskId={record.id} />
 					});
 				}
 			}}

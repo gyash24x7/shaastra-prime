@@ -491,6 +491,7 @@ export type Query = {
   getInvoices: Array<Invoice>;
   getMessages: Array<Message>;
   getTasks: Array<Task>;
+  getTask: Task;
   getUpdates: Array<Update>;
 };
 
@@ -522,6 +523,11 @@ export type QueryGetInvoicesArgs = {
 
 export type QueryGetMessagesArgs = {
   data: GetMessagesInput;
+};
+
+
+export type QueryGetTaskArgs = {
+  taskId: Scalars['String'];
 };
 
 export type RejectInvoiceInput = {
@@ -659,6 +665,37 @@ export type VerifyUserInput = {
   otp: Scalars['String'];
 };
 
+export type AcceptTaskMutationVariables = {
+  taskId: Scalars['String'];
+};
+
+
+export type AcceptTaskMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'acceptTask'>
+);
+
+export type AssignTaskMutationVariables = {
+  taskId: Scalars['String'];
+  assignedTo: Array<Scalars['String']>;
+};
+
+
+export type AssignTaskMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'assignTask'>
+);
+
+export type CompleteTaskMutationVariables = {
+  taskId: Scalars['String'];
+};
+
+
+export type CompleteTaskMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'completeTask'>
+);
+
 export type CreateChannelMutationVariables = {
   name: Scalars['String'];
   description: Scalars['String'];
@@ -725,6 +762,16 @@ export type CreateUserMutation = (
   & Pick<Mutation, 'createUser'>
 );
 
+export type DeleteTaskMutationVariables = {
+  taskId: Scalars['String'];
+};
+
+
+export type DeleteTaskMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteTask'>
+);
+
 export type LoginMutationVariables = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -734,6 +781,16 @@ export type LoginMutationVariables = {
 export type LoginMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'login'>
+);
+
+export type SubmitTaskMutationVariables = {
+  taskId: Scalars['String'];
+};
+
+
+export type SubmitTaskMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'submitTask'>
 );
 
 export type UploadCoverPicMutationVariables = {
@@ -862,12 +919,14 @@ export type GetMessagesQuery = (
   )> }
 );
 
-export type GetTasksQueryVariables = {};
+export type GetTaskQueryVariables = {
+  taskId: Scalars['String'];
+};
 
 
-export type GetTasksQuery = (
+export type GetTaskQuery = (
   { __typename?: 'Query' }
-  & { getTasks: Array<(
+  & { getTask: (
     { __typename?: 'Task' }
     & Pick<Task, 'id' | 'brief' | 'details' | 'status' | 'createdAt' | 'deadline'>
     & { byDept: (
@@ -887,6 +946,24 @@ export type GetTasksQuery = (
         { __typename?: 'Department' }
         & Pick<Department, 'id' | 'name'>
       ) }
+    )> }
+  ) }
+);
+
+export type GetTasksQueryVariables = {};
+
+
+export type GetTasksQuery = (
+  { __typename?: 'Query' }
+  & { getTasks: Array<(
+    { __typename?: 'Task' }
+    & Pick<Task, 'id' | 'brief' | 'status' | 'createdAt' | 'deadline'>
+    & { byDept: (
+      { __typename?: 'Department' }
+      & Pick<Department, 'id' | 'name'>
+    ), assignedTo: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'name'>
     )> }
   )> }
 );
@@ -975,6 +1052,97 @@ export type NewMessageSubscription = (
 );
 
 
+export const AcceptTaskDocument = gql`
+    mutation AcceptTask($taskId: String!) {
+  acceptTask(taskId: $taskId)
+}
+    `;
+export type AcceptTaskMutationFn = ApolloReactCommon.MutationFunction<AcceptTaskMutation, AcceptTaskMutationVariables>;
+
+/**
+ * __useAcceptTaskMutation__
+ *
+ * To run a mutation, you first call `useAcceptTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAcceptTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [acceptTaskMutation, { data, loading, error }] = useAcceptTaskMutation({
+ *   variables: {
+ *      taskId: // value for 'taskId'
+ *   },
+ * });
+ */
+export function useAcceptTaskMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AcceptTaskMutation, AcceptTaskMutationVariables>) {
+        return ApolloReactHooks.useMutation<AcceptTaskMutation, AcceptTaskMutationVariables>(AcceptTaskDocument, baseOptions);
+      }
+export type AcceptTaskMutationHookResult = ReturnType<typeof useAcceptTaskMutation>;
+export type AcceptTaskMutationResult = ApolloReactCommon.MutationResult<AcceptTaskMutation>;
+export type AcceptTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<AcceptTaskMutation, AcceptTaskMutationVariables>;
+export const AssignTaskDocument = gql`
+    mutation AssignTask($taskId: String!, $assignedTo: [String!]!) {
+  assignTask(data: {taskId: $taskId, assignedTo: $assignedTo})
+}
+    `;
+export type AssignTaskMutationFn = ApolloReactCommon.MutationFunction<AssignTaskMutation, AssignTaskMutationVariables>;
+
+/**
+ * __useAssignTaskMutation__
+ *
+ * To run a mutation, you first call `useAssignTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssignTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assignTaskMutation, { data, loading, error }] = useAssignTaskMutation({
+ *   variables: {
+ *      taskId: // value for 'taskId'
+ *      assignedTo: // value for 'assignedTo'
+ *   },
+ * });
+ */
+export function useAssignTaskMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AssignTaskMutation, AssignTaskMutationVariables>) {
+        return ApolloReactHooks.useMutation<AssignTaskMutation, AssignTaskMutationVariables>(AssignTaskDocument, baseOptions);
+      }
+export type AssignTaskMutationHookResult = ReturnType<typeof useAssignTaskMutation>;
+export type AssignTaskMutationResult = ApolloReactCommon.MutationResult<AssignTaskMutation>;
+export type AssignTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<AssignTaskMutation, AssignTaskMutationVariables>;
+export const CompleteTaskDocument = gql`
+    mutation CompleteTask($taskId: String!) {
+  completeTask(taskId: $taskId)
+}
+    `;
+export type CompleteTaskMutationFn = ApolloReactCommon.MutationFunction<CompleteTaskMutation, CompleteTaskMutationVariables>;
+
+/**
+ * __useCompleteTaskMutation__
+ *
+ * To run a mutation, you first call `useCompleteTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCompleteTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [completeTaskMutation, { data, loading, error }] = useCompleteTaskMutation({
+ *   variables: {
+ *      taskId: // value for 'taskId'
+ *   },
+ * });
+ */
+export function useCompleteTaskMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CompleteTaskMutation, CompleteTaskMutationVariables>) {
+        return ApolloReactHooks.useMutation<CompleteTaskMutation, CompleteTaskMutationVariables>(CompleteTaskDocument, baseOptions);
+      }
+export type CompleteTaskMutationHookResult = ReturnType<typeof useCompleteTaskMutation>;
+export type CompleteTaskMutationResult = ApolloReactCommon.MutationResult<CompleteTaskMutation>;
+export type CompleteTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<CompleteTaskMutation, CompleteTaskMutationVariables>;
 export const CreateChannelDocument = gql`
     mutation CreateChannel($name: String!, $description: String!, $members: [String!]!) {
   createChannel(data: {name: $name, description: $description, members: $members})
@@ -1141,6 +1309,36 @@ export function useCreateUserMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = ApolloReactCommon.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const DeleteTaskDocument = gql`
+    mutation DeleteTask($taskId: String!) {
+  deleteTask(taskId: $taskId)
+}
+    `;
+export type DeleteTaskMutationFn = ApolloReactCommon.MutationFunction<DeleteTaskMutation, DeleteTaskMutationVariables>;
+
+/**
+ * __useDeleteTaskMutation__
+ *
+ * To run a mutation, you first call `useDeleteTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTaskMutation, { data, loading, error }] = useDeleteTaskMutation({
+ *   variables: {
+ *      taskId: // value for 'taskId'
+ *   },
+ * });
+ */
+export function useDeleteTaskMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteTaskMutation, DeleteTaskMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteTaskMutation, DeleteTaskMutationVariables>(DeleteTaskDocument, baseOptions);
+      }
+export type DeleteTaskMutationHookResult = ReturnType<typeof useDeleteTaskMutation>;
+export type DeleteTaskMutationResult = ApolloReactCommon.MutationResult<DeleteTaskMutation>;
+export type DeleteTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteTaskMutation, DeleteTaskMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(data: {email: $email, password: $password})
@@ -1172,6 +1370,36 @@ export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOpti
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = ApolloReactCommon.MutationResult<LoginMutation>;
 export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const SubmitTaskDocument = gql`
+    mutation SubmitTask($taskId: String!) {
+  submitTask(taskId: $taskId)
+}
+    `;
+export type SubmitTaskMutationFn = ApolloReactCommon.MutationFunction<SubmitTaskMutation, SubmitTaskMutationVariables>;
+
+/**
+ * __useSubmitTaskMutation__
+ *
+ * To run a mutation, you first call `useSubmitTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubmitTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [submitTaskMutation, { data, loading, error }] = useSubmitTaskMutation({
+ *   variables: {
+ *      taskId: // value for 'taskId'
+ *   },
+ * });
+ */
+export function useSubmitTaskMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SubmitTaskMutation, SubmitTaskMutationVariables>) {
+        return ApolloReactHooks.useMutation<SubmitTaskMutation, SubmitTaskMutationVariables>(SubmitTaskDocument, baseOptions);
+      }
+export type SubmitTaskMutationHookResult = ReturnType<typeof useSubmitTaskMutation>;
+export type SubmitTaskMutationResult = ApolloReactCommon.MutationResult<SubmitTaskMutation>;
+export type SubmitTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<SubmitTaskMutation, SubmitTaskMutationVariables>;
 export const UploadCoverPicDocument = gql`
     mutation UploadCoverPic($coverPic: String!) {
   uploadCoverPic(coverPic: $coverPic)
@@ -1500,9 +1728,9 @@ export type GetMessagesQueryResult = ApolloReactCommon.QueryResult<GetMessagesQu
 export function refetchGetMessagesQuery(variables?: GetMessagesQueryVariables) {
       return { query: GetMessagesDocument, variables: variables }
     }
-export const GetTasksDocument = gql`
-    query GetTasks {
-  getTasks {
+export const GetTaskDocument = gql`
+    query GetTask($taskId: String!) {
+  getTask(taskId: $taskId) {
     id
     brief
     details
@@ -1530,6 +1758,54 @@ export const GetTasksDocument = gql`
         id
         name
       }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTaskQuery__
+ *
+ * To run a query within a React component, call `useGetTaskQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTaskQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTaskQuery({
+ *   variables: {
+ *      taskId: // value for 'taskId'
+ *   },
+ * });
+ */
+export function useGetTaskQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTaskQuery, GetTaskQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetTaskQuery, GetTaskQueryVariables>(GetTaskDocument, baseOptions);
+      }
+export function useGetTaskLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTaskQuery, GetTaskQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetTaskQuery, GetTaskQueryVariables>(GetTaskDocument, baseOptions);
+        }
+export type GetTaskQueryHookResult = ReturnType<typeof useGetTaskQuery>;
+export type GetTaskLazyQueryHookResult = ReturnType<typeof useGetTaskLazyQuery>;
+export type GetTaskQueryResult = ApolloReactCommon.QueryResult<GetTaskQuery, GetTaskQueryVariables>;
+export function refetchGetTaskQuery(variables?: GetTaskQueryVariables) {
+      return { query: GetTaskDocument, variables: variables }
+    }
+export const GetTasksDocument = gql`
+    query GetTasks {
+  getTasks {
+    id
+    brief
+    status
+    createdAt
+    deadline
+    byDept {
+      id
+      name
+    }
+    assignedTo {
+      id
+      name
     }
   }
 }

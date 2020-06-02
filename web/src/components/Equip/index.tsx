@@ -96,3 +96,7 @@ export const EquipScreen = () => {
 		</Card>
 	);
 };
+
+export interface TaskOperationProps {
+	taskId: string;
+}

@@ -63,7 +63,10 @@ export const CreateTaskForm = () => {
 
 	if (data?.createTask) {
 		return (
-			<Result icon={<ThunderboltFilled />} title="Task Created Successfully!" />
+			<Result
+				icon={<ThunderboltFilled />}
+				title="Requirement Created Successfully!"
+			/>
 		);
 	}
 
