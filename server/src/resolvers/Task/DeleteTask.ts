@@ -10,8 +10,9 @@ export class DeleteTaskResolver {
 		@Arg("taskId") taskId: string,
 		@Ctx() { user, prisma }: GraphQLContext
 	) {
-		const task = await prisma.task.delete({
+		const task = await prisma.task.update({
 			where: { id: taskId },
+			data: { deleted: true },
 			include: { channels: { select: { id: true } } }
 		});
 
