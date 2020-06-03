@@ -1,4 +1,5 @@
 import { Department, PrismaClient, User } from "@prisma/client";
+import { Email } from "node-mailjet";
 import { Stream } from "stream";
 
 export enum UserRole {
@@ -12,6 +13,7 @@ export enum UserRole {
 export interface GraphQLContext {
 	user: (User & { department: Department }) | null | null;
 	prisma: PrismaClient;
+	mailjet: Email.Client;
 }
 
 export enum MediaType {
@@ -90,7 +92,8 @@ export enum TaskActivityType {
 	SUBMITTED = "SUBMITTED",
 	COMPLETED = "COMPLETED",
 	CONNECT_CHANNEL = "CONNECT_CHANNEL",
-	ATTACH_MEDIA = "ATTACH_MEDIA"
+	ATTACH_MEDIA = "ATTACH_MEDIA",
+	DELETED = "DELETED"
 }
 
 export enum MessageType {

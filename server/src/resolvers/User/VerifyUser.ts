@@ -1,24 +1,21 @@
-import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
-import { VerifyUserInput } from "../../inputs/User/VerifyUser";
+import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { GraphQLContext } from "../../utils";
 
 @Resolver()
 export class VerifyUserResolver {
-	@Mutation(() => Boolean)
+	@Authorized()
+	@Mutation(() => String, { nullable: true })
 	async verifyUser(
-		@Arg("data") { email, otp }: VerifyUserInput,
-		@Ctx() { prisma }: GraphQLContext
+		@Arg("otp") otp: string,
+		@Ctx() { prisma, user }: GraphQLContext
 	) {
-		let user = await prisma.user.findOne({ where: { email } });
+		if (user?.verificationOTP !== otp) return null;
 
-		if (!user) return false;
-		else {
-			if (user.verificationOTP !== otp) return false;
-			await prisma.user.update({
-				where: { email },
-				data: { verified: true }
-			});
-			return true;
-		}
+		const updatedUser = await prisma.user.update({
+			where: { id: user.id },
+			data: { verified: true }
+		});
+
+		return updatedUser ? user.id : null;
 	}
 }

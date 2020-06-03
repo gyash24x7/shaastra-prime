@@ -1,13 +1,12 @@
 import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { GraphQLContext } from "../../utils";
-import mailjet from "../../utils/mailjet";
 
 @Resolver()
 export class SendPasswordOTPResolver {
 	@Mutation(() => Boolean)
 	async sendPasswordOTP(
 		@Arg("email") email: string,
-		@Ctx() { prisma }: GraphQLContext
+		@Ctx() { prisma, mailjet }: GraphQLContext
 	) {
 		const user = await prisma.user.findOne({ where: { email } });
 		if (!user) return false;
@@ -15,21 +14,18 @@ export class SendPasswordOTPResolver {
 		const passwordOTP = Math.round(Math.random() * 1000000).toString();
 		await prisma.user.update({ where: { email }, data: { passwordOTP } });
 
-		await mailjet.post("send", { version: "v3.1" }).request({
-			Messages: [
+		await mailjet.post("send", { version: "v3" }).request({
+			FromEmail: "prime@shaastra.org",
+			FromName: "Shaastra Prime Bot",
+			Recipients: [
 				{
-					From: {
-						Email: "prime@shaastra.org",
-						Name: "Shaastra Prime Bot"
-					},
-					To: {
-						Email: `${user.rollNumber.toLowerCase()}@smail.iitm.ac.in`,
-						Name: user.name
-					},
-					subject: "Reset Your Password | Shaastra Prime",
-					HTMLPart: `<p>Your password reset code for Shaastra Prime is <strong>${passwordOTP}</strong> </p>`
+					Email: `${user.rollNumber.toLowerCase()}@smail.iitm.ac.in`,
+					Name: user.name
 				}
-			]
+			],
+			Subject: "Reset Your Password | Shaastra Prime",
+			"Html-part": `<p>Your password reset code for Shaastra Prime is <strong>${passwordOTP}</strong> </p>`,
+			"Text-part": `Your password reset code for Shaastra Prime is ${passwordOTP}`
 		});
 
 		return true;

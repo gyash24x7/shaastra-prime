@@ -8,7 +8,7 @@ dotenv.config();
 
 @Resolver()
 export class LoginResolver {
-	@Mutation(() => String, { nullable: true })
+	@Mutation(() => [String], { nullable: true })
 	async login(
 		@Arg("data") { email, password }: LoginInput,
 		@Ctx() { prisma }: GraphQLContext
@@ -19,6 +19,8 @@ export class LoginResolver {
 		const valid = await bcrypt.compare(password, user.password);
 		if (!valid) return null;
 
-		return jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
+		const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
+
+		return [token, user.verified ? user.id : ""];
 	}
 }
