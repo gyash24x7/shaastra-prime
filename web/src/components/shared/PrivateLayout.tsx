@@ -1,7 +1,7 @@
 import { Layout } from "antd";
 import { DrawerProps } from "antd/lib/drawer";
 import { ModalProps } from "antd/lib/modal";
-import React, { useState } from "react";
+import React, { ReactChild, ReactChildren, useState } from "react";
 import { useLocation } from "react-use";
 import {
 	DrawerContext,
@@ -16,11 +16,11 @@ import { CommonModal } from "./CommonModal";
 
 const { Content, Sider } = Layout;
 
-interface PrivateLayoutProps {
-	children: any;
+interface LayoutProps {
+	children: ReactChild | ReactChildren;
 }
 
-export const PrivateLayout = (props: PrivateLayoutProps) => {
+export const PrivateLayout = (props: LayoutProps) => {
 	const [drawerComponent, setDrawerComponent] = useState(<div />);
 	const [drawerProps, setDrawerProps] = useState<DrawerProps>({});
 	const [isDrawerVisible, setIsDrawerVisible] = useState(false);

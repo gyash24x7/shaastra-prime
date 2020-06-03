@@ -9,7 +9,7 @@ export const AvatarMenu = () => {
 		<Menu>
 			<Menu.ItemGroup>
 				<div style={{ padding: "5px 20px" }}>
-					<UserCard withAvatar noPadding user={user} />
+					<UserCard withAvatar noPadding user={user!} />
 				</div>
 			</Menu.ItemGroup>
 			<Menu.Divider />

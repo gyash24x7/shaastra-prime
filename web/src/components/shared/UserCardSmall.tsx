@@ -1,12 +1,14 @@
 import { Tag } from "antd";
 import React, { Fragment, useContext } from "react";
+import { User } from "../../generated";
+import { RecursivePartial } from "../../generated/types";
 import { DrawerContext } from "../../utils/context";
 import { ProfileCard } from "../Home/ProfileCard";
 
 interface UserCardSmallProps {
 	onlyName?: boolean;
 	noPadding?: boolean;
-	user: any;
+	user: RecursivePartial<User>;
 	noNamePadding?: boolean;
 }
 
@@ -20,7 +22,7 @@ export const UserCardSmall = (props: UserCardSmallProps) => {
 				width: 450,
 				title: "User Profile"
 			},
-			component: <ProfileCard userId={props.user!.id} />
+			component: <ProfileCard userId={props.user!.id!} />
 		});
 	};
 
@@ -36,7 +38,7 @@ export const UserCardSmall = (props: UserCardSmallProps) => {
 			{!props.onlyName && (
 				<div className="user-details">
 					<Tag color="red" style={props.noPadding ? { padding: 0 } : {}}>
-						{props.user?.department.name}
+						{props.user?.department!.name}
 					</Tag>
 					<Tag color="gold" style={props.noPadding ? { padding: 0 } : {}}>
 						{props.user?.role}

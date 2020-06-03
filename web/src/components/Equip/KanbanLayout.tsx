@@ -2,27 +2,28 @@ import { Empty, Tag, Typography } from "antd";
 import React from "react";
 import { statusColor } from ".";
 import { Task } from "../../generated";
+import { RecursivePartial } from "../../generated/types";
 import { Loader } from "../shared/Loader";
 import { KanbanItem } from "./KanbanItem";
 
 const { Text } = Typography;
 
 interface KanbanLayoutProps {
-	data: Partial<Task>[];
+	data: RecursivePartial<Task>[];
 	loading?: boolean;
 }
 
 export const KanbanLayout = (props: KanbanLayoutProps) => {
-	const inPipelineData = props.data.filter(({ status }: any) =>
-		["NOT_ASSIGNED", "ASSIGNED"].includes(status)
+	const inPipelineData = props.data.filter(({ status }) =>
+		["NOT_ASSIGNED", "ASSIGNED"].includes(status!)
 	);
 
-	const inProgressData = props.data.filter(({ status }: any) =>
-		["IN_PROGRESS"].includes(status)
+	const inProgressData = props.data.filter(({ status }) =>
+		["IN_PROGRESS"].includes(status!)
 	);
 
-	const finishedData = props.data.filter(({ status }: any) =>
-		["SUBMITTED", "COMPLETED"].includes(status)
+	const finishedData = props.data.filter(({ status }) =>
+		["SUBMITTED", "COMPLETED"].includes(status!)
 	);
 
 	if (props.loading) {

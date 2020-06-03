@@ -7,6 +7,7 @@ import {
 	useGetMessagesQuery,
 	useNewMessageSubscription
 } from "../../generated";
+import { RecursivePartial } from "../../generated/types";
 import { ShowError } from "../shared/ShowError";
 import { MessageItem } from "./MessageItem";
 
@@ -78,13 +79,13 @@ export const MessageList = ({ channelId }: MessageListProps) => {
 		}
 	};
 
-	const getGroupedMsgs = (messages: Partial<Message>[]) => {
+	const getGroupedMsgs = (messages: RecursivePartial<Message>[]) => {
 		let dates = new Set<string>(
 			messages.map((msg) =>
 				moment(parseInt(msg.createdAt!)).format("DD/MM/YYYY")
 			)
 		);
-		let dateWiseMsgs: Record<string, Partial<Message>[]> = {};
+		let dateWiseMsgs: Record<string, RecursivePartial<Message>[]> = {};
 
 		Array.from(dates).forEach((date) => {
 			dateWiseMsgs[date] = messages.filter(

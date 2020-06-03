@@ -1,7 +1,8 @@
 import { DrawerProps } from "antd/lib/drawer";
 import { ModalProps } from "antd/lib/modal";
 import React from "react";
-import { Department } from "../generated";
+import { Department, User } from "../generated";
+import { RecursivePartial } from "../generated/types";
 
 export interface DrawerPropsExtended extends DrawerProps {
 	extra?: JSX.Element;
@@ -34,7 +35,7 @@ interface IModalContext {
 export const ModalContext = React.createContext<IModalContext | null>(null);
 
 interface IUserContext {
-	user?: any;
+	user?: RecursivePartial<User> | null;
 	isAuthenticated: boolean;
 	isVerified: boolean;
 }

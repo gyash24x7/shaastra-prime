@@ -4,13 +4,14 @@ import moment from "moment";
 import React, { useContext } from "react";
 import { statusColor } from ".";
 import { Task } from "../../generated";
+import { RecursivePartial } from "../../generated/types";
 import { DrawerContext } from "../../utils/context";
 import { TaskDescription } from "./TaskDescription";
 
 const { Title } = Typography;
 
 interface KanbanItemProps {
-	task: Partial<Task>;
+	task: RecursivePartial<Task>;
 }
 
 export const KanbanItem = ({ task }: KanbanItemProps) => {

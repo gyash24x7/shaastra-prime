@@ -67,13 +67,13 @@ export const TaskDescription = ({ taskId }: TaskOperationProps) => {
 				</Descriptions.Item>
 				<Descriptions.Item label={<Text>Created&nbsp;By</Text>} span={2}>
 					<Space>
-						<UserCardSmall user={user} />
+						<UserCardSmall user={user!} />
 					</Space>
 				</Descriptions.Item>
 				<Descriptions.Item label={<Text>Actions</Text>}>
 					<Space>
 						{data.getTask.status === TaskStatus.NotAssigned &&
-							user.role === UserRole.Core && (
+							user?.role === UserRole.Core && (
 								<Button
 									className="button"
 									onClick={() => {
@@ -95,7 +95,7 @@ export const TaskDescription = ({ taskId }: TaskOperationProps) => {
 						{data.getTask.status === TaskStatus.Submitted && (
 							<CompleteTask taskId={data.getTask.id} />
 						)}
-						{data.getTask.createdBy.id === user.id && (
+						{data.getTask.createdBy.id === user?.id && (
 							<DeleteTask taskId={data.getTask.id} />
 						)}
 					</Space>

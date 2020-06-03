@@ -2,11 +2,12 @@ import { ClockCircleFilled } from "@ant-design/icons";
 import { Card, Collapse, Empty, List, Tag, Typography } from "antd";
 import React from "react";
 import { Channel } from "../../generated";
+import { RecursivePartial } from "../../generated/types";
 import { UserCardSmall } from "../shared/UserCardSmall";
 import { MessageItem } from "./MessageItem";
 
 interface ChannelDescriptionProps {
-	channel: Partial<Channel>;
+	channel: RecursivePartial<Channel>;
 }
 
 const { Text, Paragraph } = Typography;
@@ -26,7 +27,7 @@ export const ChannelDescription = ({ channel }: ChannelDescriptionProps) => {
 							label: "Created By",
 							value: (
 								<UserCardSmall
-									user={channel.createdBy}
+									user={channel.createdBy!}
 									onlyName
 									noNamePadding
 								/>
@@ -52,15 +53,15 @@ export const ChannelDescription = ({ channel }: ChannelDescriptionProps) => {
 			<Collapse.Panel key="members" header="Members">
 				<div className="grid-row">
 					{channel.members!.map((member) => (
-						<div className="grid-col" key={member.id}>
-							<UserCardSmall user={member} />
+						<div className="grid-col" key={member!.id}>
+							<UserCardSmall user={member!} />
 						</div>
 					))}
 				</div>
 			</Collapse.Panel>
 			<Collapse.Panel key="starred" header="Starred Messages">
 				{channel.starredMsgs?.map((message, i) => (
-					<MessageItem key={i} message={message} />
+					<MessageItem key={i} message={message!} />
 				))}
 				{!channel.starredMsgs?.length && (
 					<div className="grid-row">

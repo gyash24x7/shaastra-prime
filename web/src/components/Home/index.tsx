@@ -12,7 +12,7 @@ export const HomeScreen = () => {
 			style={{ flexDirection: "row-reverse", margin: "0px -5px" }}
 		>
 			<div className="grid-col">
-				<ProfileCard userId={user!.id} />
+				<ProfileCard userId={user!.id!} />
 			</div>
 			<div className="grid-col" style={{ flex: 2 }}>
 				<UserDataCard />

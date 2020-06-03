@@ -14,3 +14,7 @@ generates:
       apolloReactCommonImportFrom: "@apollo/client"
       apolloReactHooksImportFrom: "@apollo/client"
       withRefetchFn: true
+      preResolveTypes: true
+      skipTypename: true
+      flattenGeneratedTypes: true
+      addDocBlocks: false

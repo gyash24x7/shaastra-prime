@@ -1,12 +1,14 @@
 import { Avatar, Card } from "antd";
 import React from "react";
+import { User } from "../../generated";
+import { RecursivePartial } from "../../generated/types";
 import { UserCardSmall } from "./UserCardSmall";
 
 interface UserCardProps {
 	withAvatar?: boolean;
 	avatarSize?: number;
 	noPadding?: boolean;
-	user?: any;
+	user?: RecursivePartial<User>;
 }
 
 export const UserCard = (props: UserCardProps) => {
@@ -25,7 +27,7 @@ export const UserCard = (props: UserCardProps) => {
 					/>
 				</div>
 			)}
-			<UserCardSmall noPadding={props.noPadding} user={props.user} />
+			<UserCardSmall noPadding={props.noPadding} user={props.user!} />
 		</Card>
 	);
 };

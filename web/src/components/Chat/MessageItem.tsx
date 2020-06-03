@@ -6,45 +6,31 @@ import {
 	StarOutlined
 } from "@ant-design/icons";
 import { Avatar, Comment, Space } from "antd";
+import { convertFromRaw, Editor, EditorState } from "draft-js";
 import moment from "moment";
 import React, { Fragment } from "react";
 import { Message, MessageType } from "../../generated";
+import { RecursivePartial } from "../../generated/types";
 
 interface MessageItemProps {
-	message: Partial<Message>;
+	message: RecursivePartial<Message>;
 }
 
-export const MessageItem = ({ message }: MessageItemProps) => {
+export const TextMessage = ({ message }: MessageItemProps) => {
 	return (
 		<div className="message-box">
 			<Comment
 				avatar={<Avatar src="https://source.unsplash.com/featured/100x100" />}
 				content={
-					message.type === MessageType.Media ? (
-						<div className="image-content-wrapper">
-							{message.media?.map((image) => (
-								<div
-									className="image-content"
-									onClick={() => window.open(image.url, "_blank")}
-								>
-									<img src={image.url} alt="" />
-								</div>
-							))}
-							{message.media?.map((image) => (
-								<div
-									className="image-content"
-									onClick={() => window.open(image.url, "_blank")}
-								>
-									<img src={image.url} alt="" />
-								</div>
-							))}
-						</div>
-					) : (
-						<div
-							className="message-content"
-							dangerouslySetInnerHTML={{ __html: message.content! }}
+					<div className="message-content">
+						<Editor
+							onChange={() => {}}
+							editorState={EditorState.createWithContent(
+								convertFromRaw(JSON.parse(message.content!))
+							)}
+							readOnly
 						/>
-					)
+					</div>
 				}
 				datetime={
 					<Fragment>
@@ -67,4 +53,21 @@ export const MessageItem = ({ message }: MessageItemProps) => {
 			/>
 		</div>
 	);
+};
+
+export const TaskUpdateMessage = ({ message }: MessageItemProps) => {
+	return <div className="message-box">{message.content}</div>;
+};
+
+export const MediaMessage = ({ message }: MessageItemProps) => {
+	return <div className="message-box">{message.content}</div>;
+};
+
+export const MessageItem = ({ message }: MessageItemProps) => {
+	switch (message.type) {
+		case MessageType.Text:
+			return <TextMessage message={message} />;
+		default:
+			return <TaskUpdateMessage message={message} />;
+	}
 };

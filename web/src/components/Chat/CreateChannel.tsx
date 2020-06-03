@@ -7,6 +7,7 @@ import {
 	User,
 	useSearchUserLazyQuery
 } from "../../generated";
+import { RecursivePartial } from "../../generated/types";
 import { ShowError } from "../shared/ShowError";
 
 const { useForm, Item } = Form;
@@ -15,7 +16,7 @@ const { Option } = Select;
 export const CreateChannelForm = () => {
 	const [form] = useForm();
 	const [searchStr, setSearchStr] = useState("");
-	const [searchUsers, setSearchUsers] = useState<Partial<User>[]>([]);
+	const [searchUsers, setSearchUsers] = useState<RecursivePartial<User>[]>([]);
 
 	const [searchUser, { error, data }] = useSearchUserLazyQuery();
 	const [

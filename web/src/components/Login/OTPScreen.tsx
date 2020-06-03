@@ -7,20 +7,22 @@ import { ShowError } from "../shared/ShowError";
 const { Title } = Typography;
 
 export const OTPScreen = () => {
-	const [ form ] = Form.useForm();
-	const { user } = useContext( UserContext );
+	const [form] = Form.useForm();
+	const { user } = useContext(UserContext);
 
-	const [ verifyUser, { loading, error } ] = useVerifyUserMutation( { refetchQueries: [ refetchMeQuery() ] } )
+	const [verifyUser, { loading, error }] = useVerifyUserMutation({
+		refetchQueries: [refetchMeQuery()]
+	});
 
-	if ( error ) {
-		console.log( error );
+	if (error) {
+		console.log(error);
 		return <ShowError />;
 	}
 
 	const handleSubmit = async () => {
 		try {
 			const values = await form.validateFields();
-			verifyUser({variables:{email:user!.email, otp: values.otp}})
+			verifyUser({ variables: { email: user!.email!, otp: values.otp } });
 		} catch (errorInfo) {
 			console.log("Failed:", errorInfo);
 		}

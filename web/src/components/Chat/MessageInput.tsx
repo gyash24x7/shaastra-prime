@@ -1,8 +1,8 @@
 import { Button, Space } from "antd";
 import { convertToRaw, EditorState } from "draft-js";
-import draftToHtml from "draftjs-to-html";
 import React, { useContext, useState } from "react";
 import { useCreateMessageMutation, User } from "../../generated";
+import { RecursivePartial } from "../../generated/types";
 import { ModalContext } from "../../utils/context";
 import Editor, { composedDecorator } from "../Editor";
 import { ShowError } from "../shared/ShowError";
@@ -11,7 +11,7 @@ import { MediaMessageInput } from "./MediaMessageInput";
 
 interface MessageInputProps {
 	channelId: string;
-	members: Partial<User>[];
+	members: RecursivePartial<User>[];
 }
 
 export const MessageInput = ({ channelId }: MessageInputProps) => {
@@ -41,7 +41,7 @@ export const MessageInput = ({ channelId }: MessageInputProps) => {
 
 	const handleSubmit = () => {
 		const rawContent = convertToRaw(editorState.getCurrentContent());
-		const content = draftToHtml(rawContent, { trigger: "#", separator: " " });
+		const content = JSON.stringify(rawContent);
 		const plainText = rawContent.blocks
 			.map((block) => block.text.trim())
 			.join("");

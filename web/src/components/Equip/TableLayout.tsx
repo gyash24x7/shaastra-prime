@@ -3,11 +3,18 @@ import Table, { ColumnProps } from "antd/lib/table";
 import moment from "moment";
 import React, { useContext, useState } from "react";
 import { departments, status, statusColor } from ".";
+import { Task } from "../../generated";
+import { RecursivePartial } from "../../generated/types";
 import { DrawerContext, UserContext } from "../../utils/context";
 import { UserCardSmall } from "../shared/UserCardSmall";
 import { TaskDescription } from "./TaskDescription";
 
-export const TableLayout = (props: any) => {
+interface TableLayoutProps {
+	data: RecursivePartial<Task>[];
+	loading: boolean;
+}
+
+export const TableLayout = (props: TableLayoutProps) => {
 	const [filters, setFilters] = useState<any>(null);
 	const [sorters, setSorters] = useState<any>(null);
 	const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
@@ -67,7 +74,7 @@ export const TableLayout = (props: any) => {
 			render: (val: string[]) => (
 				<Space size="large">
 					{val.map((_, i) => (
-						<UserCardSmall key={i} onlyName user={user} />
+						<UserCardSmall key={i} onlyName user={user!} />
 					))}
 				</Space>
 			)
@@ -83,7 +90,7 @@ export const TableLayout = (props: any) => {
 
 	return (
 		<Table
-			dataSource={props.data.map((data: any) => ({ ...data, key: data.id }))}
+			dataSource={props.data.map((data) => ({ ...data, key: data.id }))}
 			tableLayout="auto"
 			columns={Object.keys(columns).map((str) => columns[str])}
 			bordered

@@ -21,7 +21,7 @@ export const AssignTask = ({ taskId }: TaskOperationProps) => {
 		error: memberError,
 		loading: memberLoading
 	} = useGetDeptmembersQuery({
-		variables: { deptId: user!.department!.id }
+		variables: { deptId: user!.department!.id! }
 	});
 
 	const [assignTask, { data, loading, error }] = useAssignTaskMutation({

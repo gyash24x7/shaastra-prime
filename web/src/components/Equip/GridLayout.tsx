@@ -3,11 +3,12 @@ import React from "react";
 import StackGrid from "react-stack-grid";
 import { useWindowSize } from "react-use";
 import { Task } from "../../generated";
+import { RecursivePartial } from "../../generated/types";
 import { Loader } from "../shared/Loader";
 import { KanbanItem } from "./KanbanItem";
 
 interface GridLayoutProps {
-	data: Partial<Task>[];
+	data: RecursivePartial<Task>[];
 	loading?: boolean;
 }
 

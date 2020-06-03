@@ -1,9 +1,13 @@
 import { Col, Row } from "antd";
-import React from "react";
+import React, { ReactChild, ReactChildren } from "react";
 import DarkLogo from "../../images/DarkLogo.png";
 import LightLogo from "../../images/LightLogo.png";
 
-export const PublicLayout = (props: any) => {
+interface LayoutProps {
+	children: ReactChild | ReactChildren;
+}
+
+export const PublicLayout = (props: LayoutProps) => {
 	return (
 		<Row className="wrapper" align="middle" justify="end">
 			<Col xs={24} md={15} lg={12} xl={9} xxl={8} className="public-container">

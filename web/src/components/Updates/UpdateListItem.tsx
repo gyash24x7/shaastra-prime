@@ -4,13 +4,14 @@ import { convertFromRaw, Editor, EditorState } from "draft-js";
 import moment from "moment";
 import React, { useContext } from "react";
 import { Update } from "../../generated";
+import { RecursivePartial } from "../../generated/types";
 import { DrawerContext } from "../../utils/context";
 import { composedDecorator } from "../Editor";
 
 const { Text, Paragraph } = Typography;
 
 interface UpdateListItemProps {
-	update: Partial<Update>;
+	update: RecursivePartial<Update>;
 }
 
 export const UpdateListItem = ({ update }: UpdateListItemProps) => {
