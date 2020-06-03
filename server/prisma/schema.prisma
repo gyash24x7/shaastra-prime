@@ -82,9 +82,16 @@ model Message {
   createdById String
   type        MessageType
   media       Media[]     @relation("MessageMedia")
+
+  taskActivityId String?
+  taskActivity   TaskActivity? @relation("TaskActivityMessage", fields: [taskActivityId], references: [id])
+
+  invoiceActivityId String?
+  invoiceActivity   InvoiceActivity? @relation("InvoiceActivityMessage", fields: [invoiceActivityId], references: [id])
+
   // Omit in API
-  channel     Channel     @relation("ChannelMessages", fields: [channelId], references: [id])
-  channelId   String
+  channelId String
+  channel   Channel @relation("ChannelMessages", fields: [channelId], references: [id])
 }
 
 model Media {
@@ -93,15 +100,16 @@ model Media {
   type         MediaType
   uploadedBy   User      @relation("MediaByUser", fields: [uploadedById], references: [id])
   uploadedById String
+
   // Fields to be fetched separately if needed: Omit in API
-  invoice      Invoice?  @relation("InvoiceMedia", fields: [invoiceId], references: [id])
-  invoiceId    String?
-  vertical     Vertical? @relation("VerticalImage")
-  task         Task?     @relation("TaskMedia", fields: [taskId], references: [id])
-  taskId       String?
-  event        Event?    @relation("EventImage")
-  message      Message?  @relation("MessageMedia", fields: [messageId], references: [id])
-  messageId    String?
+  invoice   Invoice?  @relation("InvoiceMedia", fields: [invoiceId], references: [id])
+  invoiceId String?
+  vertical  Vertical? @relation("VerticalImage")
+  task      Task?     @relation("TaskMedia", fields: [taskId], references: [id])
+  taskId    String?
+  event     Event?    @relation("EventImage")
+  message   Message?  @relation("MessageMedia", fields: [messageId], references: [id])
+  messageId String?
 }
 
 model Task {
@@ -133,6 +141,9 @@ model TaskActivity {
   by          User             @relation("TaskActivityByUser", fields: [byId], references: [id])
   byId        String
   description String
+
+  // Omit in API
+  messages Message[] @relation("TaskActivityMessage")
 }
 
 model Update {
@@ -197,6 +208,9 @@ model InvoiceActivity {
   by          User                @relation("InvoiceActivityByUser", fields: [byId], references: [id])
   byId        String
   description String
+
+  //Omit in API
+  messages Message[] @relation("InvoiceActivityMessage")
 }
 
 model Vendor {
@@ -297,8 +311,9 @@ enum MessageType {
   SYSTEM
   TEXT
   MEDIA
-  TASK_UPDATE
-  INVOICE_UPDATE
+  TASK_ACTIVITY
+  INVOICE_ACTIVITY
+  ACCOMODATION_ACTIVITY
 }
 
 enum RegistrationType {
@@ -320,6 +335,7 @@ enum TaskActivityType {
   COMPLETED
   CONNECT_CHANNEL
   ATTACH_MEDIA
+  DELETED
 }
 
 enum InviteStatus {
