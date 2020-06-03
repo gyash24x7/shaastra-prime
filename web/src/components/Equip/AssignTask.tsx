@@ -15,13 +15,13 @@ const { Option } = Select;
 const { useForm, Item } = Form;
 
 export const AssignTask = ({ taskId }: TaskOperationProps) => {
-	const { user } = useContext(UserContext);
+	const { user } = useContext(UserContext)!;
 	const {
 		data: memberData,
 		error: memberError,
 		loading: memberLoading
 	} = useGetDeptmembersQuery({
-		variables: { deptId: user!.department!.id! }
+		variables: { deptId: user.department!.id! }
 	});
 
 	const [assignTask, { data, loading, error }] = useAssignTaskMutation({

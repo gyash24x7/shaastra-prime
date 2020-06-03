@@ -19,7 +19,7 @@ export const TableLayout = (props: TableLayoutProps) => {
 	const [sorters, setSorters] = useState<any>(null);
 	const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
-	const { user } = useContext(UserContext);
+	const { user } = useContext(UserContext)!;
 
 	const columns: Record<string, ColumnProps<any>> = {
 		brief: {
@@ -74,7 +74,7 @@ export const TableLayout = (props: TableLayoutProps) => {
 			render: (val: string[]) => (
 				<Space size="large">
 					{val.map((_, i) => (
-						<UserCardSmall key={i} onlyName user={user!} />
+						<UserCardSmall key={i} onlyName user={user} />
 					))}
 				</Space>
 			)

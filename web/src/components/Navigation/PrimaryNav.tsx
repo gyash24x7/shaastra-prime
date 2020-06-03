@@ -1,10 +1,12 @@
 import { useApolloClient } from "@apollo/client";
-import React from "react";
+import React, { useContext } from "react";
 import LogoWhite from "../../images/2020_white.png";
+import { AuthContext } from "../../utils/context";
 import { NavIcon } from "./NavIcon";
 
 export const PrimaryNav = () => {
 	const client = useApolloClient();
+	const { setAuthStatus } = useContext(AuthContext)!;
 
 	return (
 		<div className="primary-nav">
@@ -26,7 +28,7 @@ export const PrimaryNav = () => {
 					onClick={() => {
 						localStorage.clear();
 						client.resetStore();
-						window.location.pathname = "/login";
+						setAuthStatus([false, false]);
 					}}
 				/>
 			</div>

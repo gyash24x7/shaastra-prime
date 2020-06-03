@@ -1,7 +1,8 @@
 import { Button, Form, Input, Typography } from "antd";
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { refetchMeQuery, useLoginMutation } from "../../generated";
+import { useLoginMutation } from "../../generated";
+import { AuthContext } from "../../utils/context";
 import { ShowError } from "../shared/ShowError";
 
 // eslint-disable-next-line
@@ -11,17 +12,17 @@ const { Title } = Typography;
 
 export const LoginScreen = () => {
 	const [form] = Form.useForm();
+	const { setAuthStatus } = useContext(AuthContext)!;
 
-	const [login, { data, error, loading }] = useLoginMutation({
-		refetchQueries: [refetchMeQuery()]
+	const [login, { error, loading, data }] = useLoginMutation({
+		onCompleted(data) {
+			if (data.login) {
+				localStorage.setItem("authToken", data.login[0]);
+				localStorage.setItem("verificationToken", data.login[1]);
+				setAuthStatus(data.login.map((val) => !!val));
+			}
+		}
 	});
-
-	if (error) return <ShowError />;
-
-	if (data?.login) {
-		localStorage.setItem("authToken", data.login);
-		window.location.pathname = "verification";
-	}
 
 	const handleSubmit = async () => {
 		try {
@@ -36,6 +37,11 @@ export const LoginScreen = () => {
 			console.log("Failed:", errorInfo);
 		}
 	};
+
+	if (error || (data && !data.login)) {
+		console.log(error);
+		return <ShowError />;
+	}
 
 	return (
 		<div className="login-form-container">

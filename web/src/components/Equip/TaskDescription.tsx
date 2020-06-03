@@ -18,7 +18,7 @@ import { SubmitTask } from "./SubmitTask";
 const { Text } = Typography;
 
 export const TaskDescription = ({ taskId }: TaskOperationProps) => {
-	const { user } = useContext(UserContext);
+	const { user } = useContext(UserContext)!;
 	const { toggleModal } = useContext(ModalContext)!;
 	const { data, error } = useGetTaskQuery({ variables: { taskId } });
 
@@ -67,7 +67,7 @@ export const TaskDescription = ({ taskId }: TaskOperationProps) => {
 				</Descriptions.Item>
 				<Descriptions.Item label={<Text>Created&nbsp;By</Text>} span={2}>
 					<Space>
-						<UserCardSmall user={user!} />
+						<UserCardSmall user={user} />
 					</Space>
 				</Descriptions.Item>
 				<Descriptions.Item label={<Text>Actions</Text>}>

@@ -3,16 +3,21 @@ import { DrawerProps } from "antd/lib/drawer";
 import { ModalProps } from "antd/lib/modal";
 import React, { ReactChild, ReactChildren, useState } from "react";
 import { useLocation } from "react-use";
+import { useGetDepartmentsQuery, useMeQuery } from "../../generated";
 import {
+	DepartmentContext,
 	DrawerContext,
 	ModalContext,
 	ToggleDrawerOptions,
-	ToggleModalOptions
+	ToggleModalOptions,
+	UserContext
 } from "../../utils/context";
 import { PrimaryNav } from "../Navigation/PrimaryNav";
 import { getSecondaryNav } from "../Navigation/SecondaryNav";
 import { CommonDrawer } from "./CommonDrawer";
 import { CommonModal } from "./CommonModal";
+import { Loader } from "./Loader";
+import { ShowError } from "./ShowError";
 
 const { Content, Sider } = Layout;
 
@@ -35,6 +40,9 @@ export const PrivateLayout = (props: LayoutProps) => {
 
 	const { pathname } = useLocation();
 	const SecondaryNav = getSecondaryNav(pathname!);
+
+	const { data, error } = useMeQuery();
+	const { data: deptData, error: deptError } = useGetDepartmentsQuery();
 
 	const toggleModal = (options?: ToggleModalOptions) => {
 		setIsModalVisible(!!options);
@@ -64,35 +72,50 @@ export const PrivateLayout = (props: LayoutProps) => {
 		}
 	};
 
-	return (
-		<div className="private-container">
-			<DrawerContext.Provider value={{ toggleDrawer }}>
-				<ModalContext.Provider value={{ toggleModal }}>
-					<Layout>
-						<Sider width="270" collapsedWidth="0">
-							<SecondaryNav />
-						</Sider>
-						<Content>
-							<div className="screen-wrapper">{props.children}</div>
-						</Content>
-					</Layout>
-					<PrimaryNav />
-					<CommonModal
-						component={modalComponent}
-						visible={!!isModalVisible}
-						onCancel={() => toggleModal()}
-						modalProps={modalProps}
-					/>
-					<CommonDrawer
-						component={drawerComponent}
-						visible={isDrawerVisible}
-						drawerProps={drawerProps}
-						childDrawerComponent={childDrawerComponent}
-						childDrawerVisible={isChildDrawerVisible}
-						childDrawerProps={childDrawerProps}
-					/>
-				</ModalContext.Provider>
-			</DrawerContext.Provider>
-		</div>
-	);
+	if (error || deptError) {
+		console.log(error || deptError);
+		return <ShowError />;
+	}
+
+	if (data?.me && deptData?.getDepartments) {
+		return (
+			<div className="private-container">
+				<UserContext.Provider value={{ user: data.me }}>
+					<DepartmentContext.Provider
+						value={{ departments: deptData.getDepartments }}
+					>
+						<DrawerContext.Provider value={{ toggleDrawer }}>
+							<ModalContext.Provider value={{ toggleModal }}>
+								<Layout>
+									<Sider width="270" collapsedWidth="0">
+										<SecondaryNav />
+									</Sider>
+									<Content>
+										<div className="screen-wrapper">{props.children}</div>
+									</Content>
+								</Layout>
+								<PrimaryNav />
+								<CommonModal
+									component={modalComponent}
+									visible={!!isModalVisible}
+									onCancel={() => toggleModal()}
+									modalProps={modalProps}
+								/>
+								<CommonDrawer
+									component={drawerComponent}
+									visible={isDrawerVisible}
+									drawerProps={drawerProps}
+									childDrawerComponent={childDrawerComponent}
+									childDrawerVisible={isChildDrawerVisible}
+									childDrawerProps={childDrawerProps}
+								/>
+							</ModalContext.Provider>
+						</DrawerContext.Provider>
+					</DepartmentContext.Provider>
+				</UserContext.Provider>
+			</div>
+		);
+	}
+
+	return <Loader />;
 };
