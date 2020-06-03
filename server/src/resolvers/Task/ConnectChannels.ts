@@ -21,16 +21,19 @@ export class ConnectChannelsToTaskResolver {
 				channels: { connect: channelIds.map((id) => ({ id })) },
 				activity: {
 					create: {
-						description: `
-              ${user?.name} connected the following channels to this task:
-              ${channels?.map(({ name }) => name + ", ")}
-            `,
+						description:
+							`${user?.name} ` +
+							"connected the following channels to this task: " +
+							`${channels?.map(({ name }) => name + ", ")}`,
 						type: TaskActivityType.CONNECT_CHANNEL,
 						by: { connect: { id: user?.id } }
 					}
 				}
 			},
-			include: { channels: { select: { id: true } } }
+			include: {
+				channels: { select: { id: true } },
+				activity: { select: { id: true } }
+			}
 		});
 
 		Promise.all(
@@ -38,19 +41,17 @@ export class ConnectChannelsToTaskResolver {
 				prisma.message.create({
 					data: {
 						channel: { connect: { id: channel.id } },
-						content: `
-							<p><strong>[TASK UPDATE: ${task.brief}]</strong></p>
-              <p>
-                ${user?.name} connected the following channels to this task:
-                ${channels?.map(({ name }) => name + ", ")}
-              </p>`,
-						type: MessageType.TASK_UPDATE,
-						createdBy: { connect: { id: user?.id } }
+						content: "",
+						type: MessageType.TASK_ACTIVITY,
+						createdBy: { connect: { id: user?.id } },
+						taskActivity: {
+							connect: { id: task.activity.reverse().shift()?.id }
+						}
 					}
 				})
 			)
 		).then(() => {
-			console.log("Task Update Messages Sent!");
+			console.log("Task Activity Messages Sent!");
 		});
 
 		return !!task;

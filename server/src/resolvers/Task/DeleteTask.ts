@@ -1,4 +1,4 @@
-import { MessageType } from "@prisma/client";
+import { MessageType, TaskActivityType } from "@prisma/client";
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { GraphQLContext } from "../../utils";
 
@@ -12,8 +12,20 @@ export class DeleteTaskResolver {
 	) {
 		const task = await prisma.task.update({
 			where: { id: taskId },
-			data: { deleted: true },
-			include: { channels: { select: { id: true } } }
+			data: {
+				deleted: true,
+				activity: {
+					create: {
+						by: { connect: { id: user?.id } },
+						description: `${user?.name} deleted the task.`,
+						type: TaskActivityType.DELETED
+					}
+				}
+			},
+			include: {
+				channels: { select: { id: true } },
+				activity: { select: { id: true } }
+			}
 		});
 
 		Promise.all(
@@ -21,16 +33,17 @@ export class DeleteTaskResolver {
 				prisma.message.create({
 					data: {
 						channel: { connect: { id: channel.id } },
-						content: `
-							<p><strong>[TASK UPDATE: ${task.brief}]</strong></p>
-							<p>${user?.name} deleted the task.</p>`,
-						type: MessageType.TASK_UPDATE,
-						createdBy: { connect: { id: user?.id } }
+						content: "",
+						type: MessageType.TASK_ACTIVITY,
+						createdBy: { connect: { id: user?.id } },
+						taskActivity: {
+							connect: { id: task.activity.reverse().shift()?.id }
+						}
 					}
 				})
 			)
 		).then(() => {
-			console.log("Task Update Messages Sent!");
+			console.log("Task Activity Messages Sent!");
 		});
 
 		return !!task;

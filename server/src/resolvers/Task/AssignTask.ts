@@ -24,16 +24,16 @@ export class AssignTaskResolver {
 					create: {
 						type: TaskActivityType.ASSIGNED,
 						by: { connect: { id: user?.id } },
-						description: `${
-							user?.name
-						} assigned the task to ${assignedUsers?.map(
-							(user) => user.name + ", "
-						)}`
+						description:
+							`${user?.name}` +
+							"assigned the task to " +
+							`${assignedUsers?.map((user) => user.name + ", ")}`
 					}
 				}
 			},
 			include: {
-				channels: { select: { id: true } }
+				channels: { select: { id: true } },
+				activity: { select: { id: true } }
 			}
 		});
 
@@ -42,19 +42,17 @@ export class AssignTaskResolver {
 				prisma.message.create({
 					data: {
 						channel: { connect: { id: channel.id } },
-						content: `
-							<p><strong>[TASK UPDATE: ${task.brief}]</strong></p>
-							<p>
-								${user?.name} assigned the task to
-								${assignedUsers?.map(({ name }) => name + ", ")}
-							</p>`,
-						type: MessageType.TASK_UPDATE,
-						createdBy: { connect: { id: user?.id } }
+						content: "",
+						type: MessageType.TASK_ACTIVITY,
+						createdBy: { connect: { id: user?.id } },
+						taskActivity: {
+							connect: { id: task.activity.reverse().shift()?.id }
+						}
 					}
 				})
 			)
 		).then(() => {
-			console.log("Task Update Messages Sent!");
+			console.log("Task Activity Messages Sent!");
 		});
 
 		return !!task;

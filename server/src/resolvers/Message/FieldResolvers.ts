@@ -31,4 +31,20 @@ export class MessageFieldResolvers {
 
 		return users.length !== 0;
 	}
+
+	@FieldResolver()
+	async taskActivity(
+		@Root() { id }: Message,
+		@Ctx() { prisma }: GraphQLContext
+	) {
+		return prisma.message.findOne({ where: { id } }).taskActivity();
+	}
+
+	@FieldResolver()
+	async invoiceActivity(
+		@Root() { id }: Message,
+		@Ctx() { prisma }: GraphQLContext
+	) {
+		return prisma.message.findOne({ where: { id } }).invoiceActivity();
+	}
 }

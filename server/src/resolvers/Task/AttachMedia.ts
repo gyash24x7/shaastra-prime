@@ -23,13 +23,18 @@ export class AttachMediaToTaskResolver {
 				},
 				activity: {
 					create: {
-						description: `${user?.name} attached ${urls.length} media files to this task.`,
+						description:
+							`${user?.name} attached ${urls.length} ` +
+							"media files to this task.",
 						by: { connect: { id: user?.id } },
 						type: TaskActivityType.ATTACH_MEDIA
 					}
 				}
 			},
-			include: { channels: { select: { id: true } } }
+			include: {
+				channels: { select: { id: true } },
+				activity: { select: { id: true } }
+			}
 		});
 
 		Promise.all(
@@ -37,16 +42,17 @@ export class AttachMediaToTaskResolver {
 				prisma.message.create({
 					data: {
 						channel: { connect: { id: channel.id } },
-						content: `
-							<p><strong>[TASK UPDATE: ${task.brief}]</strong></p>
-							<p>${user?.name} attached ${urls.length} media files to this task.</p>`,
-						type: MessageType.TASK_UPDATE,
-						createdBy: { connect: { id: user?.id } }
+						content: "",
+						type: MessageType.TASK_ACTIVITY,
+						createdBy: { connect: { id: user?.id } },
+						taskActivity: {
+							connect: { id: task.activity.reverse().shift()?.id }
+						}
 					}
 				})
 			)
 		).then(() => {
-			console.log("Task Update Messages Sent!");
+			console.log("Task Activity Messages Sent!");
 		});
 
 		return !!task;
