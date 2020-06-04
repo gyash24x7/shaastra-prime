@@ -1,17 +1,19 @@
 import {
 	InboxOutlined,
-	IssuesCloseOutlined,
 	ProfileOutlined,
 	TeamOutlined
 } from "@ant-design/icons";
 import { Menu } from "antd";
-import React from "react";
+import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-use";
+import { UserRole } from "../../generated";
+import { UserContext } from "../../utils/context";
 
 export const LinkMenu = () => {
 	const { pathname } = useLocation();
 	const history = useHistory();
+	const { user } = useContext(UserContext)!;
 
 	return (
 		<Menu selectedKeys={[pathname!]}>
@@ -24,14 +26,16 @@ export const LinkMenu = () => {
 					<TeamOutlined className="icon nav-icon" />
 					<span>Team Shaastra</span>
 				</Menu.Item>
-				<Menu.Item key="/issues">
+				{/* <Menu.Item key="/issues">
 					<IssuesCloseOutlined className="icon nav-icon" />
 					<span>View Issues</span>
-				</Menu.Item>
-				<Menu.Item key="/updates" onClick={() => history.push("/updates")}>
-					<InboxOutlined className="icon nav-icon" />
-					<span>Updates</span>
-				</Menu.Item>
+				</Menu.Item> */}
+				{user.role === UserRole.Core && (
+					<Menu.Item key="/updates" onClick={() => history.push("/updates")}>
+						<InboxOutlined className="icon nav-icon" />
+						<span>Updates</span>
+					</Menu.Item>
+				)}
 			</Menu.ItemGroup>
 		</Menu>
 	);

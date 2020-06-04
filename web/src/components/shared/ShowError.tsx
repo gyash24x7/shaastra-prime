@@ -1,11 +1,16 @@
 import { Button, Result } from "antd";
 import React from "react";
 
-export const ShowError = () => {
+interface ShowErrorProps {
+	status?: "500" | "403" | "404" | "success" | "error" | "info" | "warning";
+	message?: string;
+}
+
+export const ShowError = ({ status, message }: ShowErrorProps) => {
 	return (
 		<Result
-			title="Internal Server Error"
-			status="500"
+			title={message || "Internal Server Error"}
+			status={status || "500"}
 			extra={
 				<Button
 					className="button danger"

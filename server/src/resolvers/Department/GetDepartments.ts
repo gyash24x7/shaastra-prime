@@ -6,6 +6,6 @@ import { GraphQLContext } from "../../utils";
 export class GetDepartmentResolver {
 	@Query(() => [Department])
 	async getDepartments(@Ctx() { prisma }: GraphQLContext) {
-		return prisma.department.findMany();
+		return prisma.department.findMany({ where: { name: { not: "ADMIN" } } });
 	}
 }

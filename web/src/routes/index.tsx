@@ -1,15 +1,15 @@
 import React, { useMemo, useState } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import { ChatScreen } from "../components/Chat";
-import { NoChannelScreen } from "../components/Chat/NoChannel";
 import { EquipScreen } from "../components/Equip";
 import { HomeScreen } from "../components/Home";
 import { LoginScreen } from "../components/Login";
 import { ForgotPasswordScreen } from "../components/Login/ForgotPassword";
 import { OTPScreen } from "../components/Login/OTPScreen";
 import { SignupScreen } from "../components/Login/Signup";
+import { SettingsScreen } from "../components/Settings";
 import { PrivateLayout } from "../components/shared/PrivateLayout";
 import { PublicLayout } from "../components/shared/PublicLayout";
+import { ShowError } from "../components/shared/ShowError";
 import { TeamScreen } from "../components/Team";
 import { UpdateScreen } from "../components/Updates";
 import { AuthContext } from "../utils/context";
@@ -27,12 +27,13 @@ export const AppRoutes = () => {
 				{authStatus[1] ? (
 					<PrivateLayout>
 						<Switch>
-							<Route exact path="/chat" component={NoChannelScreen} />
-							<Route exact path="/chat/:channelId" component={ChatScreen} />
+							{/* <Route exact path="/chat" component={NoChannelScreen} />
+							<Route exact path="/chat/:channelId" component={ChatScreen} /> */}
 							<Route exact path="/equip" component={EquipScreen} />
-							<Route exact path="/finbooks" component={HomeScreen} />
+							{/* <Route exact path="/finbooks" component={HomeScreen} /> */}
 							<Route exact path="/updates" component={UpdateScreen} />
 							<Route exact path="/team" component={TeamScreen} />
+							<Route exact path="/settings" component={SettingsScreen} />
 							<Redirect from="/profile" to="/" />
 							<Redirect from="/verification" to="/" />
 							<Redirect from="/login" to="/" />
@@ -40,6 +41,11 @@ export const AppRoutes = () => {
 							<Redirect from="/enterotp" to="/" />
 							<Redirect from="/forgotpassword" to="/" />
 							<Route exact path="/" component={HomeScreen} />
+							<Route
+								component={() => (
+									<ShowError status="404" message="This page doesn't exist!" />
+								)}
+							/>
 						</Switch>
 					</PrivateLayout>
 				) : authStatus[0] ? (

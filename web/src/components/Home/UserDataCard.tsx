@@ -1,28 +1,29 @@
-import { Card, Tag, Typography } from "antd";
+import { DeploymentUnitOutlined } from "@ant-design/icons";
+import { Card, Result, Tag, Typography } from "antd";
 import React, { Fragment, useState } from "react";
 import { UserMedia } from "./UserMedia";
 
-const TabComponents: Record<string, JSX.Element> = {
+export const TabComponents: Record<string, JSX.Element> = {
 	Media: <UserMedia />
 };
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 export const UserDataCard = () => {
 	const [activeTab, setActiveTab] = useState("Media");
 	return (
 		<Card
 			title={<Title level={3}>Yash Gupta</Title>}
-			tabList={[
-				{
-					key: "Media",
-					tab: (
-						<div className="tab-title">
-							<Text strong>Media</Text>
-						</div>
-					)
-				}
-			]}
+			// tabList={[
+			// 	{
+			// 		key: "Media",
+			// 		tab: (
+			// 			<div className="tab-title">
+			// 				<Text strong>Media</Text>
+			// 			</div>
+			// 		)
+			// 	}
+			// ]}
 			activeTabKey={activeTab}
 			className="user-card card-with-tabs"
 			onTabChange={setActiveTab}
@@ -34,7 +35,11 @@ export const UserDataCard = () => {
 				</Fragment>
 			}
 		>
-			{TabComponents[activeTab]}
+			<Result
+				icon={<DeploymentUnitOutlined />}
+				title="New Exciting Features Coming Soon!"
+				subTitle="Stay Tuned!"
+			/>
 		</Card>
 	);
 };

@@ -15,12 +15,12 @@ export const PrimaryNav = () => {
 					<img src={LogoWhite} alt="" />
 				</div>
 				<NavIcon name="" />
-				<NavIcon name="chat" />
+				{/* <NavIcon name="chat" /> */}
 				<NavIcon name="equip" />
-				<NavIcon name="finbooks" />
+				{/* <NavIcon name="finbooks" /> */}
 			</div>
 			<div className="app-settings-container">
-				<NavIcon name="notification" linkDisabled />
+				{/* <NavIcon name="notification" linkDisabled /> */}
 				<NavIcon name="settings" />
 				<NavIcon
 					name="logout"
