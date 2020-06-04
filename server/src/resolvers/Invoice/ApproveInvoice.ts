@@ -38,7 +38,7 @@ export class ApproveInvoiceResolver {
 					data: {
 						channel: { connect: { id } },
 						createdBy: { connect: { id: user?.id } },
-						type: MessageType.INVOICE_UPDATE,
+						type: MessageType.INVOICE_ACTIVITY,
 						content: `
 							<p>[INVOICE_UPDATE: ${invoice.title}]</p>
 							<p>${user?.name} approved the invoice.</p>

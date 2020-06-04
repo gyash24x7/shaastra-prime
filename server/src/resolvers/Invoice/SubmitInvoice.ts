@@ -56,7 +56,7 @@ export class SubmitInvoiceResolver {
 							<p><strong>[INVOICE UPDATE: ${invoice.title}]</strong></p>
 							<p>${user?.name} uploaded an invoice.</p>
 						`,
-						type: MessageType.INVOICE_UPDATE,
+						type: MessageType.INVOICE_ACTIVITY,
 						createdBy: { connect: { id: user?.id } }
 					}
 				})

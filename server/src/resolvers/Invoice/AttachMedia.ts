@@ -43,7 +43,7 @@ export class AttachMediaToInvoiceResolver {
 							<p><strong>[INVOICE UPDATE: ${invoice.title}]</strong></p>
 							<p>${user?.name} uploaded a file related to the invoice.</p>
 						`,
-						type: MessageType.INVOICE_UPDATE,
+						type: MessageType.INVOICE_ACTIVITY,
 						createdBy: { connect: { id: user?.id } }
 					}
 				})

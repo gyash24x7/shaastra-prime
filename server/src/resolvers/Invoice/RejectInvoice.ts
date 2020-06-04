@@ -40,7 +40,7 @@ export class RejectInvoiceResolver {
               <p>${user?.name} rejected the invoice.</p>
               <p>${reason}</p>
 						`,
-						type: MessageType.INVOICE_UPDATE,
+						type: MessageType.INVOICE_ACTIVITY,
 						createdBy: { connect: { id: user?.id } }
 					}
 				})

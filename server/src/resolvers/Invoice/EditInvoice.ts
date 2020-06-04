@@ -47,7 +47,7 @@ export class EditInvoiceResolver {
 							<p><strong>[INVOICE UPDATE: ${invoice.title}]</strong></p>
 							<p>${user?.name} edited the invoice.</p>
 						`,
-						type: MessageType.INVOICE_UPDATE,
+						type: MessageType.INVOICE_ACTIVITY,
 						createdBy: { connect: { id: user?.id } }
 					}
 				})

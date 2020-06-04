@@ -1,6 +1,6 @@
 import { Field, InputType } from "type-graphql";
 
-@InputType()
+@InputType("CreateVendorInput")
 export class CreateVendorInput {
 	@Field() name: string;
 	@Field() gstNumber: string;

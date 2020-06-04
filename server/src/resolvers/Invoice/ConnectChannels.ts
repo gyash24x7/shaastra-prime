@@ -44,7 +44,7 @@ export class ConnectChannelsToInvoiceResolver {
                 ${user?.name} connected the following channels to this invoice:
                 ${channels?.map(({ name }) => name + ", ")}
               </p>`,
-						type: MessageType.INVOICE_UPDATE,
+						type: MessageType.INVOICE_ACTIVITY,
 						createdBy: { connect: { id: user?.id } }
 					}
 				})
