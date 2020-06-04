@@ -35,7 +35,7 @@ export class CreateUserResolver {
 
 		let token = "";
 
-		if (!!user) {
+		if (!!user && process.env.NODE_ENV === "production") {
 			await mailjet
 				.post("send", { version: "v3" })
 				.request({
@@ -53,9 +53,8 @@ export class CreateUserResolver {
 				.catch((e) => {
 					console.log(e.message);
 				});
-
-			token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
 		}
+		token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
 
 		return [token, ""];
 	}

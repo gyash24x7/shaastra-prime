@@ -1,8 +1,8 @@
 import { Ctx, FieldResolver, Resolver, Root } from "type-graphql";
 import { Department } from "../../models/Department";
 import { Invoice } from "../../models/Invoice";
+import { User } from "../../models/User";
 import { GraphQLContext } from "../../utils";
-import User from "../User";
 
 @Resolver(Department)
 export class DepartmentFieldResolvers {
@@ -38,5 +38,13 @@ export class DepartmentFieldResolvers {
 		@Ctx() { prisma }: GraphQLContext
 	) {
 		return prisma.department.findOne({ where: { id } }).invoicesSubmitted();
+	}
+
+	@FieldResolver(() => User)
+	async finManager(
+		@Root() { id }: Department,
+		@Ctx() { prisma }: GraphQLContext
+	) {
+		return prisma.department.findOne({ where: { id } }).finManager();
 	}
 }
