@@ -26,7 +26,10 @@ const startServer = async () => {
 				)
 			};
 		},
-		cors: { origin: "http://localhost:3000", credentials: true },
+		cors: {
+			origin: ["http://localhost:3000", "https://prime.shaastra.org"],
+			credentials: true
+		},
 		subscriptions: { path: "/" },
 		playground: true,
 		introspection: true,
