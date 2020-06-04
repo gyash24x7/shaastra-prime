@@ -1,0 +1,3 @@
+mutation AssignFinManager($userId: String!, $deptId: String!) {
+	assignFinManager(data: { userId: $userId, deptId: $deptId })
+}

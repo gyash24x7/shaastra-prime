@@ -22,8 +22,12 @@ export const UserCard = (props: UserCardProps) => {
 			{props.withAvatar && (
 				<div className="avatar">
 					<Avatar
-						src="https://shaastra-2020.s3.ap-south-1.amazonaws.com/images/user9.svg"
+						src={
+							props.user?.profilePic ||
+							"https://library.kissclipart.com/20180922/eve/kissclipart-icon-full-name-clipart-computer-icons-avatar-icon-f6cf26ff2213f36e.jpg"
+						}
 						size={props.avatarSize || 48}
+						style={{ border: "2px solid #303030" }}
 					/>
 				</div>
 			)}

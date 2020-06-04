@@ -10,6 +10,7 @@
 @import "./updates";
 @import "./login";
 @import "./editor";
+@import "./settings";
 body {
 	font-family: "Montserrat", sans-serif;
 	font-size: 16px;
@@ -50,12 +51,14 @@ button {
 }
 
 .button {
-	padding: 5px 30px;
-	height: auto;
-	border-width: 2px;
-	border-radius: 3px;
+	padding: 5px 30px !important;
 	font-weight: 600 !important;
 	text-transform: uppercase;
+
+	&:disabled {
+		background-color: #434343;
+		border: 2px solid #303030 !important;
+	}
 }
 
 .ant-tabs-bar {

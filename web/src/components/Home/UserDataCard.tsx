@@ -37,7 +37,7 @@ export const UserDataCard = () => {
 		>
 			<Result
 				icon={<DeploymentUnitOutlined />}
-				title="New Exciting Features Coming Soon!"
+				title="New Features Coming Soon!"
 				subTitle="Stay Tuned!"
 			/>
 		</Card>

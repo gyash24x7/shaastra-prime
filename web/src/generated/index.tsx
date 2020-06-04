@@ -11,11 +11,6 @@ export type Scalars = {
   Float: number;
 };
 
-export type AddSubDepartmentInput = {
-  deptId: Scalars['String'];
-  subDeptName: Scalars['String'];
-};
-
 export type AddUsersToChannelInput = {
   channelId: Scalars['String'];
   userIds: Array<Scalars['String']>;
@@ -24,6 +19,11 @@ export type AddUsersToChannelInput = {
 export type ApproveInvoiceInput = {
   currentStage: Scalars['String'];
   invoiceId: Scalars['String'];
+};
+
+export type AssignFinManagerInput = {
+  userId: Scalars['String'];
+  deptId: Scalars['String'];
 };
 
 export type AssignTaskInput = {
@@ -125,6 +125,7 @@ export type Department = {
   invoicesSubmitted: Array<Invoice>;
   subDepartments: Array<Scalars['String']>;
   goals: Array<Goal>;
+  finManager: User;
 };
 
 export type EditInvoiceInput = {
@@ -169,6 +170,11 @@ export enum GoalType {
   Monthly = 'MONTHLY',
   EndGoal = 'END_GOAL'
 }
+
+export type GrantAccessInput = {
+  userId: Scalars['String'];
+  role: UserRole;
+};
 
 export type Invoice = {
   id: Scalars['ID'];
@@ -275,14 +281,10 @@ export type Mutation = {
   deleteChannel: Scalars['Boolean'];
   updateChannel: Scalars['Boolean'];
   addSubDepartment: Scalars['Boolean'];
+  assignFinManager: Scalars['Boolean'];
   createDepartment: Department;
-  createUser: Array<Scalars['String']>;
-  forgotPassword: Scalars['Boolean'];
-  login?: Maybe<Array<Scalars['String']>>;
-  sendPasswordOTP: Scalars['Boolean'];
-  uploadCoverPic: Scalars['Boolean'];
-  uploadProfilePic: Scalars['Boolean'];
-  verifyUser?: Maybe<Scalars['String']>;
+  deleteMember: Scalars['Boolean'];
+  grantAccess: Scalars['Boolean'];
   completeMilestone: Scalars['Boolean'];
   createGoal: Scalars['Boolean'];
   approveInvoice: Scalars['Boolean'];
@@ -303,6 +305,13 @@ export type Mutation = {
   deleteTask: Scalars['Boolean'];
   submitTask: Scalars['Boolean'];
   createUpdate: Scalars['Boolean'];
+  createUser: Array<Scalars['String']>;
+  forgotPassword: Scalars['Boolean'];
+  login?: Maybe<Array<Scalars['String']>>;
+  sendPasswordOTP: Scalars['Boolean'];
+  uploadCoverPic: Scalars['Boolean'];
+  uploadProfilePic: Scalars['Boolean'];
+  verifyUser?: Maybe<Scalars['String']>;
 };
 
 
@@ -327,7 +336,12 @@ export type MutationUpdateChannelArgs = {
 
 
 export type MutationAddSubDepartmentArgs = {
-  data: AddSubDepartmentInput;
+  subDept: Scalars['String'];
+};
+
+
+export type MutationAssignFinManagerArgs = {
+  data: AssignFinManagerInput;
 };
 
 
@@ -336,38 +350,13 @@ export type MutationCreateDepartmentArgs = {
 };
 
 
-export type MutationCreateUserArgs = {
-  data: CreateUserInput;
+export type MutationDeleteMemberArgs = {
+  userId: Scalars['String'];
 };
 
 
-export type MutationForgotPasswordArgs = {
-  data: ForgotPasswordInput;
-};
-
-
-export type MutationLoginArgs = {
-  data: LoginInput;
-};
-
-
-export type MutationSendPasswordOtpArgs = {
-  email: Scalars['String'];
-};
-
-
-export type MutationUploadCoverPicArgs = {
-  coverPic: Scalars['String'];
-};
-
-
-export type MutationUploadProfilePicArgs = {
-  profilePic: Scalars['String'];
-};
-
-
-export type MutationVerifyUserArgs = {
-  otp: Scalars['String'];
+export type MutationGrantAccessArgs = {
+  data: GrantAccessInput;
 };
 
 
@@ -470,13 +459,44 @@ export type MutationCreateUpdateArgs = {
   data: CreateUpdateInput;
 };
 
+
+export type MutationCreateUserArgs = {
+  data: CreateUserInput;
+};
+
+
+export type MutationForgotPasswordArgs = {
+  data: ForgotPasswordInput;
+};
+
+
+export type MutationLoginArgs = {
+  data: LoginInput;
+};
+
+
+export type MutationSendPasswordOtpArgs = {
+  email: Scalars['String'];
+};
+
+
+export type MutationUploadCoverPicArgs = {
+  coverPic: Scalars['String'];
+};
+
+
+export type MutationUploadProfilePicArgs = {
+  profilePic: Scalars['String'];
+};
+
+
+export type MutationVerifyUserArgs = {
+  otp: Scalars['String'];
+};
+
 export type Query = {
   getChannelDetails: Channel;
   getChannels: Array<Channel>;
-  getUsers: Array<User>;
-  getUser: User;
-  me?: Maybe<User>;
-  searchUser: Array<User>;
   getDepartments: Array<Department>;
   getDeptMembers: Array<User>;
   getGoals: Array<Goal>;
@@ -485,21 +505,15 @@ export type Query = {
   getTasks: Array<Task>;
   getTask: Task;
   getUpdates: Array<Update>;
+  getUsers: Array<User>;
+  getUser: User;
+  me?: Maybe<User>;
+  searchUser: Array<User>;
 };
 
 
 export type QueryGetChannelDetailsArgs = {
   channelId: Scalars['String'];
-};
-
-
-export type QueryGetUserArgs = {
-  userId: Scalars['String'];
-};
-
-
-export type QuerySearchUserArgs = {
-  searchStr: Scalars['String'];
 };
 
 
@@ -520,6 +534,16 @@ export type QueryGetMessagesArgs = {
 
 export type QueryGetTaskArgs = {
   taskId: Scalars['String'];
+};
+
+
+export type QueryGetUserArgs = {
+  userId: Scalars['String'];
+};
+
+
+export type QuerySearchUserArgs = {
+  searchStr: Scalars['String'];
 };
 
 export type RejectInvoiceInput = {
@@ -654,6 +678,21 @@ export type AcceptTaskMutationVariables = {
 
 export type AcceptTaskMutation = { acceptTask: boolean };
 
+export type AddSubDeptMutationVariables = {
+  subDept: Scalars['String'];
+};
+
+
+export type AddSubDeptMutation = { addSubDepartment: boolean };
+
+export type AssignFinManagerMutationVariables = {
+  userId: Scalars['String'];
+  deptId: Scalars['String'];
+};
+
+
+export type AssignFinManagerMutation = { assignFinManager: boolean };
+
 export type AssignTaskMutationVariables = {
   taskId: Scalars['String'];
   assignedTo: Array<Scalars['String']>;
@@ -720,12 +759,27 @@ export type CreateUserMutationVariables = {
 
 export type CreateUserMutation = { createUser: Array<string> };
 
+export type DeleteMemberMutationVariables = {
+  userId: Scalars['String'];
+};
+
+
+export type DeleteMemberMutation = { deleteMember: boolean };
+
 export type DeleteTaskMutationVariables = {
   taskId: Scalars['String'];
 };
 
 
 export type DeleteTaskMutation = { deleteTask: boolean };
+
+export type GrantAccessMutationVariables = {
+  userId: Scalars['String'];
+  role: UserRole;
+};
+
+
+export type GrantAccessMutation = { grantAccess: boolean };
 
 export type LoginMutationVariables = {
   email: Scalars['String'];
@@ -823,7 +877,7 @@ export type GetUserQuery = { getUser: { id: string, name: string, email: string,
 export type MeQueryVariables = {};
 
 
-export type MeQuery = { me?: Maybe<{ id: string, name: string, email: string, rollNumber: string, mobile: string, role: UserRole, profilePic: string, coverPic: string, about: string, verified: boolean, department: { id: string, name: string } }> };
+export type MeQuery = { me?: Maybe<{ id: string, name: string, email: string, rollNumber: string, mobile: string, role: UserRole, profilePic: string, coverPic: string, about: string, verified: boolean, department: { id: string, name: string, shortName: string, subDepartments: Array<string> } }> };
 
 export type SearchUserQueryVariables = {
   searchStr: Scalars['String'];
@@ -852,6 +906,30 @@ export function useAcceptTaskMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type AcceptTaskMutationHookResult = ReturnType<typeof useAcceptTaskMutation>;
 export type AcceptTaskMutationResult = ApolloReactCommon.MutationResult<AcceptTaskMutation>;
 export type AcceptTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<AcceptTaskMutation, AcceptTaskMutationVariables>;
+export const AddSubDeptDocument = gql`
+    mutation AddSubDept($subDept: String!) {
+  addSubDepartment(subDept: $subDept)
+}
+    `;
+export type AddSubDeptMutationFn = ApolloReactCommon.MutationFunction<AddSubDeptMutation, AddSubDeptMutationVariables>;
+export function useAddSubDeptMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddSubDeptMutation, AddSubDeptMutationVariables>) {
+        return ApolloReactHooks.useMutation<AddSubDeptMutation, AddSubDeptMutationVariables>(AddSubDeptDocument, baseOptions);
+      }
+export type AddSubDeptMutationHookResult = ReturnType<typeof useAddSubDeptMutation>;
+export type AddSubDeptMutationResult = ApolloReactCommon.MutationResult<AddSubDeptMutation>;
+export type AddSubDeptMutationOptions = ApolloReactCommon.BaseMutationOptions<AddSubDeptMutation, AddSubDeptMutationVariables>;
+export const AssignFinManagerDocument = gql`
+    mutation AssignFinManager($userId: String!, $deptId: String!) {
+  assignFinManager(data: {userId: $userId, deptId: $deptId})
+}
+    `;
+export type AssignFinManagerMutationFn = ApolloReactCommon.MutationFunction<AssignFinManagerMutation, AssignFinManagerMutationVariables>;
+export function useAssignFinManagerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AssignFinManagerMutation, AssignFinManagerMutationVariables>) {
+        return ApolloReactHooks.useMutation<AssignFinManagerMutation, AssignFinManagerMutationVariables>(AssignFinManagerDocument, baseOptions);
+      }
+export type AssignFinManagerMutationHookResult = ReturnType<typeof useAssignFinManagerMutation>;
+export type AssignFinManagerMutationResult = ApolloReactCommon.MutationResult<AssignFinManagerMutation>;
+export type AssignFinManagerMutationOptions = ApolloReactCommon.BaseMutationOptions<AssignFinManagerMutation, AssignFinManagerMutationVariables>;
 export const AssignTaskDocument = gql`
     mutation AssignTask($taskId: String!, $assignedTo: [String!]!) {
   assignTask(data: {taskId: $taskId, assignedTo: $assignedTo})
@@ -936,6 +1014,18 @@ export function useCreateUserMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = ApolloReactCommon.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const DeleteMemberDocument = gql`
+    mutation DeleteMember($userId: String!) {
+  deleteMember(userId: $userId)
+}
+    `;
+export type DeleteMemberMutationFn = ApolloReactCommon.MutationFunction<DeleteMemberMutation, DeleteMemberMutationVariables>;
+export function useDeleteMemberMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteMemberMutation, DeleteMemberMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteMemberMutation, DeleteMemberMutationVariables>(DeleteMemberDocument, baseOptions);
+      }
+export type DeleteMemberMutationHookResult = ReturnType<typeof useDeleteMemberMutation>;
+export type DeleteMemberMutationResult = ApolloReactCommon.MutationResult<DeleteMemberMutation>;
+export type DeleteMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteMemberMutation, DeleteMemberMutationVariables>;
 export const DeleteTaskDocument = gql`
     mutation DeleteTask($taskId: String!) {
   deleteTask(taskId: $taskId)
@@ -948,6 +1038,18 @@ export function useDeleteTaskMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type DeleteTaskMutationHookResult = ReturnType<typeof useDeleteTaskMutation>;
 export type DeleteTaskMutationResult = ApolloReactCommon.MutationResult<DeleteTaskMutation>;
 export type DeleteTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteTaskMutation, DeleteTaskMutationVariables>;
+export const GrantAccessDocument = gql`
+    mutation GrantAccess($userId: String!, $role: UserRole!) {
+  grantAccess(data: {userId: $userId, role: $role})
+}
+    `;
+export type GrantAccessMutationFn = ApolloReactCommon.MutationFunction<GrantAccessMutation, GrantAccessMutationVariables>;
+export function useGrantAccessMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<GrantAccessMutation, GrantAccessMutationVariables>) {
+        return ApolloReactHooks.useMutation<GrantAccessMutation, GrantAccessMutationVariables>(GrantAccessDocument, baseOptions);
+      }
+export type GrantAccessMutationHookResult = ReturnType<typeof useGrantAccessMutation>;
+export type GrantAccessMutationResult = ApolloReactCommon.MutationResult<GrantAccessMutation>;
+export type GrantAccessMutationOptions = ApolloReactCommon.BaseMutationOptions<GrantAccessMutation, GrantAccessMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(data: {email: $email, password: $password})
@@ -1314,6 +1416,8 @@ export const MeDocument = gql`
     department {
       id
       name
+      shortName
+      subDepartments
     }
   }
 }
