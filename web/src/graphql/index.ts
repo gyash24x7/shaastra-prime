@@ -39,11 +39,11 @@ const splitLink = split(
 			definition.operation === "subscription"
 		);
 	},
-	wsLink,
+	wsLink as any,
 	httpLink
 );
 
 export const client = new ApolloClient({
 	cache: new InMemoryCache(),
-	link: authLink.concat(splitLink)
+	link: authLink.concat(splitLink as any) as any
 });

@@ -1,4 +1,3 @@
-import AkButton from "@atlaskit/button";
 import { Button, Card, message, Space, Typography } from "antd";
 import React, { useState } from "react";
 import { refetchMeQuery, useUploadProfilePicMutation } from "../../generated";
@@ -43,11 +42,11 @@ export const SelectAvatar = () => {
 				</div>
 			</div>
 			<Space size="large">
-				<AkButton
-					appearance="primary"
+				<Button
+					type="primary"
 					className="button"
-					isDisabled={selectedAvatar === 0}
-					isLoading={loading}
+					disabled={selectedAvatar === 0}
+					loading={loading}
 					onClick={() => {
 						uploadProfilePic({
 							variables: { profilePic: BASE_URL + `/user${selectedAvatar}.svg` }
@@ -55,7 +54,7 @@ export const SelectAvatar = () => {
 					}}
 				>
 					Select Avatar
-				</AkButton>
+				</Button>
 				<Button className="button" onClick={() => setSelectedAvatar(0)}>
 					Cancel
 				</Button>

@@ -1,4 +1,3 @@
-import AkButton from "@atlaskit/button";
 import { Button, Card, message, Select, Space, Typography } from "antd";
 import React, { useContext, useState } from "react";
 import {
@@ -52,15 +51,15 @@ export const DeleteMember = () => {
 			/>
 			<VerticalSpace size="large" />
 			<Space size="large">
-				<AkButton
+				<Button
 					className="button"
-					appearance="primary"
-					isLoading={loading}
-					isDisabled={!userId}
+					type="primary"
+					loading={loading}
+					disabled={!userId}
 					onClick={() => deleteMember({ variables: { userId: userId! } })}
 				>
 					Delete User
-				</AkButton>
+				</Button>
 				<Button className="button" onClick={() => setUserId(undefined)}>
 					Cancel
 				</Button>

@@ -1,4 +1,3 @@
-import AkButton from "@atlaskit/button";
 import { Button, Card, message, Select, Space, Typography } from "antd";
 import React, { useContext, useState } from "react";
 import {
@@ -73,17 +72,17 @@ export const GrantAccess = () => {
 			</div>
 			<VerticalSpace size="large" />
 			<Space size="large">
-				<AkButton
+				<Button
 					className="button"
-					appearance="primary"
-					isLoading={loading}
-					isDisabled={!userId || !role}
+					type="primary"
+					loading={loading}
+					disabled={!userId || !role}
 					onClick={() =>
 						grantAccess({ variables: { userId: userId!, role: role! } })
 					}
 				>
 					Grant Access
-				</AkButton>
+				</Button>
 				<Button
 					className="button"
 					onClick={() => {

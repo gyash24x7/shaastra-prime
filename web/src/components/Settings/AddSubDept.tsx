@@ -1,4 +1,3 @@
-import AkButton from "@atlaskit/button";
 import { Button, Card, Input, message, Space, Typography } from "antd";
 import React, { useState } from "react";
 import {
@@ -35,16 +34,16 @@ export const AddSubDept = () => {
 			/>
 			<VerticalSpace size="large" />
 			<Space size="large">
-				<AkButton
-					appearance="primary"
+				<Button
+					type="primary"
 					className="button"
-					isLoading={loading}
-					isDisabled={!subDept}
+					loading={loading}
+					disabled={!subDept}
 					onClick={() => addSubDept({ variables: { subDept } })}
 				>
 					Add Sub Department
-				</AkButton>
-				<Button className="button" onClick={() => setSubDept("")}>
+				</Button>
+				<Button className="button" danger onClick={() => setSubDept("")}>
 					Cancel
 				</Button>
 			</Space>
