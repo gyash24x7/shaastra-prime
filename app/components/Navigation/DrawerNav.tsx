@@ -47,7 +47,7 @@ export const DrawerNav = ({
 
 const DrawerNavFooter = () => {
 	const client = useApolloClient();
-	const { setIsLoggedIn } = useContext(AuthContext)!;
+	const { setAuthStatus } = useContext(AuthContext)!;
 
 	return (
 		<DrawerItem
@@ -64,7 +64,7 @@ const DrawerNavFooter = () => {
 			onPress={async () => {
 				await AsyncStorage.clear();
 				await client.clearStore();
-				setIsLoggedIn(false);
+				setAuthStatus([false, false]);
 			}}
 		/>
 	);

@@ -89,7 +89,7 @@ export const SignupScreen = () => {
 								{ required: true, message: "Mobile Number is required!" }
 							]}
 						>
-							<Input placeholder="Enter Mobile Number" type="number" />
+							<Input placeholder="Enter 10 digit Mobile Number" type="number" />
 						</Form.Item>
 						<Form.Item
 							name="rollNumber"

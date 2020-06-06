@@ -1,0 +1,3 @@
+mutation AssignTask($taskId: String!, $assignedTo: [String!]!) {
+	assignTask(data: { taskId: $taskId, assignedTo: $assignedTo })
+}

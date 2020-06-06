@@ -4,20 +4,23 @@ import { setContext } from "@apollo/link-context";
 import { WebSocketLink } from "@apollo/link-ws";
 import { AsyncStorage } from "react-native";
 
+const [WS_URL, HTTP_URL] =
+	process.env.NODE_ENV === "development"
+		? ["ws://192.168.43.59:8000", "http://192.168.43.59:8000"]
+		: ["wss://api.shaastra.org", "https://api.shaastra.org"];
+
 const wsLink = new WebSocketLink({
-	uri: "ws://192.168.43.59:8000",
+	uri: WS_URL,
 	options: {
 		reconnect: true,
 		connectionParams: async () => {
 			const token = await AsyncStorage.getItem("authToken");
-			return {
-				Authorization: token ? `Bearer ${token}` : undefined
-			};
+			return { Authorization: token ? `Bearer ${token}` : undefined };
 		}
 	}
 });
 
-const httpLink = new HttpLink({ uri: "http://192.168.43.59:8000" });
+const httpLink = new HttpLink({ uri: HTTP_URL });
 
 const authLink = setContext(async (_, { headers }) => {
 	const token = await AsyncStorage.getItem("authToken");
@@ -37,11 +40,11 @@ const splitLink = split(
 			definition.operation === "subscription"
 		);
 	},
-	wsLink,
+	wsLink as any,
 	httpLink
 );
 
 export const client = new ApolloClient({
 	cache: new InMemoryCache(),
-	link: authLink.concat(splitLink)
+	link: authLink.concat(splitLink as any) as any
 });

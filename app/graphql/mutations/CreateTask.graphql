@@ -1,0 +1,17 @@
+mutation CreateTask(
+	$brief: String!
+	$details: String!
+	$forDeptId: String!
+	$deadline: String!
+	$channelIds: [String!]!
+) {
+	createTask(
+		data: {
+			brief: $brief
+			details: $details
+			forDeptId: $forDeptId
+			deadline: $deadline
+			channelIds: $channelIds
+		}
+	)
+}

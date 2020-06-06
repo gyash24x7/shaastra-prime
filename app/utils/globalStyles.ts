@@ -40,7 +40,12 @@ export default StyleSheet.create({
 		color: "#B3B3B3"
 	},
 
-	text: { fontFamily: "montserrat-regular", textTransform: "capitalize" },
+	text: {},
+
+	link: {
+		textTransform: "capitalize",
+		color: "#0052cc"
+	},
 
 	title: {
 		fontFamily: "montserrat-bold",

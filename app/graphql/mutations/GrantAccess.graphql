@@ -1,0 +1,3 @@
+mutation GrantAccess($userId: String!, $role: UserRole!) {
+	grantAccess(data: { userId: $userId, role: $role })
+}

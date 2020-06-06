@@ -1,0 +1,3 @@
+mutation AddSubDept($subDept: String!) {
+	addSubDepartment(subDept: $subDept)
+}

@@ -1,0 +1,3 @@
+mutation CompleteTask($taskId: String!) {
+	completeTask(taskId: $taskId)
+}

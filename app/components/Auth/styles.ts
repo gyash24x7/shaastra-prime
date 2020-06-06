@@ -9,7 +9,6 @@ export default StyleSheet.create({
 	},
 
 	title: {
-		fontFamily: "montserrat-regular",
 		textAlign: "center",
 		paddingBottom: 20
 	},
@@ -24,7 +23,5 @@ export default StyleSheet.create({
 		backgroundColor: "#141414"
 	},
 
-	buttonText: {
-		fontFamily: "montserrat-regular"
-	}
+	buttonText: {}
 });

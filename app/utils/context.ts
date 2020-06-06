@@ -19,7 +19,7 @@ export const DepartmentContext = React.createContext<IDepartmentContext>({
 });
 
 interface IAuthContext {
-	setIsLoggedIn: (val: boolean) => void;
+	setAuthStatus: (val: boolean[]) => void;
 }
 
 export const AuthContext = React.createContext<IAuthContext | null>(null);

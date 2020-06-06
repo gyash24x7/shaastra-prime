@@ -1,0 +1,17 @@
+query GetTasks {
+	getTasks {
+		id
+		brief
+		status
+		createdAt
+		deadline
+		byDept {
+			id
+			name
+		}
+		assignedTo {
+			id
+			name
+		}
+	}
+}

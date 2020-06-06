@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { Button, Input, Layout, Spinner, Text } from "@ui-kitten/components";
 import React, { useContext, useState } from "react";
 import { AsyncStorage, Image, StatusBar } from "react-native";
@@ -5,23 +6,28 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useLoginMutation } from "../../generated";
 import { AuthContext } from "../../utils/context";
 import globalStyles from "../../utils/globalStyles";
+import { VerticalSpace } from "../Shared/VerticalSpace";
 import styles from "./styles";
 
 const emailRegex = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 
 export const LoginScreen = () => {
-	const [login, { data, error, loading }] = useLoginMutation();
+	const [login, { data, error, loading }] = useLoginMutation({
+		async onCompleted(data) {
+			if (data.login) {
+				await AsyncStorage.setItem("authToken", data.login[0]);
+				await AsyncStorage.setItem("verificationToken", data.login[1]);
+				setAuthStatus(data.login.map((val) => !!val));
+			}
+		}
+	});
+
+	const navigation = useNavigation();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [errorMsg, setErrorMsg] = useState("");
-	const { setIsLoggedIn } = useContext(AuthContext)!;
-
-	if (data?.login) {
-		AsyncStorage.setItem("authToken", data.login).then(() => {
-			setIsLoggedIn(true);
-		});
-	}
+	const { setAuthStatus } = useContext(AuthContext)!;
 
 	const handleSubmit = async () => {
 		if (email && emailRegex.test(email)) {
@@ -66,11 +72,7 @@ export const LoginScreen = () => {
 					<Button
 						onPress={handleSubmit}
 						children={() =>
-							loading ? (
-								<Spinner status="control" />
-							) : (
-								<Text style={styles.buttonText}>LOGIN</Text>
-							)
+							loading ? <Spinner status="control" /> : <Text>LOGIN</Text>
 						}
 					/>
 					<Text style={globalStyles.errorMsg}>{errorMsg}</Text>
@@ -82,6 +84,28 @@ export const LoginScreen = () => {
 							Please Check the Entered Details
 						</Text>
 					)}
+					<Layout
+						style={{
+							display: "flex",
+							flexDirection: "row",
+							justifyContent: "space-between"
+						}}
+					>
+						<Text style={globalStyles.text}>Don't have an account?</Text>
+						<Text
+							style={globalStyles.link}
+							onPress={() => navigation.navigate("Signup")}
+						>
+							Sign Up
+						</Text>
+					</Layout>
+					<VerticalSpace />
+					<Text
+						style={[globalStyles.link, { alignSelf: "center" }]}
+						onPress={() => navigation.navigate("ForgotPassword")}
+					>
+						Forgot Password?
+					</Text>
 				</Layout>
 			</Layout>
 		</SafeAreaView>

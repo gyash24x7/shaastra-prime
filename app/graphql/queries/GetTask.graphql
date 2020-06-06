@@ -1,0 +1,32 @@
+query GetTask($taskId: String!) {
+	getTask(taskId: $taskId) {
+		id
+		brief
+		details
+		status
+		createdAt
+		deadline
+		byDept {
+			id
+			name
+		}
+		createdBy {
+			id
+			name
+			role
+			department {
+				id
+				name
+			}
+		}
+		assignedTo {
+			id
+			name
+			role
+			department {
+				id
+				name
+			}
+		}
+	}
+}

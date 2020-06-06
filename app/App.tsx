@@ -9,6 +9,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppNavigation } from "./components/Navigation";
 import { client } from "./graphql";
 import { AntFilledIconsPack, AntOutlinedIconsPack } from "./utils/AntIcons";
+import { default as mapping } from "./utils/mapping.json";
 import { default as theme } from "./utils/theme.json";
 
 export default function App() {
@@ -27,7 +28,11 @@ export default function App() {
 					icons={[EvaIconsPack, AntFilledIconsPack, AntOutlinedIconsPack]}
 				/>
 				<ApolloProvider client={client}>
-					<ApplicationProvider {...eva} theme={{ ...eva.dark, ...theme }}>
+					<ApplicationProvider
+						{...eva}
+						theme={{ ...eva.dark, ...theme }}
+						customMapping={{ ...eva.mapping, ...mapping }}
+					>
 						<AppNavigation />
 					</ApplicationProvider>
 				</ApolloProvider>
