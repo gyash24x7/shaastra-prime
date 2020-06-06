@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { ForgotPasswordScreen } from "../components/Auth/ForgotPassword";
+import { LoginScreen } from "../components/Auth/Login";
+import { OTPScreen } from "../components/Auth/OTPScreen";
+import { SignupScreen } from "../components/Auth/Signup";
 import { EquipScreen } from "../components/Equip";
 import { HomeScreen } from "../components/Home";
-import { LoginScreen } from "../components/Login";
-import { ForgotPasswordScreen } from "../components/Login/ForgotPassword";
-import { OTPScreen } from "../components/Login/OTPScreen";
-import { SignupScreen } from "../components/Login/Signup";
 import { SettingsScreen } from "../components/Settings";
 import { PrivateLayout } from "../components/shared/PrivateLayout";
 import { PublicLayout } from "../components/shared/PublicLayout";

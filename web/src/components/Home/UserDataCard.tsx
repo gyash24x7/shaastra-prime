@@ -1,6 +1,7 @@
 import { DeploymentUnitOutlined } from "@ant-design/icons";
 import { Card, Result, Tag, Typography } from "antd";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
+import { UserContext } from "../../utils/context";
 import { UserMedia } from "./UserMedia";
 
 export const TabComponents: Record<string, JSX.Element> = {
@@ -11,9 +12,11 @@ const { Title } = Typography;
 
 export const UserDataCard = () => {
 	const [activeTab, setActiveTab] = useState("Media");
+	const { user } = useContext(UserContext)!;
+
 	return (
 		<Card
-			title={<Title level={3}>Yash Gupta</Title>}
+			title={<Title level={3}>{user.name}</Title>}
 			// tabList={[
 			// 	{
 			// 		key: "Media",
@@ -30,8 +33,8 @@ export const UserDataCard = () => {
 			tabBarExtraContent={<div />}
 			extra={
 				<Fragment>
-					<Tag color="red">WEBOPS</Tag>
-					<Tag color="gold">CORE</Tag>
+					<Tag color="red">{user.department?.name}</Tag>
+					<Tag color="gold">{user.role}</Tag>
 				</Fragment>
 			}
 		>
