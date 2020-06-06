@@ -147,7 +147,6 @@ export type EditInvoiceInput = {
 export type ForgotPasswordInput = {
   email: Scalars['String'];
   newPassword: Scalars['String'];
-  passwordOTP: Scalars['String'];
 };
 
 export type GetMessagesInput = {
@@ -316,10 +315,11 @@ export type Mutation = {
   createUpdate: Scalars['Boolean'];
   createUser: Array<Scalars['String']>;
   forgotPassword: Scalars['Boolean'];
+  getPasswordOTP: Scalars['Boolean'];
   login?: Maybe<Array<Scalars['String']>>;
-  sendPasswordOTP: Scalars['Boolean'];
   uploadCoverPic: Scalars['Boolean'];
   uploadProfilePic: Scalars['Boolean'];
+  verifyPasswordOTP: Scalars['Boolean'];
   verifyUser?: Maybe<Scalars['String']>;
 };
 
@@ -479,13 +479,13 @@ export type MutationForgotPasswordArgs = {
 };
 
 
-export type MutationLoginArgs = {
-  data: LoginInput;
+export type MutationGetPasswordOtpArgs = {
+  email: Scalars['String'];
 };
 
 
-export type MutationSendPasswordOtpArgs = {
-  email: Scalars['String'];
+export type MutationLoginArgs = {
+  data: LoginInput;
 };
 
 
@@ -496,6 +496,11 @@ export type MutationUploadCoverPicArgs = {
 
 export type MutationUploadProfilePicArgs = {
   profilePic: Scalars['String'];
+};
+
+
+export type MutationVerifyPasswordOtpArgs = {
+  data: VerifyPasswordOtpInput;
 };
 
 
@@ -687,6 +692,11 @@ export type Vendor = {
   invoices: Array<Invoice>;
 };
 
+export type VerifyPasswordOtpInput = {
+  email: Scalars['String'];
+  passwordOTP: Scalars['String'];
+};
+
 export type AcceptTaskMutationVariables = {
   taskId: Scalars['String'];
 };
@@ -825,6 +835,27 @@ export type DeleteTaskMutation = (
   & Pick<Mutation, 'deleteTask'>
 );
 
+export type ForgotPasswordMutationVariables = {
+  email: Scalars['String'];
+  newPassword: Scalars['String'];
+};
+
+
+export type ForgotPasswordMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'forgotPassword'>
+);
+
+export type GetPasswordOtpMutationVariables = {
+  email: Scalars['String'];
+};
+
+
+export type GetPasswordOtpMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'getPasswordOTP'>
+);
+
 export type GrantAccessMutationVariables = {
   userId: Scalars['String'];
   role: UserRole;
@@ -875,6 +906,17 @@ export type UploadProfilePicMutationVariables = {
 export type UploadProfilePicMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'uploadProfilePic'>
+);
+
+export type VerifyPasswordOtpMutationVariables = {
+  email: Scalars['String'];
+  passwordOTP: Scalars['String'];
+};
+
+
+export type VerifyPasswordOtpMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'verifyPasswordOTP'>
 );
 
 export type VerifyUserMutationVariables = {
@@ -1493,6 +1535,67 @@ export function useDeleteTaskMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type DeleteTaskMutationHookResult = ReturnType<typeof useDeleteTaskMutation>;
 export type DeleteTaskMutationResult = ApolloReactCommon.MutationResult<DeleteTaskMutation>;
 export type DeleteTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteTaskMutation, DeleteTaskMutationVariables>;
+export const ForgotPasswordDocument = gql`
+    mutation ForgotPassword($email: String!, $newPassword: String!) {
+  forgotPassword(data: {email: $email, newPassword: $newPassword})
+}
+    `;
+export type ForgotPasswordMutationFn = ApolloReactCommon.MutationFunction<ForgotPasswordMutation, ForgotPasswordMutationVariables>;
+
+/**
+ * __useForgotPasswordMutation__
+ *
+ * To run a mutation, you first call `useForgotPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useForgotPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [forgotPasswordMutation, { data, loading, error }] = useForgotPasswordMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      newPassword: // value for 'newPassword'
+ *   },
+ * });
+ */
+export function useForgotPasswordMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ForgotPasswordMutation, ForgotPasswordMutationVariables>) {
+        return ApolloReactHooks.useMutation<ForgotPasswordMutation, ForgotPasswordMutationVariables>(ForgotPasswordDocument, baseOptions);
+      }
+export type ForgotPasswordMutationHookResult = ReturnType<typeof useForgotPasswordMutation>;
+export type ForgotPasswordMutationResult = ApolloReactCommon.MutationResult<ForgotPasswordMutation>;
+export type ForgotPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<ForgotPasswordMutation, ForgotPasswordMutationVariables>;
+export const GetPasswordOtpDocument = gql`
+    mutation GetPasswordOTP($email: String!) {
+  getPasswordOTP(email: $email)
+}
+    `;
+export type GetPasswordOtpMutationFn = ApolloReactCommon.MutationFunction<GetPasswordOtpMutation, GetPasswordOtpMutationVariables>;
+
+/**
+ * __useGetPasswordOtpMutation__
+ *
+ * To run a mutation, you first call `useGetPasswordOtpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGetPasswordOtpMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [getPasswordOtpMutation, { data, loading, error }] = useGetPasswordOtpMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useGetPasswordOtpMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<GetPasswordOtpMutation, GetPasswordOtpMutationVariables>) {
+        return ApolloReactHooks.useMutation<GetPasswordOtpMutation, GetPasswordOtpMutationVariables>(GetPasswordOtpDocument, baseOptions);
+      }
+export type GetPasswordOtpMutationHookResult = ReturnType<typeof useGetPasswordOtpMutation>;
+export type GetPasswordOtpMutationResult = ApolloReactCommon.MutationResult<GetPasswordOtpMutation>;
+export type GetPasswordOtpMutationOptions = ApolloReactCommon.BaseMutationOptions<GetPasswordOtpMutation, GetPasswordOtpMutationVariables>;
 export const GrantAccessDocument = gql`
     mutation GrantAccess($userId: String!, $role: UserRole!) {
   grantAccess(data: {userId: $userId, role: $role})
@@ -1645,6 +1748,37 @@ export function useUploadProfilePicMutation(baseOptions?: ApolloReactHooks.Mutat
 export type UploadProfilePicMutationHookResult = ReturnType<typeof useUploadProfilePicMutation>;
 export type UploadProfilePicMutationResult = ApolloReactCommon.MutationResult<UploadProfilePicMutation>;
 export type UploadProfilePicMutationOptions = ApolloReactCommon.BaseMutationOptions<UploadProfilePicMutation, UploadProfilePicMutationVariables>;
+export const VerifyPasswordOtpDocument = gql`
+    mutation VerifyPasswordOTP($email: String!, $passwordOTP: String!) {
+  verifyPasswordOTP(data: {email: $email, passwordOTP: $passwordOTP})
+}
+    `;
+export type VerifyPasswordOtpMutationFn = ApolloReactCommon.MutationFunction<VerifyPasswordOtpMutation, VerifyPasswordOtpMutationVariables>;
+
+/**
+ * __useVerifyPasswordOtpMutation__
+ *
+ * To run a mutation, you first call `useVerifyPasswordOtpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVerifyPasswordOtpMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [verifyPasswordOtpMutation, { data, loading, error }] = useVerifyPasswordOtpMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      passwordOTP: // value for 'passwordOTP'
+ *   },
+ * });
+ */
+export function useVerifyPasswordOtpMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<VerifyPasswordOtpMutation, VerifyPasswordOtpMutationVariables>) {
+        return ApolloReactHooks.useMutation<VerifyPasswordOtpMutation, VerifyPasswordOtpMutationVariables>(VerifyPasswordOtpDocument, baseOptions);
+      }
+export type VerifyPasswordOtpMutationHookResult = ReturnType<typeof useVerifyPasswordOtpMutation>;
+export type VerifyPasswordOtpMutationResult = ApolloReactCommon.MutationResult<VerifyPasswordOtpMutation>;
+export type VerifyPasswordOtpMutationOptions = ApolloReactCommon.BaseMutationOptions<VerifyPasswordOtpMutation, VerifyPasswordOtpMutationVariables>;
 export const VerifyUserDocument = gql`
     mutation VerifyUser($otp: String!) {
   verifyUser(otp: $otp)
