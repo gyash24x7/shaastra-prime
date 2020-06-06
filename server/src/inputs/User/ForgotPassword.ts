@@ -7,7 +7,4 @@ export class ForgotPasswordInput {
 
 	@Field()
 	newPassword: string;
-
-	@Field()
-	passwordOTP: string;
 }

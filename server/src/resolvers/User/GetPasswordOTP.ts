@@ -2,16 +2,16 @@ import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { GraphQLContext } from "../../utils";
 
 @Resolver()
-export class SendPasswordOTPResolver {
+export class GetPasswordOTPResolver {
 	@Mutation(() => Boolean)
-	async sendPasswordOTP(
+	async getPasswordOTP(
 		@Arg("email") email: string,
 		@Ctx() { prisma, mailjet }: GraphQLContext
 	) {
 		const user = await prisma.user.findOne({ where: { email } });
 		if (!user) return false;
 
-		const passwordOTP = Math.round(Math.random() * 1000000).toString();
+		const passwordOTP = Math.floor(100000 + Math.random() * 900000).toString();
 		await prisma.user.update({ where: { email }, data: { passwordOTP } });
 
 		await mailjet.post("send", { version: "v3" }).request({

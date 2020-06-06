@@ -1,13 +1,14 @@
 import { CreateUserResolver } from "./CreateUser";
 import { UserFieldResolvers } from "./FieldResolvers";
 import { ForgotPasswordResolver } from "./ForgotPassword";
+import { GetPasswordOTPResolver } from "./GetPasswordOTP";
 import { GetUsersResolver } from "./GetUsers";
 import { LoginResolver } from "./Login";
 import { MeResolver } from "./Me";
 import { SearchUserResolver } from "./SearchUser";
-import { SendPasswordOTPResolver } from "./SendPasswordOTP";
 import { UploadCoverPicResolver } from "./UploadCoverPic";
 import { UploadProfilePicResolver } from "./UploadProfilePic";
+import { VerifyPasswordOTPResolver } from "./VerifyPasswordOTP";
 import { VerifyUserResolver } from "./VerifyUser";
 
 export default [
@@ -17,7 +18,8 @@ export default [
 	GetUsersResolver,
 	LoginResolver,
 	MeResolver,
-	SendPasswordOTPResolver,
+	GetPasswordOTPResolver,
+	VerifyPasswordOTPResolver,
 	UploadCoverPicResolver,
 	UploadProfilePicResolver,
 	VerifyUserResolver,
