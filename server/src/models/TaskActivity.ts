@@ -3,10 +3,14 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn
 } from "typeorm";
 import { TaskActivityType } from "./../utils/index";
+import { Message } from "./Message";
 import { Task } from "./Task";
+import { User } from "./User";
 
 registerEnumType(TaskActivityType, { name: "TaskActivityType" });
 
@@ -21,9 +25,17 @@ export class TaskActivity {
 	@Field(() => TaskActivityType)
 	type: TaskActivityType;
 
-	@Field(() => Task) task: Task;
+	@ManyToOne(() => Task, (task) => task.activity)
+	@Field(() => Task)
+	task: Task;
 
 	@CreateDateColumn()
 	@Field()
 	createdOn: string;
+
+	@ManyToOne(() => User, (user) => user.taskActivity)
+	createdBy: User;
+
+	@OneToMany(() => Message, (message) => message.taskActivity)
+	messages: Message[];
 }

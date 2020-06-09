@@ -1,5 +1,15 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+	Column,
+	Entity,
+	JoinColumn,
+	JoinTable,
+	ManyToMany,
+	ManyToOne,
+	OneToMany,
+	OneToOne,
+	PrimaryGeneratedColumn
+} from "typeorm";
 import { InvoiceStatus, InvoiceType } from "../utils";
 import { Channel } from "./Channel";
 import { Department } from "./Department";
@@ -46,10 +56,29 @@ export class Invoice {
 	@Field(() => InvoiceType)
 	type: InvoiceType;
 
-	@Field(() => Media) media: Media;
-	@Field(() => [InvoiceActivity]) activity: InvoiceActivity[];
-	@Field(() => User) uploadedBy: User;
-	@Field(() => Department) byDept: Department;
-	@Field(() => Vendor) vendor: Vendor;
-	@Field(() => [Channel]) channels: Channel[];
+	@OneToOne(() => Media)
+	@JoinColumn()
+	@Field(() => Media)
+	media: Media;
+
+	@OneToMany(() => InvoiceActivity, (activity) => activity.invoice)
+	@Field(() => [InvoiceActivity])
+	activity: InvoiceActivity[];
+
+	@ManyToOne(() => User, (user) => user.invoicesSubmitted)
+	@Field(() => User)
+	uploadedBy: User;
+
+	@ManyToOne(() => Department, (dept) => dept.invoicesSubmitted)
+	@Field(() => Department)
+	byDept: Department;
+
+	@ManyToOne(() => Vendor, (vendor) => vendor.invoices)
+	@Field(() => Vendor)
+	vendor: Vendor;
+
+	@ManyToMany(() => Channel)
+	@JoinTable()
+	@Field(() => [Channel])
+	channels: Channel[];
 }

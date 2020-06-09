@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Invoice } from "./Invoice";
 
 @Entity("Vendor")
@@ -33,5 +33,7 @@ export class Vendor {
 	@Field()
 	bankDetails: string;
 
-	@Field(() => [Invoice]) invoices: Invoice[];
+	@OneToMany(() => Invoice, (invoice) => invoice.vendor)
+	@Field(() => [Invoice])
+	invoices: Invoice[];
 }

@@ -3,6 +3,7 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	ManyToOne,
 	PrimaryGeneratedColumn
 } from "typeorm";
 import { Department } from "./Department";
@@ -27,8 +28,13 @@ export class Update {
 	@Field()
 	content: string;
 
-	@Field(() => Department) byDept: Department;
-	@Field(() => User) postedBy: User;
+	@ManyToOne(() => Department, (dept) => dept.updates)
+	@Field(() => Department)
+	byDept: Department;
+
+	@ManyToOne(() => User, (user) => user.updates)
+	@Field(() => User)
+	postedBy: User;
 
 	@CreateDateColumn()
 	@Field()

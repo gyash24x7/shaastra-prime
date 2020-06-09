@@ -1,7 +1,6 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Event } from "./Event";
-import { User } from "./User";
 
 @Entity("EventTab")
 @ObjectType("EventTab")
@@ -18,6 +17,6 @@ export class EventTab {
 	@Field()
 	content: string;
 
-	@Field(() => Event) event: Event;
-	@Field(() => User) updatedBy: User;
+	@ManyToOne(() => Event, (event) => event.eventTabs)
+	event: Event;
 }

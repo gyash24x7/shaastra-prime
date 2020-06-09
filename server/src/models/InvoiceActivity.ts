@@ -3,10 +3,14 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn
 } from "typeorm";
 import { InvoiceActivityType } from "../utils";
 import { Invoice } from "./Invoice";
+import { Message } from "./Message";
+import { User } from "./User";
 
 registerEnumType(InvoiceActivityType, { name: "InvoiceActivityType" });
 
@@ -25,5 +29,12 @@ export class InvoiceActivity {
 	@Field()
 	createdOn: string;
 
-	@Field(() => Invoice) invoice: Invoice;
+	@ManyToOne(() => Invoice, (invoice) => invoice.activity)
+	invoice: Invoice;
+
+	@ManyToOne(() => User, (user) => user.invoiceActivity)
+	createdBy: User;
+
+	@OneToMany(() => Message, (message) => message.invoiceActivity)
+	messages: Message[];
 }

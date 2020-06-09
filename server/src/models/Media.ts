@@ -1,6 +1,8 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { MediaType } from "../utils";
+import { Message } from "./Message";
+import { Task } from "./Task";
 import { User } from "./User";
 
 registerEnumType(MediaType, { name: "MediaType" });
@@ -20,5 +22,13 @@ export class Media {
 	@Field(() => MediaType)
 	type: MediaType;
 
-	@Field(() => User) uploadedBy: User;
+	@ManyToOne(() => User, (user) => user.media)
+	@Field(() => User)
+	uploadedBy: User;
+
+	@ManyToOne(() => Task, (task) => task.media)
+	task: Task;
+
+	@ManyToOne(() => Message, (msg) => msg.media)
+	message: Message;
 }

@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { RegistrationType } from "../utils";
 import { Event } from "./Event";
 import { Participant } from "./Participant";
@@ -18,7 +18,15 @@ export class Registration {
 	@Field(() => RegistrationType)
 	type: RegistrationType;
 
-	@Field(() => Team, { nullable: true }) team?: Team;
-	@Field(() => Event) event: Event;
-	@Field(() => Participant, { nullable: true }) participant?: Participant;
+	@ManyToOne(() => Team, (team) => team.registrations)
+	@Field(() => Team, { nullable: true })
+	team?: Team;
+
+	@ManyToOne(() => Event, (event) => event.registrations)
+	@Field(() => Event)
+	event: Event;
+
+	@ManyToOne(() => Participant, (participant) => participant.registrations)
+	@Field(() => Participant, { nullable: true })
+	participant?: Participant;
 }

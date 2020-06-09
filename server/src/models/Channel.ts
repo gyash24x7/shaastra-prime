@@ -3,9 +3,14 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinTable,
+	ManyToMany,
+	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn
 } from "typeorm";
 import { ChannelType } from "./../utils/index";
+import { Invoice } from "./Invoice";
 import { Message } from "./Message";
 import { Task } from "./Task";
 import { User } from "./User";
@@ -39,8 +44,29 @@ export class Channel {
 	@Field(() => ChannelType)
 	type: ChannelType;
 
-	@Field(() => [User]) members: User[];
-	@Field(() => User) createdBy: User;
-	@Field(() => [Task]) connectedTasks: Task[];
+	@ManyToMany(() => User)
+	@JoinTable()
+	@Field(() => [User])
+	members: User[];
+
+	@ManyToOne(() => User)
+	@Field(() => User)
+	createdBy: User;
+
+	@ManyToMany(() => Task, (task) => task.channels)
+	@Field(() => [Task])
+	connectedTasks: Task[];
+
+	@ManyToMany(() => Invoice, (invoice) => invoice.channels)
+	@JoinTable()
+	@Field(() => [Invoice])
+	connectedInvoices: Invoice[];
+
+	//computed
 	@Field(() => [Message]) starredMsgs: Message[];
+
+	@OneToMany(() => Message, (message) => message.channel, {
+		onDelete: "CASCADE"
+	})
+	messages: Message[];
 }

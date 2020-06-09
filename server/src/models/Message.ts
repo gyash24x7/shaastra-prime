@@ -3,9 +3,14 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinTable,
+	ManyToMany,
+	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn
 } from "typeorm";
 import { MessageType } from "./../utils/index";
+import { Channel } from "./Channel";
 import { InvoiceActivity } from "./InvoiceActivity";
 import { Media } from "./Media";
 import { TaskActivity } from "./TaskActivity";
@@ -28,7 +33,9 @@ export class Message {
 	@Field()
 	createdOn: string;
 
-	@Field(() => User) createdBy: User;
+	@ManyToOne(() => User, (user) => user.messages)
+	@Field(() => User)
+	createdBy: User;
 
 	@Column()
 	@Field()
@@ -36,13 +43,26 @@ export class Message {
 
 	@Field(() => Int) likes: number;
 
-	@Field(() => [Media]) media: Media[];
+	@OneToMany(() => Media, (media) => media.message)
+	@Field(() => [Media])
+	media: Media[];
 
 	@Column("enum", { enum: MessageType })
 	@Field(() => MessageType)
 	type: MessageType;
 
-	@Field(() => TaskActivity, { nullable: true }) taskActivity?: TaskActivity;
+	@ManyToOne(() => TaskActivity)
+	@Field(() => TaskActivity, { nullable: true })
+	taskActivity?: TaskActivity;
+
+	@ManyToOne(() => InvoiceActivity)
 	@Field(() => InvoiceActivity, { nullable: true })
 	invoiceActivity?: InvoiceActivity;
+
+	@ManyToMany(() => User, (user) => user.likedMessages)
+	@JoinTable()
+	likedBy: User[];
+
+	@ManyToOne(() => Channel, (channel) => channel.messages)
+	channel: Channel;
 }

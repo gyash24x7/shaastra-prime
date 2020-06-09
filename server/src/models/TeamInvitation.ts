@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { InviteStatus } from "../utils";
 import { Participant } from "./Participant";
 import { Team } from "./Team";
@@ -17,6 +17,11 @@ export class TeamInvitation {
 	@Field(() => InviteStatus)
 	status: InviteStatus;
 
-	@Field(() => Team) team: Team;
-	@Field(() => Participant) participant: Participant;
+	@ManyToOne(() => Team, (team) => team.invitations)
+	@Field(() => Team)
+	team: Team;
+
+	@ManyToOne(() => Participant, (participant) => participant.invitations)
+	@Field(() => Participant)
+	participant: Participant;
 }

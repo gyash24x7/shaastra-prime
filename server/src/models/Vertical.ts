@@ -2,9 +2,14 @@ import { Field, ID, Int, ObjectType } from "type-graphql";
 import {
 	Column,
 	Entity,
+	JoinColumn,
+	ManyToOne,
+	OneToMany,
+	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn
 } from "typeorm";
+import { Event } from "./Event";
 import { Media } from "./Media";
 import { User } from "./User";
 
@@ -27,11 +32,19 @@ export class Vertical {
 	@Field()
 	info: string;
 
-	@Field(() => User) updatedBy: User;
+	@ManyToOne(() => User, (user) => user.verticalsUpdated)
+	@Field(() => User)
+	updatedBy: User;
 
 	@UpdateDateColumn()
 	@Field()
 	updatedOn: string;
 
-	@Field(() => Media, { nullable: true }) image: Media;
+	@OneToOne(() => Media)
+	@JoinColumn()
+	@Field(() => Media, { nullable: true })
+	image: Media;
+
+	@OneToMany(() => Event, (event) => event.vertical)
+	events: Event[];
 }

@@ -3,6 +3,10 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinTable,
+	ManyToMany,
+	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn
 } from "typeorm";
 import { TaskStatus } from "../utils";
@@ -29,8 +33,14 @@ export class Task {
 	@Field()
 	details: string;
 
-	@Field(() => Department) byDept: Department;
-	@Field(() => Department) forDept: Department;
+	@ManyToOne(() => Department, (dept) => dept.tasksCreated)
+	@Field(() => Department)
+	byDept: Department;
+
+	@ManyToOne(() => Department, (dept) => dept.tasksAssigned)
+	@Field(() => Department)
+	forDept: Department;
+
 	@Field(() => User) createdBy: User;
 	@Field(() => [User]) assignedTo: User[];
 
@@ -46,7 +56,19 @@ export class Task {
 	@Field()
 	deadline: string;
 
-	@Field(() => [Media]) media: Media[];
-	@Field(() => [TaskActivity]) activity: TaskActivity[];
-	@Field(() => [Channel]) channels: Channel[];
+	@OneToMany(() => Media, (media) => media.task)
+	@Field(() => [Media])
+	media: Media[];
+
+	@OneToMany(() => TaskActivity, (activity) => activity.task)
+	@Field(() => [TaskActivity])
+	activity: TaskActivity[];
+
+	@ManyToMany(() => Channel)
+	@JoinTable()
+	@Field(() => [Channel])
+	channels: Channel[];
+
+	@Column({ default: false })
+	deleted: boolean;
 }

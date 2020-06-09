@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Registration } from "./Registration";
 import { TeamInvitation } from "./TeamInvitation";
 
@@ -14,6 +14,11 @@ export class Team {
 	@Field()
 	name: string;
 
-	@Field(() => [TeamInvitation]) invitations: TeamInvitation[];
-	@Field(() => [Registration]) registrations: Registration[];
+	@OneToMany(() => TeamInvitation, (invitation) => invitation.team)
+	@Field(() => [TeamInvitation])
+	invitations: TeamInvitation[];
+
+	@OneToMany(() => Registration, (registration) => registration.team)
+	@Field(() => [Registration])
+	registrations: Registration[];
 }

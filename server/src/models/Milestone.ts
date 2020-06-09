@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { MilestoneStatus } from "../utils";
 import { Goal } from "./Goal";
 
@@ -23,5 +23,7 @@ export class Milestone {
 	@Field(() => MilestoneStatus)
 	status: MilestoneStatus;
 
-	@Field(() => Goal) goal: Goal;
+	@ManyToOne(() => Goal, (goal) => goal.milestones)
+	@Field(() => Goal)
+	goal: Goal;
 }

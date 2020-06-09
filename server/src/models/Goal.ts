@@ -3,6 +3,8 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn
 } from "typeorm";
 import { GoalType } from "../utils";
@@ -26,7 +28,9 @@ export class Goal {
 	@Field()
 	description: string;
 
-	@Field(() => Department) dept: Department;
+	@ManyToOne(() => Department, (dept) => dept.goals)
+	@Field(() => Department)
+	dept: Department;
 
 	@Column("enum", { enum: GoalType })
 	@Field(() => GoalType)
@@ -36,5 +40,7 @@ export class Goal {
 	@Field()
 	createdOn: string;
 
-	@Field(() => [Milestone]) milestones: Milestone[];
+	@OneToMany(() => Milestone, (milestone) => milestone.goal)
+	@Field(() => [Milestone])
+	milestones: Milestone[];
 }
