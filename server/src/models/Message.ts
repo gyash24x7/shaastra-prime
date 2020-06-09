@@ -1,4 +1,10 @@
 import { Field, ID, Int, ObjectType, registerEnumType } from "type-graphql";
+import {
+	Column,
+	CreateDateColumn,
+	Entity,
+	PrimaryGeneratedColumn
+} from "typeorm";
 import { MessageType } from "./../utils/index";
 import { InvoiceActivity } from "./InvoiceActivity";
 import { Media } from "./Media";
@@ -7,17 +13,35 @@ import { User } from "./User";
 
 registerEnumType(MessageType, { name: "MessageType" });
 
+@Entity("Message")
 @ObjectType("Message")
 export class Message {
-	@Field(() => ID) id: string;
-	@Field() content: string;
-	@Field() createdAt: string;
+	@PrimaryGeneratedColumn("uuid")
+	@Field(() => ID)
+	id: string;
+
+	@Column()
+	@Field()
+	content: string;
+
+	@CreateDateColumn()
+	@Field()
+	createdOn: string;
+
 	@Field(() => User) createdBy: User;
-	@Field() starred: boolean;
+
+	@Column()
+	@Field()
+	starred: boolean;
+
 	@Field(() => Int) likes: number;
+
 	@Field(() => [Media]) media: Media[];
-	@Field(() => MessageType) type: MessageType;
-	@Field() liked: boolean;
+
+	@Column("enum", { enum: MessageType })
+	@Field(() => MessageType)
+	type: MessageType;
+
 	@Field(() => TaskActivity, { nullable: true }) taskActivity?: TaskActivity;
 	@Field(() => InvoiceActivity, { nullable: true })
 	invoiceActivity?: InvoiceActivity;

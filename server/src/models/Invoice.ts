@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { InvoiceStatus, InvoiceType } from "../utils";
 import { Channel } from "./Channel";
 import { Department } from "./Department";
@@ -10,16 +11,41 @@ import { Vendor } from "./Vendor";
 registerEnumType(InvoiceStatus, { name: "InvoiceStatus" });
 registerEnumType(InvoiceType, { name: "InvoiceType" });
 
+@Entity("Invoice")
 @ObjectType("Invoice")
 export class Invoice {
-	@Field(() => ID) id: string;
-	@Field() title: string;
-	@Field() date: string;
-	@Field() invoiceNumber: string;
-	@Field() amount: string;
-	@Field() purpose: string;
-	@Field(() => InvoiceStatus) status: InvoiceStatus;
-	@Field(() => InvoiceType) type: InvoiceType;
+	@PrimaryGeneratedColumn("uuid")
+	@Field(() => ID)
+	id: string;
+
+	@Column()
+	@Field()
+	title: string;
+
+	@Column("timestamp")
+	@Field()
+	date: string;
+
+	@Column()
+	@Field()
+	invoiceNumber: string;
+
+	@Column()
+	@Field()
+	amount: string;
+
+	@Column()
+	@Field()
+	purpose: string;
+
+	@Column("enum", { enum: InvoiceStatus })
+	@Field(() => InvoiceStatus)
+	status: InvoiceStatus;
+
+	@Column("enum", { enum: InvoiceType })
+	@Field(() => InvoiceType)
+	type: InvoiceType;
+
 	@Field(() => Media) media: Media;
 	@Field(() => [InvoiceActivity]) activity: InvoiceActivity[];
 	@Field(() => User) uploadedBy: User;

@@ -1,15 +1,26 @@
 import { Field, ID, ObjectType } from "type-graphql";
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Goal } from "./Goal";
 import { Invoice } from "./Invoice";
 import { Task } from "./Task";
 import { Update } from "./Update";
 import { User } from "./User";
 
+@Entity("Department")
 @ObjectType("Department")
 export class Department {
-	@Field(() => ID) id: string;
-	@Field() name: string;
-	@Field() shortName: string;
+	@PrimaryGeneratedColumn("uuid")
+	@Field(() => ID)
+	id: string;
+
+	@PrimaryColumn()
+	@Field()
+	name: string;
+
+	@Column()
+	@Field()
+	shortName: string;
+
 	@Field(() => [User]) members: User[];
 	@Field(() => [Task]) tasksAssigned: Task[];
 	@Field(() => [Task]) tasksCreated: Task[];
