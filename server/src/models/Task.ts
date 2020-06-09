@@ -1,4 +1,14 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
+import {
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinTable,
+	ManyToMany,
+	ManyToOne,
+	OneToMany,
+	PrimaryGeneratedColumn
+} from "typeorm";
 import { TaskStatus } from "../utils";
 import { Channel } from "./Channel";
 import { Department } from "./Department";
@@ -8,19 +18,57 @@ import { User } from "./User";
 
 registerEnumType(TaskStatus, { name: "TaskStatus" });
 
+@Entity("Task")
 @ObjectType("Task")
 export class Task {
-	@Field(() => ID) id: string;
-	@Field() brief: string;
-	@Field() details: string;
-	@Field(() => Department) byDept: Department;
-	@Field(() => Department) forDept: Department;
+	@PrimaryGeneratedColumn()
+	@Field(() => ID)
+	id: string;
+
+	@Column()
+	@Field()
+	brief: string;
+
+	@Column()
+	@Field()
+	details: string;
+
+	@ManyToOne(() => Department, (dept) => dept.tasksCreated)
+	@Field(() => Department)
+	byDept: Department;
+
+	@ManyToOne(() => Department, (dept) => dept.tasksAssigned)
+	@Field(() => Department)
+	forDept: Department;
+
 	@Field(() => User) createdBy: User;
 	@Field(() => [User]) assignedTo: User[];
-	@Field(() => TaskStatus) status: TaskStatus;
-	@Field() createdAt: string;
-	@Field() deadline: string;
-	@Field(() => [Media]) media: Media[];
-	@Field(() => [TaskActivity]) activity: TaskActivity[];
-	@Field(() => [Channel]) channels: Channel[];
+
+	@Column("enum", { enum: TaskStatus, default: TaskStatus.NOT_ASSIGNED })
+	@Field(() => TaskStatus)
+	status: TaskStatus;
+
+	@CreateDateColumn()
+	@Field()
+	createdOn: string;
+
+	@Column("timestamp")
+	@Field()
+	deadline: string;
+
+	@OneToMany(() => Media, (media) => media.task)
+	@Field(() => [Media])
+	media: Media[];
+
+	@OneToMany(() => TaskActivity, (activity) => activity.task)
+	@Field(() => [TaskActivity])
+	activity: TaskActivity[];
+
+	@ManyToMany(() => Channel)
+	@JoinTable()
+	@Field(() => [Channel])
+	channels: Channel[];
+
+	@Column({ default: false })
+	deleted: boolean;
 }

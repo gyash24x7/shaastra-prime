@@ -1,20 +1,65 @@
 import { Field, ID, ObjectType } from "type-graphql";
+import {
+	Column,
+	Entity,
+	OneToMany,
+	PrimaryColumn,
+	PrimaryGeneratedColumn
+} from "typeorm";
 import { Registration } from "./Registration";
 import { TeamInvitation } from "./TeamInvitation";
 
+@Entity("Participant")
 @ObjectType("Participant")
 export class Participant {
-	@Field(() => ID) id: string;
-	@Field() name: string;
-	@Field() shaastraID: string;
-	@Field() shaastraQR: string;
-	@Field() email: string;
-	@Field() password: string;
-	@Field() mobile: string;
-	@Field() gender: string;
-	@Field() college: string;
-	@Field() city: string;
-	@Field() state: string;
-	@Field(() => [Registration]) registrations: Registration[];
-	@Field(() => [TeamInvitation]) invitations: TeamInvitation[];
+	@PrimaryGeneratedColumn("uuid")
+	@Field(() => ID)
+	id: string;
+
+	@Column()
+	@Field()
+	name: string;
+
+	@PrimaryGeneratedColumn("increment")
+	@Field()
+	shaastraID: string;
+
+	@PrimaryColumn()
+	@Field()
+	shaastraQR: string;
+
+	@Column()
+	@Field()
+	email: string;
+
+	@Column()
+	password: string;
+
+	@Column()
+	@Field()
+	mobile: string;
+
+	@Column()
+	@Field()
+	gender: string;
+
+	@Column()
+	@Field()
+	college: string;
+
+	@Column()
+	@Field()
+	city: string;
+
+	@Column()
+	@Field()
+	state: string;
+
+	@OneToMany(() => Registration, (registration) => registration.participant)
+	@Field(() => [Registration])
+	registrations: Registration[];
+
+	@OneToMany(() => TeamInvitation, (invitation) => invitation.participant)
+	@Field(() => [TeamInvitation])
+	invitations: TeamInvitation[];
 }
