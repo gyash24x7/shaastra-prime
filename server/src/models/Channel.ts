@@ -45,29 +45,30 @@ export class Channel extends BaseEntity {
 	@Field(() => ChannelType)
 	type: ChannelType;
 
-	@ManyToMany(() => User)
+	@ManyToMany(() => User, (user) => user.channels, { lazy: true })
 	@JoinTable()
 	@Field(() => [User])
-	members: User[];
+	members: Promise<User[]>;
 
-	@ManyToOne(() => User)
+	@ManyToOne(() => User, (user) => user.channelsCreated, { lazy: true })
 	@Field(() => User)
-	createdBy: User;
+	createdBy: Promise<User>;
 
-	@ManyToMany(() => Task, (task) => task.channels)
+	@ManyToMany(() => Task, (task) => task.channels, { lazy: true })
 	@Field(() => [Task])
-	connectedTasks: Task[];
+	connectedTasks: Promise<Task[]>;
 
-	@ManyToMany(() => Invoice, (invoice) => invoice.channels)
+	@ManyToMany(() => Invoice, (invoice) => invoice.channels, { lazy: true })
 	@JoinTable()
 	@Field(() => [Invoice])
-	connectedInvoices: Invoice[];
+	connectedInvoices: Promise<Invoice[]>;
 
 	//computed
 	@Field(() => [Message]) starredMsgs: Message[];
 
 	@OneToMany(() => Message, (message) => message.channel, {
-		onDelete: "CASCADE"
+		onDelete: "CASCADE",
+		lazy: true
 	})
 	messages: Message[];
 }

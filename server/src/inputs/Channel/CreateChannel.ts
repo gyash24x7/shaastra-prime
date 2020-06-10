@@ -4,5 +4,5 @@ import { Field, InputType } from "type-graphql";
 export class CreateChannelInput {
 	@Field() name: string;
 	@Field() description: string;
-	@Field(() => [String]) members: string[];
+	@Field(() => [String]) memberIds: string[];
 }

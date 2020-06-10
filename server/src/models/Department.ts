@@ -29,33 +29,33 @@ export class Department extends BaseEntity {
 	@Field()
 	shortName: string;
 
-	@OneToMany(() => User, (member) => member.department)
+	@OneToMany(() => User, (member) => member.department, { lazy: true })
 	@Field(() => [User])
-	members: User[];
+	members: Promise<User[]>;
 
-	@OneToMany(() => Task, (task) => task.forDept)
+	@OneToMany(() => Task, (task) => task.forDept, { lazy: true })
 	@Field(() => [Task])
-	tasksAssigned: Task[];
+	tasksAssigned: Promise<Task[]>;
 
-	@OneToMany(() => Task, (task) => task.byDept)
+	@OneToMany(() => Task, (task) => task.byDept, { lazy: true })
 	@Field(() => [Task])
-	tasksCreated: Task[];
+	tasksCreated: Promise<Task[]>;
 
 	@Column("simple-array")
 	@Field(() => [String])
 	subDepartments: string[];
 
-	@OneToMany(() => Goal, (goal) => goal.dept)
+	@OneToMany(() => Goal, (goal) => goal.dept, { lazy: true })
 	@Field(() => [Goal])
-	goals: Goal[];
+	goals: Promise<Goal[]>;
 
-	@ManyToOne(() => User, (user) => user.finManagerForDepts)
+	@ManyToOne(() => User, (user) => user.finManagerForDepts, { lazy: true })
 	@Field(() => User, { nullable: true })
-	finManager?: User;
+	finManager?: Promise<User>;
 
-	@OneToMany(() => Invoice, (invoice) => invoice.byDept)
-	invoicesSubmitted: Invoice[];
+	@OneToMany(() => Invoice, (invoice) => invoice.byDept, { lazy: true })
+	invoicesSubmitted: Promise<Invoice[]>;
 
-	@ManyToOne(() => Update, (update) => update.byDept)
-	updates: Update[];
+	@ManyToOne(() => Update, (update) => update.byDept, { lazy: true })
+	updates: Promise<Update[]>;
 }

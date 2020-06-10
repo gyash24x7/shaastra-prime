@@ -50,20 +50,20 @@ export class Event extends BaseEntity {
 	@Field()
 	paid: boolean;
 
-	@ManyToOne(() => User, (user) => user.eventsUpdated)
+	@ManyToOne(() => User, (user) => user.eventsUpdated, { lazy: true })
 	@Field(() => User)
-	updatedBy: User;
+	updatedBy: Promise<User>;
 
-	@OneToOne(() => Media, { cascade: true })
+	@OneToOne(() => Media, { lazy: true })
 	@JoinColumn()
 	@Field(() => Media, { nullable: true })
-	image: Media;
+	image: Promise<Media>;
 
-	@ManyToOne(() => Vertical, (vertical) => vertical.events)
+	@ManyToOne(() => Vertical, (vertical) => vertical.events, { lazy: true })
 	@Field(() => Vertical)
-	vertical: Vertical;
+	vertical: Promise<Vertical>;
 
-	@OneToMany(() => EventTab, (eventTab) => eventTab.event)
+	@OneToMany(() => EventTab, (eventTab) => eventTab.event, { lazy: true })
 	@Field(() => [EventTab])
 	eventTabs: EventTab[];
 
@@ -71,7 +71,9 @@ export class Event extends BaseEntity {
 	@Field(() => RegistrationType)
 	registrationType: RegistrationType;
 
-	@OneToMany(() => Registration, (registration) => registration.event)
+	@OneToMany(() => Registration, (registration) => registration.event, {
+		lazy: true
+	})
 	@Field(() => [Registration])
-	registrations: Registration[];
+	registrations: Promise<Registration[]>;
 }

@@ -29,13 +29,13 @@ export class Update extends BaseEntity {
 	@Field()
 	content: string;
 
-	@ManyToOne(() => Department, (dept) => dept.updates)
+	@ManyToOne(() => Department, (dept) => dept.updates, { lazy: true })
 	@Field(() => Department)
-	byDept: Department;
+	byDept: Promise<Department>;
 
-	@ManyToOne(() => User, (user) => user.updates)
+	@ManyToOne(() => User, (user) => user.updates, { lazy: true })
 	@Field(() => User)
-	postedBy: User;
+	postedBy: Promise<User>;
 
 	@CreateDateColumn()
 	@Field()

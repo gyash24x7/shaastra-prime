@@ -29,9 +29,9 @@ export class Goal extends BaseEntity {
 	@Field()
 	description: string;
 
-	@ManyToOne(() => Department, (dept) => dept.goals)
+	@ManyToOne(() => Department, (dept) => dept.goals, { lazy: true })
 	@Field(() => Department)
-	dept: Department;
+	dept: Promise<Department>;
 
 	@Column("enum", { enum: GoalType })
 	@Field(() => GoalType)
@@ -41,7 +41,7 @@ export class Goal extends BaseEntity {
 	@Field()
 	createdOn: string;
 
-	@OneToMany(() => Milestone, (milestone) => milestone.goal)
+	@OneToMany(() => Milestone, (milestone) => milestone.goal, { lazy: true })
 	@Field(() => [Milestone])
-	milestones: Milestone[];
+	milestones: Promise<Milestone[]>;
 }

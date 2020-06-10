@@ -14,22 +14,19 @@ dotenv.config();
 const startServer = async () => {
 	const schema = await buildSchema({ resolvers, authChecker } as any);
 
-	const db = (
-		await createConnection({
-			type: "postgres",
-			url: process.env.DATABASE_URL,
-			entities: [__dirname + "/models/*.ts"],
-			synchronize: true
-		})
-	).manager;
+	await createConnection({
+		type: "postgres",
+		url: process.env.DATABASE_URL,
+		entities: [__dirname + "/models/*.ts"],
+		synchronize: true
+	});
 
 	const server = new ApolloServer({
 		schema,
 		context: async ({ req, connection }) => {
-			const user = await getAuthUser({ req, connection, db });
+			const user = await getAuthUser({ req, connection });
 			return {
 				user,
-				db,
 				mailjet: mailjet.connect(
 					process.env.MAILJET_APIKEY!,
 					process.env.MAILJET_APISECRET!

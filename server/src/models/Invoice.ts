@@ -57,29 +57,31 @@ export class Invoice extends BaseEntity {
 	@Field(() => InvoiceType)
 	type: InvoiceType;
 
-	@OneToOne(() => Media)
+	@OneToOne(() => Media, { eager: true })
 	@JoinColumn()
 	@Field(() => Media)
 	media: Media;
 
-	@OneToMany(() => InvoiceActivity, (activity) => activity.invoice)
+	@OneToMany(() => InvoiceActivity, (activity) => activity.invoice, {
+		lazy: true
+	})
 	@Field(() => [InvoiceActivity])
-	activity: InvoiceActivity[];
+	activity: Promise<InvoiceActivity[]>;
 
-	@ManyToOne(() => User, (user) => user.invoicesSubmitted)
+	@ManyToOne(() => User, (user) => user.invoicesSubmitted, { lazy: true })
 	@Field(() => User)
-	uploadedBy: User;
+	uploadedBy: Promise<User>;
 
-	@ManyToOne(() => Department, (dept) => dept.invoicesSubmitted)
+	@ManyToOne(() => Department, (dept) => dept.invoicesSubmitted, { lazy: true })
 	@Field(() => Department)
-	byDept: Department;
+	byDept: Promise<Department>;
 
-	@ManyToOne(() => Vendor, (vendor) => vendor.invoices)
+	@ManyToOne(() => Vendor, (vendor) => vendor.invoices, { lazy: true })
 	@Field(() => Vendor)
-	vendor: Vendor;
+	vendor: Promise<Vendor>;
 
-	@ManyToMany(() => Channel)
+	@ManyToMany(() => Channel, { lazy: true })
 	@JoinTable()
 	@Field(() => [Channel])
-	channels: Channel[];
+	channels: Promise<Channel[]>;
 }

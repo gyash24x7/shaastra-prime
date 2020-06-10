@@ -34,7 +34,7 @@ export class Message extends BaseEntity {
 	@Field()
 	createdOn: string;
 
-	@ManyToOne(() => User, (user) => user.messages)
+	@ManyToOne(() => User, (user) => user.messages, { lazy: true })
 	@Field(() => User)
 	createdBy: User;
 
@@ -44,7 +44,7 @@ export class Message extends BaseEntity {
 
 	@Field(() => Int) likes: number;
 
-	@OneToMany(() => Media, (media) => media.message)
+	@OneToMany(() => Media, (media) => media.message, { lazy: true })
 	@Field(() => [Media])
 	media: Media[];
 
@@ -52,18 +52,22 @@ export class Message extends BaseEntity {
 	@Field(() => MessageType)
 	type: MessageType;
 
-	@ManyToOne(() => TaskActivity)
+	@ManyToOne(() => TaskActivity, (activity) => activity.messages, {
+		lazy: true
+	})
 	@Field(() => TaskActivity, { nullable: true })
-	taskActivity?: TaskActivity;
+	taskActivity?: Promise<TaskActivity>;
 
-	@ManyToOne(() => InvoiceActivity)
+	@ManyToOne(() => InvoiceActivity, (activity) => activity.messages, {
+		lazy: true
+	})
 	@Field(() => InvoiceActivity, { nullable: true })
-	invoiceActivity?: InvoiceActivity;
+	invoiceActivity?: Promise<InvoiceActivity>;
 
-	@ManyToMany(() => User, (user) => user.likedMessages)
+	@ManyToMany(() => User, (user) => user.likedMessages, { lazy: true })
 	@JoinTable()
-	likedBy: User[];
+	likedBy: Promise<User[]>;
 
-	@ManyToOne(() => Channel, (channel) => channel.messages)
-	channel: Channel;
+	@ManyToOne(() => Channel, (channel) => channel.messages, { lazy: true })
+	channel: Promise<Channel>;
 }

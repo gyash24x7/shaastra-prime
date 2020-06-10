@@ -24,15 +24,17 @@ export class Registration extends BaseEntity {
 	@Field(() => RegistrationType)
 	type: RegistrationType;
 
-	@ManyToOne(() => Team, (team) => team.registrations)
+	@ManyToOne(() => Team, (team) => team.registrations, { lazy: true })
 	@Field(() => Team, { nullable: true })
-	team?: Team;
+	team?: Promise<Team>;
 
-	@ManyToOne(() => Event, (event) => event.registrations)
+	@ManyToOne(() => Event, (event) => event.registrations, { lazy: true })
 	@Field(() => Event)
-	event: Event;
+	event: Promise<Event>;
 
-	@ManyToOne(() => Participant, (participant) => participant.registrations)
+	@ManyToOne(() => Participant, (participant) => participant.registrations, {
+		lazy: true
+	})
 	@Field(() => Participant, { nullable: true })
-	participant?: Participant;
+	participant?: Promise<Participant>;
 }

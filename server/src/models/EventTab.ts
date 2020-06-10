@@ -23,6 +23,6 @@ export class EventTab extends BaseEntity {
 	@Field()
 	content: string;
 
-	@ManyToOne(() => Event, (event) => event.eventTabs)
-	event: Event;
+	@ManyToOne(() => Event, (event) => event.eventTabs, { lazy: true })
+	event: Promise<Event>;
 }

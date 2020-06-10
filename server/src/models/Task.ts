@@ -34,16 +34,21 @@ export class Task extends BaseEntity {
 	@Field()
 	details: string;
 
-	@ManyToOne(() => Department, (dept) => dept.tasksCreated)
+	@ManyToOne(() => Department, (dept) => dept.tasksCreated, { lazy: true })
 	@Field(() => Department)
-	byDept: Department;
+	byDept: Promise<Department>;
 
-	@ManyToOne(() => Department, (dept) => dept.tasksAssigned)
+	@ManyToOne(() => Department, (dept) => dept.tasksAssigned, { lazy: true })
 	@Field(() => Department)
-	forDept: Department;
+	forDept: Promise<Department>;
 
-	@Field(() => User) createdBy: User;
-	@Field(() => [User]) assignedTo: User[];
+	@ManyToOne(() => User, (user) => user.tasksCreated, { lazy: true })
+	@Field(() => User)
+	createdBy: Promise<User>;
+
+	@ManyToMany(() => User, (user) => user.tasksAssigned, { lazy: true })
+	@Field(() => [User])
+	assignedTo: Promise<User[]>;
 
 	@Column("enum", { enum: TaskStatus, default: TaskStatus.NOT_ASSIGNED })
 	@Field(() => TaskStatus)
@@ -57,18 +62,20 @@ export class Task extends BaseEntity {
 	@Field()
 	deadline: string;
 
-	@OneToMany(() => Media, (media) => media.task)
+	@OneToMany(() => Media, (media) => media.task, { lazy: true })
 	@Field(() => [Media])
-	media: Media[];
+	media: Promise<Media[]>;
 
-	@OneToMany(() => TaskActivity, (activity) => activity.task)
+	@OneToMany(() => TaskActivity, (activity) => activity.task, { lazy: true })
 	@Field(() => [TaskActivity])
-	activity: TaskActivity[];
+	activity: Promise<TaskActivity[]>;
 
-	@ManyToMany(() => Channel)
+	@ManyToMany(() => Channel, (channel) => channel.connectedTasks, {
+		lazy: true
+	})
 	@JoinTable()
 	@Field(() => [Channel])
-	channels: Channel[];
+	channels: Promise<Channel[]>;
 
 	@Column({ default: false })
 	deleted: boolean;

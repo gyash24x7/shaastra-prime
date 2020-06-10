@@ -30,12 +30,15 @@ export class InvoiceActivity extends BaseEntity {
 	@Field()
 	createdOn: string;
 
-	@ManyToOne(() => Invoice, (invoice) => invoice.activity)
-	invoice: Invoice;
+	@ManyToOne(() => Invoice, (invoice) => invoice.activity, { lazy: true })
+	invoice: Promise<Invoice>;
 
-	@ManyToOne(() => User, (user) => user.invoiceActivity)
-	createdBy: User;
+	@ManyToOne(() => User, (user) => user.invoiceActivity, { lazy: true })
+	@Field(() => User)
+	createdBy: Promise<User>;
 
-	@OneToMany(() => Message, (message) => message.invoiceActivity)
-	messages: Message[];
+	@OneToMany(() => Message, (message) => message.invoiceActivity, {
+		lazy: true
+	})
+	messages: Promise<Message[]>;
 }

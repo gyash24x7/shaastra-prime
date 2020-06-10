@@ -39,7 +39,7 @@ export class Vendor extends BaseEntity {
 	@Field()
 	bankDetails: string;
 
-	@OneToMany(() => Invoice, (invoice) => invoice.vendor)
+	@OneToMany(() => Invoice, (invoice) => invoice.vendor, { lazy: true })
 	@Field(() => [Invoice])
-	invoices: Invoice[];
+	invoices: Promise<Invoice[]>;
 }

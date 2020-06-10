@@ -28,13 +28,13 @@ export class Media extends BaseEntity {
 	@Field(() => MediaType)
 	type: MediaType;
 
-	@ManyToOne(() => User, (user) => user.media)
+	@ManyToOne(() => User, (user) => user.media, { lazy: true })
 	@Field(() => User)
 	uploadedBy: User;
 
-	@ManyToOne(() => Task, (task) => task.media)
-	task: Task;
+	@ManyToOne(() => Task, (task) => task.media, { lazy: true })
+	task: Promise<Task>;
 
-	@ManyToOne(() => Message, (msg) => msg.media)
-	message: Message;
+	@ManyToOne(() => Message, (msg) => msg.media, { lazy: true })
+	message: Promise<Message>;
 }

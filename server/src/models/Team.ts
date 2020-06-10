@@ -20,11 +20,15 @@ export class Team extends BaseEntity {
 	@Field()
 	name: string;
 
-	@OneToMany(() => TeamInvitation, (invitation) => invitation.team)
+	@OneToMany(() => TeamInvitation, (invitation) => invitation.team, {
+		lazy: true
+	})
 	@Field(() => [TeamInvitation])
-	invitations: TeamInvitation[];
+	invitations: Promise<TeamInvitation[]>;
 
-	@OneToMany(() => Registration, (registration) => registration.team)
+	@OneToMany(() => Registration, (registration) => registration.team, {
+		lazy: true
+	})
 	@Field(() => [Registration])
-	registrations: Registration[];
+	registrations: Promise<Registration[]>;
 }

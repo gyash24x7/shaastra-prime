@@ -26,17 +26,17 @@ export class TaskActivity extends BaseEntity {
 	@Field(() => TaskActivityType)
 	type: TaskActivityType;
 
-	@ManyToOne(() => Task, (task) => task.activity)
+	@ManyToOne(() => Task, (task) => task.activity, { lazy: true })
 	@Field(() => Task)
-	task: Task;
+	task: Promise<Task>;
 
 	@CreateDateColumn()
 	@Field()
 	createdOn: string;
 
-	@ManyToOne(() => User, (user) => user.taskActivity)
-	createdBy: User;
+	@ManyToOne(() => User, (user) => user.taskActivity, { lazy: true })
+	createdBy: Promise<User>;
 
-	@OneToMany(() => Message, (message) => message.taskActivity)
-	messages: Message[];
+	@OneToMany(() => Message, (message) => message.taskActivity, { lazy: true })
+	messages: Promise<Message[]>;
 }

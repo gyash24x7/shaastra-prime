@@ -23,11 +23,13 @@ export class TeamInvitation extends BaseEntity {
 	@Field(() => InviteStatus)
 	status: InviteStatus;
 
-	@ManyToOne(() => Team, (team) => team.invitations)
+	@ManyToOne(() => Team, (team) => team.invitations, { lazy: true })
 	@Field(() => Team)
-	team: Team;
+	team: Promise<Team>;
 
-	@ManyToOne(() => Participant, (participant) => participant.invitations)
+	@ManyToOne(() => Participant, (participant) => participant.invitations, {
+		lazy: true
+	})
 	@Field(() => Participant)
-	participant: Participant;
+	participant: Promise<Participant>;
 }

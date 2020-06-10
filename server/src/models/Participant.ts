@@ -56,11 +56,15 @@ export class Participant extends BaseEntity {
 	@Field()
 	state: string;
 
-	@OneToMany(() => Registration, (registration) => registration.participant)
+	@OneToMany(() => Registration, (registration) => registration.participant, {
+		lazy: true
+	})
 	@Field(() => [Registration])
-	registrations: Registration[];
+	registrations: Promise<Registration[]>;
 
-	@OneToMany(() => TeamInvitation, (invitation) => invitation.participant)
+	@OneToMany(() => TeamInvitation, (invitation) => invitation.participant, {
+		lazy: true
+	})
 	@Field(() => [TeamInvitation])
-	invitations: TeamInvitation[];
+	invitations: Promise<TeamInvitation[]>;
 }

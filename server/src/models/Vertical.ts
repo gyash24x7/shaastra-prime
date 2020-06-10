@@ -33,19 +33,19 @@ export class Vertical extends BaseEntity {
 	@Field()
 	info: string;
 
-	@ManyToOne(() => User, (user) => user.verticalsUpdated)
+	@ManyToOne(() => User, (user) => user.verticalsUpdated, { lazy: true })
 	@Field(() => User)
-	updatedBy: User;
+	updatedBy: Promise<User>;
 
 	@UpdateDateColumn()
 	@Field()
 	updatedOn: string;
 
-	@OneToOne(() => Media)
+	@OneToOne(() => Media, { lazy: true })
 	@JoinColumn()
 	@Field(() => Media, { nullable: true })
-	image: Media;
+	image: Promise<Media>;
 
-	@OneToMany(() => Event, (event) => event.vertical)
-	events: Event[];
+	@OneToMany(() => Event, (event) => event.vertical, { lazy: true })
+	events: Promise<Event[]>;
 }
