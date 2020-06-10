@@ -11,7 +11,7 @@ export class EditInvoiceResolver {
 	@Mutation(() => Boolean)
 	async editInvoice(
 		@Arg("data") data: EditInvoiceInput,
-		@Ctx() { user, prisma }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
 		const invoice = await prisma.invoice.update({
 			where: { id: data.invoiceId },

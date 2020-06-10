@@ -5,12 +5,10 @@ import { CompleteTaskResolver } from "./CompleteTask";
 import { ConnectChannelsToTaskResolver } from "./ConnectChannels";
 import { CreateTaskResolver } from "./CreateTask";
 import { DeleteTaskResolver } from "./DeleteTask";
-import { TaskFieldResolvers } from "./FieldResolvers";
 import { GetTasksResolver } from "./GetTasks";
 import { SubmitTaskResolver } from "./SubmitTask";
 
 export default [
-	TaskFieldResolvers,
 	CreateTaskResolver,
 	AssignTaskResolver,
 	AcceptTaskResolver,

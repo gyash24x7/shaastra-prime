@@ -70,5 +70,5 @@ export class Channel extends BaseEntity {
 		onDelete: "CASCADE",
 		lazy: true
 	})
-	messages: Message[];
+	messages: Promise<Message[]>;
 }

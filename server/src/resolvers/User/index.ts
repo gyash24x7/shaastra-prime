@@ -1,5 +1,4 @@
 import { CreateUserResolver } from "./CreateUser";
-import { UserFieldResolvers } from "./FieldResolvers";
 import { ForgotPasswordResolver } from "./ForgotPassword";
 import { GetPasswordOTPResolver } from "./GetPasswordOTP";
 import { GetUsersResolver } from "./GetUsers";
@@ -13,7 +12,6 @@ import { VerifyUserResolver } from "./VerifyUser";
 
 export default [
 	CreateUserResolver,
-	UserFieldResolvers,
 	ForgotPasswordResolver,
 	GetUsersResolver,
 	LoginResolver,
