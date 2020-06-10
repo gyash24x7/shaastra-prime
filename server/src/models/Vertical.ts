@@ -1,5 +1,6 @@
 import { Field, ID, Int, ObjectType } from "type-graphql";
 import {
+	BaseEntity,
 	Column,
 	Entity,
 	JoinColumn,
@@ -15,7 +16,7 @@ import { User } from "./User";
 
 @Entity("Vertical")
 @ObjectType("Vertical")
-export class Vertical {
+export class Vertical extends BaseEntity {
 	@PrimaryGeneratedColumn("uuid")
 	@Field(() => ID)
 	id: string;

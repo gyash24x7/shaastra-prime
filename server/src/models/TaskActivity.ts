@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
+	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -16,7 +17,7 @@ registerEnumType(TaskActivityType, { name: "TaskActivityType" });
 
 @Entity("TaskActivity")
 @ObjectType("TaskActivity")
-export class TaskActivity {
+export class TaskActivity extends BaseEntity {
 	@PrimaryGeneratedColumn("uuid")
 	@Field(() => ID)
 	id: string;

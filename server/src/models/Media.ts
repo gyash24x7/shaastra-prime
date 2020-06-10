@@ -1,5 +1,11 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+	BaseEntity,
+	Column,
+	Entity,
+	ManyToOne,
+	PrimaryGeneratedColumn
+} from "typeorm";
 import { MediaType } from "../utils";
 import { Message } from "./Message";
 import { Task } from "./Task";
@@ -9,7 +15,7 @@ registerEnumType(MediaType, { name: "MediaType" });
 
 @Entity("Media")
 @ObjectType("Media")
-export class Media {
+export class Media extends BaseEntity {
 	@PrimaryGeneratedColumn("uuid")
 	@Field(() => ID)
 	id: string;

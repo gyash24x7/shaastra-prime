@@ -1,4 +1,4 @@
-import { InvoiceStatus, UserRole } from "@prisma/client";
+import { InvoiceStatus, UserRole } from ".";
 
 export const getInvoiceStatus = (role: UserRole, isFinDept: boolean) => {
 	if (isFinDept) {

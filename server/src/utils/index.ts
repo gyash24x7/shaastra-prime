@@ -1,6 +1,7 @@
-import { Department, PrismaClient, User } from "@prisma/client";
+import { Department, User } from "@prisma/client";
 import { Email } from "node-mailjet";
 import { Stream } from "stream";
+import { EntityManager } from "typeorm";
 
 export enum UserRole {
 	COORD = "COORD",
@@ -12,7 +13,7 @@ export enum UserRole {
 
 export interface GraphQLContext {
 	user: (User & { department: Department }) | null | null;
-	prisma: PrismaClient;
+	db: EntityManager;
 	mailjet: Email.Client;
 }
 

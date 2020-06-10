@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
+	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -19,7 +20,7 @@ registerEnumType(ChannelType, { name: "ChannelType" });
 
 @Entity("Channel")
 @ObjectType("Channel")
-export class Channel {
+export class Channel extends BaseEntity {
 	@PrimaryGeneratedColumn("uuid")
 	@Field(() => ID)
 	id: string;

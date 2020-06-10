@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
+	BaseEntity,
 	Column,
 	Entity,
 	JoinColumn,
@@ -23,7 +24,7 @@ registerEnumType(InvoiceType, { name: "InvoiceType" });
 
 @Entity("Invoice")
 @ObjectType("Invoice")
-export class Invoice {
+export class Invoice extends BaseEntity {
 	@PrimaryGeneratedColumn("uuid")
 	@Field(() => ID)
 	id: string;

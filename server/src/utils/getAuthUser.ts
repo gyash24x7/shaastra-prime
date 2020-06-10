@@ -1,30 +1,28 @@
-import { Department, PrismaClient, User } from "@prisma/client";
 import { Request } from "express";
 import jwt from "jsonwebtoken";
 import { ExecutionParams } from "subscriptions-transport-ws";
+import { EntityManager } from "typeorm";
+import { User } from "../models/User";
 
 interface AuthParams {
 	req: Request;
 	connection?: ExecutionParams;
-	prisma: PrismaClient;
+	db: EntityManager;
 }
 
-export const getAuthUser = async ({ req, connection, prisma }: AuthParams) => {
+export const getAuthUser = async ({ req, connection, db }: AuthParams) => {
 	const header: string = !!req
 		? req.headers.authorization
 		: connection!.context.Authorization;
 
-	let user: (User & { department: Department }) | null = null;
+	let user: (User & { id: string; name: string }) | undefined;
 
 	if (!!header) {
 		const token: string = header.split(" ")[1];
 
 		if (!!token) {
 			const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-			user = await prisma.user.findOne({
-				where: { id: decoded.id },
-				include: { department: true }
-			});
+			user = await db.findOne(User, decoded.id, { relations: ["department"] });
 		}
 	}
 	return user;
