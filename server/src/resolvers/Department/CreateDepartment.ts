@@ -1,14 +1,11 @@
-import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
+import { Arg, Mutation, Resolver } from "type-graphql";
 import { Department } from "../../models/Department";
-import { GraphQLContext } from "../../utils";
 
 @Resolver()
 export class CreateDepartmentResolver {
 	@Mutation(() => Department)
-	async createDepartment(
-		@Arg("name") name: string,
-		@Ctx() { prisma }: GraphQLContext
-	) {
-		return prisma.department.create({ data: { name } });
+	async createDepartment(@Arg("name") name: string) {
+		const dept = await Department.create({ name }).save();
+		return !!dept;
 	}
 }

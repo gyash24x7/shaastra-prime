@@ -1,15 +1,12 @@
-import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { GraphQLContext } from "../../utils";
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
+import { User } from "../../models/User";
 
 @Resolver()
 export class DeleteMemberResolver {
 	@Authorized("CORE")
 	@Mutation(() => Boolean)
-	async deleteMember(
-		@Arg("userId") userId: string,
-		@Ctx() { prisma }: GraphQLContext
-	) {
-		const user = await prisma.user.delete({ where: { id: userId } });
-		return !!user;
+	async deleteMember(@Arg("userId") userId: string) {
+		const { affected } = await User.delete(userId);
+		return !!affected;
 	}
 }

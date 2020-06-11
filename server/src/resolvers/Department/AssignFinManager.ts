@@ -1,20 +1,19 @@
-import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
 import { AssignFinManagerInput } from "../../inputs/Department/AssignFinManager";
-import { GraphQLContext } from "../../utils";
+import { Department } from "../../models/Department";
+import { User } from "../../models/User";
 
 @Resolver()
 export class AssignFinManagerResolver {
 	@Authorized("CORE")
 	@Mutation(() => Boolean)
 	async assignFinManager(
-		@Arg("data") { userId, deptId }: AssignFinManagerInput,
-		@Ctx() { prisma }: GraphQLContext
+		@Arg("data") { userId, deptId }: AssignFinManagerInput
 	) {
-		const dept = await prisma.department.update({
-			where: { id: deptId },
-			data: { finManager: { connect: { id: userId } } }
+		const { affected } = await Department.update(deptId, {
+			finManager: User.findOne(userId)
 		});
 
-		return !!dept;
+		return !!affected;
 	}
 }

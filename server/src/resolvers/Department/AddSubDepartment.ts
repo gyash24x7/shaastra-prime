@@ -1,4 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
+import { Department } from "../../models/Department";
 import { GraphQLContext } from "../../utils";
 
 @Resolver()
@@ -7,15 +8,13 @@ export class AddSubDepartmentResolver {
 	@Mutation(() => Boolean)
 	async addSubDepartment(
 		@Arg("subDept") subDept: string,
-		@Ctx() { prisma, user }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		let dept = await prisma.department.update({
-			where: { id: user?.department.id },
-			data: {
-				subDepartments: { set: [...user!.department.subDepartments, subDept] }
-			}
+		let dept = await user.department;
+		const { affected } = await Department.update(dept.id, {
+			subDepartments: dept.subDepartments.concat([subDept])
 		});
 
-		return !!dept;
+		return !!affected;
 	}
 }
