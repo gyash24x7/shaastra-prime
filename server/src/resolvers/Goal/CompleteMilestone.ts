@@ -1,20 +1,16 @@
-import { MilestoneStatus } from "@prisma/client";
-import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { GraphQLContext } from "../../utils";
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
+import { Milestone } from "../../models/Milestone";
+import { MilestoneStatus } from "../../utils";
 
 @Resolver()
 export class CompleteMilestoneResolver {
 	@Authorized()
 	@Mutation(() => Boolean)
-	async completeMilestone(
-		@Arg("milestoneId") milestoneId: string,
-		@Ctx() { prisma }: GraphQLContext
-	) {
-		const milestone = await prisma.milestone.update({
-			where: { id: milestoneId },
-			data: { status: MilestoneStatus.ACHIEVED }
+	async completeMilestone(@Arg("milestoneId") milestoneId: string) {
+		const { affected } = await Milestone.update(milestoneId, {
+			status: MilestoneStatus.ACHIEVED
 		});
 
-		return !!milestone;
+		return !!affected;
 	}
 }

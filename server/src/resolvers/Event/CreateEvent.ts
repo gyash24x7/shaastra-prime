@@ -1,7 +1,10 @@
-import { MediaType } from "@prisma/client";
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { CreateEventInput } from "../../inputs/Event/CreateEvent";
-import { defaultImageUrl, GraphQLContext } from "../../utils";
+import { Event } from "../../models/Event";
+import { EventTab } from "../../models/EventTab";
+import { Media } from "../../models/Media";
+import { Vertical } from "../../models/Vertical";
+import { defaultImageUrl, GraphQLContext, MediaType } from "../../utils";
 
 @Resolver()
 export class CreateEventResolver {
@@ -9,31 +12,29 @@ export class CreateEventResolver {
 	@Mutation(() => Boolean)
 	async createEvent(
 		@Arg("data") data: CreateEventInput,
-		@Ctx() { user, prisma }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const event = await prisma.event.create({
-			data: {
-				name: data.name,
-				info: data.info,
-				paid: data.paid,
-				registrationType: data.registrationType,
-				vertical: { connect: { id: data.verticalId } },
-				updatedBy: { connect: { id: user!.id } },
-				image: {
-					create: {
-						url: data.imageUrl || defaultImageUrl,
-						type: MediaType.IMAGE,
-						uploadedBy: { connect: { id: user?.id } }
-					}
-				},
-				eventTabs: {
-					create: data.eventTabTitles.map((title, i) => ({
-						title,
-						content: data.eventTabContents[i]
-					}))
-				}
-			}
-		});
+		const eventTabs = EventTab.create(
+			data.eventTabTitles.map((title, i) => ({
+				title,
+				content: data.eventTabContents[i]
+			}))
+		);
+
+		const event = await Event.create({
+			name: data.name,
+			info: data.info,
+			paid: data.paid,
+			registrationType: data.registrationType,
+			vertical: Vertical.findOne(data.verticalId),
+			updatedBy: Promise.resolve(user),
+			image: Media.create({
+				url: data.imageUrl || defaultImageUrl,
+				type: MediaType.IMAGE,
+				uploadedBy: Promise.resolve(user)
+			}).save(),
+			eventTabs
+		}).save();
 
 		return !!event;
 	}

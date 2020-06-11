@@ -1,19 +1,12 @@
-import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { GraphQLContext } from "../../utils";
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
+import { Event } from "../../models/Event";
 
 @Resolver()
 export class ApproveEventResolver {
 	@Authorized("CORE", "HEAD")
 	@Mutation(() => Boolean)
-	async approveEvent(
-		@Arg("id") eventId: string,
-		@Ctx() { prisma }: GraphQLContext
-	) {
-		const event = await prisma.event.update({
-			where: { id: eventId },
-			data: { approved: true }
-		});
-
-		return event.approved;
+	async approveEvent(@Arg("id") eventId: string) {
+		const { affected } = await Event.update(eventId, { approved: true });
+		return !!affected;
 	}
 }

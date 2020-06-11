@@ -41,7 +41,7 @@ export class Goal extends BaseEntity {
 	@Field()
 	createdOn: string;
 
-	@OneToMany(() => Milestone, (milestone) => milestone.goal, { lazy: true })
+	@OneToMany(() => Milestone, (milestone) => milestone.goal, { cascade: true })
 	@Field(() => [Milestone])
-	milestones: Promise<Milestone[]>;
+	milestones: Milestone[];
 }

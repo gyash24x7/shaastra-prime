@@ -54,16 +54,19 @@ export class Event extends BaseEntity {
 	@Field(() => User)
 	updatedBy: Promise<User>;
 
-	@OneToOne(() => Media, { lazy: true })
+	@OneToOne(() => Media, { lazy: true, cascade: true })
 	@JoinColumn()
-	@Field(() => Media, { nullable: true })
+	@Field(() => Media)
 	image: Promise<Media>;
 
 	@ManyToOne(() => Vertical, (vertical) => vertical.events, { lazy: true })
 	@Field(() => Vertical)
 	vertical: Promise<Vertical>;
 
-	@OneToMany(() => EventTab, (eventTab) => eventTab.event, { lazy: true })
+	@OneToMany(() => EventTab, (eventTab) => eventTab.event, {
+		lazy: true,
+		cascade: true
+	})
 	@Field(() => [EventTab])
 	eventTabs: EventTab[];
 

@@ -1,7 +1,9 @@
-import moment from "moment";
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { UpdateEventInput } from "../../inputs/Event/UpdateEvent";
-import { defaultImageUrl, GraphQLContext } from "../../utils";
+import { Event } from "../../models/Event";
+import { EventTab } from "../../models/EventTab";
+import { Media } from "../../models/Media";
+import { defaultImageUrl, GraphQLContext, MediaType } from "../../utils";
 
 @Resolver()
 export class UpdateEventResolver {
@@ -9,34 +11,29 @@ export class UpdateEventResolver {
 	@Mutation(() => Boolean)
 	async updateEvent(
 		@Arg("data") data: UpdateEventInput,
-		@Ctx() { user, prisma }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const event = await prisma.event.update({
-			where: { id: data.id },
-			data: {
-				name: data.name,
-				info: data.info,
-				paid: data.paid,
-				registrationType: data.registrationType,
-				image: {
-					update: {
-						url: data.imageUrl || defaultImageUrl,
-						uploadedBy: { connect: { id: user!.id } }
-					}
-				},
-				updatedBy: { connect: { id: user!.id } },
-				updatedOn: moment().toDate(),
-				eventTabs: {
-					updateMany: data.eventTabIds.map((id, i) => ({
-						where: { id },
-						data: {
-							title: data.eventTabTitles[i],
-							content: data.eventTabContents[i]
-						}
-					}))
-				}
-			}
+		const eventTabs = EventTab.create(
+			data.eventTabTitles.map((title, i) => ({
+				title,
+				content: data.eventTabContents[i]
+			}))
+		);
+
+		const { affected } = await Event.update(data.id, {
+			name: data.name,
+			info: data.info,
+			paid: data.paid,
+			registrationType: data.registrationType,
+			eventTabs,
+			image: Media.create({
+				url: data.imageUrl || defaultImageUrl,
+				type: MediaType.IMAGE,
+				uploadedBy: Promise.resolve(user)
+			}).save(),
+			updatedBy: Promise.resolve(user)
 		});
-		return !!event;
+
+		return !!affected;
 	}
 }
