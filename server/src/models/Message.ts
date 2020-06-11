@@ -36,7 +36,7 @@ export class Message extends BaseEntity {
 
 	@ManyToOne(() => User, (user) => user.messages, { lazy: true })
 	@Field(() => User)
-	createdBy: User;
+	createdBy: Promise<User>;
 
 	@Column()
 	@Field()

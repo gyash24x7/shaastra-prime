@@ -4,7 +4,7 @@ import { DeleteChannelResolver } from "./DeleteChannel";
 import { ChannelFieldResolvers } from "./FieldResolvers";
 import { GetChannelDetailsResolver } from "./GetChannelDetails";
 import { GetChannelsResolver } from "./GetChannels";
-import { UpdateChannelResolver } from "./UpdateChannel";
+import { UpdateChannelDescriptionResolver } from "./UpdateChannelDescription";
 
 export default [
 	CreateChannelResolver,
@@ -12,6 +12,6 @@ export default [
 	ChannelFieldResolvers,
 	AddUsersToChannelResolver,
 	DeleteChannelResolver,
-	UpdateChannelResolver,
+	UpdateChannelDescriptionResolver,
 	GetChannelDetailsResolver
 ];

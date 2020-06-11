@@ -1,14 +1,12 @@
-import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { GraphQLContext } from "../../utils";
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
+import { Channel } from "../../models/Channel";
+
 @Resolver()
 export class DeleteChannelResolver {
 	@Authorized()
 	@Mutation(() => Boolean)
-	async deleteChannel(
-		@Arg("channelId") channelId: string,
-		@Ctx() { prisma }: GraphQLContext
-	) {
-		const channel = await prisma.channel.delete({ where: { id: channelId } });
-		return !!channel;
+	async deleteChannel(@Arg("channelId") channelId: string) {
+		const { affected } = await Channel.delete(channelId);
+		return !!affected;
 	}
 }
