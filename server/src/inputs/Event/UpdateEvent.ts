@@ -1,4 +1,4 @@
-import { Field, ID, InputType, registerEnumType } from "type-graphql";
+import { Field, InputType, registerEnumType } from "type-graphql";
 import { RegistrationType } from "../../utils";
 
 registerEnumType(RegistrationType, { name: "RegistrationType" });
@@ -10,9 +10,7 @@ export class UpdateEventInput {
 	@Field() info: string;
 	@Field({ nullable: true }) imageUrl?: string;
 	@Field() paid: boolean;
-	@Field(() => ID) verticalId: string;
 	@Field(() => RegistrationType) registrationType: RegistrationType;
 	@Field(() => [String]) eventTabTitles: string[];
 	@Field(() => [String]) eventTabContents: string[];
-	@Field(() => [String]) eventTabIds: string[];
 }

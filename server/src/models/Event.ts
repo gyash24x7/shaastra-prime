@@ -11,7 +11,6 @@ import {
 	UpdateDateColumn
 } from "typeorm";
 import { RegistrationType } from "../utils";
-import { EventTab } from "./EventTab";
 import { Media } from "./Media";
 import { Registration } from "./Registration";
 import { User } from "./User";
@@ -54,7 +53,7 @@ export class Event extends BaseEntity {
 	@Field(() => User)
 	updatedBy: Promise<User>;
 
-	@OneToOne(() => Media, { lazy: true, cascade: true })
+	@OneToOne(() => Media, { lazy: true })
 	@JoinColumn()
 	@Field(() => Media)
 	image: Promise<Media>;
@@ -63,12 +62,10 @@ export class Event extends BaseEntity {
 	@Field(() => Vertical)
 	vertical: Promise<Vertical>;
 
-	@OneToMany(() => EventTab, (eventTab) => eventTab.event, {
-		lazy: true,
-		cascade: true
-	})
-	@Field(() => [EventTab])
-	eventTabs: EventTab[];
+	//stringified JSON
+	@Column()
+	@Field(() => String)
+	eventTabs: string;
 
 	@Column("enum", { enum: RegistrationType })
 	@Field(() => RegistrationType)

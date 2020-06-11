@@ -1,7 +1,6 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { UpdateEventInput } from "../../inputs/Event/UpdateEvent";
 import { Event } from "../../models/Event";
-import { EventTab } from "../../models/EventTab";
 import { Media } from "../../models/Media";
 import { defaultImageUrl, GraphQLContext, MediaType } from "../../utils";
 
@@ -13,25 +12,28 @@ export class UpdateEventResolver {
 		@Arg("data") data: UpdateEventInput,
 		@Ctx() { user }: GraphQLContext
 	) {
-		const eventTabs = EventTab.create(
-			data.eventTabTitles.map((title, i) => ({
-				title,
-				content: data.eventTabContents[i]
-			}))
-		);
+		let media = await Media.findOne();
+		if (data.imageUrl) {
+			media = await Media.create({
+				url: data.imageUrl || defaultImageUrl,
+				type: MediaType.IMAGE,
+				uploadedBy: Promise.resolve(user)
+			}).save();
+		}
 
 		const { affected } = await Event.update(data.id, {
 			name: data.name,
 			info: data.info,
 			paid: data.paid,
 			registrationType: data.registrationType,
-			eventTabs,
-			image: Media.create({
-				url: data.imageUrl || defaultImageUrl,
-				type: MediaType.IMAGE,
-				uploadedBy: Promise.resolve(user)
-			}).save(),
-			updatedBy: Promise.resolve(user)
+			image: Promise.resolve(media),
+			updatedBy: Promise.resolve(user),
+			eventTabs: JSON.stringify(
+				data.eventTabTitles.map((title, i) => ({
+					title,
+					content: data.eventTabContents[i]
+				}))
+			)
 		});
 
 		return !!affected;

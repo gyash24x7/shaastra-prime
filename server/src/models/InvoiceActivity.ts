@@ -30,6 +30,10 @@ export class InvoiceActivity extends BaseEntity {
 	@Field()
 	createdOn: string;
 
+	@Column()
+	@Field()
+	description: string;
+
 	@ManyToOne(() => Invoice, (invoice) => invoice.activity, { lazy: true })
 	invoice: Promise<Invoice>;
 
