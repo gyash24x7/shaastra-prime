@@ -1,7 +1,10 @@
-import { InvoiceActivityType, MessageType } from "@prisma/client";
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { ConnectChannelsToInvoiceInput } from "../../inputs/Invoice/ConnectChannels";
-import { GraphQLContext } from "../../utils";
+import { Channel } from "../../models/Channel";
+import { Invoice } from "../../models/Invoice";
+import { InvoiceActivity } from "../../models/InvoiceActivity";
+import { Message } from "../../models/Message";
+import { GraphQLContext, InvoiceActivityType, MessageType } from "../../utils";
 
 @Resolver()
 export class ConnectChannelsToInvoiceResolver {
@@ -9,50 +12,37 @@ export class ConnectChannelsToInvoiceResolver {
 	@Mutation(() => Boolean)
 	async connectChannelsToInvoice(
 		@Arg("data") { channelIds, invoiceId }: ConnectChannelsToInvoiceInput,
-		@Ctx() { user, prisma }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const channels = await prisma.channel.findMany({
-			where: { id: { in: channelIds } }
+		const channels = await Channel.findByIds(channelIds);
+
+		const { affected } = await Invoice.update(invoiceId, {
+			channels: Channel.findByIds([...channelIds, channels.map(({ id }) => id)])
 		});
 
-		const invoice = await prisma.invoice.update({
-			where: { id: invoiceId },
-			data: {
-				channels: { connect: channelIds.map((id) => ({ id })) },
-				activity: {
-					create: {
-						description: `
-              ${user?.name} connected the following channels to this invoice:
-              ${channels?.map(({ name }) => name + ", ")}
-            `,
-						type: InvoiceActivityType.CONNECT_CHANNEL,
-						by: { connect: { id: user?.id } }
-					}
-				}
-			},
-			include: { channels: { select: { id: true } } }
-		});
+		const activity = await InvoiceActivity.create({
+			description:
+				`${user.name} ` +
+				"connected the following channels to this invoice: " +
+				`${channels?.map(({ name }) => name + ", ")}`,
+			type: InvoiceActivityType.CONNECT_CHANNEL,
+			createdBy: Promise.resolve(user)
+		}).save();
 
 		Promise.all(
-			invoice.channels.map((channel) =>
-				prisma.message.create({
-					data: {
-						channel: { connect: { id: channel.id } },
-						content: `
-							<p><strong>[INVOICE UPDATE: ${invoice.title}]</strong></p>
-              <p>
-                ${user?.name} connected the following channels to this invoice:
-                ${channels?.map(({ name }) => name + ", ")}
-              </p>`,
-						type: MessageType.INVOICE_ACTIVITY,
-						createdBy: { connect: { id: user?.id } }
-					}
-				})
+			channels.map((channel) =>
+				Message.create({
+					channel: Promise.resolve(channel),
+					content: "",
+					type: MessageType.INVOICE_ACTIVITY,
+					createdBy: Promise.resolve(user),
+					invoiceActivity: Promise.resolve(activity)
+				}).save()
 			)
 		).then(() => {
 			console.log("Invoice Update Messages Sent!");
 		});
 
-		return !!invoice;
+		return !!affected;
 	}
 }

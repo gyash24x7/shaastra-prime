@@ -1,8 +1,18 @@
-import { InvoiceActivityType, MessageType, UserRole } from "@prisma/client";
-import moment from "moment";
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { SubmitInvoiceInput } from "../../inputs/Invoice/SubmitInvoice";
-import { GraphQLContext } from "../../utils";
+import { Channel } from "../../models/Channel";
+import { Invoice } from "../../models/Invoice";
+import { InvoiceActivity } from "../../models/InvoiceActivity";
+import { Media } from "../../models/Media";
+import { Message } from "../../models/Message";
+import { Vendor } from "../../models/Vendor";
+import {
+	GraphQLContext,
+	InvoiceActivityType,
+	MediaType,
+	MessageType,
+	UserRole
+} from "../../utils";
 import { getInvoiceStatus } from "../../utils/getInvoiceStatus";
 
 @Resolver()
@@ -11,55 +21,52 @@ export class SubmitInvoiceResolver {
 	@Mutation(() => Boolean)
 	async submitInvoice(
 		@Arg("data") data: SubmitInvoiceInput,
-		@Ctx() { user, prisma }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const invoice = await prisma.invoice.create({
-			data: {
-				title: data.title,
-				amount: data.amount,
-				type: data.type,
-				purpose: data.purpose,
-				invoiceNumber: data.invoiceNumber,
-				date: moment(parseInt(data.date)).toDate(),
-				media: {
-					create: {
-						url: data.fileUrl,
-						type: data.mediaType,
-						uploadedBy: { connect: { id: user?.id } }
-					}
-				},
-				status: getInvoiceStatus(
-					user!.role,
-					user!.role !== UserRole.COORD && user!.department.name === "FINANCE"
-				),
-				vendor: { connect: { id: data.vendorId } },
-				byDept: { connect: { id: user?.department.id } },
-				uploadedBy: { connect: { id: user?.id } },
-				activity: {
-					create: {
-						type: InvoiceActivityType.UPLOADED,
-						description: `${user?.name} uploaded the invoice.`,
-						by: { connect: { id: user?.id } }
-					}
-				},
-				channels: { connect: data.channelIds.map((id) => ({ id })) }
-			},
-			include: { channels: { select: { id: true } } }
-		});
+		const dept = await user.department;
+
+		const media = await Media.create({
+			url: data.fileUrl,
+			type: MediaType.IMAGE,
+			uploadedBy: Promise.resolve(user)
+		}).save();
+
+		const invoice = await Invoice.create({
+			title: data.title,
+			amount: data.amount,
+			type: data.type,
+			purpose: data.purpose,
+			invoiceNumber: data.invoiceNumber,
+			date: data.date,
+			media: Promise.resolve(media),
+			status: getInvoiceStatus(
+				user!.role,
+				user!.role !== UserRole.COORD && dept.name === "FINANCE"
+			),
+			vendor: Vendor.findOne(data.vendorId),
+			byDept: user.department,
+			uploadedBy: Promise.resolve(user),
+			channels: Channel.findByIds(data.channelIds)
+		}).save();
+
+		const activity = await InvoiceActivity.create({
+			description: `${user?.name} uploaded the invoice.`,
+			type: InvoiceActivityType.UPLOADED,
+			createdBy: Promise.resolve(user),
+			invoice: Promise.resolve(invoice)
+		}).save();
+
+		const messageChannels = await invoice.channels;
 
 		Promise.all(
-			invoice.channels.map((channel) =>
-				prisma.message.create({
-					data: {
-						channel: { connect: { id: channel.id } },
-						content: `
-							<p><strong>[INVOICE UPDATE: ${invoice.title}]</strong></p>
-							<p>${user?.name} uploaded an invoice.</p>
-						`,
-						type: MessageType.INVOICE_ACTIVITY,
-						createdBy: { connect: { id: user?.id } }
-					}
-				})
+			messageChannels.map((channel) =>
+				Message.create({
+					channel: Promise.resolve(channel),
+					content: "",
+					type: MessageType.INVOICE_ACTIVITY,
+					createdBy: Promise.resolve(user),
+					invoiceActivity: Promise.resolve(activity)
+				}).save()
 			)
 		).then(() => {
 			console.log("Invoice Update Messages Sent!");

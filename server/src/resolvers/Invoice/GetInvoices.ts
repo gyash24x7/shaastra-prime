@@ -1,7 +1,7 @@
-import { InvoiceStatus } from "@prisma/client";
 import { Arg, Authorized, Ctx, Query, Resolver } from "type-graphql";
 import { Invoice } from "../../models/Invoice";
-import { APPROVAL_STAGES, GraphQLContext } from "../../utils";
+import { GraphQLContext, InvoiceStatus } from "../../utils";
+import { getInvoiceStatus } from "../../utils/getInvoiceStatus";
 
 @Resolver()
 export class GetInvoicesResolver {
@@ -9,38 +9,31 @@ export class GetInvoicesResolver {
 	@Query(() => [Invoice])
 	async getInvoices(
 		@Arg("type") type: string,
-		@Ctx() { user, prisma }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
+		const userDept = await user.department;
+
 		switch (type) {
 			case "REJECTED":
-				return prisma.invoice.findMany({
-					where: {
-						uploadedById: user!.id,
-						status: InvoiceStatus.REJECTED
-					}
-				});
-			case "PENDING":
-				const currentStageIndex = APPROVAL_STAGES.findIndex((stage) => {
-					if (user?.department.name === "FINANCE") {
-						if (user.role === "HEAD") return stage === "FIN_MAANGER";
-						if (user.role === "CORE") return stage === "FIN_CORE";
-					}
-					return stage === user!.role;
-				});
+				return (await user.invoicesSubmitted).filter(
+					(invoice) => invoice.status === InvoiceStatus.REJECTED
+				);
 
-				return prisma.invoice.findMany({
-					where: {
-						byDeptId: user!.department.id,
-						status: APPROVAL_STAGES[currentStageIndex - 1] as InvoiceStatus
-					}
-				});
+			case "PENDING":
+				return (await userDept.invoicesSubmitted).filter(
+					(invoice) =>
+						invoice.status ===
+						getInvoiceStatus(
+							user.role,
+							user.role !== "COORD" && userDept.name === "FINANCE",
+							true
+						)
+				);
+
 			default:
-				return prisma.invoice.findMany({
-					where: {
-						uploadedById: user!.id,
-						status: { not: InvoiceStatus.REJECTED }
-					}
-				});
+				return (await user.invoicesSubmitted).filter(
+					(invoice) => invoice.status !== InvoiceStatus.REJECTED
+				);
 		}
 	}
 }

@@ -1,11 +1,14 @@
+import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
+import { RejectInvoiceInput } from "../../inputs/Invoice/RejectInvoice";
+import { Invoice } from "../../models/Invoice";
+import { InvoiceActivity } from "../../models/InvoiceActivity";
+import { Message } from "../../models/Message";
 import {
+	GraphQLContext,
 	InvoiceActivityType,
 	InvoiceStatus,
 	MessageType
-} from "@prisma/client";
-import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { RejectInvoiceInput } from "../../inputs/Invoice/RejectInvoice";
-import { GraphQLContext } from "../../utils";
+} from "../../utils";
 
 @Resolver()
 export class RejectInvoiceResolver {
@@ -13,37 +16,30 @@ export class RejectInvoiceResolver {
 	@Mutation(() => Boolean)
 	async rejectInvoice(
 		@Arg("data") { reason, invoiceId }: RejectInvoiceInput,
-		@Ctx() { user, prisma }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const invoice = await prisma.invoice.update({
-			where: { id: invoiceId },
-			data: {
-				status: InvoiceStatus.REJECTED,
-				activity: {
-					create: {
-						by: { connect: { id: user!.id } },
-						description: `${user?.name} rejected the invoice. ${reason}`,
-						type: InvoiceActivityType.REJECTED
-					}
-				}
-			},
-			include: { channels: { select: { id: true } } }
+		const { affected } = await Invoice.update(invoiceId, {
+			status: InvoiceStatus.REJECTED
 		});
 
+		const activity = await InvoiceActivity.create({
+			createdBy: Promise.resolve(user),
+			description: `${user?.name} rejected the invoice. ${reason}`,
+			type: InvoiceActivityType.REJECTED
+		}).save();
+
+		const invoice = await Invoice.findOne(invoiceId);
+		const channels = await invoice!.channels;
+
 		Promise.all(
-			invoice.channels.map((channel) =>
-				prisma.message.create({
-					data: {
-						channel: { connect: { id: channel.id } },
-						content: `
-							<p><strong>[INVOICE UPDATE: ${invoice.title}]</strong></p>
-              <p>${user?.name} rejected the invoice.</p>
-              <p>${reason}</p>
-						`,
-						type: MessageType.INVOICE_ACTIVITY,
-						createdBy: { connect: { id: user?.id } }
-					}
-				})
+			channels.map((channel) =>
+				Message.create({
+					channel: Promise.resolve(channel),
+					content: "",
+					invoiceActivity: Promise.resolve(activity),
+					type: MessageType.INVOICE_ACTIVITY,
+					createdBy: Promise.resolve(user)
+				}).save()
 			)
 		).then(() => {
 			console.log("Invoice Update Messages Sent!");

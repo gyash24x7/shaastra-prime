@@ -57,14 +57,13 @@ export class Invoice extends BaseEntity {
 	@Field(() => InvoiceType)
 	type: InvoiceType;
 
-	@OneToOne(() => Media, { eager: true, cascade: true })
+	@OneToOne(() => Media, { lazy: true })
 	@JoinColumn()
 	@Field(() => Media)
-	media: Media;
+	media: Promise<Media>;
 
 	@OneToMany(() => InvoiceActivity, (activity) => activity.invoice, {
-		lazy: true,
-		cascade: true
+		lazy: true
 	})
 	@Field(() => [InvoiceActivity])
 	activity: Promise<InvoiceActivity[]>;

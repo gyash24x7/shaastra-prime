@@ -1,15 +1,12 @@
-import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { GraphQLContext } from "../../utils";
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
+import { Invoice } from "../../models/Invoice";
 
 @Resolver()
 export class DeleteInvoiceResolver {
 	@Authorized()
 	@Mutation(() => Boolean)
-	async deleteInvoice(
-		@Arg("invoiceId") invoiceId: string,
-		@Ctx() { prisma }: GraphQLContext
-	) {
-		const invoice = await prisma.invoice.delete({ where: { id: invoiceId } });
-		return !!invoice;
+	async deleteInvoice(@Arg("invoiceId") invoiceId: string) {
+		const { affected } = await Invoice.delete(invoiceId);
+		return !!affected;
 	}
 }
