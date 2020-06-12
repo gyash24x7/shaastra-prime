@@ -1,6 +1,8 @@
-import { MessageType, TaskActivityType } from "@prisma/client";
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { GraphQLContext } from "../../utils";
+import { Message } from "../../models/Message";
+import { Task } from "../../models/Task";
+import { TaskActivity } from "../../models/TaskActivity";
+import { GraphQLContext, MessageType, TaskActivityType } from "../../utils";
 
 @Resolver()
 export class DeleteTaskResolver {
@@ -8,39 +10,32 @@ export class DeleteTaskResolver {
 	@Mutation(() => Boolean)
 	async deleteTask(
 		@Arg("taskId") taskId: string,
-		@Ctx() { user, prisma }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const task = await prisma.task.update({
-			where: { id: taskId },
-			data: {
-				deleted: true,
-				activity: {
-					create: {
-						by: { connect: { id: user?.id } },
-						description: `${user?.name} deleted the task.`,
-						type: TaskActivityType.DELETED
-					}
-				}
-			},
-			include: {
-				channels: { select: { id: true } },
-				activity: { select: { id: true } }
-			}
-		});
+		let task = await Task.findOne(taskId);
+
+		const { affected } = await Task.update(taskId, { deleted: true });
+
+		if (!affected || !task) return false;
+
+		const channels = await task.channels;
+
+		const activity = await TaskActivity.create({
+			createdBy: Promise.resolve(user),
+			description: `${user?.name} deleted the task.`,
+			type: TaskActivityType.DELETED,
+			task: Promise.resolve(task)
+		}).save();
 
 		Promise.all(
-			task.channels.map((channel) =>
-				prisma.message.create({
-					data: {
-						channel: { connect: { id: channel.id } },
-						content: "",
-						type: MessageType.TASK_ACTIVITY,
-						createdBy: { connect: { id: user?.id } },
-						taskActivity: {
-							connect: { id: task.activity.reverse().shift()?.id }
-						}
-					}
-				})
+			channels.map((channel) =>
+				Message.create({
+					channel: Promise.resolve(channel),
+					content: "",
+					type: MessageType.TASK_ACTIVITY,
+					createdBy: Promise.resolve(user),
+					taskActivity: Promise.resolve(activity)
+				}).save()
 			)
 		).then(() => {
 			console.log("Task Activity Messages Sent!");

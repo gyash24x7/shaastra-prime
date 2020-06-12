@@ -1,7 +1,10 @@
-import { MessageType, TaskActivityType } from "@prisma/client";
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { ConnectChannelsToTaskInput } from "../../inputs/Task/ConnectChannels";
-import { GraphQLContext } from "../../utils";
+import { Channel } from "../../models/Channel";
+import { Message } from "../../models/Message";
+import { Task } from "../../models/Task";
+import { TaskActivity } from "../../models/TaskActivity";
+import { GraphQLContext, MessageType, TaskActivityType } from "../../utils";
 
 @Resolver()
 export class ConnectChannelsToTaskResolver {
@@ -9,51 +12,42 @@ export class ConnectChannelsToTaskResolver {
 	@Mutation(() => Boolean)
 	async connectChannelsToTask(
 		@Arg("data") { channelIds, taskId }: ConnectChannelsToTaskInput,
-		@Ctx() { user, prisma }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const channels = await prisma.channel.findMany({
-			where: { id: { in: channelIds } }
+		const newChannels = await Channel.findByIds(channelIds);
+		let task = await Task.findOne(taskId);
+		let channels = await task?.channels;
+
+		if (!task || !channels) return false;
+
+		const { affected } = await Task.update(taskId, {
+			channels: Promise.resolve([...channels, ...newChannels])
 		});
 
-		const task = await prisma.task.update({
-			where: { id: taskId },
-			data: {
-				channels: { connect: channelIds.map((id) => ({ id })) },
-				activity: {
-					create: {
-						description:
-							`${user?.name} ` +
-							"connected the following channels to this task: " +
-							`${channels?.map(({ name }) => name + ", ")}`,
-						type: TaskActivityType.CONNECT_CHANNEL,
-						by: { connect: { id: user?.id } }
-					}
-				}
-			},
-			include: {
-				channels: { select: { id: true } },
-				activity: { select: { id: true } }
-			}
-		});
+		const activity = await TaskActivity.create({
+			description:
+				`${user?.name} ` +
+				"connected the following channels to this task: " +
+				`${channels?.map(({ name }) => name + ", ")}`,
+			type: TaskActivityType.CONNECT_CHANNEL,
+			createdBy: Promise.resolve(user),
+			task: Promise.resolve(task)
+		}).save();
 
 		Promise.all(
-			task.channels.map((channel) =>
-				prisma.message.create({
-					data: {
-						channel: { connect: { id: channel.id } },
-						content: "",
-						type: MessageType.TASK_ACTIVITY,
-						createdBy: { connect: { id: user?.id } },
-						taskActivity: {
-							connect: { id: task.activity.reverse().shift()?.id }
-						}
-					}
-				})
+			channels.map((channel) =>
+				Message.create({
+					channel: Promise.resolve(channel),
+					content: "",
+					type: MessageType.TASK_ACTIVITY,
+					createdBy: Promise.resolve(user),
+					taskActivity: Promise.resolve(activity)
+				}).save()
 			)
 		).then(() => {
 			console.log("Task Activity Messages Sent!");
 		});
 
-		return !!task;
+		return !!affected;
 	}
 }

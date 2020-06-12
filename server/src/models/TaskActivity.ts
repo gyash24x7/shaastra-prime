@@ -26,6 +26,10 @@ export class TaskActivity extends BaseEntity {
 	@Field(() => TaskActivityType)
 	type: TaskActivityType;
 
+	@Column()
+	@Field()
+	description: string;
+
 	@ManyToOne(() => Task, (task) => task.activity, { lazy: true })
 	@Field(() => Task)
 	task: Promise<Task>;

@@ -87,7 +87,7 @@ export enum ChannelType {
 }
 
 export enum TaskActivityType {
-	NOT_ASSIGNED = "NOT_ASSIGNED",
+	CREATED = "CREATED",
 	ASSIGNED = "ASSIGNED",
 	IN_PROGRESS = "IN_PROGRESS",
 	SUBMITTED = "SUBMITTED",

@@ -6,42 +6,31 @@ import { GraphQLContext } from "../../utils";
 export class GetTasksResolver {
 	@Authorized()
 	@Query(() => [Task])
-	async getTasks(@Ctx() { user, prisma }: GraphQLContext) {
+	async getTasks(@Ctx() { user }: GraphQLContext) {
 		switch (user?.role) {
 			case "COCAD":
 			case "COCAS":
-				const allTasks = await prisma.task.findMany({
-					orderBy: { createdAt: "desc" },
+				const allTasks = await Task.find({
+					order: { createdOn: "DESC" },
 					where: { deleted: false }
 				});
 				return allTasks;
 
 			case "CORE":
-				const coreTasks = await prisma.department
-					.findOne({ where: { id: user.deptId } })
-					.tasksAssigned({
-						orderBy: { createdAt: "desc" },
-						where: { deleted: false }
-					});
-				return coreTasks;
+				const userDept = await user.department;
+				const coreTasks = await userDept.tasksAssigned;
+				return coreTasks.reverse().filter((task) => task.deleted === false);
 
 			default:
-				const coordTasks = await prisma.user
-					.findOne({ where: { id: user?.id } })
-					.tasksAssigned({
-						orderBy: { createdAt: "desc" },
-						where: { deleted: false }
-					});
-				return coordTasks;
+				const coordTasks = await user.tasksAssigned;
+				return coordTasks.reverse().filter((task) => task.deleted === false);
 		}
 	}
 
 	@Authorized()
 	@Query(() => Task)
-	async getTask(
-		@Arg("taskId") taskId: string,
-		@Ctx() { prisma }: GraphQLContext
-	) {
-		return prisma.task.findOne({ where: { id: taskId } });
+	async getTask(@Arg("taskId") taskId: string) {
+		const task = await Task.findOne(taskId);
+		return task;
 	}
 }
