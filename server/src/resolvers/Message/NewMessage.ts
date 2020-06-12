@@ -6,10 +6,9 @@ export class NewMessageResolver {
 	@Authorized()
 	@Subscription(() => Message, { topics: ({ args }) => args.channelId })
 	async newMessage(
-		@Arg("channelId") channelId: string,
+		@Arg("channelId") _channelId: string,
 		@Root() message: Message
 	) {
-		console.log(channelId);
 		return message;
 	}
 }

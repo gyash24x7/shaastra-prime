@@ -1,5 +1,6 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { CreateUpdateInput } from "../../inputs/Update/CreateUpdate";
+import { Update } from "../../models/Update";
 import { GraphQLContext } from "../../utils";
 
 @Resolver()
@@ -8,17 +9,15 @@ export class CreateUpdateResolver {
 	@Mutation(() => Boolean)
 	async createUpdate(
 		@Arg("data") { brief, subject, content }: CreateUpdateInput,
-		@Ctx() { user, prisma }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const update = await prisma.update.create({
-			data: {
-				brief,
-				subject,
-				content,
-				postedBy: { connect: { id: user?.id } },
-				byDept: { connect: { id: user?.deptId } }
-			}
-		});
+		const update = await Update.create({
+			brief,
+			subject,
+			content,
+			postedBy: Promise.resolve(user),
+			byDept: user.department
+		}).save();
 
 		return !!update;
 	}

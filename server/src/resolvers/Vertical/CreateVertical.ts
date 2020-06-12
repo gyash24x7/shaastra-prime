@@ -1,30 +1,33 @@
-import { MediaType } from "@prisma/client";
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { CreateVerticalInput } from "../../inputs/Vertical/CreateVertical";
+import { Media } from "../../models/Media";
 import { Vertical } from "../../models/Vertical";
-import { defaultImageUrl, GraphQLContext } from "../../utils";
+import { GraphQLContext, MediaType } from "../../utils";
 
 @Resolver()
 export class CreateVerticalResolver {
 	@Authorized("CORE", "HEAD")
-	@Mutation(() => Vertical)
+	@Mutation(() => Boolean)
 	async addVertical(
 		@Arg("data") { name, info, imageUrl }: CreateVerticalInput,
-		@Ctx() { user, prisma }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		return await prisma.vertical.create({
-			data: {
-				name,
-				info,
-				image: {
-					create: {
-						url: imageUrl || defaultImageUrl,
-						uploadedBy: { connect: { id: user?.id } },
-						type: MediaType.IMAGE
-					}
-				},
-				updatedBy: { connect: { id: user!.id } }
-			}
-		});
+		let image = Media.findOne();
+		if (imageUrl) {
+			image = Media.create({
+				url: imageUrl,
+				uploadedBy: Promise.resolve(user),
+				type: MediaType.IMAGE
+			}).save();
+		}
+
+		const vertical = await Vertical.create({
+			name,
+			info,
+			image,
+			updatedBy: Promise.resolve(user)
+		}).save();
+
+		return !!vertical;
 	}
 }

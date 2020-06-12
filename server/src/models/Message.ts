@@ -46,7 +46,7 @@ export class Message extends BaseEntity {
 
 	@OneToMany(() => Media, (media) => media.message, { lazy: true })
 	@Field(() => [Media])
-	media: Media[];
+	media: Promise<Media[]>;
 
 	@Column("enum", { enum: MessageType })
 	@Field(() => MessageType)

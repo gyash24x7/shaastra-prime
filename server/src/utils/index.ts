@@ -1,6 +1,6 @@
-import { Department, User } from "@prisma/client";
 import { Email } from "node-mailjet";
 import { Stream } from "stream";
+import { User } from "../models/User";
 
 export enum UserRole {
 	COORD = "COORD",
@@ -11,7 +11,7 @@ export enum UserRole {
 }
 
 export interface GraphQLContext {
-	user: (User & { department: Department }) | null | null;
+	user: User;
 	mailjet: Email.Client;
 }
 
@@ -61,7 +61,8 @@ export enum InvoiceActivityType {
 	UPLOADED = "UPLOADED",
 	EDITED = "EDITED",
 	APPROVED = "APPROVED",
-	REJECTED = "REJECTED"
+	REJECTED = "REJECTED",
+	CONNECT_CHANNEL = "CONNECT_CHANNEL"
 }
 
 export enum InvoiceType {
@@ -76,7 +77,8 @@ export enum InvoiceStatus {
 	CORE = "CORE",
 	FIN_MANAGER = "FIN_MANAGER",
 	FIN_CORE = "FIN_CORE",
-	COCAD = "COCAD"
+	COCAD = "COCAD",
+	REJECTED = "REJECTED"
 }
 
 export enum ChannelType {

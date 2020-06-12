@@ -1,6 +1,6 @@
-import moment from "moment";
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
 import { UpdateVerticalInput } from "../../inputs/Vertical/UpdateVertical";
+import { Vertical } from "../../models/Vertical";
 import { GraphQLContext } from "../../utils";
 
 @Resolver()
@@ -9,17 +9,13 @@ export class UpdateVerticalResolver {
 	@Mutation(() => Boolean)
 	async updateVertical(
 		@Arg("data") { name, info, verticalId }: UpdateVerticalInput,
-		@Ctx() { user, prisma }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const vertical = await prisma.vertical.update({
-			where: { id: verticalId },
-			data: {
-				name,
-				info,
-				updatedBy: { connect: { id: user!.id } },
-				updatedOn: moment().toDate()
-			}
+		const { affected } = await Vertical.update(verticalId, {
+			name,
+			info,
+			updatedBy: Promise.resolve(user)
 		});
-		return !!vertical;
+		return !!affected;
 	}
 }

@@ -1,16 +1,13 @@
-import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
 import { CreateVendorInput } from "../../inputs/Vendor/CreateVendor";
-import { GraphQLContext } from "../../utils";
+import { Vendor } from "../../models/Vendor";
 
 @Resolver()
 export class CreateVendorResolver {
 	@Authorized()
 	@Mutation(() => Boolean)
-	async createVendor(
-		@Arg("data") data: CreateVendorInput,
-		@Ctx() { prisma }: GraphQLContext
-	) {
-		const vendor = await prisma.vendor.create({ data });
+	async createVendor(@Arg("data") data: CreateVendorInput) {
+		const vendor = await Vendor.create({ ...data }).save();
 		return !!vendor;
 	}
 }

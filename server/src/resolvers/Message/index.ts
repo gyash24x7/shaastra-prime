@@ -1,13 +1,17 @@
-import { CreateMessageResolver } from "./CreateMessage";
+import { CreateMediaMessageResolver } from "./CreateMediaMessage";
+import { CreateTextMessageResolver } from "./CreateTextMessage";
 import { MessageFieldResolvers } from "./FieldResolvers";
 import { GetMessagesResolver } from "./GetMessages";
 import { NewMessageResolver } from "./NewMessage";
-import { UpdateMessageResolver } from "./UpdateMessage";
+import { ToggleMessageLikeResolver } from "./ToggleMessageLike";
+import { ToggleMessageStarResolver } from "./ToggleMessageStar";
 
 export default [
 	MessageFieldResolvers,
-	CreateMessageResolver,
-	UpdateMessageResolver,
+	CreateTextMessageResolver,
+	CreateMediaMessageResolver,
+	ToggleMessageStarResolver,
+	ToggleMessageLikeResolver,
 	GetMessagesResolver,
 	NewMessageResolver
 ];

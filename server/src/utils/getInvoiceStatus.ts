@@ -1,17 +1,18 @@
 import { InvoiceStatus, UserRole } from ".";
 
-export const getInvoiceStatus = (role: UserRole, isFinDept: boolean) => {
+export const getInvoiceStatus = (
+	role: UserRole,
+	isFinDept: boolean,
+	prev?: boolean
+) => {
 	if (isFinDept) {
-		if (role === UserRole.CORE) return InvoiceStatus.FIN_CORE;
-		else return InvoiceStatus.FIN_MANAGER;
+		if (role === UserRole.CORE)
+			return prev ? InvoiceStatus.FIN_MANAGER : InvoiceStatus.FIN_CORE;
+		else return prev ? InvoiceStatus.CORE : InvoiceStatus.FIN_MANAGER;
 	} else {
 		switch (role) {
-			case UserRole.COCAD:
-				return InvoiceStatus.COCAD;
-			case UserRole.HEAD:
-				return InvoiceStatus.HEAD;
 			case UserRole.CORE:
-				return InvoiceStatus.CORE;
+				return prev ? InvoiceStatus.COORD : InvoiceStatus.CORE;
 			default:
 				return InvoiceStatus.COORD;
 		}

@@ -1,15 +1,12 @@
-import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { GraphQLContext } from "../../utils";
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
+import { Vendor } from "../../models/Vendor";
 
 @Resolver()
 export class DeleteVendorResolver {
 	@Authorized("HEAD", "CORE")
 	@Mutation(() => Boolean)
-	async deleteVendor(
-		@Arg("vendorId") id: string,
-		@Ctx() { prisma }: GraphQLContext
-	) {
-		const vendor = await prisma.vendor.delete({ where: { id } });
-		return !!vendor;
+	async deleteVendor(@Arg("vendorId") id: string) {
+		const { affected } = await Vendor.delete(id);
+		return !!affected;
 	}
 }
