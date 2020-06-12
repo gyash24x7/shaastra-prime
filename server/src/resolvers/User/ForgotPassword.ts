@@ -1,20 +1,20 @@
 import bcrypt from "bcryptjs";
-import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
+import { Arg, Mutation, Resolver } from "type-graphql";
 import { ForgotPasswordInput } from "../../inputs/User/ForgotPassword";
-import { GraphQLContext } from "../../utils";
+import { User } from "../../models/User";
 
 @Resolver()
 export class ForgotPasswordResolver {
 	@Mutation(() => Boolean)
 	async forgotPassword(
-		@Arg("data") { email, newPassword }: ForgotPasswordInput,
-		@Ctx() { prisma }: GraphQLContext
+		@Arg("data") { email, newPassword }: ForgotPasswordInput
 	) {
 		const password = await bcrypt.hash(newPassword, 13);
-		const user = await prisma.user.update({
-			where: { email },
-			data: { password }
-		});
+		let user = await User.findOne({ where: { email } });
+		if (!user) return false;
+
+		user.password = password;
+		user = await user.save();
 		return !!user;
 	}
 }

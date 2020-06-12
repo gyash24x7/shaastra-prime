@@ -1,20 +1,16 @@
-import { Arg, Authorized, Ctx, Query, Resolver } from "type-graphql";
+import { Arg, Authorized, Query, Resolver } from "type-graphql";
 import { User } from "../../models/User";
-import { GraphQLContext } from "../../utils";
 
 @Resolver()
 export class GetUsersResolver {
 	@Query(() => [User])
-	async getUsers(@Ctx() { prisma }: GraphQLContext) {
-		return prisma.user.findMany();
+	async getUsers() {
+		return User.find();
 	}
 
 	@Authorized()
 	@Query(() => User)
-	async getUser(
-		@Arg("userId") userId: string,
-		@Ctx() { prisma }: GraphQLContext
-	) {
-		return prisma.user.findOne({ where: { id: userId } });
+	async getUser(@Arg("userId") userId: string) {
+		return User.findOne(userId);
 	}
 }

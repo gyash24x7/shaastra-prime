@@ -4,7 +4,6 @@ import { GetPasswordOTPResolver } from "./GetPasswordOTP";
 import { GetUsersResolver } from "./GetUsers";
 import { LoginResolver } from "./Login";
 import { MeResolver } from "./Me";
-import { SearchUserResolver } from "./SearchUser";
 import { UploadCoverPicResolver } from "./UploadCoverPic";
 import { UploadProfilePicResolver } from "./UploadProfilePic";
 import { VerifyPasswordOTPResolver } from "./VerifyPasswordOTP";
@@ -20,6 +19,5 @@ export default [
 	VerifyPasswordOTPResolver,
 	UploadCoverPicResolver,
 	UploadProfilePicResolver,
-	VerifyUserResolver,
-	SearchUserResolver
+	VerifyUserResolver
 ];

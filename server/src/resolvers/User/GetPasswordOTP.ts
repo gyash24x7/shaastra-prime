@@ -1,4 +1,5 @@
 import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
+import { User } from "../../models/User";
 import { GraphQLContext } from "../../utils";
 
 @Resolver()
@@ -6,13 +7,14 @@ export class GetPasswordOTPResolver {
 	@Mutation(() => Boolean)
 	async getPasswordOTP(
 		@Arg("email") email: string,
-		@Ctx() { prisma, mailjet }: GraphQLContext
+		@Ctx() { mailjet }: GraphQLContext
 	) {
-		const user = await prisma.user.findOne({ where: { email } });
+		let user = await User.findOne({ where: { email } });
 		if (!user) return false;
 
 		const passwordOTP = Math.floor(100000 + Math.random() * 900000).toString();
-		await prisma.user.update({ where: { email }, data: { passwordOTP } });
+		user.passwordOTP = passwordOTP;
+		user = await user.save();
 
 		await mailjet.post("send", { version: "v3" }).request({
 			FromEmail: "prime@shaastra.org",

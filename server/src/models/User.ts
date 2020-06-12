@@ -6,6 +6,7 @@ import {
 	ManyToMany,
 	ManyToOne,
 	OneToMany,
+	PrimaryColumn,
 	PrimaryGeneratedColumn
 } from "typeorm";
 import { UserRole } from "../utils";
@@ -34,7 +35,7 @@ export class User extends BaseEntity {
 	@Field()
 	name: string;
 
-	@Column()
+	@PrimaryColumn()
 	@Field()
 	email: string;
 
@@ -69,6 +70,15 @@ export class User extends BaseEntity {
 	@Column()
 	@Field()
 	verified: boolean;
+
+	@Column()
+	password: string;
+
+	@Column()
+	verificationOTP: string;
+
+	@Column()
+	passwordOTP: string;
 
 	@ManyToOne(() => Department, (dept) => dept.members, { lazy: true })
 	@Field(() => Department)

@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { CreateUserInput } from "../../inputs/User/CreateUser";
+import { Department } from "../../models/Department";
+import { User } from "../../models/User";
 import { GraphQLContext } from "../../utils";
 dotenv.config();
 
@@ -11,26 +13,22 @@ export class CreateUserResolver {
 	@Mutation(() => [String])
 	async createUser(
 		@Arg("data") { departmentId, ...data }: CreateUserInput,
-		@Ctx() { prisma, mailjet }: GraphQLContext
+		@Ctx() { mailjet }: GraphQLContext
 	) {
 		const password = await bcrypt.hash(data.password, 13);
 		const verificationOTP = Math.floor(
 			100000 + Math.random() * 900000
 		).toString();
 
-		const user = await prisma.user.create({
-			data: {
-				...data,
-				password,
-				verificationOTP,
-				profilePic: "",
-				coverPic: "",
-				about: "",
-				upi: "",
-				department: {
-					connect: { id: departmentId }
-				}
-			}
+		const user = await User.create({
+			...data,
+			password,
+			verificationOTP,
+			profilePic: "",
+			coverPic: "",
+			about: "",
+			upi: "",
+			department: Department.findOne(departmentId)
 		});
 
 		let token = "";

@@ -1,4 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
+import { User } from "../../models/User";
 import { GraphQLContext } from "../../utils";
 
 @Resolver()
@@ -7,12 +8,9 @@ export class UploadCoverPicResolver {
 	@Mutation(() => Boolean)
 	async uploadCoverPic(
 		@Arg("coverPic") coverPic: string,
-		@Ctx() { user, prisma }: GraphQLContext
+		@Ctx() { user }: GraphQLContext
 	) {
-		const updatedUser = await prisma.user.update({
-			where: { id: user?.id },
-			data: { coverPic }
-		});
+		const updatedUser = await User.update(user.id, { coverPic });
 		return !!updatedUser;
 	}
 }
