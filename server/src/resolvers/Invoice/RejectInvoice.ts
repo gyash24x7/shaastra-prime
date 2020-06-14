@@ -45,6 +45,6 @@ export class RejectInvoiceResolver {
 			console.log("Invoice Update Messages Sent!");
 		});
 
-		return !!invoice;
+		return !!affected;
 	}
 }

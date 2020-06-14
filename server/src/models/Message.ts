@@ -1,14 +1,18 @@
+import cuid from "cuid";
 import { Field, ID, Int, ObjectType, registerEnumType } from "type-graphql";
 import {
 	BaseEntity,
+	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinColumn,
 	JoinTable,
 	ManyToMany,
 	ManyToOne,
 	OneToMany,
-	PrimaryGeneratedColumn
+	OneToOne,
+	PrimaryColumn
 } from "typeorm";
 import { MessageType } from "./../utils/index";
 import { Channel } from "./Channel";
@@ -22,7 +26,27 @@ registerEnumType(MessageType, { name: "MessageType" });
 @Entity("Message")
 @ObjectType("Message")
 export class Message extends BaseEntity {
-	@PrimaryGeneratedColumn("uuid")
+	// STATIC FIELDS
+
+	static primaryFields = ["id", "content", "createdOn", "starred", "type"];
+
+	static relationalFields = [
+		"taskActivity",
+		"invoiceActivity",
+		"media",
+		"createdBy"
+	];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
+	// PRIMARY FIELDS
+
+	@PrimaryColumn()
 	@Field(() => ID)
 	id: string;
 
@@ -34,49 +58,41 @@ export class Message extends BaseEntity {
 	@Field()
 	createdOn: string;
 
-	@ManyToOne(() => User, (user) => user.messages, { lazy: true })
-	@Field(() => User)
-	createdBy: Promise<User>;
+	@Column("enum", { enum: MessageType })
+	@Field(() => MessageType)
+	type: MessageType;
 
 	@Column()
 	@Field()
 	starred: boolean;
 
+	// computed
 	@Field(() => Int) likes: number;
+
+	// RELATIONS AND FOREIGN KEYS
+
+	@ManyToOne(() => User, (user) => user.messages, { lazy: true })
+	@Field(() => User)
+	createdBy: Promise<User>;
 
 	@OneToMany(() => Media, (media) => media.message, { lazy: true })
 	@Field(() => [Media])
 	media: Promise<Media[]>;
 
-	@Column("enum", { enum: MessageType })
-	@Field(() => MessageType)
-	type: MessageType;
-
-	@ManyToOne(() => TaskActivity, (activity) => activity.messages, {
-		lazy: true
-	})
+	@OneToOne(() => TaskActivity, { lazy: true })
+	@JoinColumn()
 	@Field(() => TaskActivity, { nullable: true })
 	taskActivity?: Promise<TaskActivity>;
 
-	@Column({ nullable: true })
-	taskActivityId?: string;
-
-	@ManyToOne(() => InvoiceActivity, (activity) => activity.messages, {
-		lazy: true
-	})
+	@OneToOne(() => InvoiceActivity, { lazy: true })
+	@JoinColumn()
 	@Field(() => InvoiceActivity, { nullable: true })
 	invoiceActivity?: Promise<InvoiceActivity>;
-
-	@Column({ nullable: true })
-	invoiceActivityId?: string;
 
 	@ManyToMany(() => User, (user) => user.likedMessages, { lazy: true })
 	@JoinTable()
 	likedBy: Promise<User[]>;
 
-	@ManyToOne(() => Channel, (channel) => channel.messages, { lazy: true })
-	channel: Promise<Channel>;
-
-	@Column()
-	channelId: string;
+	@ManyToMany(() => Channel, (channel) => channel.messages, { lazy: true })
+	channels: Promise<Channel[]>;
 }

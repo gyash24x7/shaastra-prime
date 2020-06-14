@@ -1,10 +1,12 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
 	BaseEntity,
+	BeforeInsert,
 	Column,
 	Entity,
 	ManyToOne,
-	PrimaryGeneratedColumn
+	PrimaryColumn
 } from "typeorm";
 import { MediaType } from "../utils";
 import { Message } from "./Message";
@@ -16,7 +18,22 @@ registerEnumType(MediaType, { name: "MediaType" });
 @Entity("Media")
 @ObjectType("Media")
 export class Media extends BaseEntity {
-	@PrimaryGeneratedColumn("uuid")
+	// STATIC FIELDS
+
+	static primaryFields = ["id", "url", "type"];
+
+	static relationalFields = ["uploadedBy"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
+	// PRIMARY FIELDS
+
+	@PrimaryColumn()
 	@Field(() => ID)
 	id: string;
 
@@ -27,6 +44,8 @@ export class Media extends BaseEntity {
 	@Column("enum", { enum: MediaType })
 	@Field(() => MediaType)
 	type: MediaType;
+
+	// RELATIONS AND FOREIGN KEYS
 
 	@ManyToOne(() => User, (user) => user.media, { lazy: true })
 	@Field(() => User)

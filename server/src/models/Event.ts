@@ -1,13 +1,15 @@
+import cuid from "cuid";
 import { Field, ID, Int, ObjectType, registerEnumType } from "type-graphql";
 import {
 	BaseEntity,
+	BeforeInsert,
 	Column,
 	Entity,
 	JoinColumn,
 	ManyToOne,
 	OneToMany,
 	OneToOne,
-	PrimaryGeneratedColumn,
+	PrimaryColumn,
 	UpdateDateColumn
 } from "typeorm";
 import { RegistrationType } from "../utils";
@@ -21,7 +23,32 @@ registerEnumType(RegistrationType, { name: "RegistrationType" });
 @Entity("Event")
 @ObjectType("Event")
 export class Event extends BaseEntity {
-	@PrimaryGeneratedColumn("uuid")
+	// STATIC FIELDS
+
+	static primaryFields = [
+		"id",
+		"name",
+		"rank",
+		"info",
+		"updatedOn",
+		"approved",
+		"paid",
+		"eventTabs",
+		"registrationType"
+	];
+
+	static relationalFields = ["updatedBy", "image", "vertical", "registrations"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
+	// PRIMARY FIELDS
+
+	@PrimaryColumn()
 	@Field(() => ID)
 	id: string;
 
@@ -49,6 +76,17 @@ export class Event extends BaseEntity {
 	@Field()
 	paid: boolean;
 
+	//stringified JSON
+	@Column()
+	@Field(() => String)
+	eventTabs: string;
+
+	@Column("enum", { enum: RegistrationType })
+	@Field(() => RegistrationType)
+	registrationType: RegistrationType;
+
+	// RELATIONS AND FOREIGN KEYS
+
 	@ManyToOne(() => User, (user) => user.eventsUpdated, { lazy: true })
 	@Field(() => User)
 	updatedBy: Promise<User>;
@@ -67,15 +105,6 @@ export class Event extends BaseEntity {
 
 	@Column()
 	verticalId: string;
-
-	//stringified JSON
-	@Column()
-	@Field(() => String)
-	eventTabs: string;
-
-	@Column("enum", { enum: RegistrationType })
-	@Field(() => RegistrationType)
-	registrationType: RegistrationType;
 
 	@OneToMany(() => Registration, (registration) => registration.event, {
 		lazy: true

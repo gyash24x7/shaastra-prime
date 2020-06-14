@@ -1,6 +1,8 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
 	BaseEntity,
+	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -8,7 +10,7 @@ import {
 	ManyToMany,
 	ManyToOne,
 	OneToMany,
-	PrimaryGeneratedColumn
+	PrimaryColumn
 } from "typeorm";
 import { TaskStatus } from "../utils";
 import { Channel } from "./Channel";
@@ -22,7 +24,37 @@ registerEnumType(TaskStatus, { name: "TaskStatus" });
 @Entity("Task")
 @ObjectType("Task")
 export class Task extends BaseEntity {
-	@PrimaryGeneratedColumn()
+	// STATIC FIELDS
+
+	static primaryFields = [
+		"id",
+		"brief",
+		"details",
+		"status",
+		"createdOn",
+		"deadline"
+	];
+
+	static relationalFields = [
+		"byDept",
+		"forDept",
+		"createdBy",
+		"assignedTo",
+		"media",
+		"activity",
+		"channels"
+	];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
+	// PRIMARY FIELDS
+
+	@PrimaryColumn()
 	@Field(() => ID)
 	id: string;
 
@@ -33,6 +65,24 @@ export class Task extends BaseEntity {
 	@Column()
 	@Field()
 	details: string;
+
+	@Column("enum", { enum: TaskStatus, default: TaskStatus.NOT_ASSIGNED })
+	@Field(() => TaskStatus)
+	status: TaskStatus;
+
+	@CreateDateColumn()
+	@Field()
+	createdOn: string;
+
+	@Column("timestamp")
+	@Field()
+	deadline: string;
+
+	// db only field for soft delete
+	@Column({ default: false })
+	deleted: boolean;
+
+	// RELATIONS AND FOREIGN KEYS
 
 	@ManyToOne(() => Department, (dept) => dept.tasksCreated, { lazy: true })
 	@Field(() => Department)
@@ -59,18 +109,6 @@ export class Task extends BaseEntity {
 	@Field(() => [User])
 	assignedTo: Promise<User[]>;
 
-	@Column("enum", { enum: TaskStatus, default: TaskStatus.NOT_ASSIGNED })
-	@Field(() => TaskStatus)
-	status: TaskStatus;
-
-	@CreateDateColumn()
-	@Field()
-	createdOn: string;
-
-	@Column("timestamp")
-	@Field()
-	deadline: string;
-
 	@OneToMany(() => Media, (media) => media.task, { lazy: true })
 	@Field(() => [Media])
 	media: Promise<Media[]>;
@@ -85,7 +123,4 @@ export class Task extends BaseEntity {
 	@JoinTable()
 	@Field(() => [Channel])
 	channels: Promise<Channel[]>;
-
-	@Column({ default: false })
-	deleted: boolean;
 }

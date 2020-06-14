@@ -1,6 +1,8 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
 	BaseEntity,
+	BeforeInsert,
 	Column,
 	Entity,
 	JoinColumn,
@@ -9,7 +11,7 @@ import {
 	ManyToOne,
 	OneToMany,
 	OneToOne,
-	PrimaryGeneratedColumn
+	PrimaryColumn
 } from "typeorm";
 import { InvoiceStatus, InvoiceType } from "../utils";
 import { Channel } from "./Channel";
@@ -25,7 +27,38 @@ registerEnumType(InvoiceType, { name: "InvoiceType" });
 @Entity("Invoice")
 @ObjectType("Invoice")
 export class Invoice extends BaseEntity {
-	@PrimaryGeneratedColumn("uuid")
+	// STATIC FIELDS
+
+	static primaryFields = [
+		"id",
+		"title",
+		"date",
+		"invoiceNumber",
+		"amount",
+		"purpose",
+		"status",
+		"type"
+	];
+
+	static relationalFields = [
+		"media",
+		"activity",
+		"uploadedBy",
+		"byDept",
+		"vendor",
+		"channels"
+	];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
+	// PRIMARY FIELDS
+
+	@PrimaryColumn()
 	@Field(() => ID)
 	id: string;
 
@@ -56,6 +89,8 @@ export class Invoice extends BaseEntity {
 	@Column("enum", { enum: InvoiceType })
 	@Field(() => InvoiceType)
 	type: InvoiceType;
+
+	// RELATIONS AND FOREIGN KEYS
 
 	@OneToOne(() => Media, { lazy: true })
 	@JoinColumn()

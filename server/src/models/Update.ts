@@ -1,11 +1,13 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType } from "type-graphql";
 import {
 	BaseEntity,
+	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
 	ManyToOne,
-	PrimaryGeneratedColumn
+	PrimaryColumn
 } from "typeorm";
 import { Department } from "./Department";
 import { User } from "./User";
@@ -13,7 +15,22 @@ import { User } from "./User";
 @Entity("Update")
 @ObjectType("Update")
 export class Update extends BaseEntity {
-	@PrimaryGeneratedColumn("uuid")
+	// STATIC FIELDS
+
+	static primaryFields = ["id", "brief", "subject", "content", "createdOn"];
+
+	static relationalFields = ["byDept", "postedBy"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
+	// PRIMARY FIELDS
+
+	@PrimaryColumn()
 	@Field(() => ID)
 	id: string;
 
@@ -29,6 +46,12 @@ export class Update extends BaseEntity {
 	@Field()
 	content: string;
 
+	@CreateDateColumn()
+	@Field()
+	createdOn: string;
+
+	// RELATIONS AND FOREIGN KEYS
+
 	@ManyToOne(() => Department, (dept) => dept.updates, { lazy: true })
 	@Field(() => Department)
 	byDept: Promise<Department>;
@@ -42,8 +65,4 @@ export class Update extends BaseEntity {
 
 	@Column()
 	postedById: string;
-
-	@CreateDateColumn()
-	@Field()
-	createdOn: string;
 }

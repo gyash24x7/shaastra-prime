@@ -1,13 +1,16 @@
+import cuid from "cuid";
 import { Field, ID, Int, ObjectType } from "type-graphql";
 import {
 	BaseEntity,
+	BeforeInsert,
 	Column,
 	Entity,
+	Generated,
 	JoinColumn,
 	ManyToOne,
 	OneToMany,
 	OneToOne,
-	PrimaryGeneratedColumn,
+	PrimaryColumn,
 	UpdateDateColumn
 } from "typeorm";
 import { Event } from "./Event";
@@ -17,11 +20,22 @@ import { User } from "./User";
 @Entity("Vertical")
 @ObjectType("Vertical")
 export class Vertical extends BaseEntity {
-	@PrimaryGeneratedColumn("uuid")
+	// STATIC FIELDS
+
+	static primaryFields = ["id", "rank", "info", "updatedOn"];
+
+	static relationalFields = ["image", "events"];
+
+	@PrimaryColumn()
 	@Field(() => ID)
 	id: string;
 
-	@Column("int")
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
+	@Generated("increment")
 	@Field(() => Int)
 	rank: number;
 

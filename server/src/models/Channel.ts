@@ -1,14 +1,15 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
 	BaseEntity,
+	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
 	JoinTable,
 	ManyToMany,
 	ManyToOne,
-	OneToMany,
-	PrimaryGeneratedColumn
+	PrimaryColumn
 } from "typeorm";
 import { ChannelType } from "./../utils/index";
 import { Invoice } from "./Invoice";
@@ -21,7 +22,35 @@ registerEnumType(ChannelType, { name: "ChannelType" });
 @Entity("Channel")
 @ObjectType("Channel")
 export class Channel extends BaseEntity {
-	@PrimaryGeneratedColumn("uuid")
+	// STATIC FIELDS
+
+	static primaryFields = [
+		"id",
+		"name",
+		"description",
+		"createdOn",
+		"archived",
+		"type"
+	];
+
+	static relationalFields = [
+		"messages",
+		"connectedInvoices",
+		"connectedTasks",
+		"createdBy",
+		"members"
+	];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
+	// PRIMARY FIELDS
+
+	@PrimaryColumn()
 	@Field(() => ID)
 	id: string;
 
@@ -45,6 +74,8 @@ export class Channel extends BaseEntity {
 	@Field(() => ChannelType)
 	type: ChannelType;
 
+	// RELATIONS
+
 	@ManyToMany(() => User, (user) => user.channels, { lazy: true })
 	@JoinTable()
 	@Field(() => [User])
@@ -62,25 +93,13 @@ export class Channel extends BaseEntity {
 	connectedTasks: Promise<Task[]>;
 
 	@ManyToMany(() => Invoice, (invoice) => invoice.channels, { lazy: true })
-	@JoinTable()
 	@Field(() => [Invoice])
 	connectedInvoices: Promise<Invoice[]>;
 
 	//computed
 	@Field(() => [Message]) starredMsgs: Message[];
 
-	@OneToMany(() => Message, (message) => message.channel, {
-		onDelete: "CASCADE",
-		lazy: true
-	})
+	@ManyToMany(() => Message, (message) => message.channels, { lazy: true })
+	@JoinTable()
 	messages: Promise<Message[]>;
-
-	staticFields = ["id", "name", "description", "createdOn", "archived", "type"];
-	relationFields = [
-		"messages",
-		"connectedInvoices",
-		"connectedTasks",
-		"createdBy",
-		"members"
-	];
 }

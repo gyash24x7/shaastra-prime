@@ -1,11 +1,13 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType } from "type-graphql";
 import {
 	BaseEntity,
+	BeforeInsert,
 	Column,
 	Entity,
 	ManyToOne,
 	OneToMany,
-	PrimaryGeneratedColumn
+	PrimaryColumn
 } from "typeorm";
 import { Goal } from "./Goal";
 import { Invoice } from "./Invoice";
@@ -16,8 +18,11 @@ import { User } from "./User";
 @Entity("Department")
 @ObjectType("Department")
 export class Department extends BaseEntity {
-	static staticFields = ["id", "name", "shortName", "subDepartments"];
-	static relationFields = [
+	// STATIC FIELDS
+
+	static primaryFields = ["id", "name", "shortName", "subDepartments"];
+
+	static relationalFields = [
 		"members",
 		"tasksAssigned",
 		"tasksCreated",
@@ -27,7 +32,16 @@ export class Department extends BaseEntity {
 		"invoicesSubmitted"
 	];
 
-	@PrimaryGeneratedColumn("uuid")
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
+	// PRIMARY FIELDS
+
+	@PrimaryColumn()
 	@Field(() => ID)
 	id: string;
 
@@ -38,6 +52,12 @@ export class Department extends BaseEntity {
 	@Column({ default: "" })
 	@Field()
 	shortName: string;
+
+	@Column("simple-array", { default: [] })
+	@Field(() => [String])
+	subDepartments: string[];
+
+	// RELATIONS
 
 	@OneToMany(() => User, (member) => member.department, { lazy: true })
 	@Field(() => [User])
@@ -50,10 +70,6 @@ export class Department extends BaseEntity {
 	@OneToMany(() => Task, (task) => task.byDept, { lazy: true })
 	@Field(() => [Task])
 	tasksCreated: Promise<Task[]>;
-
-	@Column("simple-array", { default: [] })
-	@Field(() => [String])
-	subDepartments: string[];
 
 	@OneToMany(() => Goal, (goal) => goal.dept, { lazy: true })
 	@Field(() => [Goal])

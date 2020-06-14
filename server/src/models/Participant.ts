@@ -1,11 +1,14 @@
+import cuid from "cuid";
+import jwt from "jsonwebtoken";
 import { Field, ID, ObjectType } from "type-graphql";
 import {
 	BaseEntity,
+	BeforeInsert,
 	Column,
 	Entity,
 	Generated,
 	OneToMany,
-	PrimaryGeneratedColumn
+	PrimaryColumn
 } from "typeorm";
 import { Registration } from "./Registration";
 import { TeamInvitation } from "./TeamInvitation";
@@ -13,7 +16,34 @@ import { TeamInvitation } from "./TeamInvitation";
 @Entity("Participant")
 @ObjectType("Participant")
 export class Participant extends BaseEntity {
-	@PrimaryGeneratedColumn("uuid")
+	// STATIC FIELDS
+
+	static primaryFields = [
+		"id",
+		"name",
+		"email",
+		"shaastraID",
+		"shaastraQR",
+		"mobile",
+		"gender",
+		"college",
+		"city",
+		"state"
+	];
+
+	static relationalFields = ["registrations", "invitations"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setIdAndShaastraQR() {
+		this.id = cuid();
+		this.shaastraQR = jwt.sign({ id: this.id }, process.env.QR_SECRET!);
+	}
+
+	// PRIMARY FIELDS
+
+	@PrimaryColumn()
 	@Field(() => ID)
 	id: string;
 
@@ -55,6 +85,8 @@ export class Participant extends BaseEntity {
 	@Column()
 	@Field()
 	state: string;
+
+	// RELATIONS
 
 	@OneToMany(() => Registration, (registration) => registration.participant, {
 		lazy: true

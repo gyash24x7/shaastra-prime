@@ -1,14 +1,19 @@
+import bcrypt from "bcryptjs";
+import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
+	AfterInsert,
 	BaseEntity,
+	BeforeInsert,
 	Column,
 	Entity,
 	ManyToMany,
 	ManyToOne,
 	OneToMany,
-	PrimaryGeneratedColumn
+	PrimaryColumn
 } from "typeorm";
 import { UserRole } from "../utils";
+import mailjet from "../utils/mailjet";
 import { Channel } from "./Channel";
 import { Department } from "./Department";
 import { Event } from "./Event";
@@ -26,7 +31,69 @@ registerEnumType(UserRole, { name: "UserRole" });
 @Entity("User")
 @ObjectType("User")
 export class User extends BaseEntity {
-	@PrimaryGeneratedColumn("uuid")
+	// CUSTOM STATIC PROPERTIES AND METHODS
+
+	static primaryFields = [
+		"id",
+		"name",
+		"email",
+		"rollNumber",
+		"profilePic",
+		"coverPic",
+		"upi",
+		"mobile",
+		"about",
+		"verified",
+		"role"
+	];
+
+	static relationalFields = ["department"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
+	@BeforeInsert()
+	async hashPassword() {
+		this.password = await bcrypt.hash(this.password, 13);
+	}
+
+	@BeforeInsert()
+	async generateVerificationOTP() {
+		this.verificationOTP = Math.floor(
+			100000 + Math.random() * 900000
+		).toString();
+	}
+
+	@AfterInsert()
+	async sendVerificationMail() {
+		if (process.env.NODE_ENV === "production") {
+			await mailjet
+				.post("send", { version: "v3" })
+				.request({
+					FromEmail: "prime@shaastra.org",
+					FromName: "Shaastra Prime Bot",
+					Recipients: [
+						{
+							Email: `${this.rollNumber.toLowerCase()}@smail.iitm.ac.in`,
+							Name: this.name
+						}
+					],
+					Subject: "Complete Smail Verification | Shaastra Prime",
+					"Html-part": `<p>You verification code is <strong>${this.verificationOTP}</strong></p>`
+				})
+				.catch((e) => {
+					console.log(e.message);
+				});
+		}
+	}
+
+	// PRIMARY FIELDS
+
+	@PrimaryColumn("uuid")
 	@Field(() => ID)
 	id: string;
 
@@ -42,11 +109,11 @@ export class User extends BaseEntity {
 	@Field()
 	rollNumber: string;
 
-	@Column()
+	@Column({ default: "" })
 	@Field()
 	profilePic: string;
 
-	@Column()
+	@Column({ default: "" })
 	@Field()
 	coverPic: string;
 
@@ -54,11 +121,11 @@ export class User extends BaseEntity {
 	@Field()
 	mobile: string;
 
-	@Column()
+	@Column({ default: "" })
 	@Field()
 	upi: string;
 
-	@Column()
+	@Column({ default: "" })
 	@Field()
 	about: string;
 
@@ -78,6 +145,8 @@ export class User extends BaseEntity {
 
 	@Column()
 	passwordOTP: string;
+
+	// RELATIONS & FOREIGN KEYS
 
 	@ManyToOne(() => Department, (dept) => dept.members, { lazy: true })
 	@Field(() => Department)

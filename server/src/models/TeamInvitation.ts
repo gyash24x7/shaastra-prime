@@ -1,10 +1,12 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
 	BaseEntity,
+	BeforeInsert,
 	Column,
 	Entity,
 	ManyToOne,
-	PrimaryGeneratedColumn
+	PrimaryColumn
 } from "typeorm";
 import { InviteStatus } from "../utils";
 import { Participant } from "./Participant";
@@ -15,13 +17,30 @@ registerEnumType(InviteStatus, { name: "InviteStatus" });
 @Entity("TeamInvitation")
 @ObjectType("TeamInvitation")
 export class TeamInvitation extends BaseEntity {
-	@PrimaryGeneratedColumn("uuid")
+	// STATIC FIELDS
+
+	static primaryKeys = ["id", "status"];
+
+	static relationalFields = ["team", "participant"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
+	// PRIMARY FIELDS
+
+	@PrimaryColumn()
 	@Field(() => ID)
 	id: string;
 
 	@Column("enum", { enum: InviteStatus, default: InviteStatus.PENDING })
 	@Field(() => InviteStatus)
 	status: InviteStatus;
+
+	// RELATIONS AND FOREIGN KEYS
 
 	@ManyToOne(() => Team, (team) => team.invitations, { lazy: true })
 	@Field(() => Team)
