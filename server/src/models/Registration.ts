@@ -28,13 +28,22 @@ export class Registration extends BaseEntity {
 	@Field(() => Team, { nullable: true })
 	team?: Promise<Team>;
 
+	@Column({ nullable: true })
+	teamId?: string;
+
 	@ManyToOne(() => Event, (event) => event.registrations, { lazy: true })
 	@Field(() => Event)
 	event: Promise<Event>;
+
+	@Column()
+	eventId: string;
 
 	@ManyToOne(() => Participant, (participant) => participant.registrations, {
 		lazy: true
 	})
 	@Field(() => Participant, { nullable: true })
 	participant?: Promise<Participant>;
+
+	@Column({ nullable: true })
+	participantId?: string;
 }

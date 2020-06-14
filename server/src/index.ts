@@ -18,7 +18,8 @@ const startServer = async () => {
 		type: "postgres",
 		url: process.env.DATABASE_URL,
 		entities: [__dirname + "/models/*.ts"],
-		synchronize: true
+		synchronize: true,
+		logging: true
 	});
 
 	const server = new ApolloServer({

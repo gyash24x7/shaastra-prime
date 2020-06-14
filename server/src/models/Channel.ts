@@ -54,6 +54,9 @@ export class Channel extends BaseEntity {
 	@Field(() => User)
 	createdBy: Promise<User>;
 
+	@Column()
+	createdById: string;
+
 	@ManyToMany(() => Task, (task) => task.channels, { lazy: true })
 	@Field(() => [Task])
 	connectedTasks: Promise<Task[]>;
@@ -71,4 +74,13 @@ export class Channel extends BaseEntity {
 		lazy: true
 	})
 	messages: Promise<Message[]>;
+
+	staticFields = ["id", "name", "description", "createdOn", "archived", "type"];
+	relationFields = [
+		"messages",
+		"connectedInvoices",
+		"connectedTasks",
+		"createdBy",
+		"members"
+	];
 }

@@ -58,11 +58,17 @@ export class Message extends BaseEntity {
 	@Field(() => TaskActivity, { nullable: true })
 	taskActivity?: Promise<TaskActivity>;
 
+	@Column({ nullable: true })
+	taskActivityId?: string;
+
 	@ManyToOne(() => InvoiceActivity, (activity) => activity.messages, {
 		lazy: true
 	})
 	@Field(() => InvoiceActivity, { nullable: true })
 	invoiceActivity?: Promise<InvoiceActivity>;
+
+	@Column({ nullable: true })
+	invoiceActivityId?: string;
 
 	@ManyToMany(() => User, (user) => user.likedMessages, { lazy: true })
 	@JoinTable()
@@ -70,4 +76,7 @@ export class Message extends BaseEntity {
 
 	@ManyToOne(() => Channel, (channel) => channel.messages, { lazy: true })
 	channel: Promise<Channel>;
+
+	@Column()
+	channelId: string;
 }

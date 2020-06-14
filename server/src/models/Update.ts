@@ -33,9 +33,15 @@ export class Update extends BaseEntity {
 	@Field(() => Department)
 	byDept: Promise<Department>;
 
+	@Column()
+	byDeptId: string;
+
 	@ManyToOne(() => User, (user) => user.updates, { lazy: true })
 	@Field(() => User)
 	postedBy: Promise<User>;
+
+	@Column()
+	postedById: string;
 
 	@CreateDateColumn()
 	@Field()

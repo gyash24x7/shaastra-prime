@@ -27,9 +27,15 @@ export class TeamInvitation extends BaseEntity {
 	@Field(() => Team)
 	team: Promise<Team>;
 
+	@Column()
+	teamId: string;
+
 	@ManyToOne(() => Participant, (participant) => participant.invitations, {
 		lazy: true
 	})
 	@Field(() => Participant)
 	participant: Promise<Participant>;
+
+	@Column()
+	participantId: string;
 }

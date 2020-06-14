@@ -72,13 +72,22 @@ export class Invoice extends BaseEntity {
 	@Field(() => User)
 	uploadedBy: Promise<User>;
 
+	@Column()
+	uploadedById: string;
+
 	@ManyToOne(() => Department, (dept) => dept.invoicesSubmitted, { lazy: true })
 	@Field(() => Department)
 	byDept: Promise<Department>;
 
+	@Column()
+	byDeptId: string;
+
 	@ManyToOne(() => Vendor, (vendor) => vendor.invoices, { lazy: true })
 	@Field(() => Vendor)
 	vendor: Promise<Vendor>;
+
+	@Column()
+	vendorId: string;
 
 	@ManyToMany(() => Channel, { lazy: true })
 	@JoinTable()

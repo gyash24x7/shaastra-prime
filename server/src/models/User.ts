@@ -6,7 +6,6 @@ import {
 	ManyToMany,
 	ManyToOne,
 	OneToMany,
-	PrimaryColumn,
 	PrimaryGeneratedColumn
 } from "typeorm";
 import { UserRole } from "../utils";
@@ -35,7 +34,7 @@ export class User extends BaseEntity {
 	@Field()
 	name: string;
 
-	@PrimaryColumn()
+	@Column({ unique: true })
 	@Field()
 	email: string;
 
@@ -83,6 +82,9 @@ export class User extends BaseEntity {
 	@ManyToOne(() => Department, (dept) => dept.members, { lazy: true })
 	@Field(() => Department)
 	department: Promise<Department>;
+
+	@Column()
+	departmentId: string;
 
 	@ManyToMany(() => Channel, (channel) => channel.members, { lazy: true })
 	channels: Promise<Channel[]>;

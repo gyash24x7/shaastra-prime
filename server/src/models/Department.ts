@@ -5,7 +5,6 @@ import {
 	Entity,
 	ManyToOne,
 	OneToMany,
-	PrimaryColumn,
 	PrimaryGeneratedColumn
 } from "typeorm";
 import { Goal } from "./Goal";
@@ -17,15 +16,26 @@ import { User } from "./User";
 @Entity("Department")
 @ObjectType("Department")
 export class Department extends BaseEntity {
+	static staticFields = ["id", "name", "shortName", "subDepartments"];
+	static relationFields = [
+		"members",
+		"tasksAssigned",
+		"tasksCreated",
+		"goals",
+		"finManager",
+		"updates",
+		"invoicesSubmitted"
+	];
+
 	@PrimaryGeneratedColumn("uuid")
 	@Field(() => ID)
 	id: string;
 
-	@PrimaryColumn()
+	@Column({ unique: true })
 	@Field()
 	name: string;
 
-	@Column()
+	@Column({ default: "" })
 	@Field()
 	shortName: string;
 
@@ -41,7 +51,7 @@ export class Department extends BaseEntity {
 	@Field(() => [Task])
 	tasksCreated: Promise<Task[]>;
 
-	@Column("simple-array")
+	@Column("simple-array", { default: [] })
 	@Field(() => [String])
 	subDepartments: string[];
 
@@ -53,9 +63,12 @@ export class Department extends BaseEntity {
 	@Field(() => User, { nullable: true })
 	finManager?: Promise<User>;
 
+	@Column({ nullable: true })
+	finManagerId?: string;
+
 	@OneToMany(() => Invoice, (invoice) => invoice.byDept, { lazy: true })
 	invoicesSubmitted: Promise<Invoice[]>;
 
-	@ManyToOne(() => Update, (update) => update.byDept, { lazy: true })
+	@OneToMany(() => Update, (update) => update.byDept, { lazy: true })
 	updates: Promise<Update[]>;
 }

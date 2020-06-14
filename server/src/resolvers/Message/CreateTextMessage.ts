@@ -7,7 +7,7 @@ import {
 	PubSubEngine,
 	Resolver
 } from "type-graphql";
-import { CreateMessageInput } from "../../inputs/Message/CreateTextMessage";
+import { CreateTextMessageInput } from "../../inputs/Message/CreateTextMessage";
 import { Channel } from "../../models/Channel";
 import { Message } from "../../models/Message";
 import { GraphQLContext, MessageType } from "../../utils";
@@ -17,7 +17,7 @@ export class CreateTextMessageResolver {
 	@Authorized()
 	@Mutation(() => Boolean)
 	async createTextMessage(
-		@Arg("data") { channelId, content }: CreateMessageInput,
+		@Arg("data") { channelId, content }: CreateTextMessageInput,
 		@Ctx() { user }: GraphQLContext,
 		@PubSub() pubsub: PubSubEngine
 	) {

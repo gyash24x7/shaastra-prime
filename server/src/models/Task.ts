@@ -38,13 +38,22 @@ export class Task extends BaseEntity {
 	@Field(() => Department)
 	byDept: Promise<Department>;
 
+	@Column()
+	byDeptId: string;
+
 	@ManyToOne(() => Department, (dept) => dept.tasksAssigned, { lazy: true })
 	@Field(() => Department)
 	forDept: Promise<Department>;
 
+	@Column()
+	forDeptId: string;
+
 	@ManyToOne(() => User, (user) => user.tasksCreated, { lazy: true })
 	@Field(() => User)
 	createdBy: Promise<User>;
+
+	@Column()
+	createdById: string;
 
 	@ManyToMany(() => User, (user) => user.tasksAssigned, { lazy: true })
 	@Field(() => [User])

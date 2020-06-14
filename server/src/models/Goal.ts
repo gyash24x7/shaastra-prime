@@ -33,6 +33,9 @@ export class Goal extends BaseEntity {
 	@Field(() => Department)
 	dept: Promise<Department>;
 
+	@Column()
+	deptId: string;
+
 	@Column("enum", { enum: GoalType })
 	@Field(() => GoalType)
 	type: GoalType;

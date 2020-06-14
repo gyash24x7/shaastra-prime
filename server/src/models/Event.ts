@@ -53,6 +53,9 @@ export class Event extends BaseEntity {
 	@Field(() => User)
 	updatedBy: Promise<User>;
 
+	@Column()
+	updatedById: string;
+
 	@OneToOne(() => Media, { lazy: true })
 	@JoinColumn()
 	@Field(() => Media)
@@ -61,6 +64,9 @@ export class Event extends BaseEntity {
 	@ManyToOne(() => Vertical, (vertical) => vertical.events, { lazy: true })
 	@Field(() => Vertical)
 	vertical: Promise<Vertical>;
+
+	@Column()
+	verticalId: string;
 
 	//stringified JSON
 	@Column()

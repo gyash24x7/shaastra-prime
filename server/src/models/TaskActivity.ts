@@ -34,12 +34,18 @@ export class TaskActivity extends BaseEntity {
 	@Field(() => Task)
 	task: Promise<Task>;
 
+	@Column()
+	taskId: string;
+
 	@CreateDateColumn()
 	@Field()
 	createdOn: string;
 
 	@ManyToOne(() => User, (user) => user.taskActivity, { lazy: true })
 	createdBy: Promise<User>;
+
+	@Column()
+	createdById: string;
 
 	@OneToMany(() => Message, (message) => message.taskActivity, { lazy: true })
 	messages: Promise<Message[]>;

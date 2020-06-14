@@ -32,4 +32,7 @@ export class Milestone extends BaseEntity {
 	@ManyToOne(() => Goal, (goal) => goal.milestones, { lazy: true })
 	@Field(() => Goal)
 	goal: Promise<Goal>;
+
+	@Column()
+	goalId: string;
 }

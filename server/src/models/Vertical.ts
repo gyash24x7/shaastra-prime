@@ -37,6 +37,9 @@ export class Vertical extends BaseEntity {
 	@Field(() => User)
 	updatedBy: Promise<User>;
 
+	@Column()
+	updatedById: string;
+
 	@UpdateDateColumn()
 	@Field()
 	updatedOn: string;

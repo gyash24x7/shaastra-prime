@@ -4,7 +4,7 @@ import { setContext } from "@apollo/link-context";
 import { WebSocketLink } from "@apollo/link-ws";
 
 const [WS_URL, HTTP_URL] =
-	process.env.NODE_ENV === "development"
+	process.env.NODE_ENV === "production"
 		? ["ws://localhost:8000", "http://localhost:8000"]
 		: ["wss://api.shaastra.org", "https://api.shaastra.org"];
 

@@ -3,8 +3,8 @@ import {
 	BaseEntity,
 	Column,
 	Entity,
+	Generated,
 	OneToMany,
-	PrimaryColumn,
 	PrimaryGeneratedColumn
 } from "typeorm";
 import { Registration } from "./Registration";
@@ -21,15 +21,15 @@ export class Participant extends BaseEntity {
 	@Field()
 	name: string;
 
-	@PrimaryGeneratedColumn("increment")
+	@Generated("increment")
 	@Field()
 	shaastraID: string;
 
-	@PrimaryColumn()
+	@Column({ unique: true })
 	@Field()
 	shaastraQR: string;
 
-	@Column()
+	@Column({ unique: true })
 	@Field()
 	email: string;
 

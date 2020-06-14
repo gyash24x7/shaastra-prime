@@ -21,7 +21,7 @@
 		"db:studio": "cd server && npx prisma studio --experimental",
 		"db:migrate": "yarn workspace server migrate",
 		"build": "dotenv -e ./server/.env yarn gen:server && yarn build:server",
-		"start": "node ./server/dist",
+		"start": "ts-node src/index.ts",
 		"dev:app": "yarn workspace app start"
 	}
 }
