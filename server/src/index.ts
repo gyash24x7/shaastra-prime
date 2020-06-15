@@ -23,15 +23,42 @@ import { Update } from "./models/Update";
 import { User } from "./models/User";
 import { Vendor } from "./models/Vendor";
 import { Vertical } from "./models/Vertical";
-import { resolvers } from "./resolvers";
+import { ChannelResolver } from "./resolvers/Channel";
+import { DepartmentResolver } from "./resolvers/Department";
+import { EventResolver } from "./resolvers/Event";
+import { GoalResolver } from "./resolvers/Goal";
+import { InvoiceResolver } from "./resolvers/Invoice";
+import { MessageResolver } from "./resolvers/Message";
+import { TaskResolver } from "./resolvers/Task";
+import { UpdateResolver } from "./resolvers/Update";
+import { UserResolver } from "./resolvers/User";
+import { VendorResolver } from "./resolvers/Vendor";
+import { VerticalResolver } from "./resolvers/Vertical";
 import { GraphQLContext } from "./utils";
 import { authChecker } from "./utils/authChecker";
 import { getAuthUser } from "./utils/getAuthUser";
 
 dotenv.config();
 
+// useContainer(Container);
+
 const startServer = async () => {
-	const schema = await buildSchema({ resolvers, authChecker } as any);
+	const schema = await buildSchema({
+		resolvers: [
+			DepartmentResolver,
+			UserResolver,
+			ChannelResolver,
+			MessageResolver,
+			UpdateResolver,
+			TaskResolver,
+			InvoiceResolver,
+			GoalResolver,
+			EventResolver,
+			VendorResolver,
+			VerticalResolver
+		],
+		authChecker
+	});
 
 	await createConnection({
 		type: "postgres",

@@ -93,7 +93,7 @@ export class User extends BaseEntity {
 
 	// PRIMARY FIELDS
 
-	@PrimaryColumn("uuid")
+	@PrimaryColumn()
 	@Field(() => ID)
 	id: string;
 
@@ -133,7 +133,7 @@ export class User extends BaseEntity {
 	@Field(() => UserRole)
 	role: UserRole;
 
-	@Column()
+	@Column({ default: false })
 	@Field()
 	verified: boolean;
 
@@ -143,7 +143,7 @@ export class User extends BaseEntity {
 	@Column()
 	verificationOTP: string;
 
-	@Column()
+	@Column({ nullable: true })
 	passwordOTP: string;
 
 	// RELATIONS & FOREIGN KEYS
