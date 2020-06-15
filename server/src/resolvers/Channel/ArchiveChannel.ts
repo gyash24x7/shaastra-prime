@@ -15,8 +15,8 @@ export class ArchiveChannelResolver {
 		Message.create({
 			type: MessageType.SYSTEM,
 			content: `${user!.name} archived the Channel.`,
-			createdBy: Promise.resolve(user),
-			channel: Channel.findOne(channelId)
+			createdById: user.id,
+			channels: Channel.findByIds([channelId])
 		})
 			.save()
 			.then(() => console.log("Channel Update Message sent!"));

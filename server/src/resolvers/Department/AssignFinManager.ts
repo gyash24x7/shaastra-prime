@@ -1,5 +1,5 @@
 import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
-import { AssignFinManagerInput } from "../../inputs/Department/AssignFinManager";
+import { AssignFinManagerInput } from "../../inputs/Department";
 import { Department } from "../../models/Department";
 import { User } from "../../models/User";
 

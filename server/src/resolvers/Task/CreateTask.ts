@@ -36,19 +36,17 @@ export class CreateTaskResolver {
 
 		const channels = await task.channels;
 
-		Promise.all(
-			channels.map((channel) =>
-				Message.create({
-					channel: Promise.resolve(channel),
-					content: "",
-					type: MessageType.TASK_ACTIVITY,
-					createdBy: Promise.resolve(user),
-					taskActivity: Promise.resolve(activity)
-				}).save()
-			)
-		).then(() => {
-			console.log("Task Activity Messages Sent!");
-		});
+		Message.create({
+			channels: Promise.resolve(channels),
+			content: "",
+			type: MessageType.TASK_ACTIVITY,
+			createdBy: Promise.resolve(user),
+			taskActivity: Promise.resolve(activity)
+		})
+			.save()
+			.then(() => {
+				console.log("Task Activity Messages Sent!");
+			});
 
 		return !!task;
 	}

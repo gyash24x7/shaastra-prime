@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { Arg, Mutation, Resolver } from "type-graphql";
-import { LoginInput } from "../../inputs/User/Login";
+import { LoginInput } from "../../inputs/User";
 import { User } from "../../models/User";
 dotenv.config();
 

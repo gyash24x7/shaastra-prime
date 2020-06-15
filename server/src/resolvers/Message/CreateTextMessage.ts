@@ -7,7 +7,7 @@ import {
 	PubSubEngine,
 	Resolver
 } from "type-graphql";
-import { CreateTextMessageInput } from "../../inputs/Message/CreateTextMessage";
+import { CreateTextMessageInput } from "../../inputs/Message";
 import { Channel } from "../../models/Channel";
 import { Message } from "../../models/Message";
 import { GraphQLContext, MessageType } from "../../utils";
@@ -22,7 +22,7 @@ export class CreateTextMessageResolver {
 		@PubSub() pubsub: PubSubEngine
 	) {
 		let message = await Message.create({
-			channel: Channel.findOne(channelId),
+			channels: Channel.findByIds([channelId]),
 			createdBy: Promise.resolve(user),
 			content,
 			type: MessageType.TEXT

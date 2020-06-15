@@ -1,5 +1,5 @@
 import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
-import { GrantAccessInput } from "../../inputs/Department/GrantAccess";
+import { GrantAccessInput } from "../../inputs/Department";
 import { User } from "../../models/User";
 
 @Resolver()

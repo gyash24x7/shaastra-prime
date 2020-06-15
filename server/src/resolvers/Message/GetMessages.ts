@@ -1,5 +1,5 @@
 import { Arg, Authorized, Query, Resolver } from "type-graphql";
-import { GetMessagesInput } from "../../inputs/Message/GetMessages";
+import { GetMessagesInput } from "../../inputs/Message";
 import { Channel } from "../../models/Channel";
 import { Message } from "../../models/Message";
 

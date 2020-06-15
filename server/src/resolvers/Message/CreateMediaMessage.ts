@@ -7,7 +7,7 @@ import {
 	PubSubEngine,
 	Resolver
 } from "type-graphql";
-import { CreateMediaMessageInput } from "../../inputs/Message/CreateMediaMessage";
+import { CreateMediaMessageInput } from "../../inputs/Message";
 import { Channel } from "../../models/Channel";
 import { Media } from "../../models/Media";
 import { Message } from "../../models/Message";
@@ -31,7 +31,7 @@ export class CreateMediaMessageResolver {
 		);
 
 		let message = await Message.create({
-			channel: Channel.findOne(channelId),
+			channels: Channel.findByIds([channelId]),
 			createdBy: Promise.resolve(user),
 			content: "",
 			type: MessageType.MEDIA,

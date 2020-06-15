@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { AddUsersToChannelInput } from "../../inputs/Channel/AddUsersToChannel";
+import { AddUsersToChannelInput } from "../../inputs/Channel";
 import { Channel } from "../../models/Channel";
 import { Message } from "../../models/Message";
 import { User } from "../../models/User";
@@ -28,8 +28,8 @@ export class AddUsersToChannelResolver {
 			content: `${user!.name} added ${usersToBeAdded.map(
 				({ name }) => name + ", "
 			)}`,
-			createdBy: Promise.resolve(user),
-			channel: Promise.resolve(channel)
+			createdById: user.id,
+			channels: Promise.resolve([] as Channel[])
 		})
 			.save()
 			.then(() => {

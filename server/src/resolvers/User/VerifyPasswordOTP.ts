@@ -1,5 +1,5 @@
 import { Arg, Mutation, Resolver } from "type-graphql";
-import { VerifyPasswordOTPInput } from "../../inputs/User/VerifyPasswordOTP";
+import { VerifyPasswordOTPInput } from "../../inputs/User";
 import { User } from "../../models/User";
 
 @Resolver()

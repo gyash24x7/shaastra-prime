@@ -24,3 +24,30 @@ export class CreateUserInput {
 	@Field()
 	departmentId: string;
 }
+
+@InputType("ForgotPasswordInput")
+export class ForgotPasswordInput {
+	@Field()
+	email: string;
+
+	@Field()
+	newPassword: string;
+}
+
+@InputType("LoginInput")
+export class LoginInput {
+	@Field()
+	email: string;
+
+	@Field()
+	password: string;
+}
+
+@InputType("VerifyPasswordOTPInput")
+export class VerifyPasswordOTPInput {
+	@Field()
+	email: string;
+
+	@Field()
+	passwordOTP: string;
+}

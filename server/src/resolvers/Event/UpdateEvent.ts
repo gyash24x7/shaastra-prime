@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { UpdateEventInput } from "../../inputs/Event/UpdateEvent";
+import { UpdateEventInput } from "../../inputs/Event";
 import { Event } from "../../models/Event";
 import { Media } from "../../models/Media";
 import { defaultImageUrl, GraphQLContext, MediaType } from "../../utils";

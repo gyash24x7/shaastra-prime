@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { CreateVerticalInput } from "../../inputs/Vertical/CreateVertical";
+import { CreateVerticalInput } from "../../inputs/Vertical";
 import { Media } from "../../models/Media";
 import { Vertical } from "../../models/Vertical";
 import { GraphQLContext, MediaType } from "../../utils";

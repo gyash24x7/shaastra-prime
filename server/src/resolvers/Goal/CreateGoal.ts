@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { CreateGoalInput } from "../../inputs/Goal/CreateGoal";
+import { CreateGoalInput } from "../../inputs/Goal";
 import { Goal } from "../../models/Goal";
 import { Milestone } from "../../models/Milestone";
 import { GraphQLContext } from "../../utils";

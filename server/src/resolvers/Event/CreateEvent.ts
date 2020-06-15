@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { CreateEventInput } from "../../inputs/Event/CreateEvent";
+import { CreateEventInput } from "../../inputs/Event";
 import { Event } from "../../models/Event";
 import { Media } from "../../models/Media";
 import { Vertical } from "../../models/Vertical";

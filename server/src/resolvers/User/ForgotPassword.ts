@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import { Arg, Mutation, Resolver } from "type-graphql";
-import { ForgotPasswordInput } from "../../inputs/User/ForgotPassword";
+import { ForgotPasswordInput } from "../../inputs/User";
 import { User } from "../../models/User";
 
 @Resolver()

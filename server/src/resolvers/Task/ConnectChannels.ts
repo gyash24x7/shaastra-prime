@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { ConnectChannelsToTaskInput } from "../../inputs/Task/ConnectChannels";
+import { ConnectChannelsToTaskInput } from "../../inputs/Task";
 import { Channel } from "../../models/Channel";
 import { Message } from "../../models/Message";
 import { Task } from "../../models/Task";
@@ -34,19 +34,17 @@ export class ConnectChannelsToTaskResolver {
 			task: Promise.resolve(task)
 		}).save();
 
-		Promise.all(
-			channels.map((channel) =>
-				Message.create({
-					channel: Promise.resolve(channel),
-					content: "",
-					type: MessageType.TASK_ACTIVITY,
-					createdBy: Promise.resolve(user),
-					taskActivity: Promise.resolve(activity)
-				}).save()
-			)
-		).then(() => {
-			console.log("Task Activity Messages Sent!");
-		});
+		Message.create({
+			channels: Promise.resolve(channels),
+			content: "",
+			type: MessageType.TASK_ACTIVITY,
+			createdBy: Promise.resolve(user),
+			taskActivity: Promise.resolve(activity)
+		})
+			.save()
+			.then(() => {
+				console.log("Task Activity Messages Sent!");
+			});
 
 		return !!affected;
 	}

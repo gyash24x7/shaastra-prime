@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { SubmitInvoiceInput } from "../../inputs/Invoice/SubmitInvoice";
+import { SubmitInvoiceInput } from "../../inputs/Invoice";
 import { Channel } from "../../models/Channel";
 import { Invoice } from "../../models/Invoice";
 import { InvoiceActivity } from "../../models/InvoiceActivity";
@@ -58,19 +58,17 @@ export class SubmitInvoiceResolver {
 
 		const messageChannels = await invoice.channels;
 
-		Promise.all(
-			messageChannels.map((channel) =>
-				Message.create({
-					channel: Promise.resolve(channel),
-					content: "",
-					type: MessageType.INVOICE_ACTIVITY,
-					createdBy: Promise.resolve(user),
-					invoiceActivity: Promise.resolve(activity)
-				}).save()
-			)
-		).then(() => {
-			console.log("Invoice Update Messages Sent!");
-		});
+		Message.create({
+			channels: Promise.resolve(messageChannels),
+			content: "",
+			type: MessageType.INVOICE_ACTIVITY,
+			createdBy: Promise.resolve(user),
+			invoiceActivity: Promise.resolve(activity)
+		})
+			.save()
+			.then(() => {
+				console.log("Invoice Update Messages Sent!");
+			});
 
 		return !!invoice;
 	}

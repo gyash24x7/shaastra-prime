@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { UpdateChannelDescriptionInput } from "../../inputs/Channel/UpdateChannelDescription";
+import { UpdateChannelDescriptionInput } from "../../inputs/Channel";
 import { Channel } from "../../models/Channel";
 import { Message } from "../../models/Message";
 import { GraphQLContext, MessageType } from "../../utils";
@@ -18,8 +18,8 @@ export class UpdateChannelDescriptionResolver {
 		Message.create({
 			type: MessageType.SYSTEM,
 			content: `${user!.name} changed the Channel Description`,
-			createdBy: Promise.resolve(user),
-			channel: Channel.findOne(channelId)
+			createdById: user.id,
+			channels: Channel.findByIds([channelId])
 		})
 			.save()
 			.then(() => console.log("Channel Update Message sent!"));

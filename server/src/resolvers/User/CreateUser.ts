@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Arg, Mutation, Resolver } from "type-graphql";
-import { CreateUserInput } from "../../inputs/User/CreateUser";
+import { CreateUserInput } from "../../inputs/User";
 import { Department } from "../../models/Department";
 import { User } from "../../models/User";
 

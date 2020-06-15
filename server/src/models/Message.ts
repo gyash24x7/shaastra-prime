@@ -75,6 +75,9 @@ export class Message extends BaseEntity {
 	@Field(() => User)
 	createdBy: Promise<User>;
 
+	@Column()
+	createdById: string;
+
 	@OneToMany(() => Media, (media) => media.message, { lazy: true })
 	@Field(() => [Media])
 	media: Promise<Media[]>;

@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { ConnectChannelsToInvoiceInput } from "../../inputs/Invoice/ConnectChannels";
+import { ConnectChannelsToInvoiceInput } from "../../inputs/Invoice";
 import { Channel } from "../../models/Channel";
 import { Invoice } from "../../models/Invoice";
 import { InvoiceActivity } from "../../models/InvoiceActivity";
@@ -29,19 +29,17 @@ export class ConnectChannelsToInvoiceResolver {
 			createdBy: Promise.resolve(user)
 		}).save();
 
-		Promise.all(
-			channels.map((channel) =>
-				Message.create({
-					channel: Promise.resolve(channel),
-					content: "",
-					type: MessageType.INVOICE_ACTIVITY,
-					createdBy: Promise.resolve(user),
-					invoiceActivity: Promise.resolve(activity)
-				}).save()
-			)
-		).then(() => {
-			console.log("Invoice Update Messages Sent!");
-		});
+		Message.create({
+			channels: Promise.resolve(channels),
+			content: "",
+			type: MessageType.INVOICE_ACTIVITY,
+			createdById: user.id,
+			invoiceActivity: Promise.resolve(activity)
+		})
+			.save()
+			.then(() => {
+				console.log("Invoice Update Messages Sent!");
+			});
 
 		return !!affected;
 	}

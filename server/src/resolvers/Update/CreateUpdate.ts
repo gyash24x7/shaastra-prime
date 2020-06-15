@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { CreateUpdateInput } from "../../inputs/Update/CreateUpdate";
+import { CreateUpdateInput } from "../../inputs/Update";
 import { Update } from "../../models/Update";
 import { GraphQLContext } from "../../utils";
 

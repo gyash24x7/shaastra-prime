@@ -1,5 +1,5 @@
 import { Field, InputType } from "type-graphql";
-import { GoalType } from "./../../utils";
+import { GoalType } from "./../utils";
 
 @InputType("CreateGoalInput")
 export class CreateGoalInput {

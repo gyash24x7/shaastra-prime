@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Resolver } from "type-graphql";
-import { CreateChannelInput } from "../../inputs/Channel/CreateChannel";
+import { CreateChannelInput } from "../../inputs/Channel";
 import { Channel } from "../../models/Channel";
 import { User } from "../../models/User";
 import { ChannelType, GraphQLContext } from "../../utils";
