@@ -1,7 +1,7 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Goal } from "../entities/Goal";
+import { Milestone } from "../entities/Milestone";
 import { CreateGoalInput } from "../inputs/Goal";
-import { Goal } from "../models/Goal";
-import { Milestone } from "../models/Milestone";
 import { GraphQLContext, MilestoneStatus } from "../utils";
 
 @Resolver()

@@ -1,7 +1,7 @@
 import { Request } from "express";
 import jwt from "jsonwebtoken";
 import { ExecutionParams } from "subscriptions-transport-ws";
-import { User } from "../models/User";
+import { User } from "../entities/User";
 
 interface AuthParams {
 	req: Request;

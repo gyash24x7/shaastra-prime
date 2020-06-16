@@ -1,7 +1,7 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Department } from "../entities/Department";
+import { User } from "../entities/User";
 import { AssignFinManagerInput, GrantAccessInput } from "../inputs/Department";
-import { Department } from "../models/Department";
-import { User } from "../models/User";
 import { GraphQLContext } from "../utils";
 
 @Resolver()

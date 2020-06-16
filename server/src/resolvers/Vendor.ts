@@ -1,6 +1,6 @@
 import { Arg, Authorized, Mutation, Query, Resolver } from "type-graphql";
+import { Vendor } from "../entities/Vendor";
 import { CreateVendorInput } from "../inputs/Vendor";
-import { Vendor } from "../models/Vendor";
 
 @Resolver()
 export class VendorResolver {

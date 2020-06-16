@@ -1,8 +1,8 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Event } from "../entities/Event";
+import { Media } from "../entities/Media";
+import { Vertical } from "../entities/Vertical";
 import { CreateEventInput, UpdateEventInput } from "../inputs/Event";
-import { Event } from "../models/Event";
-import { Media } from "../models/Media";
-import { Vertical } from "../models/Vertical";
 import { defaultImageUrl, GraphQLContext, MediaType } from "../utils";
 
 @Resolver()

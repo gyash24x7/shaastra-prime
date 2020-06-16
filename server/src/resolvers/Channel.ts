@@ -8,14 +8,14 @@ import {
 	Resolver,
 	Root
 } from "type-graphql";
+import { Channel } from "../entities/Channel";
+import { Message } from "../entities/Message";
+import { User } from "../entities/User";
 import {
 	AddUsersToChannelInput,
 	CreateChannelInput,
 	UpdateChannelDescriptionInput
 } from "../inputs/Channel";
-import { Channel } from "../models/Channel";
-import { Message } from "../models/Message";
-import { User } from "../models/User";
 import { ChannelType, GraphQLContext, MessageType } from "../utils";
 
 @Resolver(Channel)

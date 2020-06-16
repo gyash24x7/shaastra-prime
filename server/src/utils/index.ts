@@ -1,6 +1,13 @@
 import { Email } from "node-mailjet";
 import { Stream } from "stream";
-import { User } from "../models/User";
+import { User } from "../entities/User";
+
+export interface SendMailOptions {
+	rollNumber: string;
+	name: string;
+	subject: string;
+	htmlPart: string;
+}
 
 export enum UserRole {
 	COORD = "COORD",

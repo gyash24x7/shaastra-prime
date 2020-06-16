@@ -1,18 +1,18 @@
 import moment from "moment";
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Channel } from "../entities/Channel";
+import { Department } from "../entities/Department";
+import { Media } from "../entities/Media";
+import { Message } from "../entities/Message";
+import { Task } from "../entities/Task";
+import { TaskActivity } from "../entities/TaskActivity";
+import { User } from "../entities/User";
 import {
 	AssignTaskInput,
 	AttachMediaToTaskInput,
 	ConnectChannelsToTaskInput,
 	CreateTaskInput
 } from "../inputs/Task";
-import { Channel } from "../models/Channel";
-import { Department } from "../models/Department";
-import { Media } from "../models/Media";
-import { Message } from "../models/Message";
-import { Task } from "../models/Task";
-import { TaskActivity } from "../models/TaskActivity";
-import { User } from "../models/User";
 import {
 	GraphQLContext,
 	MediaType,

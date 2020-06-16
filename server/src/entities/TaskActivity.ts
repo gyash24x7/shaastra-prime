@@ -9,7 +9,7 @@ import {
 	ManyToOne,
 	PrimaryColumn
 } from "typeorm";
-import { TaskActivityType } from "./../utils/index";
+import { TaskActivityType } from "../utils/index";
 import { Task } from "./Task";
 import { User } from "./User";
 

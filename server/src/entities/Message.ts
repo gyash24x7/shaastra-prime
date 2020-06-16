@@ -14,7 +14,7 @@ import {
 	OneToOne,
 	PrimaryColumn
 } from "typeorm";
-import { MessageType } from "./../utils/index";
+import { MessageType } from "../utils/index";
 import { Channel } from "./Channel";
 import { InvoiceActivity } from "./InvoiceActivity";
 import { Media } from "./Media";

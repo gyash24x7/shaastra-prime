@@ -1,7 +1,7 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Media } from "../entities/Media";
+import { Vertical } from "../entities/Vertical";
 import { CreateVerticalInput, UpdateVerticalInput } from "../inputs/Vertical";
-import { Media } from "../models/Media";
-import { Vertical } from "../models/Vertical";
 import { GraphQLContext, MediaType } from "../utils";
 
 @Resolver()

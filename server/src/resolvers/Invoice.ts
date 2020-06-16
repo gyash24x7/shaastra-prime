@@ -1,16 +1,16 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Channel } from "../entities/Channel";
+import { Invoice } from "../entities/Invoice";
+import { InvoiceActivity } from "../entities/InvoiceActivity";
+import { Media } from "../entities/Media";
+import { Message } from "../entities/Message";
+import { Vendor } from "../entities/Vendor";
 import {
 	ApproveInvoiceInput,
 	ConnectChannelsToInvoiceInput,
 	RejectInvoiceInput,
 	SubmitInvoiceInput
 } from "../inputs/Invoice";
-import { Channel } from "../models/Channel";
-import { Invoice } from "../models/Invoice";
-import { InvoiceActivity } from "../models/InvoiceActivity";
-import { Media } from "../models/Media";
-import { Message } from "../models/Message";
-import { Vendor } from "../models/Vendor";
 import {
 	APPROVAL_STAGES,
 	GraphQLContext,

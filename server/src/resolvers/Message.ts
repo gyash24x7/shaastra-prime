@@ -11,14 +11,14 @@ import {
 	Root,
 	Subscription
 } from "type-graphql";
+import { Channel } from "../entities/Channel";
+import { Media } from "../entities/Media";
+import { Message } from "../entities/Message";
 import {
 	CreateMediaMessageInput,
 	CreateTextMessageInput,
 	GetMessagesInput
 } from "../inputs/Message";
-import { Channel } from "../models/Channel";
-import { Media } from "../models/Media";
-import { Message } from "../models/Message";
 import { GraphQLContext, MediaType, MessageType } from "../utils";
 
 @Resolver(Message)

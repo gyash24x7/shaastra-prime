@@ -11,7 +11,7 @@ import {
 	ManyToOne,
 	PrimaryColumn
 } from "typeorm";
-import { ChannelType } from "./../utils/index";
+import { ChannelType } from "../utils/index";
 import { Invoice } from "./Invoice";
 import { Message } from "./Message";
 import { Task } from "./Task";
