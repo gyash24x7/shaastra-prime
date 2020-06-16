@@ -1,14 +1,24 @@
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
-import { Repository } from "typeorm";
+import graphqlFields from "graphql-fields";
+import {
+	Arg,
+	Authorized,
+	Ctx,
+	Info,
+	Mutation,
+	Query,
+	Resolver
+} from "type-graphql";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Update } from "../entities/Update";
 import { CreateUpdateInput } from "../inputs/Update";
+import { UpdateRepository } from "../repositories/Update";
 import { GraphQLContext } from "../utils";
+import getSelectionAndRelation from "../utils/getSelectionAndRelation";
 
 @Resolver()
 export class UpdateResolver {
-	@InjectRepository(Update)
-	private readonly updateRepo: Repository<Update>;
+	@InjectRepository()
+	private readonly updateRepo: UpdateRepository;
 
 	@Authorized()
 	@Mutation(() => Boolean)
@@ -29,8 +39,17 @@ export class UpdateResolver {
 
 	@Authorized()
 	@Query(() => [Update])
-	async getUpdates() {
-		const updates = await this.updateRepo.find({ order: { id: "DESC" } });
+	async getUpdates(@Info() info: any) {
+		const { select, relations } = getSelectionAndRelation(
+			graphqlFields(info),
+			this.updateRepo
+		);
+
+		const updates = await this.updateRepo.find({
+			order: { id: "DESC" },
+			select,
+			relations
+		});
 		return updates;
 	}
 }
