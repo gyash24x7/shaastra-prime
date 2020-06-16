@@ -83,56 +83,52 @@ export class User extends BaseEntity {
 
 	// RELATIONS & FOREIGN KEYS
 
-	@ManyToOne(() => Department, (dept) => dept.members, { lazy: true })
+	@ManyToOne(() => Department, (dept) => dept.members)
 	@Field(() => Department)
-	department: Promise<Department>;
+	department: Department;
 
 	@Column()
 	departmentId: string;
 
-	@ManyToMany(() => Channel, (channel) => channel.members, { lazy: true })
-	channels: Promise<Channel[]>;
+	@ManyToMany(() => Channel, (channel) => channel.members)
+	channels: Channel[];
 
-	@OneToMany(() => Media, (media) => media.uploadedBy, { lazy: true })
-	media: Promise<Media[]>;
+	@OneToMany(() => Media, (media) => media.uploadedBy)
+	media: Media[];
 
-	@OneToMany(() => Task, (task) => task.createdBy, { lazy: true })
-	tasksAssigned: Promise<Task[]>;
+	@ManyToMany(() => Task, (task) => task.createdBy)
+	tasksAssigned: Task[];
 
-	@OneToMany(() => Invoice, (invoice) => invoice.uploadedBy, { lazy: true })
-	invoicesSubmitted: Promise<Invoice[]>;
+	@OneToMany(() => Invoice, (invoice) => invoice.uploadedBy)
+	invoicesSubmitted: Invoice[];
 
-	@ManyToOne(() => Message, (msg) => msg.createdBy, { lazy: true })
-	messages: Promise<Message[]>;
+	@ManyToOne(() => Message, (msg) => msg.createdBy)
+	messages: Message[];
 
-	@OneToMany(() => Channel, (channel) => channel.createdBy, { lazy: true })
-	channelsCreated: Promise<Channel[]>;
+	@OneToMany(() => Channel, (channel) => channel.createdBy)
+	channelsCreated: Channel[];
 
-	@OneToMany(() => Task, (task) => task.createdBy, { lazy: true })
-	tasksCreated: Promise<Task[]>;
+	@OneToMany(() => Task, (task) => task.createdBy)
+	tasksCreated: Task[];
 
-	@ManyToMany(() => Message, (message) => message.likedBy, { lazy: true })
-	likedMessages: Promise<Message[]>;
+	@ManyToMany(() => Message, (message) => message.likedBy)
+	likedMessages: Message[];
 
-	@OneToMany(() => Update, (update) => update.postedBy, { lazy: true })
-	updates: Promise<Update[]>;
+	@OneToMany(() => Update, (update) => update.postedBy)
+	updates: Update[];
 
-	@OneToMany(() => Vertical, (vertical) => vertical.updatedBy, { lazy: true })
-	verticalsUpdated: Promise<Vertical[]>;
+	@OneToMany(() => Vertical, (vertical) => vertical.updatedBy)
+	verticalsUpdated: Vertical[];
 
-	@OneToMany(() => Event, (event) => event.updatedBy, { lazy: true })
-	eventsUpdated: Promise<Event[]>;
+	@OneToMany(() => Event, (event) => event.updatedBy)
+	eventsUpdated: Event[];
 
-	@OneToMany(() => TaskActivity, (activity) => activity.createdBy, {
-		lazy: true
-	})
+	@OneToMany(() => TaskActivity, (activity) => activity.createdBy)
 	taskActivity: Promise<TaskActivity[]>;
 
-	@OneToMany(() => InvoiceActivity, (activity) => activity.createdBy, {
-		lazy: true
-	})
+	@OneToMany(() => InvoiceActivity, (activity) => activity.createdBy)
 	invoiceActivity: Promise<InvoiceActivity[]>;
 
-	@OneToMany(() => Department, (dept) => dept.finManager, { lazy: true })
-	finManagerForDepts: Promise<Department[]>;
+	@OneToMany(() => Department, (dept) => dept.finManager)
+	finManagerForDepts: Department[];
 }

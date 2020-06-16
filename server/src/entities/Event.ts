@@ -1,8 +1,6 @@
-import cuid from "cuid";
 import { Field, ID, Int, ObjectType, registerEnumType } from "type-graphql";
 import {
 	BaseEntity,
-	BeforeInsert,
 	Column,
 	Entity,
 	JoinColumn,
@@ -23,29 +21,6 @@ registerEnumType(RegistrationType, { name: "RegistrationType" });
 @Entity("Event")
 @ObjectType("Event")
 export class Event extends BaseEntity {
-	// STATIC FIELDS
-
-	static primaryFields = [
-		"id",
-		"name",
-		"rank",
-		"info",
-		"updatedOn",
-		"approved",
-		"paid",
-		"eventTabs",
-		"registrationType"
-	];
-
-	static relationalFields = ["updatedBy", "image", "vertical", "registrations"];
-
-	// LISTENERS
-
-	@BeforeInsert()
-	setId() {
-		this.id = cuid();
-	}
-
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -87,28 +62,26 @@ export class Event extends BaseEntity {
 
 	// RELATIONS AND FOREIGN KEYS
 
-	@ManyToOne(() => User, (user) => user.eventsUpdated, { lazy: true })
+	@ManyToOne(() => User, (user) => user.eventsUpdated)
 	@Field(() => User)
-	updatedBy: Promise<User>;
+	updatedBy: User;
 
 	@Column()
 	updatedById: string;
 
-	@OneToOne(() => Media, { lazy: true })
+	@OneToOne(() => Media)
 	@JoinColumn()
 	@Field(() => Media)
-	image: Promise<Media>;
+	image: Media;
 
-	@ManyToOne(() => Vertical, (vertical) => vertical.events, { lazy: true })
+	@ManyToOne(() => Vertical, (vertical) => vertical.events)
 	@Field(() => Vertical)
-	vertical: Promise<Vertical>;
+	vertical: Vertical;
 
 	@Column()
 	verticalId: string;
 
-	@OneToMany(() => Registration, (registration) => registration.event, {
-		lazy: true
-	})
+	@OneToMany(() => Registration, (registration) => registration.event)
 	@Field(() => [Registration])
-	registrations: Promise<Registration[]>;
+	registrations: Registration[];
 }

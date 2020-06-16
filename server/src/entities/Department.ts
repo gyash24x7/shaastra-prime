@@ -1,8 +1,6 @@
-import cuid from "cuid";
 import { Field, ID, ObjectType } from "type-graphql";
 import {
 	BaseEntity,
-	BeforeInsert,
 	Column,
 	Entity,
 	ManyToOne,
@@ -18,27 +16,6 @@ import { User } from "./User";
 @Entity("Department")
 @ObjectType("Department")
 export class Department extends BaseEntity {
-	// STATIC FIELDS
-
-	static primaryFields = ["id", "name", "shortName", "subDepartments"];
-
-	static relationalFields = [
-		"members",
-		"tasksAssigned",
-		"tasksCreated",
-		"goals",
-		"finManager",
-		"updates",
-		"invoicesSubmitted"
-	];
-
-	// LISTENERS
-
-	@BeforeInsert()
-	setId() {
-		this.id = cuid();
-	}
-
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -59,32 +36,32 @@ export class Department extends BaseEntity {
 
 	// RELATIONS
 
-	@OneToMany(() => User, (member) => member.department, { lazy: true })
+	@OneToMany(() => User, (member) => member.department)
 	@Field(() => [User])
-	members: Promise<User[]>;
+	members: User[];
 
-	@OneToMany(() => Task, (task) => task.forDept, { lazy: true })
+	@OneToMany(() => Task, (task) => task.forDept)
 	@Field(() => [Task])
-	tasksAssigned: Promise<Task[]>;
+	tasksAssigned: Task[];
 
-	@OneToMany(() => Task, (task) => task.byDept, { lazy: true })
+	@OneToMany(() => Task, (task) => task.byDept)
 	@Field(() => [Task])
-	tasksCreated: Promise<Task[]>;
+	tasksCreated: Task[];
 
-	@OneToMany(() => Goal, (goal) => goal.dept, { lazy: true })
+	@OneToMany(() => Goal, (goal) => goal.dept)
 	@Field(() => [Goal])
-	goals: Promise<Goal[]>;
+	goals: Goal[];
 
-	@ManyToOne(() => User, (user) => user.finManagerForDepts, { lazy: true })
+	@ManyToOne(() => User, (user) => user.finManagerForDepts)
 	@Field(() => User, { nullable: true })
-	finManager?: Promise<User>;
+	finManager?: User;
 
 	@Column({ nullable: true })
 	finManagerId?: string;
 
-	@OneToMany(() => Invoice, (invoice) => invoice.byDept, { lazy: true })
-	invoicesSubmitted: Promise<Invoice[]>;
+	@OneToMany(() => Invoice, (invoice) => invoice.byDept)
+	invoicesSubmitted: Invoice[];
 
-	@OneToMany(() => Update, (update) => update.byDept, { lazy: true })
-	updates: Promise<Update[]>;
+	@OneToMany(() => Update, (update) => update.byDept)
+	updates: Update[];
 }

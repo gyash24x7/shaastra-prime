@@ -1,8 +1,6 @@
-import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
 	BaseEntity,
-	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -22,32 +20,6 @@ registerEnumType(ChannelType, { name: "ChannelType" });
 @Entity("Channel")
 @ObjectType("Channel")
 export class Channel extends BaseEntity {
-	// STATIC FIELDS
-
-	static primaryFields = [
-		"id",
-		"name",
-		"description",
-		"createdOn",
-		"archived",
-		"type"
-	];
-
-	static relationalFields = [
-		"messages",
-		"connectedInvoices",
-		"connectedTasks",
-		"createdBy",
-		"members"
-	];
-
-	// LISTENERS
-
-	@BeforeInsert()
-	setId() {
-		this.id = cuid();
-	}
-
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -76,30 +48,27 @@ export class Channel extends BaseEntity {
 
 	// RELATIONS
 
-	@ManyToMany(() => User, (user) => user.channels, { lazy: true })
+	@ManyToMany(() => User, (user) => user.channels)
 	@JoinTable()
 	@Field(() => [User])
-	members: Promise<User[]>;
+	members: User[];
 
-	@ManyToOne(() => User, (user) => user.channelsCreated, { lazy: true })
+	@ManyToOne(() => User, (user) => user.channelsCreated)
 	@Field(() => User)
-	createdBy: Promise<User>;
+	createdBy: User;
 
 	@Column()
 	createdById: string;
 
-	@ManyToMany(() => Task, (task) => task.channels, { lazy: true })
+	@ManyToMany(() => Task, (task) => task.channels)
 	@Field(() => [Task])
-	connectedTasks: Promise<Task[]>;
+	connectedTasks: Task[];
 
-	@ManyToMany(() => Invoice, (invoice) => invoice.channels, { lazy: true })
+	@ManyToMany(() => Invoice, (invoice) => invoice.channels)
 	@Field(() => [Invoice])
-	connectedInvoices: Promise<Invoice[]>;
+	connectedInvoices: Invoice[];
 
-	//computed
-	@Field(() => [Message]) starredMsgs: Message[];
-
-	@ManyToMany(() => Message, (message) => message.channels, { lazy: true })
+	@ManyToMany(() => Message, (message) => message.channels)
 	@JoinTable()
-	messages: Promise<Message[]>;
+	messages: Message[];
 }

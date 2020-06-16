@@ -37,16 +37,16 @@ export class Update extends BaseEntity {
 
 	// RELATIONS AND FOREIGN KEYS
 
-	@ManyToOne(() => Department, (dept) => dept.updates, { lazy: true })
+	@ManyToOne(() => Department, (dept) => dept.updates)
 	@Field(() => Department)
-	byDept: Promise<Department>;
+	byDept: Department;
 
 	@Column()
 	byDeptId: string;
 
-	@ManyToOne(() => User, (user) => user.updates, { lazy: true })
+	@ManyToOne(() => User, (user) => user.updates)
 	@Field(() => User)
-	postedBy: Promise<User>;
+	postedBy: User;
 
 	@Column()
 	postedById: string;

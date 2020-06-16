@@ -1,8 +1,6 @@
-import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
 	BaseEntity,
-	BeforeInsert,
 	Column,
 	Entity,
 	JoinColumn,
@@ -27,35 +25,6 @@ registerEnumType(InvoiceType, { name: "InvoiceType" });
 @Entity("Invoice")
 @ObjectType("Invoice")
 export class Invoice extends BaseEntity {
-	// STATIC FIELDS
-
-	static primaryFields = [
-		"id",
-		"title",
-		"date",
-		"invoiceNumber",
-		"amount",
-		"purpose",
-		"status",
-		"type"
-	];
-
-	static relationalFields = [
-		"media",
-		"activity",
-		"uploadedBy",
-		"byDept",
-		"vendor",
-		"channels"
-	];
-
-	// LISTENERS
-
-	@BeforeInsert()
-	setId() {
-		this.id = cuid();
-	}
-
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -97,35 +66,33 @@ export class Invoice extends BaseEntity {
 	@Field(() => Media)
 	media: Promise<Media>;
 
-	@OneToMany(() => InvoiceActivity, (activity) => activity.invoice, {
-		lazy: true
-	})
+	@OneToMany(() => InvoiceActivity, (activity) => activity.invoice)
 	@Field(() => [InvoiceActivity])
-	activity: Promise<InvoiceActivity[]>;
+	activity: InvoiceActivity[];
 
-	@ManyToOne(() => User, (user) => user.invoicesSubmitted, { lazy: true })
+	@ManyToOne(() => User, (user) => user.invoicesSubmitted)
 	@Field(() => User)
-	uploadedBy: Promise<User>;
+	uploadedBy: User;
 
 	@Column()
 	uploadedById: string;
 
-	@ManyToOne(() => Department, (dept) => dept.invoicesSubmitted, { lazy: true })
+	@ManyToOne(() => Department, (dept) => dept.invoicesSubmitted)
 	@Field(() => Department)
-	byDept: Promise<Department>;
+	byDept: Department;
 
 	@Column()
 	byDeptId: string;
 
-	@ManyToOne(() => Vendor, (vendor) => vendor.invoices, { lazy: true })
+	@ManyToOne(() => Vendor, (vendor) => vendor.invoices)
 	@Field(() => Vendor)
-	vendor: Promise<Vendor>;
+	vendor: Vendor;
 
 	@Column()
 	vendorId: string;
 
-	@ManyToMany(() => Channel, { lazy: true })
+	@ManyToMany(() => Channel)
 	@JoinTable()
 	@Field(() => [Channel])
-	channels: Promise<Channel[]>;
+	channels: Channel[];
 }

@@ -1,8 +1,6 @@
-import cuid from "cuid";
 import { Field, ID, Int, ObjectType, registerEnumType } from "type-graphql";
 import {
 	BaseEntity,
-	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -26,24 +24,6 @@ registerEnumType(MessageType, { name: "MessageType" });
 @Entity("Message")
 @ObjectType("Message")
 export class Message extends BaseEntity {
-	// STATIC FIELDS
-
-	static primaryFields = ["id", "content", "createdOn", "starred", "type"];
-
-	static relationalFields = [
-		"taskActivity",
-		"invoiceActivity",
-		"media",
-		"createdBy"
-	];
-
-	// LISTENERS
-
-	@BeforeInsert()
-	setId() {
-		this.id = cuid();
-	}
-
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -71,31 +51,31 @@ export class Message extends BaseEntity {
 
 	// RELATIONS AND FOREIGN KEYS
 
-	@ManyToOne(() => User, (user) => user.messages, { lazy: true })
+	@ManyToOne(() => User, (user) => user.messages)
 	@Field(() => User)
-	createdBy: Promise<User>;
+	createdBy: User;
 
 	@Column()
 	createdById: string;
 
-	@OneToMany(() => Media, (media) => media.message, { lazy: true })
+	@OneToMany(() => Media, (media) => media.message)
 	@Field(() => [Media])
-	media: Promise<Media[]>;
+	media: Media[];
 
-	@OneToOne(() => TaskActivity, { lazy: true })
+	@OneToOne(() => TaskActivity)
 	@JoinColumn()
 	@Field(() => TaskActivity, { nullable: true })
-	taskActivity?: Promise<TaskActivity>;
+	taskActivity?: TaskActivity;
 
-	@OneToOne(() => InvoiceActivity, { lazy: true })
+	@OneToOne(() => InvoiceActivity)
 	@JoinColumn()
 	@Field(() => InvoiceActivity, { nullable: true })
-	invoiceActivity?: Promise<InvoiceActivity>;
+	invoiceActivity?: InvoiceActivity;
 
-	@ManyToMany(() => User, (user) => user.likedMessages, { lazy: true })
+	@ManyToMany(() => User, (user) => user.likedMessages)
 	@JoinTable()
-	likedBy: Promise<User[]>;
+	likedBy: User[];
 
-	@ManyToMany(() => Channel, (channel) => channel.messages, { lazy: true })
-	channels: Promise<Channel[]>;
+	@ManyToMany(() => Channel, (channel) => channel.messages)
+	channels: Channel[];
 }

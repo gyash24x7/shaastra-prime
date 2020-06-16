@@ -1,13 +1,5 @@
-import {
-	Arg,
-	Authorized,
-	Ctx,
-	FieldResolver,
-	Mutation,
-	Query,
-	Resolver,
-	Root
-} from "type-graphql";
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { InjectRepository } from "typeorm-typedi-extensions";
 import { Channel } from "../entities/Channel";
 import { Message } from "../entities/Message";
 import { User } from "../entities/User";
@@ -16,10 +8,14 @@ import {
 	CreateChannelInput,
 	UpdateChannelDescriptionInput
 } from "../inputs/Channel";
+import { ChannelRepository } from "../repositories/Channel";
 import { ChannelType, GraphQLContext, MessageType } from "../utils";
 
 @Resolver(Channel)
 export class ChannelResolver {
+	@InjectRepository()
+	private readonly channelRepo: ChannelRepository;
+
 	@Authorized()
 	@Mutation(() => Boolean)
 	async addUserToChannel(
@@ -33,8 +29,7 @@ export class ChannelResolver {
 			throw new Error("Channel Not Found!");
 		}
 
-		let members = await channel.members;
-		members.push(...usersToBeAdded);
+		channel.members.push(...usersToBeAdded);
 		channel = await channel?.save();
 
 		Message.create({
@@ -94,11 +89,6 @@ export class ChannelResolver {
 	async deleteChannel(@Arg("channelId") channelId: string) {
 		const { affected } = await Channel.delete(channelId);
 		return !!affected;
-	}
-
-	@FieldResolver()
-	async starredMsgs(@Root() { messages }: Channel) {
-		return (await messages).filter((msg) => msg.starred);
 	}
 
 	@Authorized()

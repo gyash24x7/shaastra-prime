@@ -47,8 +47,8 @@ export class UpdateResolver {
 
 		const updates = await this.updateRepo.find({
 			order: { id: "DESC" },
-			select,
-			relations
+			relations,
+			select
 		});
 		return updates;
 	}

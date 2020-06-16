@@ -1,32 +1,11 @@
-import cuid from "cuid";
 import { Field, ID, ObjectType } from "type-graphql";
-import {
-	BaseEntity,
-	BeforeInsert,
-	Column,
-	Entity,
-	OneToMany,
-	PrimaryColumn
-} from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 import { Registration } from "./Registration";
 import { TeamInvitation } from "./TeamInvitation";
 
 @Entity("Team")
 @ObjectType("Team")
 export class Team extends BaseEntity {
-	// STATIC FIELDS
-
-	static primaryFields = ["id", "name"];
-
-	static relationalFields = ["invitations", "registrations"];
-
-	// LISTENERS
-
-	@BeforeInsert()
-	setId() {
-		this.id = cuid();
-	}
-
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -39,15 +18,11 @@ export class Team extends BaseEntity {
 
 	// RELATIONS AND FOREIGN KEYS
 
-	@OneToMany(() => TeamInvitation, (invitation) => invitation.team, {
-		lazy: true
-	})
+	@OneToMany(() => TeamInvitation, (invitation) => invitation.team)
 	@Field(() => [TeamInvitation])
-	invitations: Promise<TeamInvitation[]>;
+	invitations: TeamInvitation[];
 
-	@OneToMany(() => Registration, (registration) => registration.team, {
-		lazy: true
-	})
+	@OneToMany(() => Registration, (registration) => registration.team)
 	@Field(() => [Registration])
-	registrations: Promise<Registration[]>;
+	registrations: Registration[];
 }

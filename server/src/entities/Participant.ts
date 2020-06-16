@@ -1,9 +1,6 @@
-import cuid from "cuid";
-import jwt from "jsonwebtoken";
 import { Field, ID, ObjectType } from "type-graphql";
 import {
 	BaseEntity,
-	BeforeInsert,
 	Column,
 	Entity,
 	Generated,
@@ -16,31 +13,6 @@ import { TeamInvitation } from "./TeamInvitation";
 @Entity("Participant")
 @ObjectType("Participant")
 export class Participant extends BaseEntity {
-	// STATIC FIELDS
-
-	static primaryFields = [
-		"id",
-		"name",
-		"email",
-		"shaastraID",
-		"shaastraQR",
-		"mobile",
-		"gender",
-		"college",
-		"city",
-		"state"
-	];
-
-	static relationalFields = ["registrations", "invitations"];
-
-	// LISTENERS
-
-	@BeforeInsert()
-	setIdAndShaastraQR() {
-		this.id = cuid();
-		this.shaastraQR = jwt.sign({ id: this.id }, process.env.QR_SECRET!);
-	}
-
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -88,15 +60,11 @@ export class Participant extends BaseEntity {
 
 	// RELATIONS
 
-	@OneToMany(() => Registration, (registration) => registration.participant, {
-		lazy: true
-	})
+	@OneToMany(() => Registration, (registration) => registration.participant)
 	@Field(() => [Registration])
-	registrations: Promise<Registration[]>;
+	registrations: Registration[];
 
-	@OneToMany(() => TeamInvitation, (invitation) => invitation.participant, {
-		lazy: true
-	})
+	@OneToMany(() => TeamInvitation, (invitation) => invitation.participant)
 	@Field(() => [TeamInvitation])
-	invitations: Promise<TeamInvitation[]>;
+	invitations: TeamInvitation[];
 }

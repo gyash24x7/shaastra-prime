@@ -1,13 +1,5 @@
-import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import {
-	BaseEntity,
-	BeforeInsert,
-	Column,
-	Entity,
-	ManyToOne,
-	PrimaryColumn
-} from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { RegistrationType } from "../utils";
 import { Event } from "./Event";
 import { Participant } from "./Participant";
@@ -18,19 +10,6 @@ registerEnumType(RegistrationType, { name: "RegistrationType" });
 @Entity("Registration")
 @ObjectType("Registration")
 export class Registration extends BaseEntity {
-	// STATIC FIELDS
-
-	static primaryFields = ["id", "type"];
-
-	static relationalFields = ["team", "event", "participant"];
-
-	// LISTENERS
-
-	@BeforeInsert()
-	setId() {
-		this.id = cuid();
-	}
-
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -43,25 +22,23 @@ export class Registration extends BaseEntity {
 
 	// RELATIONS AND FOREIGN KEYS
 
-	@ManyToOne(() => Team, (team) => team.registrations, { lazy: true })
+	@ManyToOne(() => Team, (team) => team.registrations)
 	@Field(() => Team, { nullable: true })
-	team?: Promise<Team>;
+	team?: Team;
 
 	@Column({ nullable: true })
 	teamId?: string;
 
-	@ManyToOne(() => Event, (event) => event.registrations, { lazy: true })
+	@ManyToOne(() => Event, (event) => event.registrations)
 	@Field(() => Event)
-	event: Promise<Event>;
+	event: Event;
 
 	@Column()
 	eventId: string;
 
-	@ManyToOne(() => Participant, (participant) => participant.registrations, {
-		lazy: true
-	})
+	@ManyToOne(() => Participant, (participant) => participant.registrations)
 	@Field(() => Participant, { nullable: true })
-	participant?: Promise<Participant>;
+	participant?: Participant;
 
 	@Column({ nullable: true })
 	participantId?: string;

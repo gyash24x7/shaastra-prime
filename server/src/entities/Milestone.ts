@@ -1,13 +1,5 @@
-import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import {
-	BaseEntity,
-	BeforeInsert,
-	Column,
-	Entity,
-	ManyToOne,
-	PrimaryColumn
-} from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { MilestoneStatus } from "../utils";
 import { Goal } from "./Goal";
 
@@ -16,19 +8,6 @@ registerEnumType(MilestoneStatus, { name: "MilestoneStatus" });
 @Entity("Milestone")
 @ObjectType("Milestone")
 export class Milestone extends BaseEntity {
-	// STATIC FIELDS
-
-	static primaryFields = ["id", "title", "status"];
-
-	static relationalFields = ["goal"];
-
-	// LISTENERS
-
-	@BeforeInsert()
-	setId() {
-		this.id = cuid();
-	}
-
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -48,9 +27,9 @@ export class Milestone extends BaseEntity {
 
 	// RELATIONS AND FOREIGN KEYS
 
-	@ManyToOne(() => Goal, (goal) => goal.milestones, { lazy: true })
+	@ManyToOne(() => Goal, (goal) => goal.milestones)
 	@Field(() => Goal)
-	goal: Promise<Goal>;
+	goal: Goal;
 
 	@Column()
 	goalId: string;

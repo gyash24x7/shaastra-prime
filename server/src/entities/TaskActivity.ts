@@ -1,8 +1,6 @@
-import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
 	BaseEntity,
-	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -18,19 +16,6 @@ registerEnumType(TaskActivityType, { name: "TaskActivityType" });
 @Entity("TaskActivity")
 @ObjectType("TaskActivity")
 export class TaskActivity extends BaseEntity {
-	// STATIC FIELDS
-
-	static primaryFields = ["id", "type", "description", "createdOn"];
-
-	static relationalFields = ["task", "createdBy"];
-
-	// LISTENERS
-
-	@BeforeInsert()
-	setId() {
-		this.id = cuid();
-	}
-
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -51,15 +36,15 @@ export class TaskActivity extends BaseEntity {
 
 	// RELATIONS AND FOREIGN KEYS
 
-	@ManyToOne(() => Task, (task) => task.activity, { lazy: true })
+	@ManyToOne(() => Task, (task) => task.activity)
 	@Field(() => Task)
-	task: Promise<Task>;
+	task: Task;
 
 	@Column()
 	taskId: string;
 
-	@ManyToOne(() => User, (user) => user.taskActivity, { lazy: true })
-	createdBy: Promise<User>;
+	@ManyToOne(() => User, (user) => user.taskActivity)
+	createdBy: User;
 
 	@Column()
 	createdById: string;

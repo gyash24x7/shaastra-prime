@@ -1,8 +1,6 @@
-import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
 	BaseEntity,
-	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -24,34 +22,6 @@ registerEnumType(TaskStatus, { name: "TaskStatus" });
 @Entity("Task")
 @ObjectType("Task")
 export class Task extends BaseEntity {
-	// STATIC FIELDS
-
-	static primaryFields = [
-		"id",
-		"brief",
-		"details",
-		"status",
-		"createdOn",
-		"deadline"
-	];
-
-	static relationalFields = [
-		"byDept",
-		"forDept",
-		"createdBy",
-		"assignedTo",
-		"media",
-		"activity",
-		"channels"
-	];
-
-	// LISTENERS
-
-	@BeforeInsert()
-	setId() {
-		this.id = cuid();
-	}
-
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -84,43 +54,41 @@ export class Task extends BaseEntity {
 
 	// RELATIONS AND FOREIGN KEYS
 
-	@ManyToOne(() => Department, (dept) => dept.tasksCreated, { lazy: true })
+	@ManyToOne(() => Department, (dept) => dept.tasksCreated)
 	@Field(() => Department)
-	byDept: Promise<Department>;
+	byDept: Department;
 
 	@Column()
 	byDeptId: string;
 
-	@ManyToOne(() => Department, (dept) => dept.tasksAssigned, { lazy: true })
+	@ManyToOne(() => Department, (dept) => dept.tasksAssigned)
 	@Field(() => Department)
-	forDept: Promise<Department>;
+	forDept: Department;
 
 	@Column()
 	forDeptId: string;
 
-	@ManyToOne(() => User, (user) => user.tasksCreated, { lazy: true })
+	@ManyToOne(() => User, (user) => user.tasksCreated)
 	@Field(() => User)
-	createdBy: Promise<User>;
+	createdBy: User;
 
 	@Column()
 	createdById: string;
 
-	@ManyToMany(() => User, (user) => user.tasksAssigned, { lazy: true })
+	@ManyToMany(() => User, (user) => user.tasksAssigned)
 	@Field(() => [User])
-	assignedTo: Promise<User[]>;
+	assignedTo: User[];
 
-	@OneToMany(() => Media, (media) => media.task, { lazy: true })
+	@OneToMany(() => Media, (media) => media.task)
 	@Field(() => [Media])
-	media: Promise<Media[]>;
+	media: Media[];
 
-	@OneToMany(() => TaskActivity, (activity) => activity.task, { lazy: true })
+	@OneToMany(() => TaskActivity, (activity) => activity.task)
 	@Field(() => [TaskActivity])
-	activity: Promise<TaskActivity[]>;
+	activity: TaskActivity[];
 
-	@ManyToMany(() => Channel, (channel) => channel.connectedTasks, {
-		lazy: true
-	})
+	@ManyToMany(() => Channel, (channel) => channel.connectedTasks)
 	@JoinTable()
 	@Field(() => [Channel])
-	channels: Promise<Channel[]>;
+	channels: Channel[];
 }

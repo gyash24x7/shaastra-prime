@@ -1,8 +1,6 @@
-import cuid from "cuid";
 import { Field, ID, Int, ObjectType } from "type-graphql";
 import {
 	BaseEntity,
-	BeforeInsert,
 	Column,
 	Entity,
 	Generated,
@@ -20,24 +18,19 @@ import { User } from "./User";
 @Entity("Vertical")
 @ObjectType("Vertical")
 export class Vertical extends BaseEntity {
-	// STATIC FIELDS
-
-	static primaryFields = ["id", "rank", "info", "updatedOn"];
-
-	static relationalFields = ["image", "events"];
+	// PRIMARY FIELDS
 
 	@PrimaryColumn()
 	@Field(() => ID)
 	id: string;
 
-	@BeforeInsert()
-	setId() {
-		this.id = cuid();
-	}
-
 	@Generated("increment")
 	@Field(() => Int)
 	rank: number;
+
+	@UpdateDateColumn()
+	@Field()
+	updatedOn: string;
 
 	@Column()
 	@Field()
@@ -47,22 +40,20 @@ export class Vertical extends BaseEntity {
 	@Field()
 	info: string;
 
-	@ManyToOne(() => User, (user) => user.verticalsUpdated, { lazy: true })
+	// RELATIONS AND FORIEGN KEYS
+
+	@ManyToOne(() => User, (user) => user.verticalsUpdated)
 	@Field(() => User)
-	updatedBy: Promise<User>;
+	updatedBy: User;
 
 	@Column()
 	updatedById: string;
 
-	@UpdateDateColumn()
-	@Field()
-	updatedOn: string;
-
-	@OneToOne(() => Media, { lazy: true })
+	@OneToOne(() => Media)
 	@JoinColumn()
 	@Field(() => Media, { nullable: true })
-	image: Promise<Media>;
+	image: Media;
 
-	@OneToMany(() => Event, (event) => event.vertical, { lazy: true })
-	events: Promise<Event[]>;
+	@OneToMany(() => Event, (event) => event.vertical)
+	events: Event[];
 }

@@ -1,13 +1,5 @@
-import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import {
-	BaseEntity,
-	BeforeInsert,
-	Column,
-	Entity,
-	ManyToOne,
-	PrimaryColumn
-} from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { InviteStatus } from "../utils";
 import { Participant } from "./Participant";
 import { Team } from "./Team";
@@ -17,19 +9,6 @@ registerEnumType(InviteStatus, { name: "InviteStatus" });
 @Entity("TeamInvitation")
 @ObjectType("TeamInvitation")
 export class TeamInvitation extends BaseEntity {
-	// STATIC FIELDS
-
-	static primaryKeys = ["id", "status"];
-
-	static relationalFields = ["team", "participant"];
-
-	// LISTENERS
-
-	@BeforeInsert()
-	setId() {
-		this.id = cuid();
-	}
-
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -42,18 +21,16 @@ export class TeamInvitation extends BaseEntity {
 
 	// RELATIONS AND FOREIGN KEYS
 
-	@ManyToOne(() => Team, (team) => team.invitations, { lazy: true })
+	@ManyToOne(() => Team, (team) => team.invitations)
 	@Field(() => Team)
-	team: Promise<Team>;
+	team: Team;
 
 	@Column()
 	teamId: string;
 
-	@ManyToOne(() => Participant, (participant) => participant.invitations, {
-		lazy: true
-	})
+	@ManyToOne(() => Participant, (participant) => participant.invitations)
 	@Field(() => Participant)
-	participant: Promise<Participant>;
+	participant: Participant;
 
 	@Column()
 	participantId: string;
