@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { RegistrationType } from "../utils";
 import { Event } from "./Event";
 import { Participant } from "./Participant";
@@ -9,7 +9,7 @@ registerEnumType(RegistrationType, { name: "RegistrationType" });
 
 @Entity("Registration")
 @ObjectType("Registration")
-export class Registration extends BaseEntity {
+export class Registration {
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()

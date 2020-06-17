@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
-	BaseEntity,
 	Column,
 	Entity,
 	JoinColumn,
@@ -24,7 +23,7 @@ registerEnumType(InvoiceType, { name: "InvoiceType" });
 
 @Entity("Invoice")
 @ObjectType("Invoice")
-export class Invoice extends BaseEntity {
+export class Invoice {
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -59,25 +58,33 @@ export class Invoice extends BaseEntity {
 	@Field(() => InvoiceType)
 	type: InvoiceType;
 
+	//db only field for soft delete
+	@Column({ default: false })
+	deleted: boolean;
+
 	// RELATIONS AND FOREIGN KEYS
 
-	@OneToOne(() => Media, { lazy: true })
+	@OneToOne(() => Media, { cascade: true })
 	@JoinColumn()
 	@Field(() => Media)
-	media: Promise<Media>;
+	media: Media;
 
 	@OneToMany(() => InvoiceActivity, (activity) => activity.invoice)
 	@Field(() => [InvoiceActivity])
 	activity: InvoiceActivity[];
 
-	@ManyToOne(() => User, (user) => user.invoicesSubmitted)
-	@Field(() => User)
-	uploadedBy: User;
+	@ManyToOne(() => User, (user) => user.invoicesSubmitted, {
+		onDelete: "SET NULL"
+	})
+	@Field(() => User, { nullable: true })
+	uploadedBy?: User;
 
-	@Column()
+	@Column({ nullable: true })
 	uploadedById: string;
 
-	@ManyToOne(() => Department, (dept) => dept.invoicesSubmitted)
+	@ManyToOne(() => Department, (dept) => dept.invoicesSubmitted, {
+		onDelete: "CASCADE"
+	})
 	@Field(() => Department)
 	byDept: Department;
 

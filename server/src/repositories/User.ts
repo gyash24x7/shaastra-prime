@@ -22,7 +22,7 @@ export class UserRepository extends Repository<User> {
 	relationalFields = ["department"];
 
 	findByEmail(email: string, select: any[] = ["id"]) {
-		return this.findOne({ where: { email }, select });
+		return this.findOneOrFail({ where: { email }, select });
 	}
 
 	sendMail({ rollNumber, name, htmlPart, subject }: SendMailOptions) {

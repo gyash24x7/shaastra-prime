@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType } from "type-graphql";
 import {
-	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -12,7 +11,7 @@ import { User } from "./User";
 
 @Entity("Update")
 @ObjectType("Update")
-export class Update extends BaseEntity {
+export class Update {
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -44,7 +43,7 @@ export class Update extends BaseEntity {
 	@Column()
 	byDeptId: string;
 
-	@ManyToOne(() => User, (user) => user.updates)
+	@ManyToOne(() => User, (user) => user.updates, { onDelete: "CASCADE" })
 	@Field(() => User)
 	postedBy: User;
 

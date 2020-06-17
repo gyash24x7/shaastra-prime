@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
-	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -15,7 +14,7 @@ registerEnumType(TaskActivityType, { name: "TaskActivityType" });
 
 @Entity("TaskActivity")
 @ObjectType("TaskActivity")
-export class TaskActivity extends BaseEntity {
+export class TaskActivity {
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -36,7 +35,7 @@ export class TaskActivity extends BaseEntity {
 
 	// RELATIONS AND FOREIGN KEYS
 
-	@ManyToOne(() => Task, (task) => task.activity)
+	@ManyToOne(() => Task, (task) => task.activity, { onDelete: "CASCADE" })
 	@Field(() => Task)
 	task: Task;
 

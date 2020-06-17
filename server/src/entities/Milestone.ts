@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { MilestoneStatus } from "../utils";
 import { Goal } from "./Goal";
 
@@ -7,7 +7,7 @@ registerEnumType(MilestoneStatus, { name: "MilestoneStatus" });
 
 @Entity("Milestone")
 @ObjectType("Milestone")
-export class Milestone extends BaseEntity {
+export class Milestone {
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -27,7 +27,7 @@ export class Milestone extends BaseEntity {
 
 	// RELATIONS AND FOREIGN KEYS
 
-	@ManyToOne(() => Goal, (goal) => goal.milestones)
+	@ManyToOne(() => Goal, (goal) => goal.milestones, { onDelete: "CASCADE" })
 	@Field(() => Goal)
 	goal: Goal;
 

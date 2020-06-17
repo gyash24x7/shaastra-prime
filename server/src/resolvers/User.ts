@@ -14,8 +14,8 @@ import { InjectRepository } from "typeorm-typedi-extensions";
 import { User } from "../entities/User";
 import {
 	CreateUserInput,
-	ForgotPasswordInput,
 	LoginInput,
+	UpdatePasswordInput,
 	VerifyPasswordOTPInput
 } from "../inputs/User";
 import { UserRepository } from "../repositories/User";
@@ -35,7 +35,7 @@ export class UserResolver {
 	}
 
 	@Mutation(() => Boolean)
-	async forgotPassword(@Arg("data") data: ForgotPasswordInput) {
+	async updatePassword(@Arg("data") data: UpdatePasswordInput) {
 		const password = await bcrypt.hash(data.newPassword, 13);
 		let user = await this.userRepo.findByEmail(data.email);
 		if (!user) return false;
@@ -48,8 +48,6 @@ export class UserResolver {
 	@Mutation(() => Boolean)
 	async getPasswordOTP(@Arg("email") email: string) {
 		let user = await this.userRepo.findByEmail(email);
-		if (!user) return false;
-
 		user.passwordOTP = this.userRepo.generateOTP();
 		user = await this.userRepo.save(user);
 
@@ -80,7 +78,7 @@ export class UserResolver {
 			this.userRepo
 		);
 
-		return User.findOne(userId, { select, relations });
+		return this.userRepo.findOne(userId, { select, relations });
 	}
 
 	@Mutation(() => [String], { nullable: true })
@@ -90,13 +88,11 @@ export class UserResolver {
 			"id",
 			"verified"
 		]);
-		if (!user) return null;
 
 		const valid = await bcrypt.compare(password, user.password);
-		if (!valid) return null;
+		if (!valid) throw new Error("Invalid Password!");
 
 		const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
-
 		return [token, user.verified ? user.id : ""];
 	}
 
@@ -111,8 +107,8 @@ export class UserResolver {
 		@Arg("coverPic") coverPic: string,
 		@Ctx() { user: { id } }: GraphQLContext
 	) {
-		const updatedUser = await this.userRepo.save({ id, coverPic });
-		return !!updatedUser;
+		const { affected } = await this.userRepo.update(id, { coverPic });
+		return affected === 1;
 	}
 
 	@Mutation(() => Boolean)
@@ -120,8 +116,8 @@ export class UserResolver {
 		@Arg("profilePic") profilePic: string,
 		@Ctx() { user: { id } }: GraphQLContext
 	) {
-		const updatedUser = await this.userRepo.save({ id, profilePic });
-		return !!updatedUser;
+		const { affected } = await this.userRepo.update(id, { profilePic });
+		return affected === 1;
 	}
 
 	@Mutation(() => Boolean)
@@ -133,15 +129,10 @@ export class UserResolver {
 	}
 
 	@Authorized()
-	@Mutation(() => String, { nullable: true })
+	@Mutation(() => String)
 	async verifyUser(@Arg("otp") otp: string, @Ctx() { user }: GraphQLContext) {
-		if (user?.verificationOTP !== otp) return null;
-
-		const updatedUser = await this.userRepo.save({
-			id: user.id,
-			verified: true
-		});
-
-		return updatedUser ? user.id : null;
+		if (user?.verificationOTP !== otp) throw new Error("Invalid OTP!");
+		await this.userRepo.save({ id: user.id, verified: true });
+		return user.id;
 	}
 }

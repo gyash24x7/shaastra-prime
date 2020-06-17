@@ -1,12 +1,5 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import {
-	BaseEntity,
-	Column,
-	Entity,
-	ManyToOne,
-	OneToMany,
-	PrimaryColumn
-} from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import { Goal } from "./Goal";
 import { Invoice } from "./Invoice";
 import { Task } from "./Task";
@@ -15,7 +8,7 @@ import { User } from "./User";
 
 @Entity("Department")
 @ObjectType("Department")
-export class Department extends BaseEntity {
+export class Department {
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -30,7 +23,7 @@ export class Department extends BaseEntity {
 	@Field()
 	shortName: string;
 
-	@Column("simple-array", { default: [] })
+	@Column("simple-array")
 	@Field(() => [String])
 	subDepartments: string[];
 

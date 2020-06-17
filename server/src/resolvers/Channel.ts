@@ -1,70 +1,81 @@
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import cuid from "cuid";
+import graphqlFields from "graphql-fields";
+import {
+	Arg,
+	Authorized,
+	Ctx,
+	Info,
+	Mutation,
+	Query,
+	Resolver
+} from "type-graphql";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Channel } from "../entities/Channel";
-import { Message } from "../entities/Message";
-import { User } from "../entities/User";
 import {
 	AddUsersToChannelInput,
 	CreateChannelInput,
 	UpdateChannelDescriptionInput
 } from "../inputs/Channel";
 import { ChannelRepository } from "../repositories/Channel";
-import { ChannelType, GraphQLContext, MessageType } from "../utils";
+import { MessageRepository } from "../repositories/Message";
+import { UserRepository } from "../repositories/User";
+import { ChannelType, GraphQLContext } from "../utils";
+import getSelectionAndRelation from "../utils/getSelectionAndRelation";
 
 @Resolver(Channel)
 export class ChannelResolver {
 	@InjectRepository()
 	private readonly channelRepo: ChannelRepository;
 
+	@InjectRepository()
+	private readonly userRepo: UserRepository;
+
+	@InjectRepository()
+	private readonly msgRepo: MessageRepository;
+
 	@Authorized()
 	@Mutation(() => Boolean)
-	async addUserToChannel(
+	async addUsersToChannel(
 		@Arg("data") { channelId, userIds }: AddUsersToChannelInput,
 		@Ctx() { user }: GraphQLContext
 	) {
-		const usersToBeAdded = await User.findByIds(userIds);
-		let channel = await Channel.findOne(channelId);
-
-		if (!channel) {
-			throw new Error("Channel Not Found!");
-		}
+		const usersToBeAdded = await this.userRepo.findByIds(userIds);
+		let channel = await this.channelRepo.findOneOrFail(channelId, {
+			relations: ["members"]
+		});
 
 		channel.members.push(...usersToBeAdded);
-		channel = await channel?.save();
+		channel = await this.channelRepo.save(channel);
 
-		Message.create({
-			type: MessageType.SYSTEM,
-			content: `${user!.name} added ${usersToBeAdded.map(
-				({ name }) => name + ", "
-			)}`,
-			createdById: user.id,
-			channels: Promise.resolve([] as Channel[])
-		})
-			.save()
-			.then(() => {
-				console.log("Channel Update Message sent!");
-			});
+		let msgContent = `${user!.name} added ${usersToBeAdded.map(
+			({ name }) => name + ", "
+		)}`;
+
+		this.msgRepo.sendSystemMessage(channel, msgContent, user.id).then(() => {
+			console.log("Channel Update Message sent!");
+		});
 
 		return !!channel;
 	}
 
 	@Authorized()
+	@Mutation(() => Boolean)
 	async archiveChannel(
 		@Arg("channelId") channelId: string,
 		@Ctx() { user }: GraphQLContext
 	) {
-		const { affected } = await Channel.update(channelId, { archived: true });
+		const channel = await this.channelRepo.save({
+			id: channelId,
+			archived: true
+		});
 
-		Message.create({
-			type: MessageType.SYSTEM,
-			content: `${user!.name} archived the Channel.`,
-			createdById: user.id,
-			channels: Channel.findByIds([channelId])
-		})
-			.save()
-			.then(() => console.log("Channel Update Message sent!"));
+		const msgContent = `${user!.name} archived the Channel.`;
 
-		return !!affected;
+		this.msgRepo.sendSystemMessage(channel, msgContent, user.id).then(() => {
+			console.log("Channel Update Message sent!");
+		});
+
+		return !!channel;
 	}
 
 	@Authorized()
@@ -73,13 +84,16 @@ export class ChannelResolver {
 		@Arg("data") { memberIds, name, description }: CreateChannelInput,
 		@Ctx() { user }: GraphQLContext
 	) {
-		const channel = await Channel.create({
+		const channelMembers = await this.userRepo.findByIds(memberIds);
+		const channel = await this.channelRepo.save({
+			id: cuid(),
 			name,
 			type: ChannelType.GROUP,
 			description,
-			members: User.findByIds(memberIds),
-			createdBy: Promise.resolve(user)
-		}).save();
+			members: channelMembers,
+			createdById: user.id,
+			archived: false
+		});
 
 		return !!channel;
 	}
@@ -87,43 +101,54 @@ export class ChannelResolver {
 	@Authorized()
 	@Mutation(() => Boolean)
 	async deleteChannel(@Arg("channelId") channelId: string) {
-		const { affected } = await Channel.delete(channelId);
+		const { affected } = await this.channelRepo.delete(channelId);
 		return !!affected;
 	}
 
 	@Authorized()
 	@Query(() => Channel)
-	async getChannelDetails(@Arg("channelId") channelId: string) {
-		const channel = await Channel.findOne(channelId);
+	async getChannelDetails(
+		@Arg("channelId") channelId: string,
+		@Info() info: any
+	) {
+		const { select, relations } = getSelectionAndRelation(
+			graphqlFields(info),
+			this.channelRepo
+		);
 
-		if (!channel) throw new Error("Channel Not Found!");
+		const channel = await this.channelRepo.findOneOrFail(channelId, {
+			select,
+			relations
+		});
+
 		return channel;
 	}
 
 	@Authorized()
 	@Query(() => [Channel])
 	async getChannels(@Ctx() { user }: GraphQLContext) {
-		const channels = await user.channels;
+		const { channels } = await this.userRepo.findOneOrFail(user.id, {
+			relations: ["channels"]
+		});
 		return channels;
 	}
 
 	@Authorized()
 	@Mutation(() => Boolean)
-	async updateChannel(
+	async updateChannelDescription(
 		@Arg("data") { description, channelId }: UpdateChannelDescriptionInput,
 		@Ctx() { user }: GraphQLContext
 	) {
-		const { affected } = await Channel.update(channelId, { description });
-		if (affected === 0) throw new Error("Channel Not Updated!");
+		const channel = await this.channelRepo.save({
+			id: channelId,
+			description
+		});
 
-		Message.create({
-			type: MessageType.SYSTEM,
-			content: `${user!.name} changed the Channel Description`,
-			createdById: user.id,
-			channels: Channel.findByIds([channelId])
-		})
-			.save()
-			.then(() => console.log("Channel Update Message sent!"));
+		const msgContent = `${user!.name} changed the Channel Description`;
+
+		this.msgRepo.sendSystemMessage(channel, msgContent, user.id).then(() => {
+			console.log("Channel Update Message sent!");
+		});
 
 		return true;
 	}

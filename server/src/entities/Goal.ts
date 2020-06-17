@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
-	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -16,7 +15,7 @@ registerEnumType(GoalType, { name: "GoalType" });
 
 @Entity("Goal")
 @ObjectType("Goal")
-export class Goal extends BaseEntity {
+export class Goal {
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -41,7 +40,7 @@ export class Goal extends BaseEntity {
 
 	// RELATIONS AND FOREIGN KEYS
 
-	@ManyToOne(() => Department, (dept) => dept.goals)
+	@ManyToOne(() => Department, (dept) => dept.goals, { onDelete: "CASCADE" })
 	@Field(() => Department)
 	dept: Department;
 

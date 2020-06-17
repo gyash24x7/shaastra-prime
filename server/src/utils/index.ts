@@ -1,4 +1,3 @@
-import { Email } from "node-mailjet";
 import { Stream } from "stream";
 import { User } from "../entities/User";
 
@@ -19,7 +18,6 @@ export enum UserRole {
 
 export interface GraphQLContext {
 	user: User;
-	mailjet: Email.Client;
 }
 
 export enum MediaType {

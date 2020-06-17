@@ -1,18 +1,11 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import {
-	BaseEntity,
-	Column,
-	Entity,
-	Generated,
-	OneToMany,
-	PrimaryColumn
-} from "typeorm";
+import { Column, Entity, Generated, OneToMany, PrimaryColumn } from "typeorm";
 import { Registration } from "./Registration";
 import { TeamInvitation } from "./TeamInvitation";
 
 @Entity("Participant")
 @ObjectType("Participant")
-export class Participant extends BaseEntity {
+export class Participant {
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()

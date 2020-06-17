@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import cuid from "cuid";
 import { Inject } from "typedi";
 import {
 	EntitySubscriberInterface,
@@ -18,6 +19,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
 	}
 
 	async beforeInsert(e: InsertEvent<User>) {
+		e.entity.id = cuid();
 		e.entity.password = await bcrypt.hash(e.entity.password, 13);
 		e.entity.verificationOTP = this.userRepo.generateOTP();
 	}

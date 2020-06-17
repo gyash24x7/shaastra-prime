@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
-	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -15,7 +14,7 @@ registerEnumType(InvoiceActivityType, { name: "InvoiceActivityType" });
 
 @Entity("InvoiceActivity")
 @ObjectType("InvoiceActivity")
-export class InvoiceActivity extends BaseEntity {
+export class InvoiceActivity {
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -36,7 +35,9 @@ export class InvoiceActivity extends BaseEntity {
 
 	// RELATIONS AND FOREIGN KEYS
 
-	@ManyToOne(() => Invoice, (invoice) => invoice.activity)
+	@ManyToOne(() => Invoice, (invoice) => invoice.activity, {
+		onDelete: "CASCADE"
+	})
 	invoice: Invoice;
 
 	@Column()

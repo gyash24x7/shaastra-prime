@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { MediaType } from "../utils";
 import { Message } from "./Message";
 import { Task } from "./Task";
@@ -9,7 +9,7 @@ registerEnumType(MediaType, { name: "MediaType" });
 
 @Entity("Media")
 @ObjectType("Media")
-export class Media extends BaseEntity {
+export class Media {
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -28,19 +28,19 @@ export class Media extends BaseEntity {
 
 	@ManyToOne(() => User, (user) => user.media)
 	@Field(() => User)
-	uploadedBy: Promise<User>;
+	uploadedBy: User;
 
 	@Column()
 	uploadedById: string;
 
-	@ManyToOne(() => Task, (task) => task.media)
-	task: Task;
+	@ManyToOne(() => Task, (task) => task.media, { onDelete: "CASCADE" })
+	task?: Task;
 
 	@Column({ nullable: true })
 	taskId?: string;
 
-	@ManyToOne(() => Message, (msg) => msg.media)
-	message: Message;
+	@ManyToOne(() => Message, (msg) => msg.media, { onDelete: "CASCADE" })
+	message?: Message;
 
 	@Column({ nullable: true })
 	messageId?: string;

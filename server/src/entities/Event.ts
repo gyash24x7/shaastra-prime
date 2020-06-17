@@ -1,6 +1,5 @@
 import { Field, ID, Int, ObjectType, registerEnumType } from "type-graphql";
 import {
-	BaseEntity,
 	Column,
 	Entity,
 	JoinColumn,
@@ -20,7 +19,7 @@ registerEnumType(RegistrationType, { name: "RegistrationType" });
 
 @Entity("Event")
 @ObjectType("Event")
-export class Event extends BaseEntity {
+export class Event {
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -69,12 +68,17 @@ export class Event extends BaseEntity {
 	@Column()
 	updatedById: string;
 
-	@OneToOne(() => Media)
+	@OneToOne(() => Media, { cascade: true, nullable: true })
 	@JoinColumn()
-	@Field(() => Media)
-	image: Media;
+	@Field(() => Media, { nullable: true })
+	image?: Media;
 
-	@ManyToOne(() => Vertical, (vertical) => vertical.events)
+	@Column({ nullable: true })
+	imageId?: string;
+
+	@ManyToOne(() => Vertical, (vertical) => vertical.events, {
+		onDelete: "CASCADE"
+	})
 	@Field(() => Vertical)
 	vertical: Vertical;
 

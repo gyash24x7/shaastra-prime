@@ -25,8 +25,8 @@ export class CreateUserInput {
 	departmentId: string;
 }
 
-@InputType("ForgotPasswordInput")
-export class ForgotPasswordInput {
+@InputType("UpdatePasswordInput")
+export class UpdatePasswordInput {
 	@Field()
 	email: string;
 

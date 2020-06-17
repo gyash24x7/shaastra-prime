@@ -1,8 +1,8 @@
+import cuid from "cuid";
 import {
 	Arg,
 	Authorized,
 	Ctx,
-	FieldResolver,
 	Mutation,
 	PubSub,
 	PubSubEngine,
@@ -11,18 +11,29 @@ import {
 	Root,
 	Subscription
 } from "type-graphql";
-import { Channel } from "../entities/Channel";
-import { Media } from "../entities/Media";
+import { InjectRepository } from "typeorm-typedi-extensions";
 import { Message } from "../entities/Message";
 import {
 	CreateMediaMessageInput,
 	CreateTextMessageInput,
 	GetMessagesInput
 } from "../inputs/Message";
+import { ChannelRepository } from "../repositories/Channel";
+import { MediaRepository } from "../repositories/Media";
+import { MessageRepository } from "../repositories/Message";
 import { GraphQLContext, MediaType, MessageType } from "../utils";
 
 @Resolver(Message)
 export class MessageResolver {
+	@InjectRepository()
+	private readonly msgRepo: MessageRepository;
+
+	@InjectRepository()
+	private readonly channelRepo: ChannelRepository;
+
+	@InjectRepository()
+	private readonly mediaRepo: MediaRepository;
+
 	@Authorized()
 	@Mutation(() => Boolean)
 	async createMediaMessage(
@@ -30,21 +41,25 @@ export class MessageResolver {
 		@Ctx() { user }: GraphQLContext,
 		@PubSub() pubsub: PubSubEngine
 	) {
-		const media = Media.create(
-			mediaUrls.map((url) => ({
-				url,
-				uploadedBy: Promise.resolve(user),
-				type: MediaType.IMAGE
-			}))
-		);
+		const channels = await this.channelRepo.findByIds([channelId]);
 
-		let message = await Message.create({
-			channels: Channel.findByIds([channelId]),
-			createdBy: Promise.resolve(user),
+		let message = await this.msgRepo.save({
+			channels,
+			createdById: user.id,
 			content: "",
 			type: MessageType.MEDIA,
-			media: Promise.all(media.map((obj) => obj.save()))
-		}).save();
+			id: cuid()
+		});
+
+		await this.mediaRepo.save(
+			mediaUrls.map((url) => ({
+				id: cuid(),
+				url,
+				uploadedById: user.id,
+				type: MediaType.IMAGE,
+				messageId: message.id
+			}))
+		);
 
 		await pubsub.publish(channelId, message);
 
@@ -58,30 +73,27 @@ export class MessageResolver {
 		@Ctx() { user }: GraphQLContext,
 		@PubSub() pubsub: PubSubEngine
 	) {
-		let message = await Message.create({
-			channels: Channel.findByIds([channelId]),
-			createdBy: Promise.resolve(user),
+		const channels = await this.channelRepo.findByIds([channelId]);
+		let message = await this.msgRepo.save({
+			channels,
+			createdById: user.id,
 			content,
-			type: MessageType.TEXT
-		}).save();
+			type: MessageType.TEXT,
+			id: cuid()
+		});
 
 		await pubsub.publish(channelId, message);
 
 		return !!message;
 	}
 
-	@FieldResolver()
-	async likes(@Root() { likedBy }: Message) {
-		return (await likedBy).length;
-	}
-
 	@Authorized()
 	@Query(() => [Message])
 	async getMessages(@Arg("data") { channelId, skip }: GetMessagesInput) {
-		const channel = await Channel.findOne(channelId);
-		const messages = await channel?.messages;
-
-		return messages?.reverse().slice((skip || 0) * 20, 20);
+		const channel = await this.channelRepo.findOneOrFail(channelId, {
+			relations: ["messages"]
+		});
+		return channel.messages.reverse().slice((skip || 0) * 20, 20);
 	}
 
 	@Authorized()
@@ -95,33 +107,13 @@ export class MessageResolver {
 
 	@Authorized()
 	@Mutation(() => Boolean)
-	async toggleMessageLike(
-		@Arg("messageId") messageId: string,
-		@Ctx() { user }: GraphQLContext
-	) {
-		let message = await Message.findOne(messageId);
-		if (!message) return false;
-
-		let likedBy = await message.likedBy;
-		const userIndex = likedBy.findIndex(({ id }) => user.id === id);
-
-		if (userIndex >= 0) likedBy = likedBy.splice(userIndex, 1);
-		else likedBy.push(user);
-
-		message.likedBy == Promise.resolve(likedBy);
-		message = await message.save();
-
-		return !!message;
-	}
-
-	@Authorized()
-	@Mutation(() => Boolean)
 	async toggleMessageStar(@Arg("messageId") messageId: string) {
-		let message = await Message.findOne(messageId);
-		if (!message) return false;
+		let message = await this.msgRepo.findOneOrFail(messageId, {
+			select: ["id", "starred"]
+		});
 
 		message.starred = !message.starred;
-		message = await message.save();
+		message = await this.msgRepo.save(message);
 
 		return !!message;
 	}

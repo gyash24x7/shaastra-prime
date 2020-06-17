@@ -1,6 +1,5 @@
 import { Field, ID, Int, ObjectType } from "type-graphql";
 import {
-	BaseEntity,
 	Column,
 	Entity,
 	Generated,
@@ -17,7 +16,7 @@ import { User } from "./User";
 
 @Entity("Vertical")
 @ObjectType("Vertical")
-export class Vertical extends BaseEntity {
+export class Vertical {
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -53,6 +52,9 @@ export class Vertical extends BaseEntity {
 	@JoinColumn()
 	@Field(() => Media, { nullable: true })
 	image: Media;
+
+	@Column({ nullable: true })
+	imageId: string;
 
 	@OneToMany(() => Event, (event) => event.vertical)
 	events: Event[];

@@ -1,11 +1,9 @@
-import { Field, ID, Int, ObjectType, registerEnumType } from "type-graphql";
+import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
-	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
 	JoinColumn,
-	JoinTable,
 	ManyToMany,
 	ManyToOne,
 	OneToMany,
@@ -23,7 +21,7 @@ registerEnumType(MessageType, { name: "MessageType" });
 
 @Entity("Message")
 @ObjectType("Message")
-export class Message extends BaseEntity {
+export class Message {
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -42,12 +40,9 @@ export class Message extends BaseEntity {
 	@Field(() => MessageType)
 	type: MessageType;
 
-	@Column()
+	@Column({ default: false })
 	@Field()
 	starred: boolean;
-
-	// computed
-	@Field(() => Int) likes: number;
 
 	// RELATIONS AND FOREIGN KEYS
 
@@ -62,19 +57,21 @@ export class Message extends BaseEntity {
 	@Field(() => [Media])
 	media: Media[];
 
-	@OneToOne(() => TaskActivity)
+	@OneToOne(() => TaskActivity, { cascade: true, onDelete: "CASCADE" })
 	@JoinColumn()
 	@Field(() => TaskActivity, { nullable: true })
 	taskActivity?: TaskActivity;
 
-	@OneToOne(() => InvoiceActivity)
+	@Column({ nullable: true })
+	taskActivityId?: string;
+
+	@OneToOne(() => InvoiceActivity, { cascade: true, onDelete: "CASCADE" })
 	@JoinColumn()
 	@Field(() => InvoiceActivity, { nullable: true })
 	invoiceActivity?: InvoiceActivity;
 
-	@ManyToMany(() => User, (user) => user.likedMessages)
-	@JoinTable()
-	likedBy: User[];
+	@Column({ nullable: true })
+	invoiceActivityId?: string;
 
 	@ManyToMany(() => Channel, (channel) => channel.messages)
 	channels: Channel[];

@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
-	BaseEntity,
 	Column,
 	Entity,
 	ManyToMany,
@@ -25,7 +24,7 @@ registerEnumType(UserRole, { name: "UserRole" });
 
 @Entity("User")
 @ObjectType("User")
-export class User extends BaseEntity {
+export class User {
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -110,9 +109,6 @@ export class User extends BaseEntity {
 
 	@OneToMany(() => Task, (task) => task.createdBy)
 	tasksCreated: Task[];
-
-	@ManyToMany(() => Message, (message) => message.likedBy)
-	likedMessages: Message[];
 
 	@OneToMany(() => Update, (update) => update.postedBy)
 	updates: Update[];
