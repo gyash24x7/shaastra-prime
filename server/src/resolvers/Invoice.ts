@@ -8,19 +8,17 @@ import {
 	Query,
 	Resolver
 } from "type-graphql";
-import { InjectRepository } from "typeorm-typedi-extensions";
+import { Channel } from "../entities/Channel";
 import { Invoice } from "../entities/Invoice";
+import { InvoiceActivity } from "../entities/InvoiceActivity";
+import { Media } from "../entities/Media";
+import { Message } from "../entities/Message";
 import {
 	ApproveInvoiceInput,
 	ConnectChannelsToInvoiceInput,
 	RejectInvoiceInput,
 	SubmitInvoiceInput
 } from "../inputs/Invoice";
-import { ChannelRepository } from "../repositories/Channel";
-import { InvoiceRepository } from "../repositories/Invoice";
-import { InvoiceActivityRepository } from "../repositories/InvoiceActivity";
-import { MediaRepository } from "../repositories/Media";
-import { MessageRepository } from "../repositories/Message";
 import {
 	APPROVAL_STAGES,
 	GraphQLContext,
@@ -35,58 +33,41 @@ import getSelectionAndRelation from "../utils/getSelectionAndRelation";
 
 @Resolver()
 export class InvoiceResolver {
-	@InjectRepository()
-	private readonly invoiceRepo: InvoiceRepository;
-
-	@InjectRepository()
-	private readonly channelRepo: ChannelRepository;
-
-	@InjectRepository()
-	private readonly messageRepo: MessageRepository;
-
-	@InjectRepository()
-	private readonly mediaRepo: MediaRepository;
-
-	@InjectRepository()
-	private readonly invoiceActivityRepo: InvoiceActivityRepository;
-
 	@Authorized("CORE", "HEAD", "COCAD")
 	@Mutation(() => Boolean)
 	async approveInvoice(
 		@Arg("data") { invoiceId, currentStage }: ApproveInvoiceInput,
 		@Ctx() { user }: GraphQLContext
 	) {
-		const invoice = await this.invoiceRepo.save({
-			id: invoiceId,
+		const { affected } = await Invoice.update(invoiceId, {
 			status: APPROVAL_STAGES[
 				APPROVAL_STAGES.findIndex((stage) => stage === currentStage) + 1
 			] as InvoiceStatus
 		});
 
-		if (!invoice) return false;
+		if (affected === 0) return false;
 
-		const activity = this.invoiceActivityRepo.create({
+		const activity = InvoiceActivity.create({
 			type: InvoiceActivityType.APPROVED,
 			createdById: user.id,
 			description: `${user?.name} approved the Invoice.`,
 			invoiceId
 		});
 
-		const { channels } = await this.invoiceRepo.findOneOrFail(invoice.id, {
+		const { channels } = await Invoice.findOneOrFail(invoiceId, {
 			relations: ["channels"]
 		});
 
-		this.messageRepo
-			.save({
-				channels,
-				createdById: user.id,
-				type: MessageType.INVOICE_ACTIVITY,
-				content: "",
-				invoiceActivity: activity
-			})
-			.then(() => {
-				console.log("Invoice Update sent to Channels!");
-			});
+		const message = new Message();
+		message.channels = channels;
+		message.content = "";
+		message.type = MessageType.INVOICE_ACTIVITY;
+		message.createdById = user.id;
+		message.invoiceActivityId = activity.id;
+
+		message.save().then(() => {
+			console.log("Invoice Update sent to Channels!");
+		});
 
 		return true;
 	}
@@ -97,15 +78,15 @@ export class InvoiceResolver {
 		@Arg("data") { channelIds, invoiceId }: ConnectChannelsToInvoiceInput,
 		@Ctx() { user }: GraphQLContext
 	) {
-		const channels = await this.channelRepo.findByIds(channelIds);
-		let invoice = await this.invoiceRepo.findOneOrFail(invoiceId, {
+		const channels = await Channel.findByIds(channelIds);
+		let invoice = await Invoice.findOneOrFail(invoiceId, {
 			relations: ["channels"]
 		});
 
 		invoice.channels.push(...channels);
-		invoice = await this.invoiceRepo.save(invoice);
+		await invoice.save();
 
-		const activity = this.invoiceActivityRepo.create({
+		const activity = await InvoiceActivity.create({
 			description:
 				`${user.name} ` +
 				"connected the following channels to this invoice: " +
@@ -113,19 +94,18 @@ export class InvoiceResolver {
 			type: InvoiceActivityType.CONNECT_CHANNEL,
 			createdById: user.id,
 			invoiceId
-		});
+		}).save();
 
-		this.messageRepo
-			.save({
-				channels: invoice.channels,
-				content: "",
-				type: MessageType.INVOICE_ACTIVITY,
-				createdById: user.id,
-				invoiceActivity: activity
-			})
-			.then(() => {
-				console.log("Invoice Update Messages Sent!");
-			});
+		const message = new Message();
+		message.channels = invoice.channels;
+		message.content = "";
+		message.type = MessageType.INVOICE_ACTIVITY;
+		message.createdById = user.id;
+		message.invoiceActivityId = activity.id;
+
+		message.save().then(() => {
+			console.log("Invoice Update Messages Sent!");
+		});
 
 		return !!invoice;
 	}
@@ -133,7 +113,7 @@ export class InvoiceResolver {
 	@Authorized()
 	@Mutation(() => Boolean)
 	async deleteInvoice(@Arg("invoiceId") invoiceId: string) {
-		const { affected } = await this.invoiceRepo.delete(invoiceId);
+		const { affected } = await Invoice.delete(invoiceId);
 		return !!affected;
 	}
 
@@ -146,19 +126,19 @@ export class InvoiceResolver {
 	) {
 		const { select, relations } = getSelectionAndRelation(
 			graphqlFields(info),
-			this.invoiceRepo
+			Invoice
 		);
 
 		switch (type) {
 			case "REJECTED":
-				return this.invoiceRepo.find({
+				return Invoice.find({
 					where: { status: InvoiceStatus.REJECTED, uploadedById: user.id },
 					select,
 					relations
 				});
 
 			case "PENDING":
-				return this.invoiceRepo.find({
+				return Invoice.find({
 					where: {
 						status: getInvoiceStatus(
 							user.role,
@@ -173,7 +153,7 @@ export class InvoiceResolver {
 
 			default:
 				return (
-					await this.invoiceRepo.find({
+					await Invoice.find({
 						where: { uploadedById: user.id },
 						select,
 						relations
@@ -188,35 +168,33 @@ export class InvoiceResolver {
 		@Arg("data") { reason, invoiceId }: RejectInvoiceInput,
 		@Ctx() { user }: GraphQLContext
 	) {
-		let invoice = await this.invoiceRepo.findOne(invoiceId, {
+		let invoice = await Invoice.findOneOrFail(invoiceId, {
 			relations: ["channels"]
 		});
 
-		invoice = await this.invoiceRepo.save({
-			id: invoiceId,
+		const { affected } = await Invoice.update(invoiceId, {
 			status: InvoiceStatus.REJECTED
 		});
 
-		const activity = this.invoiceActivityRepo.create({
+		const activity = await InvoiceActivity.create({
 			createdById: user.id,
 			description: `${user?.name} rejected the invoice. ${reason}`,
 			type: InvoiceActivityType.REJECTED,
 			invoiceId
+		}).save();
+
+		const message = new Message();
+		message.channels = invoice.channels;
+		message.content = "";
+		message.type = MessageType.INVOICE_ACTIVITY;
+		message.createdById = user.id;
+		message.invoiceActivityId = activity.id;
+
+		message.save().then(() => {
+			console.log("Invoice Update Messages Sent!");
 		});
 
-		this.messageRepo
-			.save({
-				channels: invoice.channels,
-				content: "",
-				invoiceActivity: activity,
-				type: MessageType.INVOICE_ACTIVITY,
-				createdById: user.id
-			})
-			.then(() => {
-				console.log("Invoice Update Messages Sent!");
-			});
-
-		return !!invoice;
+		return affected === 1;
 	}
 
 	@Authorized()
@@ -225,22 +203,21 @@ export class InvoiceResolver {
 		@Arg("data") data: SubmitInvoiceInput,
 		@Ctx() { user }: GraphQLContext
 	) {
-		const channels = await this.channelRepo.findByIds(data.channelIds);
+		const channels = await Channel.findByIds(data.channelIds);
 
-		const media = this.mediaRepo.create({
+		const media = await Media.create({
 			url: data.fileUrl,
 			type: MediaType.IMAGE,
 			uploadedById: user.id
-		});
+		}).save();
 
-		const invoice = await this.invoiceRepo.save({
+		const invoice = await Invoice.create({
 			title: data.title,
 			amount: data.amount,
 			type: data.type,
 			purpose: data.purpose,
 			invoiceNumber: data.invoiceNumber,
 			date: data.date,
-			media,
 			status: getInvoiceStatus(
 				user!.role,
 				user!.role !== UserRole.COORD && user.department.name === "FINANCE"
@@ -248,27 +225,27 @@ export class InvoiceResolver {
 			byDept: user.department,
 			uploadedById: user.id,
 			vendorId: data.vendorId,
-			channels
-		});
+			channels,
+			mediaId: media.id
+		}).save();
 
-		const activity = this.invoiceActivityRepo.create({
+		const activity = await InvoiceActivity.create({
 			description: `${user?.name} uploaded the invoice.`,
 			type: InvoiceActivityType.UPLOADED,
 			createdById: user.id,
 			invoiceId: invoice.id
-		});
+		}).save();
 
-		this.messageRepo
-			.save({
-				channels,
-				content: "",
-				type: MessageType.INVOICE_ACTIVITY,
-				createdById: user.id,
-				invoiceActivity: activity
-			})
-			.then(() => {
-				console.log("Invoice Update Messages Sent!");
-			});
+		const message = new Message();
+		message.channels = channels;
+		message.content = "";
+		message.type = MessageType.INVOICE_ACTIVITY;
+		message.createdById = user.id;
+		message.invoiceActivityId = activity.id;
+
+		message.save().then(() => {
+			console.log("Invoice Update Messages Sent!");
+		});
 
 		return !!invoice;
 	}

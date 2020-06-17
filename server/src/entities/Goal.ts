@@ -1,5 +1,8 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
+	BaseEntity,
+	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -15,7 +18,17 @@ registerEnumType(GoalType, { name: "GoalType" });
 
 @Entity("Goal")
 @ObjectType("Goal")
-export class Goal {
+export class Goal extends BaseEntity {
+	static primaryFields = ["id", "title", "description", "type", "createdOn"];
+	static relationalFields = ["milestones", "dept"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()

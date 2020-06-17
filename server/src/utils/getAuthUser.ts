@@ -2,19 +2,13 @@ import { Request } from "express";
 import jwt from "jsonwebtoken";
 import { ExecutionParams } from "subscriptions-transport-ws";
 import { User } from "../entities/User";
-import { UserRepository } from "../repositories/User";
 
 interface AuthParams {
 	req: Request;
 	connection?: ExecutionParams;
-	userRepo: UserRepository;
 }
 
-export const getAuthUser = async ({
-	req,
-	connection,
-	userRepo
-}: AuthParams) => {
+export const getAuthUser = async ({ req, connection }: AuthParams) => {
 	const header: string = !!req
 		? req.headers.authorization
 		: connection!.context.Authorization;
@@ -26,7 +20,7 @@ export const getAuthUser = async ({
 
 		if (!!token) {
 			const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-			user = await userRepo.findOne(decoded.id, { relations: ["department"] });
+			user = await User.findOne(decoded.id, { relations: ["department"] });
 		}
 	}
 	return user;

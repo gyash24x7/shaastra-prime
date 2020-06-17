@@ -1,5 +1,8 @@
+import cuid from "cuid";
 import { Field, ID, Int, ObjectType, registerEnumType } from "type-graphql";
 import {
+	BaseEntity,
+	BeforeInsert,
 	Column,
 	Entity,
 	JoinColumn,
@@ -19,7 +22,28 @@ registerEnumType(RegistrationType, { name: "RegistrationType" });
 
 @Entity("Event")
 @ObjectType("Event")
-export class Event {
+export class Event extends BaseEntity {
+	static primaryFields = [
+		"id",
+		"name",
+		"rank",
+		"info",
+		"updatedOn",
+		"approved",
+		"paid",
+		"eventTabs",
+		"registrationType"
+	];
+
+	static relationalFields = ["updatedBy", "image", "vertical", "registrations"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()

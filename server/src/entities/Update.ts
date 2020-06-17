@@ -1,5 +1,8 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType } from "type-graphql";
 import {
+	BaseEntity,
+	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -11,7 +14,17 @@ import { User } from "./User";
 
 @Entity("Update")
 @ObjectType("Update")
-export class Update {
+export class Update extends BaseEntity {
+	static primaryFields = ["id", "brief", "subject", "content", "createdOn"];
+	static relationalFields = ["byDept", "postedBy"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()

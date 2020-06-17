@@ -1,3 +1,4 @@
+import cuid from "cuid";
 import graphqlFields from "graphql-fields";
 import moment from "moment";
 import {
@@ -6,27 +7,25 @@ import {
 	Ctx,
 	Info,
 	Mutation,
+	PubSub,
+	PubSubEngine,
 	Query,
 	Resolver
 } from "type-graphql";
-import { InjectRepository } from "typeorm-typedi-extensions";
+import { Channel } from "../entities/Channel";
+import { Media } from "../entities/Media";
 import { Task } from "../entities/Task";
+import { TaskActivity } from "../entities/TaskActivity";
+import { User } from "../entities/User";
 import {
 	AssignTaskInput,
 	AttachMediaToTaskInput,
 	ConnectChannelsToTaskInput,
 	CreateTaskInput
 } from "../inputs/Task";
-import { ChannelRepository } from "../repositories/Channel";
-import { MediaRepository } from "../repositories/Media";
-import { MessageRepository } from "../repositories/Message";
-import { TaskRepository } from "../repositories/Task";
-import { TaskActivityRepository } from "../repositories/TaskActivity";
-import { UserRepository } from "../repositories/User";
 import {
 	GraphQLContext,
 	MediaType,
-	MessageType,
 	TaskActivityType,
 	TaskStatus
 } from "../utils";
@@ -34,55 +33,26 @@ import getSelectionAndRelation from "../utils/getSelectionAndRelation";
 
 @Resolver()
 export class TaskResolver {
-	@InjectRepository()
-	private readonly taskRepo: TaskRepository;
-
-	@InjectRepository()
-	private readonly taskActivityRepo: TaskActivityRepository;
-
-	@InjectRepository()
-	private readonly channelRepo: ChannelRepository;
-
-	@InjectRepository()
-	private readonly mediaRepo: MediaRepository;
-
-	@InjectRepository()
-	private readonly msgRepo: MessageRepository;
-
-	@InjectRepository()
-	private readonly userRepo: UserRepository;
-
 	@Authorized()
 	@Mutation(() => Boolean)
 	async acceptTask(
 		@Arg("taskId") taskId: string,
-		@Ctx() { user }: GraphQLContext
+		@Ctx() { user }: GraphQLContext,
+		@PubSub() pubsub: PubSubEngine
 	) {
-		let task = await this.taskRepo.findOneOrFail(taskId, {
+		let task = await Task.findOneOrFail(taskId, {
 			relations: ["channels"]
 		});
 
 		task.status = TaskStatus.IN_PROGRESS;
-		task = await this.taskRepo.save(task);
+		task = await task.save();
 
-		const activity = this.taskActivityRepo.create({
+		await TaskActivity.create({
 			type: TaskActivityType.IN_PROGRESS,
 			createdById: user.id,
 			description: `${user!.name} started working on the task.`,
 			taskId
-		});
-
-		this.msgRepo
-			.save({
-				channels: task.channels,
-				content: "",
-				type: MessageType.TASK_ACTIVITY,
-				createdById: user.id,
-				taskActivity: activity
-			})
-			.then(() => {
-				console.log("Task Activity Messages Sent!");
-			});
+		}).save({ data: { channels: task.channels, pubsub } });
 
 		return !!task;
 	}
@@ -91,38 +61,25 @@ export class TaskResolver {
 	@Mutation(() => Boolean)
 	async assignTask(
 		@Arg("data") { taskId, assignedTo }: AssignTaskInput,
-		@Ctx() { user }: GraphQLContext
+		@Ctx() { user }: GraphQLContext,
+		@PubSub() pubsub: PubSubEngine
 	) {
-		let task = await this.taskRepo.findOneOrFail(taskId, {
+		let task = await Task.findOneOrFail(taskId, {
 			relations: ["channels"]
 		});
-		const assignedUsers = await this.userRepo.findByIds(assignedTo);
-
-		task.assignedTo.push(...assignedUsers);
+		task.assignedTo = await User.findByIds(assignedTo);
 		task.status = TaskStatus.ASSIGNED;
-		task = await this.taskRepo.save(task);
+		task = await task.save();
 
-		const activity = this.taskActivityRepo.create({
+		await TaskActivity.create({
 			type: TaskActivityType.ASSIGNED,
 			createdById: user.id,
 			description:
 				`${user?.name}` +
-				"assigned the task to " +
-				`${assignedUsers?.map((user) => user.name + ", ")}`,
+				" assigned the task to " +
+				`${task.assignedTo?.map((user) => user.name + ", ")}`,
 			taskId
-		});
-
-		this.msgRepo
-			.save({
-				content: "",
-				type: MessageType.TASK_ACTIVITY,
-				createdById: user.id,
-				taskActivity: activity,
-				channels: task.channels
-			})
-			.then(() => {
-				console.log("Task Activity Messages Sent!");
-			});
+		}).save({ data: { channels: task.channels, pubsub } });
 
 		return !!task;
 	}
@@ -131,41 +88,31 @@ export class TaskResolver {
 	@Mutation(() => Boolean)
 	async attachMediaToTask(
 		@Arg("data") { taskId, urls }: AttachMediaToTaskInput,
-		@Ctx() { user }: GraphQLContext
+		@Ctx() { user }: GraphQLContext,
+		@PubSub() pubsub: PubSubEngine
 	) {
-		let task = await this.taskRepo.findOneOrFail(taskId, {
-			relations: ["channel"]
+		let task = await Task.findOneOrFail(taskId, {
+			relations: ["channels"]
 		});
 
-		const media = this.mediaRepo.create(
-			urls.map((url) => ({
-				url,
-				createdById: user.id,
-				type: MediaType.IMAGE
-			}))
+		await Promise.all(
+			urls.map((url) =>
+				Media.create({
+					url,
+					uploadedById: user.id,
+					type: MediaType.IMAGE,
+					id: cuid(),
+					taskId
+				}).save()
+			)
 		);
 
-		task.media.push(...media);
-		task = await this.taskRepo.save(task);
-
-		const activity = this.taskActivityRepo.create({
+		await TaskActivity.create({
 			description: `${user?.name} attached ${urls.length} media files to this task.`,
 			type: TaskActivityType.ATTACH_MEDIA,
 			createdById: user.id,
 			taskId
-		});
-
-		this.msgRepo
-			.save({
-				channels: task.channels,
-				content: "",
-				type: MessageType.TASK_ACTIVITY,
-				createdById: user.id,
-				taskActivity: activity
-			})
-			.then(() => {
-				console.log("Task Activity Messages Sent!");
-			});
+		}).save({ data: { channels: task.channels, pubsub } });
 
 		return !!task;
 	}
@@ -174,33 +121,22 @@ export class TaskResolver {
 	@Mutation(() => Boolean)
 	async completeTask(
 		@Arg("taskId") taskId: string,
-		@Ctx() { user }: GraphQLContext
+		@Ctx() { user }: GraphQLContext,
+		@PubSub() pubsub: PubSubEngine
 	) {
-		let task = await this.taskRepo.findOneOrFail(taskId, {
+		let task = await Task.findOneOrFail(taskId, {
 			relations: ["channels"]
 		});
 
 		task.status = TaskStatus.COMPLETED;
-		task = await this.taskRepo.save(task);
+		task = await task.save();
 
-		const activity = this.taskActivityRepo.create({
+		await TaskActivity.create({
 			type: TaskActivityType.COMPLETED,
 			createdById: user.id,
 			description: `${user!.name} marked the task as completed.`,
 			taskId
-		});
-
-		this.msgRepo
-			.save({
-				channels: task.channels,
-				content: "",
-				type: MessageType.TASK_ACTIVITY,
-				createdById: user.id,
-				taskActivity: activity
-			})
-			.then(() => {
-				console.log("Task Activity Messages Sent!");
-			});
+		}).save({ data: { channels: task.channels, pubsub } });
 
 		return !!task;
 	}
@@ -209,17 +145,18 @@ export class TaskResolver {
 	@Mutation(() => Boolean)
 	async connectChannelsToTask(
 		@Arg("data") { channelIds, taskId }: ConnectChannelsToTaskInput,
-		@Ctx() { user }: GraphQLContext
+		@Ctx() { user }: GraphQLContext,
+		@PubSub() pubsub: PubSubEngine
 	) {
-		let task = await this.taskRepo.findOneOrFail(taskId, {
+		let task = await Task.findOneOrFail(taskId, {
 			relations: ["channels"]
 		});
-		const newChannels = await this.channelRepo.findByIds(channelIds);
+		const newChannels = await Channel.findByIds(channelIds);
 
 		task.channels.push(...newChannels);
-		task = await this.taskRepo.save(task);
+		task = await task.save();
 
-		const activity = this.taskActivityRepo.create({
+		await TaskActivity.create({
 			description:
 				`${user?.name} ` +
 				"connected the following channels to this task: " +
@@ -227,19 +164,7 @@ export class TaskResolver {
 			type: TaskActivityType.CONNECT_CHANNEL,
 			createdById: user.id,
 			taskId
-		});
-
-		this.msgRepo
-			.save({
-				channels: task.channels,
-				content: "",
-				type: MessageType.TASK_ACTIVITY,
-				createdById: user.id,
-				taskActivity: activity
-			})
-			.then(() => {
-				console.log("Task Activity Messages Sent!");
-			});
+		}).save({ data: { channels: task.channels, pubsub } });
 
 		return !!task;
 	}
@@ -247,40 +172,26 @@ export class TaskResolver {
 	@Authorized()
 	@Mutation(() => Boolean)
 	async createTask(
-		@Arg("data")
-		{ brief, deadline, details, forDeptId, channelIds }: CreateTaskInput,
-		@Ctx() { user }: GraphQLContext
+		@Arg("data") { deadline, channelIds, ...rest }: CreateTaskInput,
+		@Ctx() { user }: GraphQLContext,
+		@PubSub() pubsub: PubSubEngine
 	) {
-		const channels = await this.channelRepo.findByIds(channelIds);
+		const channels = await Channel.findByIds(channelIds);
 
-		const task = await this.taskRepo.save({
-			brief,
+		const task = await Task.create({
+			...rest,
 			deadline: moment(deadline, "DD/MM/YYYY").toISOString(),
-			details,
-			forDeptId,
 			createdById: user.id,
 			byDeptId: user.departmentId,
 			channels
-		});
+		}).save();
 
-		const activity = this.taskActivityRepo.create({
+		await TaskActivity.create({
 			description: `${user?.name} created the task.`,
 			type: TaskActivityType.CREATED,
 			createdById: user.id,
 			taskId: task.id
-		});
-
-		this.msgRepo
-			.save({
-				channels,
-				content: "",
-				type: MessageType.TASK_ACTIVITY,
-				createdById: user.id,
-				taskActivity: activity
-			})
-			.then(() => {
-				console.log("Task Activity Messages Sent!");
-			});
+		}).save({ data: { channels: task.channels, pubsub } });
 
 		return !!task;
 	}
@@ -289,32 +200,21 @@ export class TaskResolver {
 	@Mutation(() => Boolean)
 	async deleteTask(
 		@Arg("taskId") taskId: string,
-		@Ctx() { user }: GraphQLContext
+		@Ctx() { user }: GraphQLContext,
+		@PubSub() pubsub: PubSubEngine
 	) {
-		let task = await this.taskRepo.findOneOrFail(taskId, {
+		let task = await Task.findOneOrFail(taskId, {
 			relations: ["channels"]
 		});
 		task.deleted = true;
-		task = await this.taskRepo.save(task);
+		task = await task.save();
 
-		const activity = this.taskActivityRepo.create({
+		await TaskActivity.create({
 			createdById: user.id,
 			description: `${user?.name} deleted the task.`,
 			type: TaskActivityType.DELETED,
 			taskId
-		});
-
-		this.msgRepo
-			.save({
-				channels: task.channels,
-				content: "",
-				type: MessageType.TASK_ACTIVITY,
-				createdById: user.id,
-				taskActivity: activity
-			})
-			.then(() => {
-				console.log("Task Activity Messages Sent!");
-			});
+		}).save({ data: { channels: task.channels, pubsub } });
 
 		return !!task;
 	}
@@ -324,13 +224,13 @@ export class TaskResolver {
 	async getTasks(@Ctx() { user }: GraphQLContext, @Info() info: any) {
 		const { select, relations } = getSelectionAndRelation(
 			graphqlFields(info),
-			this.taskRepo
+			Task
 		);
 
 		switch (user?.role) {
 			case "COCAD":
 			case "COCAS":
-				const allTasks = await this.taskRepo.find({
+				const allTasks = await Task.find({
 					order: { createdOn: "DESC" },
 					where: { deleted: false },
 					select,
@@ -339,7 +239,7 @@ export class TaskResolver {
 				return allTasks;
 
 			case "CORE":
-				return this.taskRepo.find({
+				return Task.find({
 					order: { createdOn: "DESC" },
 					where: { deleted: false, forDeptId: user.departmentId },
 					select,
@@ -347,7 +247,7 @@ export class TaskResolver {
 				});
 
 			default:
-				const { tasksAssigned } = await this.userRepo.findOneOrFail(user.id, {
+				const { tasksAssigned } = await User.findOneOrFail(user.id, {
 					relations: ["tasksAssigned"]
 				});
 				return tasksAssigned.reverse().filter((task) => task.deleted === false);
@@ -359,10 +259,10 @@ export class TaskResolver {
 	async getTask(@Arg("taskId") taskId: string, @Info() info: any) {
 		const { select, relations } = getSelectionAndRelation(
 			graphqlFields(info),
-			this.taskRepo
+			Task
 		);
 
-		const task = await this.taskRepo.findOne(taskId, { select, relations });
+		const task = await Task.findOne(taskId, { select, relations });
 		return task;
 	}
 
@@ -370,33 +270,22 @@ export class TaskResolver {
 	@Mutation(() => Boolean)
 	async submitTask(
 		@Arg("taskId") taskId: string,
-		@Ctx() { user }: GraphQLContext
+		@Ctx() { user }: GraphQLContext,
+		@PubSub() pubsub: PubSubEngine
 	) {
-		let task = await this.taskRepo.findOneOrFail(taskId, {
+		let task = await Task.findOneOrFail(taskId, {
 			relations: ["channels"]
 		});
 
 		task.status = TaskStatus.SUBMITTED;
-		task = await this.taskRepo.save(task);
+		task = await task.save();
 
-		const activity = this.taskActivityRepo.create({
+		await TaskActivity.create({
 			type: TaskActivityType.SUBMITTED,
 			createdById: user.id,
 			description: `${user!.name} submitted the task.`,
 			taskId
-		});
-
-		this.msgRepo
-			.save({
-				channels: task.channels,
-				content: "",
-				type: MessageType.TASK_ACTIVITY,
-				createdById: user.id,
-				taskActivity: activity
-			})
-			.then(() => {
-				console.log("Task Activity Messages Sent!");
-			});
+		}).save({ data: { channels: task.channels, pubsub } });
 
 		return !!task;
 	}

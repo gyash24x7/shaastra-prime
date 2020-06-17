@@ -1,13 +1,20 @@
+import bcrypt from "bcryptjs";
+import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
+	AfterInsert,
+	BaseEntity,
+	BeforeInsert,
 	Column,
 	Entity,
+	JoinTable,
 	ManyToMany,
 	ManyToOne,
 	OneToMany,
 	PrimaryColumn
 } from "typeorm";
-import { UserRole } from "../utils";
+import { SendMailOptions, UserRole } from "../utils";
+import mailjet from "../utils/mailjet";
 import { Channel } from "./Channel";
 import { Department } from "./Department";
 import { Event } from "./Event";
@@ -24,7 +31,67 @@ registerEnumType(UserRole, { name: "UserRole" });
 
 @Entity("User")
 @ObjectType("User")
-export class User {
+export class User extends BaseEntity {
+	static primaryFields = [
+		"id",
+		"name",
+		"email",
+		"rollNumber",
+		"profilePic",
+		"coverPic",
+		"upi",
+		"mobile",
+		"about",
+		"verified",
+		"role"
+	];
+
+	static relationalFields = ["department"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	async setId() {
+		this.id = cuid();
+		this.password = await bcrypt.hash(this.password, 13);
+		this.verificationOTP = User.generateOTP();
+	}
+
+	@AfterInsert()
+	async senVerificationMail() {
+		await User.sendMail({
+			rollNumber: this.rollNumber,
+			name: this.name,
+			subject: "Complete Smail Verification | Shaastra Prime",
+			htmlPart: `<p>You verification code is <strong>${this.verificationOTP}</strong></p>`
+		});
+	}
+
+	static findByEmail(email: string, select: any[] = ["id"]) {
+		return User.findOneOrFail({ where: { email }, select });
+	}
+
+	static sendMail({ rollNumber, name, htmlPart, subject }: SendMailOptions) {
+		if (process.env.NODE_ENV === "production") {
+			return mailjet.post("send", { version: "v3" }).request({
+				FromEmail: "prime@shaastra.org",
+				FromName: "Shaastra Prime Bot",
+				Recipients: [
+					{
+						Email: `${rollNumber.toLowerCase()}@smail.iitm.ac.in`,
+						Name: name
+					}
+				],
+				Subject: subject,
+				"Html-part": htmlPart
+			});
+		} else return Promise.resolve();
+	}
+
+	static generateOTP() {
+		return Math.floor(100000 + Math.random() * 900000).toString();
+	}
+
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -95,7 +162,8 @@ export class User {
 	@OneToMany(() => Media, (media) => media.uploadedBy)
 	media: Media[];
 
-	@ManyToMany(() => Task, (task) => task.createdBy)
+	@ManyToMany(() => Task, (task) => task.assignedTo)
+	@JoinTable()
 	tasksAssigned: Task[];
 
 	@OneToMany(() => Invoice, (invoice) => invoice.uploadedBy)

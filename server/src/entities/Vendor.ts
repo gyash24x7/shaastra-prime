@@ -1,10 +1,37 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType } from "type-graphql";
-import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import {
+	BaseEntity,
+	BeforeInsert,
+	Column,
+	Entity,
+	OneToMany,
+	PrimaryColumn
+} from "typeorm";
 import { Invoice } from "./Invoice";
 
 @Entity("Vendor")
 @ObjectType("Vendor")
-export class Vendor {
+export class Vendor extends BaseEntity {
+	static primaryFields = [
+		"id",
+		"name",
+		"gstNumber",
+		"accountName",
+		"accountNumber",
+		"ifsc",
+		"bankDetails"
+	];
+
+	static relationalFields = ["invoices"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()

@@ -1,5 +1,8 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
+	BaseEntity,
+	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -20,7 +23,33 @@ registerEnumType(TaskStatus, { name: "TaskStatus" });
 
 @Entity("Task")
 @ObjectType("Task")
-export class Task {
+export class Task extends BaseEntity {
+	static primaryFields = [
+		"id",
+		"brief",
+		"details",
+		"status",
+		"createdOn",
+		"deadline"
+	];
+
+	static relationalFields = [
+		"byDept",
+		"forDept",
+		"createdBy",
+		"assignedTo",
+		"media",
+		"activity",
+		"channels"
+	];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()

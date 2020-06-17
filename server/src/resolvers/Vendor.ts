@@ -1,27 +1,22 @@
 import graphqlFields from "graphql-fields";
 import { Arg, Authorized, Info, Mutation, Query, Resolver } from "type-graphql";
-import { InjectRepository } from "typeorm-typedi-extensions";
 import { Vendor } from "../entities/Vendor";
 import { CreateVendorInput } from "../inputs/Vendor";
-import { VendorRepository } from "../repositories/Vendor";
 import getSelectionAndRelation from "../utils/getSelectionAndRelation";
 
 @Resolver()
 export class VendorResolver {
-	@InjectRepository()
-	private readonly vendorRepo: VendorRepository;
-
 	@Authorized()
 	@Mutation(() => Boolean)
 	async createVendor(@Arg("data") data: CreateVendorInput) {
-		const vendor = await this.vendorRepo.save({ ...data });
+		const vendor = await Vendor.create({ ...data }).save();
 		return !!vendor;
 	}
 
 	@Authorized("HEAD", "CORE")
 	@Mutation(() => Boolean)
 	async deleteVendor(@Arg("vendorId") id: string) {
-		const { affected } = await this.vendorRepo.delete(id);
+		const { affected } = await Vendor.delete(id);
 		return !!affected;
 	}
 
@@ -30,8 +25,8 @@ export class VendorResolver {
 	async getVendors(@Info() info: any) {
 		const { select, relations } = getSelectionAndRelation(
 			graphqlFields(info),
-			this.vendorRepo
+			Vendor
 		);
-		return this.vendorRepo.find({ select, relations });
+		return Vendor.find({ select, relations });
 	}
 }

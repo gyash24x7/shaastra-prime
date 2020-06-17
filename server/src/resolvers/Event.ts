@@ -8,28 +8,19 @@ import {
 	Query,
 	Resolver
 } from "type-graphql";
-import { InjectRepository } from "typeorm-typedi-extensions";
 import { Event } from "../entities/Event";
 import { Media } from "../entities/Media";
 import { CreateEventInput, UpdateEventInput } from "../inputs/Event";
-import { EventRepository } from "../repositories/Event";
-import { MediaRepository } from "../repositories/Media";
 import { GraphQLContext, MediaType } from "../utils";
 import getSelectionAndRelation from "../utils/getSelectionAndRelation";
 
 @Resolver()
 export class EventResolver {
-	@InjectRepository()
-	private readonly eventRepo: EventRepository;
-
-	@InjectRepository()
-	private readonly mediaRepo: MediaRepository;
-
 	@Authorized("CORE", "HEAD")
 	@Mutation(() => Boolean)
 	async approveEvent(@Arg("id") eventId: string) {
-		const event = await this.eventRepo.save({ id: eventId, approved: true });
-		return !!event;
+		const { affected } = await Event.update(eventId, { approved: true });
+		return affected === 1;
 	}
 
 	@Authorized()
@@ -40,14 +31,14 @@ export class EventResolver {
 	) {
 		let image: Media | undefined;
 		if (data.imageUrl) {
-			image = this.mediaRepo.create({
+			image = Media.create({
 				url: data.imageUrl,
 				uploadedById: user.id,
 				type: MediaType.IMAGE
 			});
 		}
 
-		const event = await this.eventRepo.save({
+		const event = await Event.create({
 			name: data.name,
 			info: data.info,
 			paid: data.paid,
@@ -61,7 +52,7 @@ export class EventResolver {
 					content: data.eventTabContents[i]
 				}))
 			)
-		});
+		}).save();
 
 		return !!event;
 	}
@@ -69,7 +60,7 @@ export class EventResolver {
 	@Authorized()
 	@Mutation(() => Boolean)
 	async deleteEvent(@Arg("id") id: string) {
-		const { affected } = await this.eventRepo.delete(id);
+		const { affected } = await Event.delete(id);
 		return !!affected;
 	}
 
@@ -77,10 +68,10 @@ export class EventResolver {
 	async getEventsByVertical(@Arg("id") id: string, @Info() info: any) {
 		const { select, relations } = getSelectionAndRelation(
 			graphqlFields(info),
-			this.eventRepo
+			Event
 		);
 
-		const events = await this.eventRepo.find({
+		const events = await Event.find({
 			where: { verticalId: id },
 			select,
 			relations
@@ -94,10 +85,10 @@ export class EventResolver {
 	async getEvent(@Arg("id") id: string, @Info() info: any) {
 		const { select, relations } = getSelectionAndRelation(
 			graphqlFields(info),
-			this.eventRepo
+			Event
 		);
 
-		const event = await this.eventRepo.findOne(id, { select, relations });
+		const event = await Event.findOne(id, { select, relations });
 		return event;
 	}
 
@@ -109,14 +100,14 @@ export class EventResolver {
 	) {
 		let image: Media | undefined;
 		if (data.imageUrl) {
-			image = this.mediaRepo.create({
+			image = Media.create({
 				url: data.imageUrl,
 				uploadedById: user.id,
 				type: MediaType.IMAGE
 			});
 		}
 
-		const event = await this.eventRepo.save({
+		const { affected } = await Event.update(data.id, {
 			name: data.name,
 			info: data.info,
 			paid: data.paid,
@@ -131,6 +122,6 @@ export class EventResolver {
 			)
 		});
 
-		return !!event;
+		return affected === 1;
 	}
 }

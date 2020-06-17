@@ -8,23 +8,14 @@ import {
 	Query,
 	Resolver
 } from "type-graphql";
-import { InjectRepository } from "typeorm-typedi-extensions";
 import { Media } from "../entities/Media";
 import { Vertical } from "../entities/Vertical";
 import { CreateVerticalInput, UpdateVerticalInput } from "../inputs/Vertical";
-import { MediaRepository } from "../repositories/Media";
-import { VerticalRepository } from "../repositories/Vertical";
 import { GraphQLContext, MediaType } from "../utils";
 import getSelectionAndRelation from "../utils/getSelectionAndRelation";
 
 @Resolver()
 export class VerticalResolver {
-	@InjectRepository()
-	private readonly verticalRepo: VerticalRepository;
-
-	@InjectRepository()
-	private readonly mediaRepo: MediaRepository;
-
 	@Authorized("CORE", "HEAD")
 	@Mutation(() => Boolean)
 	async addVertical(
@@ -33,19 +24,19 @@ export class VerticalResolver {
 	) {
 		let image: Media | undefined;
 		if (imageUrl) {
-			image = this.mediaRepo.create({
+			image = await Media.create({
 				url: imageUrl,
 				uploadedById: user.id,
 				type: MediaType.IMAGE
-			});
+			}).save();
 		}
 
-		const vertical = await this.verticalRepo.save({
+		const vertical = await Vertical.create({
 			name,
 			info,
-			image,
+			imageId: image?.id,
 			updatedById: user.id
-		});
+		}).save();
 
 		return !!vertical;
 	}
@@ -53,7 +44,7 @@ export class VerticalResolver {
 	@Authorized("CORE", "HEAD")
 	@Mutation(() => Boolean)
 	async deleteVertical(@Arg("id") id: string) {
-		const { affected } = await this.verticalRepo.delete(id);
+		const { affected } = await Vertical.delete(id);
 		return !!affected;
 	}
 
@@ -62,9 +53,9 @@ export class VerticalResolver {
 	async getVerticals(@Info() info: any) {
 		const { select, relations } = getSelectionAndRelation(
 			graphqlFields(info),
-			this.verticalRepo
+			Vertical
 		);
-		return await this.verticalRepo.find({ select, relations });
+		return await Vertical.find({ select, relations });
 	}
 
 	@Authorized("CORE", "HEAD")
@@ -73,12 +64,11 @@ export class VerticalResolver {
 		@Arg("data") { name, info, verticalId }: UpdateVerticalInput,
 		@Ctx() { user }: GraphQLContext
 	) {
-		const vertical = await this.verticalRepo.save({
-			id: verticalId,
+		const { affected } = await Vertical.update(verticalId, {
 			name,
 			info,
 			updatedById: user.id
 		});
-		return !!vertical;
+		return affected === 1;
 	}
 }

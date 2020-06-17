@@ -1,5 +1,14 @@
-import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
+import cuid from "cuid";
 import {
+	Field,
+	ID,
+	ObjectType,
+	PubSubEngine,
+	registerEnumType
+} from "type-graphql";
+import {
+	BaseEntity,
+	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -8,9 +17,10 @@ import {
 	ManyToOne,
 	OneToMany,
 	OneToOne,
-	PrimaryColumn
+	PrimaryColumn,
+	SaveOptions
 } from "typeorm";
-import { MessageType } from "../utils/index";
+import { MessagePubsubOptions, MessageType } from "../utils/index";
 import { Channel } from "./Channel";
 import { InvoiceActivity } from "./InvoiceActivity";
 import { Media } from "./Media";
@@ -21,7 +31,65 @@ registerEnumType(MessageType, { name: "MessageType" });
 
 @Entity("Message")
 @ObjectType("Message")
-export class Message {
+export class Message extends BaseEntity {
+	static primaryFields = ["id", "content", "createdOn", "starred", "type"];
+	static relationalFields = [
+		"taskActivity",
+		"invoiceActivity",
+		"media",
+		"createdBy"
+	];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
+	static sendSystemMessage(
+		channel: Channel,
+		content: string,
+		createdById: string,
+		pubsub: PubSubEngine
+	) {
+		const message = new Message();
+		message.type = MessageType.SYSTEM;
+		message.content = content;
+		message.createdById = createdById;
+		message.channels = [channel];
+
+		return message.save({ data: { channels: [channel], pubsub } });
+	}
+
+	static sendTaskActivityMessage(
+		channels: Channel[],
+		createdById: string,
+		taskActivityId: string,
+		pubsub: PubSubEngine
+	) {
+		const message = new Message();
+		message.channels = channels;
+		message.content = "";
+		message.type = MessageType.TASK_ACTIVITY;
+		message.createdById = createdById;
+		message.taskActivityId = taskActivityId;
+
+		return message.save({ data: { channels, pubsub } });
+	}
+
+	async save(options?: SaveOptions) {
+		const message = await super.save();
+		if (options?.data) {
+			const { pubsub, channels } = options.data as MessagePubsubOptions;
+			Promise.all(
+				channels.map(({ id }) => pubsub.publish(id, message))
+			).then(() => console.log("Message published on Channels!"));
+		}
+
+		return message;
+	}
+
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()

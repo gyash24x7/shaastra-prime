@@ -1,5 +1,13 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import {
+	BaseEntity,
+	BeforeInsert,
+	Column,
+	Entity,
+	ManyToOne,
+	PrimaryColumn
+} from "typeorm";
 import { MilestoneStatus } from "../utils";
 import { Goal } from "./Goal";
 
@@ -7,7 +15,17 @@ registerEnumType(MilestoneStatus, { name: "MilestoneStatus" });
 
 @Entity("Milestone")
 @ObjectType("Milestone")
-export class Milestone {
+export class Milestone extends BaseEntity {
+	static primaryFields = ["id", "title", "status"];
+	static relationalFields = ["goal"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()

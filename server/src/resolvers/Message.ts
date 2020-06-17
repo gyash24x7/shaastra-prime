@@ -11,29 +11,18 @@ import {
 	Root,
 	Subscription
 } from "type-graphql";
-import { InjectRepository } from "typeorm-typedi-extensions";
+import { Channel } from "../entities/Channel";
+import { Media } from "../entities/Media";
 import { Message } from "../entities/Message";
 import {
 	CreateMediaMessageInput,
 	CreateTextMessageInput,
 	GetMessagesInput
 } from "../inputs/Message";
-import { ChannelRepository } from "../repositories/Channel";
-import { MediaRepository } from "../repositories/Media";
-import { MessageRepository } from "../repositories/Message";
 import { GraphQLContext, MediaType, MessageType } from "../utils";
 
 @Resolver(Message)
 export class MessageResolver {
-	@InjectRepository()
-	private readonly msgRepo: MessageRepository;
-
-	@InjectRepository()
-	private readonly channelRepo: ChannelRepository;
-
-	@InjectRepository()
-	private readonly mediaRepo: MediaRepository;
-
 	@Authorized()
 	@Mutation(() => Boolean)
 	async createMediaMessage(
@@ -41,24 +30,24 @@ export class MessageResolver {
 		@Ctx() { user }: GraphQLContext,
 		@PubSub() pubsub: PubSubEngine
 	) {
-		const channels = await this.channelRepo.findByIds([channelId]);
+		let message = new Message();
+		message.channels = await Channel.findByIds([channelId]);
+		message.createdById = user.id;
+		message.content = "";
+		message.type = MessageType.MEDIA;
 
-		let message = await this.msgRepo.save({
-			channels,
-			createdById: user.id,
-			content: "",
-			type: MessageType.MEDIA,
-			id: cuid()
-		});
+		message = await message.save();
 
-		await this.mediaRepo.save(
-			mediaUrls.map((url) => ({
-				id: cuid(),
-				url,
-				uploadedById: user.id,
-				type: MediaType.IMAGE,
-				messageId: message.id
-			}))
+		await Promise.all(
+			mediaUrls.map((url) =>
+				Media.create({
+					id: cuid(),
+					url,
+					uploadedById: user.id,
+					type: MediaType.IMAGE,
+					messageId: message.id
+				}).save()
+			)
 		);
 
 		await pubsub.publish(channelId, message);
@@ -73,16 +62,13 @@ export class MessageResolver {
 		@Ctx() { user }: GraphQLContext,
 		@PubSub() pubsub: PubSubEngine
 	) {
-		const channels = await this.channelRepo.findByIds([channelId]);
-		let message = await this.msgRepo.save({
-			channels,
-			createdById: user.id,
-			content,
-			type: MessageType.TEXT,
-			id: cuid()
-		});
+		let message = new Message();
+		message.channels = await Channel.findByIds([channelId]);
+		message.createdById = user.id;
+		message.content = content;
+		message.type = MessageType.TEXT;
 
-		await pubsub.publish(channelId, message);
+		message = await message.save({ data: { channelIds: [channelId], pubsub } });
 
 		return !!message;
 	}
@@ -90,7 +76,7 @@ export class MessageResolver {
 	@Authorized()
 	@Query(() => [Message])
 	async getMessages(@Arg("data") { channelId, skip }: GetMessagesInput) {
-		const channel = await this.channelRepo.findOneOrFail(channelId, {
+		const channel = await Channel.findOneOrFail(channelId, {
 			relations: ["messages"]
 		});
 		return channel.messages.reverse().slice((skip || 0) * 20, 20);
@@ -108,12 +94,12 @@ export class MessageResolver {
 	@Authorized()
 	@Mutation(() => Boolean)
 	async toggleMessageStar(@Arg("messageId") messageId: string) {
-		let message = await this.msgRepo.findOneOrFail(messageId, {
+		let message = await Message.findOneOrFail(messageId, {
 			select: ["id", "starred"]
 		});
 
 		message.starred = !message.starred;
-		message = await this.msgRepo.save(message);
+		message = await Message.save(message);
 
 		return !!message;
 	}

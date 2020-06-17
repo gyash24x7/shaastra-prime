@@ -1,10 +1,12 @@
-export default (fields: any, repo: any) => {
+export default (fields: any, entity: any) => {
 	const select: any[] = Object.keys(fields).filter((field) =>
-		repo.primaryFields.includes(field)
+		entity.primaryFields.includes(field)
 	);
 
+	if (!select.includes("id")) select.push("id");
+
 	const relations = Object.keys(fields).filter((field) =>
-		repo.relationalFields.includes(field)
+		entity.relationalFields.includes(field)
 	);
 
 	return { select, relations };

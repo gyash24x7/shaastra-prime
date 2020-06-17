@@ -1,12 +1,17 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
+	BaseEntity,
+	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
 	ManyToOne,
-	PrimaryColumn
+	PrimaryColumn,
+	SaveOptions
 } from "typeorm";
-import { TaskActivityType } from "../utils/index";
+import { MessagePubsubOptions, TaskActivityType } from "../utils";
+import { Message } from "./Message";
 import { Task } from "./Task";
 import { User } from "./User";
 
@@ -14,7 +19,31 @@ registerEnumType(TaskActivityType, { name: "TaskActivityType" });
 
 @Entity("TaskActivity")
 @ObjectType("TaskActivity")
-export class TaskActivity {
+export class TaskActivity extends BaseEntity {
+	static primaryFields = ["id", "type", "description", "createdOn"];
+	static relationalFields = ["task", "createdBy"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
+	async save(options?: SaveOptions) {
+		const activity = await super.save();
+		if (options?.data) {
+			const { channels, pubsub } = options.data as MessagePubsubOptions;
+			Message.sendTaskActivityMessage(
+				channels,
+				activity.createdById,
+				activity.id,
+				pubsub
+			).then(() => console.log("Task Activity Message Sent!"));
+		}
+		return activity;
+	}
+
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()

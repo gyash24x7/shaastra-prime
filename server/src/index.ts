@@ -2,40 +2,30 @@ import { ApolloServer } from "apollo-server";
 import dotenv from "dotenv";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
-import { Container as container } from "typedi";
-import { createConnection, useContainer } from "typeorm";
+import { createConnection } from "typeorm";
 import entities from "./entities";
-import { UserRepository } from "./repositories/User";
 import resolvers from "./resolvers";
-import subscribers from "./subscribers";
 import { GraphQLContext } from "./utils";
 import { authChecker } from "./utils/authChecker";
 import { getAuthUser } from "./utils/getAuthUser";
 
 dotenv.config();
 
-useContainer(container);
-
 const startServer = async () => {
-	const schema = await buildSchema({ resolvers, authChecker, container });
+	const schema = await buildSchema({ resolvers, authChecker });
 
-	let dbConnection = await createConnection({
+	await createConnection({
 		type: "postgres",
 		url: process.env.DATABASE_URL,
 		entities,
 		synchronize: false,
-		logging: true,
-		subscribers
+		logging: true
 	});
 
 	const server = new ApolloServer({
 		schema,
 		context: async ({ req, connection }) => {
-			const user = await getAuthUser({
-				req,
-				connection,
-				userRepo: dbConnection.getCustomRepository(UserRepository)
-			});
+			const user = await getAuthUser({ req, connection });
 			return { user } as GraphQLContext;
 		},
 		cors: {

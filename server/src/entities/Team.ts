@@ -1,11 +1,29 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType } from "type-graphql";
-import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import {
+	BaseEntity,
+	BeforeInsert,
+	Column,
+	Entity,
+	OneToMany,
+	PrimaryColumn
+} from "typeorm";
 import { Registration } from "./Registration";
 import { TeamInvitation } from "./TeamInvitation";
 
 @Entity("Team")
 @ObjectType("Team")
-export class Team {
+export class Team extends BaseEntity {
+	static primaryFields = ["id", "name"];
+	static relationalFields = ["invitations", "registrations"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()

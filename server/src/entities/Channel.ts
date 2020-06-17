@@ -1,5 +1,8 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
+	BaseEntity,
+	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	Entity,
@@ -18,7 +21,34 @@ registerEnumType(ChannelType, { name: "ChannelType" });
 
 @Entity("Channel")
 @ObjectType("Channel")
-export class Channel {
+export class Channel extends BaseEntity {
+	// ADDITIONAL PROPERTIES
+
+	static primaryFields = [
+		"id",
+		"name",
+		"description",
+		"createdOn",
+		"archived",
+		"type"
+	];
+
+	static relationalFields = [
+		"starredMsgs",
+		"messages",
+		"connectedInvoices",
+		"connectedTasks",
+		"createdBy",
+		"members"
+	];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()

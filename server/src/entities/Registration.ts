@@ -1,5 +1,13 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import {
+	BaseEntity,
+	BeforeInsert,
+	Column,
+	Entity,
+	ManyToOne,
+	PrimaryColumn
+} from "typeorm";
 import { RegistrationType } from "../utils";
 import { Event } from "./Event";
 import { Participant } from "./Participant";
@@ -9,7 +17,17 @@ registerEnumType(RegistrationType, { name: "RegistrationType" });
 
 @Entity("Registration")
 @ObjectType("Registration")
-export class Registration {
+export class Registration extends BaseEntity {
+	static primaryFields = ["id", "type"];
+	static relationalFields = ["team", "event", "participant"];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()

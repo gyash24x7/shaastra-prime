@@ -1,5 +1,8 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {
+	BaseEntity,
+	BeforeInsert,
 	Column,
 	Entity,
 	JoinColumn,
@@ -23,7 +26,34 @@ registerEnumType(InvoiceType, { name: "InvoiceType" });
 
 @Entity("Invoice")
 @ObjectType("Invoice")
-export class Invoice {
+export class Invoice extends BaseEntity {
+	static primaryFields = [
+		"id",
+		"title",
+		"date",
+		"invoiceNumber",
+		"amount",
+		"purpose",
+		"status",
+		"type"
+	];
+
+	static relationalFields = [
+		"media",
+		"activity",
+		"uploadedBy",
+		"byDept",
+		"vendor",
+		"channels"
+	];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -68,6 +98,9 @@ export class Invoice {
 	@JoinColumn()
 	@Field(() => Media)
 	media: Media;
+
+	@Column()
+	mediaId: string;
 
 	@OneToMany(() => InvoiceActivity, (activity) => activity.invoice)
 	@Field(() => [InvoiceActivity])

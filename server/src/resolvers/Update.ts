@@ -8,31 +8,26 @@ import {
 	Query,
 	Resolver
 } from "type-graphql";
-import { InjectRepository } from "typeorm-typedi-extensions";
 import { Update } from "../entities/Update";
 import { CreateUpdateInput } from "../inputs/Update";
-import { UpdateRepository } from "../repositories/Update";
 import { GraphQLContext } from "../utils";
 import getSelectionAndRelation from "../utils/getSelectionAndRelation";
 
 @Resolver()
 export class UpdateResolver {
-	@InjectRepository()
-	private readonly updateRepo: UpdateRepository;
-
 	@Authorized()
 	@Mutation(() => Boolean)
 	async createUpdate(
 		@Arg("data") { brief, subject, content }: CreateUpdateInput,
 		@Ctx() { user }: GraphQLContext
 	) {
-		const update = await this.updateRepo.save({
+		const update = await Update.create({
 			brief,
 			subject,
 			content,
 			postedById: user.id,
 			byDeptId: user.departmentId
-		});
+		}).save();
 
 		return !!update;
 	}
@@ -42,10 +37,10 @@ export class UpdateResolver {
 	async getUpdates(@Info() info: any) {
 		const { select, relations } = getSelectionAndRelation(
 			graphqlFields(info),
-			this.updateRepo
+			Update
 		);
 
-		const updates = await this.updateRepo.find({
+		const updates = await Update.find({
 			order: { id: "DESC" },
 			relations,
 			select

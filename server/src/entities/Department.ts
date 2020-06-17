@@ -1,5 +1,14 @@
+import cuid from "cuid";
 import { Field, ID, ObjectType } from "type-graphql";
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
+import {
+	BaseEntity,
+	BeforeInsert,
+	Column,
+	Entity,
+	ManyToOne,
+	OneToMany,
+	PrimaryColumn
+} from "typeorm";
 import { Goal } from "./Goal";
 import { Invoice } from "./Invoice";
 import { Task } from "./Task";
@@ -8,7 +17,26 @@ import { User } from "./User";
 
 @Entity("Department")
 @ObjectType("Department")
-export class Department {
+export class Department extends BaseEntity {
+	static primaryFields = ["id", "name", "shortName", "subDepartments"];
+
+	static relationalFields = [
+		"members",
+		"tasksAssigned",
+		"tasksCreated",
+		"goals",
+		"finManager",
+		"updates",
+		"invoicesSubmitted"
+	];
+
+	// LISTENERS
+
+	@BeforeInsert()
+	setId() {
+		this.id = cuid();
+	}
+
 	// PRIMARY FIELDS
 
 	@PrimaryColumn()
@@ -23,9 +51,9 @@ export class Department {
 	@Field()
 	shortName: string;
 
-	@Column("simple-array")
+	@Column("simple-array", { nullable: true })
 	@Field(() => [String])
-	subDepartments: string[];
+	subDepartments?: string[];
 
 	// RELATIONS
 

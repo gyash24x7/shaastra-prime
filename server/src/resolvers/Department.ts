@@ -1,4 +1,3 @@
-import cuid from "cuid";
 import graphqlFields from "graphql-fields";
 import {
 	Arg,
@@ -9,34 +8,26 @@ import {
 	Query,
 	Resolver
 } from "type-graphql";
-import { InjectRepository } from "typeorm-typedi-extensions";
 import { Department } from "../entities/Department";
 import { User } from "../entities/User";
 import { AssignFinManagerInput, GrantAccessInput } from "../inputs/Department";
-import { DepartmentRepository } from "../repositories/Department";
-import { UserRepository } from "../repositories/User";
 import { GraphQLContext } from "../utils";
 import getSelectionAndRelation from "../utils/getSelectionAndRelation";
 
 @Resolver()
 export class DepartmentResolver {
-	@InjectRepository()
-	private readonly deptRepo: DepartmentRepository;
-
-	@InjectRepository()
-	private readonly userRepo: UserRepository;
-
 	@Authorized(["CORE"])
 	@Mutation(() => Boolean)
 	async addSubDepartment(
 		@Arg("subDept") subDept: string,
 		@Ctx() { user }: GraphQLContext
 	) {
-		let dept = await this.deptRepo.findOneOrFail(user.departmentId, {
+		let dept = await Department.findOneOrFail(user.departmentId, {
 			select: ["subDepartments", "id"]
 		});
-		dept.subDepartments.push(subDept);
-		dept = await this.deptRepo.save(dept);
+		if (dept.subDepartments) dept.subDepartments.push(subDept);
+		else dept.subDepartments = [subDept];
+		dept = await Department.save(dept);
 
 		return !!dept;
 	}
@@ -46,50 +37,47 @@ export class DepartmentResolver {
 	async assignFinManager(
 		@Arg("data") { userId, deptId }: AssignFinManagerInput
 	) {
-		const dept = await this.deptRepo.save({
-			id: deptId,
+		const { affected } = await Department.update(deptId, {
 			finManagerId: userId
 		});
-
-		return !!dept;
+		return affected === 1;
 	}
 
 	@Mutation(() => Boolean)
 	async createDepartment(@Arg("name") name: string) {
-		const dept = await this.deptRepo.save({ name, id: cuid() });
+		const dept = await Department.create({ name }).save();
 		return !!dept;
-	}
-
-	@Authorized("CORE")
-	@Mutation(() => Boolean)
-	async deleteMember(@Arg("userId") userId: string) {
-		const { affected } = await this.userRepo.delete(userId);
-		return !!affected;
 	}
 
 	@Query(() => [Department])
 	async getDepartments(@Info() info: any) {
 		const { select, relations } = getSelectionAndRelation(
 			graphqlFields(info),
-			this.deptRepo
+			Department
 		);
-		const depts = await this.deptRepo.find({ select, relations });
+		const depts = await Department.find({ select, relations });
 		return depts.filter(({ name }) => name !== "ADMIN");
 	}
 
 	@Authorized()
 	@Query(() => [User])
-	async getDeptMembers(@Arg("deptId") deptId: string) {
-		const dept = await this.deptRepo.findOneOrFail(deptId, {
-			relations: ["members"]
+	async getDeptMembers(@Arg("deptId") deptId: string, @Info() info: any) {
+		const { select, relations } = getSelectionAndRelation(
+			graphqlFields(info),
+			User
+		);
+		const members = await User.find({
+			where: { departmentId: deptId },
+			relations,
+			select
 		});
-		return dept.members;
+		return members;
 	}
 
 	@Authorized("CORE")
 	@Mutation(() => Boolean)
 	async grantAccess(@Arg("data") { userId, role }: GrantAccessInput) {
-		const user = await this.userRepo.save({ role, id: userId });
-		return !!user;
+		const { affected } = await User.update(userId, { role });
+		return affected === 1;
 	}
 }

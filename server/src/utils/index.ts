@@ -1,4 +1,6 @@
 import { Stream } from "stream";
+import { PubSubEngine } from "type-graphql";
+import { Channel } from "../entities/Channel";
 import { User } from "../entities/User";
 
 export interface SendMailOptions {
@@ -6,6 +8,11 @@ export interface SendMailOptions {
 	name: string;
 	subject: string;
 	htmlPart: string;
+}
+
+export interface MessagePubsubOptions {
+	pubsub: PubSubEngine;
+	channels: Channel[];
 }
 
 export enum UserRole {

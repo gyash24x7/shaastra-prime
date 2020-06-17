@@ -10,7 +10,6 @@ import {
 	Query,
 	Resolver
 } from "type-graphql";
-import { InjectRepository } from "typeorm-typedi-extensions";
 import { User } from "../entities/User";
 import {
 	CreateUserInput,
@@ -18,18 +17,14 @@ import {
 	UpdatePasswordInput,
 	VerifyPasswordOTPInput
 } from "../inputs/User";
-import { UserRepository } from "../repositories/User";
 import { GraphQLContext } from "../utils";
 import getSelectionAndRelation from "../utils/getSelectionAndRelation";
 
 @Resolver()
 export class UserResolver {
-	@InjectRepository()
-	private readonly userRepo: UserRepository;
-
 	@Mutation(() => [String])
 	async createUser(@Arg("data") data: CreateUserInput) {
-		const user = await this.userRepo.save({ ...data });
+		const user = await User.create({ ...data }).save();
 		let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
 		return [token, ""];
 	}
@@ -37,21 +32,21 @@ export class UserResolver {
 	@Mutation(() => Boolean)
 	async updatePassword(@Arg("data") data: UpdatePasswordInput) {
 		const password = await bcrypt.hash(data.newPassword, 13);
-		let user = await this.userRepo.findByEmail(data.email);
+		let user = await User.findByEmail(data.email);
 		if (!user) return false;
 
 		user.password = password;
-		user = await this.userRepo.save(user);
+		user = await User.save(user);
 		return !!user;
 	}
 
 	@Mutation(() => Boolean)
 	async getPasswordOTP(@Arg("email") email: string) {
-		let user = await this.userRepo.findByEmail(email);
-		user.passwordOTP = this.userRepo.generateOTP();
-		user = await this.userRepo.save(user);
+		let user = await User.findByEmail(email);
+		user.passwordOTP = User.generateOTP();
+		user = await User.save(user);
 
-		await this.userRepo.sendMail({
+		await User.sendMail({
 			rollNumber: user.rollNumber,
 			name: user.name,
 			htmlPart: `<p>Your password reset code for Shaastra Prime is <strong>${user.passwordOTP}</strong> </p>`,
@@ -65,9 +60,9 @@ export class UserResolver {
 	async getUsers(@Info() info: any) {
 		const { select, relations } = getSelectionAndRelation(
 			graphqlFields(info),
-			this.userRepo
+			User
 		);
-		return this.userRepo.find({ select, relations });
+		return User.find({ select, relations });
 	}
 
 	@Authorized()
@@ -75,19 +70,15 @@ export class UserResolver {
 	async getUser(@Arg("userId") userId: string, @Info() info: any) {
 		const { select, relations } = getSelectionAndRelation(
 			graphqlFields(info),
-			this.userRepo
+			User
 		);
 
-		return this.userRepo.findOne(userId, { select, relations });
+		return User.findOne(userId, { select, relations });
 	}
 
 	@Mutation(() => [String], { nullable: true })
 	async login(@Arg("data") { email, password }: LoginInput) {
-		let user = await this.userRepo.findByEmail(email, [
-			"password",
-			"id",
-			"verified"
-		]);
+		let user = await User.findByEmail(email, ["password", "id", "verified"]);
 
 		const valid = await bcrypt.compare(password, user.password);
 		if (!valid) throw new Error("Invalid Password!");
@@ -107,7 +98,7 @@ export class UserResolver {
 		@Arg("coverPic") coverPic: string,
 		@Ctx() { user: { id } }: GraphQLContext
 	) {
-		const { affected } = await this.userRepo.update(id, { coverPic });
+		const { affected } = await User.update(id, { coverPic });
 		return affected === 1;
 	}
 
@@ -116,7 +107,7 @@ export class UserResolver {
 		@Arg("profilePic") profilePic: string,
 		@Ctx() { user: { id } }: GraphQLContext
 	) {
-		const { affected } = await this.userRepo.update(id, { profilePic });
+		const { affected } = await User.update(id, { profilePic });
 		return affected === 1;
 	}
 
@@ -124,7 +115,7 @@ export class UserResolver {
 	async verifyPasswordOTP(
 		@Arg("data") { email, passwordOTP }: VerifyPasswordOTPInput
 	) {
-		const user = await this.userRepo.findByEmail(email, ["passwordOTP"]);
+		const user = await User.findByEmail(email, ["passwordOTP"]);
 		return !!(user?.passwordOTP === passwordOTP);
 	}
 
@@ -132,7 +123,7 @@ export class UserResolver {
 	@Mutation(() => String)
 	async verifyUser(@Arg("otp") otp: string, @Ctx() { user }: GraphQLContext) {
 		if (user?.verificationOTP !== otp) throw new Error("Invalid OTP!");
-		await this.userRepo.save({ id: user.id, verified: true });
+		await User.update(user.id, { verified: true });
 		return user.id;
 	}
 }
