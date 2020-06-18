@@ -8,13 +8,12 @@ query GetMessages($channelId: String!, $skip: Int, $first: Int) {
 			id
 			name
 		}
-		createdAt
+		createdOn
 		media {
 			id
 			url
 			type
 		}
-		likes
-		liked
+		# liked
 	}
 }

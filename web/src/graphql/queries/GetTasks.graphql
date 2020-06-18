@@ -3,7 +3,7 @@ query GetTasks {
 		id
 		brief
 		status
-		createdAt
+		createdOn
 		deadline
 		byDept {
 			id

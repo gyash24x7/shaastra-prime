@@ -1,6 +1,0 @@
-query SearchUser($searchStr: String!) {
-	searchUser(searchStr: $searchStr) {
-		id
-		name
-	}
-}

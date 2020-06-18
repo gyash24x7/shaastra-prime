@@ -1,9 +1,9 @@
 mutation CreateChannel(
 	$name: String!
 	$description: String!
-	$members: [String!]!
+	$memberIds: [String!]!
 ) {
 	createChannel(
-		data: { name: $name, description: $description, members: $members }
+		data: { name: $name, description: $description, memberIds: $memberIds }
 	)
 }

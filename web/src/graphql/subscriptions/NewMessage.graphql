@@ -4,17 +4,15 @@ subscription NewMessage($channelId: String!) {
 		content
 		type
 		starred
-		liked
 		createdBy {
 			id
 			name
 		}
-		createdAt
+		createdOn
 		media {
 			id
 			url
 			type
 		}
-		likes
 	}
 }

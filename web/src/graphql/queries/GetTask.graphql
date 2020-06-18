@@ -4,7 +4,7 @@ query GetTask($taskId: String!) {
 		brief
 		details
 		status
-		createdAt
+		createdOn
 		deadline
 		byDept {
 			id

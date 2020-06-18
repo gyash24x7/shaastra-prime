@@ -1,0 +1,3 @@
+mutation CreateTextMessage($channelId: String!, $content: String!) {
+	createTextMessage(data: { channelId: $channelId, content: $content })
+}

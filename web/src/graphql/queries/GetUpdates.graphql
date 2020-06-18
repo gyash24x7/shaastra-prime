@@ -12,6 +12,6 @@ query GetUpdates {
 			id
 			name
 		}
-		createdAt
+		createdOn
 	}
 }
