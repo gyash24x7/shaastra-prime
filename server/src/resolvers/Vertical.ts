@@ -1,18 +1,20 @@
-import graphqlFields from "graphql-fields";
 import {
 	Arg,
 	Authorized,
 	Ctx,
+	FieldResolver,
 	Info,
 	Mutation,
 	Query,
-	Resolver
+	Resolver,
+	Root
 } from "type-graphql";
+import { Event } from "../entities/Event";
 import { Media } from "../entities/Media";
 import { Vertical } from "../entities/Vertical";
 import { CreateVerticalInput, UpdateVerticalInput } from "../inputs/Vertical";
 import { GraphQLContext, MediaType } from "../utils";
-import getSelectionAndRelation from "../utils/getSelectionAndRelation";
+import getSelectAndRelation from "../utils/getSelectAndRelation";
 
 @Resolver()
 export class VerticalResolver {
@@ -30,14 +32,12 @@ export class VerticalResolver {
 				type: MediaType.IMAGE
 			}).save();
 		}
-
 		const vertical = await Vertical.create({
 			name,
 			info,
 			imageId: image?.id,
 			updatedById: user.id
 		}).save();
-
 		return !!vertical;
 	}
 
@@ -51,10 +51,7 @@ export class VerticalResolver {
 	@Authorized()
 	@Query(() => [Vertical])
 	async getVerticals(@Info() info: any) {
-		const { select, relations } = getSelectionAndRelation(
-			graphqlFields(info),
-			Vertical
-		);
+		const { select, relations } = getSelectAndRelation(info, Vertical);
 		return await Vertical.find({ select, relations });
 	}
 
@@ -70,5 +67,17 @@ export class VerticalResolver {
 			updatedById: user.id
 		});
 		return affected === 1;
+	}
+
+	@FieldResolver()
+	async image(@Root() { image, imageId }: Vertical) {
+		if (image) return image;
+		return Media.findOne(imageId);
+	}
+
+	@FieldResolver()
+	async events(@Root() { events, id }: Vertical) {
+		if (events) return events;
+		return Event.find({ where: { verticalId: id } });
 	}
 }

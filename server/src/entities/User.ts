@@ -58,7 +58,7 @@ export class User extends BaseEntity {
 	}
 
 	@AfterInsert()
-	async senVerificationMail() {
+	async sendVerificationMail() {
 		await User.sendMail({
 			rollNumber: this.rollNumber,
 			name: this.name,

@@ -3,6 +3,7 @@ import {
 	Arg,
 	Authorized,
 	Ctx,
+	FieldResolver,
 	Mutation,
 	PubSub,
 	PubSubEngine,
@@ -12,8 +13,11 @@ import {
 	Subscription
 } from "type-graphql";
 import { Channel } from "../entities/Channel";
+import { InvoiceActivity } from "../entities/InvoiceActivity";
 import { Media } from "../entities/Media";
 import { Message } from "../entities/Message";
+import { TaskActivity } from "../entities/TaskActivity";
+import { User } from "../entities/User";
 import {
 	CreateMediaMessageInput,
 	CreateTextMessageInput,
@@ -102,5 +106,31 @@ export class MessageResolver {
 		message = await Message.save(message);
 
 		return !!message;
+	}
+
+	@FieldResolver()
+	async taskActivity(@Root() { taskActivity, taskActivityId }: Message) {
+		if (taskActivity) return taskActivity;
+		return TaskActivity.findOne(taskActivityId);
+	}
+
+	@FieldResolver()
+	async invoiceActivity(
+		@Root() { invoiceActivity, invoiceActivityId }: Message
+	) {
+		if (invoiceActivity) return invoiceActivity;
+		return InvoiceActivity.findOne(invoiceActivityId);
+	}
+
+	@FieldResolver()
+	async createdBy(@Root() { createdBy, createdById }: Message) {
+		if (createdBy) return createdBy;
+		return User.findOne(createdById);
+	}
+
+	@FieldResolver()
+	async media(@Root() { media, id }: Message) {
+		if (media) return media;
+		return Media.find({ where: { messageId: id } });
 	}
 }

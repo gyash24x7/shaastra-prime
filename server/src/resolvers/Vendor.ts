@@ -1,8 +1,17 @@
-import graphqlFields from "graphql-fields";
-import { Arg, Authorized, Info, Mutation, Query, Resolver } from "type-graphql";
+import {
+	Arg,
+	Authorized,
+	FieldResolver,
+	Info,
+	Mutation,
+	Query,
+	Resolver,
+	Root
+} from "type-graphql";
+import { Invoice } from "../entities/Invoice";
 import { Vendor } from "../entities/Vendor";
 import { CreateVendorInput } from "../inputs/Vendor";
-import getSelectionAndRelation from "../utils/getSelectionAndRelation";
+import getSelectAndRelation from "../utils/getSelectAndRelation";
 
 @Resolver()
 export class VendorResolver {
@@ -23,10 +32,13 @@ export class VendorResolver {
 	@Authorized()
 	@Query(() => [Vendor])
 	async getVendors(@Info() info: any) {
-		const { select, relations } = getSelectionAndRelation(
-			graphqlFields(info),
-			Vendor
-		);
+		const { select, relations } = getSelectAndRelation(info, Vendor);
 		return Vendor.find({ select, relations });
+	}
+
+	@FieldResolver()
+	async participant(@Root() { invoices, id }: Vendor) {
+		if (invoices) return invoices;
+		return Invoice.findOne(id);
 	}
 }

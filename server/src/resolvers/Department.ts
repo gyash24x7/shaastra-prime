@@ -1,18 +1,20 @@
-import graphqlFields from "graphql-fields";
 import {
 	Arg,
 	Authorized,
 	Ctx,
+	FieldResolver,
 	Info,
 	Mutation,
 	Query,
-	Resolver
+	Resolver,
+	Root
 } from "type-graphql";
 import { Department } from "../entities/Department";
+import { Task } from "../entities/Task";
 import { User } from "../entities/User";
 import { AssignFinManagerInput, GrantAccessInput } from "../inputs/Department";
 import { GraphQLContext } from "../utils";
-import getSelectionAndRelation from "../utils/getSelectionAndRelation";
+import getSelectAndRelation from "../utils/getSelectAndRelation";
 
 @Resolver()
 export class DepartmentResolver {
@@ -27,19 +29,16 @@ export class DepartmentResolver {
 		});
 		if (dept.subDepartments) dept.subDepartments.push(subDept);
 		else dept.subDepartments = [subDept];
-		dept = await Department.save(dept);
-
+		await Department.save(dept);
 		return !!dept;
 	}
 
 	@Authorized("CORE")
 	@Mutation(() => Boolean)
 	async assignFinManager(
-		@Arg("data") { userId, deptId }: AssignFinManagerInput
+		@Arg("data") { finManagerId, deptId }: AssignFinManagerInput
 	) {
-		const { affected } = await Department.update(deptId, {
-			finManagerId: userId
-		});
+		const { affected } = await Department.update(deptId, { finManagerId });
 		return affected === 1;
 	}
 
@@ -51,10 +50,7 @@ export class DepartmentResolver {
 
 	@Query(() => [Department])
 	async getDepartments(@Info() info: any) {
-		const { select, relations } = getSelectionAndRelation(
-			graphqlFields(info),
-			Department
-		);
+		const { select, relations } = getSelectAndRelation(info, Department);
 		const depts = await Department.find({ select, relations });
 		return depts.filter(({ name }) => name !== "ADMIN");
 	}
@@ -62,10 +58,7 @@ export class DepartmentResolver {
 	@Authorized()
 	@Query(() => [User])
 	async getDeptMembers(@Arg("deptId") deptId: string, @Info() info: any) {
-		const { select, relations } = getSelectionAndRelation(
-			graphqlFields(info),
-			User
-		);
+		const { select, relations } = getSelectAndRelation(info, User);
 		const members = await User.find({
 			where: { departmentId: deptId },
 			relations,
@@ -79,5 +72,29 @@ export class DepartmentResolver {
 	async grantAccess(@Arg("data") { userId, role }: GrantAccessInput) {
 		const { affected } = await User.update(userId, { role });
 		return affected === 1;
+	}
+
+	@FieldResolver()
+	async members(@Root() { id, members }: Department) {
+		if (members) return members;
+		return User.find({ where: { departmentId: id } });
+	}
+
+	@FieldResolver()
+	async tasksAssigned(@Root() { id, tasksAssigned }: Department) {
+		if (tasksAssigned) return tasksAssigned;
+		return Task.find({ where: { forDeptId: id } });
+	}
+
+	@FieldResolver()
+	async tasksCreated(@Root() { id, tasksCreated }: Department) {
+		if (tasksCreated) return tasksCreated;
+		return Task.find({ where: { byDeptId: id } });
+	}
+
+	@FieldResolver()
+	async finManager(@Root() { finManagerId, finManager }: Department) {
+		if (finManager) return finManager;
+		return User.findOne(finManagerId);
 	}
 }

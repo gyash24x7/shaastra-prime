@@ -106,18 +106,14 @@ export class Invoice extends BaseEntity {
 	@Field(() => [InvoiceActivity])
 	activity: InvoiceActivity[];
 
-	@ManyToOne(() => User, (user) => user.invoicesSubmitted, {
-		onDelete: "SET NULL"
-	})
+	@ManyToOne(() => User, (user) => user.invoicesSubmitted)
 	@Field(() => User, { nullable: true })
 	uploadedBy?: User;
 
 	@Column({ nullable: true })
 	uploadedById: string;
 
-	@ManyToOne(() => Department, (dept) => dept.invoicesSubmitted, {
-		onDelete: "CASCADE"
-	})
+	@ManyToOne(() => Department, (dept) => dept.invoicesSubmitted)
 	@Field(() => Department)
 	byDept: Department;
 

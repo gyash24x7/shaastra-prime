@@ -47,21 +47,6 @@ export class Message extends BaseEntity {
 		this.id = cuid();
 	}
 
-	static sendSystemMessage(
-		channel: Channel,
-		content: string,
-		createdById: string,
-		pubsub: PubSubEngine
-	) {
-		const message = new Message();
-		message.type = MessageType.SYSTEM;
-		message.content = content;
-		message.createdById = createdById;
-		message.channels = [channel];
-
-		return message.save({ data: { channels: [channel], pubsub } });
-	}
-
 	static sendTaskActivityMessage(
 		channels: Channel[],
 		createdById: string,

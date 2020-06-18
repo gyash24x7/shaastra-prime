@@ -1,19 +1,22 @@
-import graphqlFields from "graphql-fields";
 import moment from "moment";
 import {
 	Arg,
 	Authorized,
 	Ctx,
+	FieldResolver,
 	Info,
 	Mutation,
 	PubSub,
 	PubSubEngine,
 	Query,
-	Resolver
+	Resolver,
+	Root
 } from "type-graphql";
 import { Channel } from "../entities/Channel";
+import { Department } from "../entities/Department";
 import { Media } from "../entities/Media";
 import { Task } from "../entities/Task";
+import { TaskActivity } from "../entities/TaskActivity";
 import { User } from "../entities/User";
 import {
 	AssignTaskInput,
@@ -27,7 +30,7 @@ import {
 	TaskActivityType,
 	TaskStatus
 } from "../utils";
-import getSelectionAndRelation from "../utils/getSelectionAndRelation";
+import getSelectAndRelation from "../utils/getSelectAndRelation";
 
 @Resolver()
 export class TaskResolver {
@@ -156,10 +159,7 @@ export class TaskResolver {
 	@Authorized()
 	@Query(() => [Task])
 	async getTasks(@Ctx() { user }: GraphQLContext, @Info() info: any) {
-		const { select, relations } = getSelectionAndRelation(
-			graphqlFields(info),
-			Task
-		);
+		const { select, relations } = getSelectAndRelation(info, Task);
 
 		switch (user?.role) {
 			case "COCAD":
@@ -191,10 +191,7 @@ export class TaskResolver {
 	@Authorized()
 	@Query(() => Task)
 	async getTask(@Arg("taskId") taskId: string, @Info() info: any) {
-		const { select, relations } = getSelectionAndRelation(
-			graphqlFields(info),
-			Task
-		);
+		const { select, relations } = getSelectAndRelation(info, Task);
 		const task = await Task.findOne(taskId, { select, relations });
 		return task;
 	}
@@ -213,5 +210,49 @@ export class TaskResolver {
 		});
 
 		return !!task;
+	}
+
+	@FieldResolver()
+	async byDept(@Root() { byDept, byDeptId }: Task) {
+		if (byDept) return byDept;
+		return Department.findOne(byDeptId);
+	}
+
+	@FieldResolver()
+	async channels(@Root() { channels, id }: Task) {
+		if (channels) return channels;
+		const task = await Task.findOne(id, { relations: ["channels"] });
+		return task!.channels;
+	}
+
+	@FieldResolver()
+	async assignedTo(@Root() { assignedTo, id }: Task) {
+		if (assignedTo) return assignedTo;
+		const task = await Task.findOne(id, { relations: ["assignedTo"] });
+		return task!.assignedTo;
+	}
+
+	@FieldResolver()
+	async media(@Root() { media, id }: Task) {
+		if (media) return media;
+		return Media.find({ where: { taskId: id } });
+	}
+
+	@FieldResolver()
+	async activity(@Root() { activity, id }: Task) {
+		if (activity) return activity;
+		return TaskActivity.find({ where: { taskId: id } });
+	}
+
+	@FieldResolver()
+	async createdBy(@Root() { createdBy, createdById }: Task) {
+		if (createdBy) return createdBy;
+		return User.findOne(createdById);
+	}
+
+	@FieldResolver()
+	async forDept(@Root() { forDept, forDeptId }: Task) {
+		if (forDept) return forDeptId;
+		return Department.findOne(forDeptId);
 	}
 }

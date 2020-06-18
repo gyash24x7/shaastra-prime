@@ -1,4 +1,5 @@
-export default (fields: any, entity: any) => {
+export default (info: any, entity: any) => {
+	const fields = info;
 	const select: any[] = Object.keys(fields).filter((field) =>
 		entity.primaryFields.includes(field)
 	);

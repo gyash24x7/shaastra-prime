@@ -1,15 +1,17 @@
 import bcrypt from "bcryptjs";
-import graphqlFields from "graphql-fields";
 import jwt from "jsonwebtoken";
 import {
 	Arg,
 	Authorized,
 	Ctx,
+	FieldResolver,
 	Info,
 	Mutation,
 	Query,
-	Resolver
+	Resolver,
+	Root
 } from "type-graphql";
+import { Department } from "../entities/Department";
 import { User } from "../entities/User";
 import {
 	CreateUserInput,
@@ -18,7 +20,7 @@ import {
 	VerifyPasswordOTPInput
 } from "../inputs/User";
 import { GraphQLContext } from "../utils";
-import getSelectionAndRelation from "../utils/getSelectionAndRelation";
+import getSelectAndRelation from "../utils/getSelectAndRelation";
 
 @Resolver()
 export class UserResolver {
@@ -33,8 +35,6 @@ export class UserResolver {
 	async updatePassword(@Arg("data") data: UpdatePasswordInput) {
 		const password = await bcrypt.hash(data.newPassword, 13);
 		let user = await User.findByEmail(data.email);
-		if (!user) return false;
-
 		user.password = password;
 		user = await User.save(user);
 		return !!user;
@@ -45,44 +45,33 @@ export class UserResolver {
 		let user = await User.findByEmail(email);
 		user.passwordOTP = User.generateOTP();
 		user = await User.save(user);
-
 		await User.sendMail({
 			rollNumber: user.rollNumber,
 			name: user.name,
 			htmlPart: `<p>Your password reset code for Shaastra Prime is <strong>${user.passwordOTP}</strong> </p>`,
 			subject: "Reset Your Password | Shaastra Prime"
 		});
-
 		return true;
 	}
 
 	@Query(() => [User])
 	async getUsers(@Info() info: any) {
-		const { select, relations } = getSelectionAndRelation(
-			graphqlFields(info),
-			User
-		);
+		const { select, relations } = getSelectAndRelation(info, User);
 		return User.find({ select, relations });
 	}
 
 	@Authorized()
 	@Query(() => User)
 	async getUser(@Arg("userId") userId: string, @Info() info: any) {
-		const { select, relations } = getSelectionAndRelation(
-			graphqlFields(info),
-			User
-		);
-
+		const { select, relations } = getSelectAndRelation(info, User);
 		return User.findOne(userId, { select, relations });
 	}
 
 	@Mutation(() => [String], { nullable: true })
 	async login(@Arg("data") { email, password }: LoginInput) {
 		let user = await User.findByEmail(email, ["password", "id", "verified"]);
-
 		const valid = await bcrypt.compare(password, user.password);
 		if (!valid) throw new Error("Invalid Password!");
-
 		const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
 		return [token, user.verified ? user.id : ""];
 	}
@@ -125,5 +114,11 @@ export class UserResolver {
 		if (user?.verificationOTP !== otp) throw new Error("Invalid OTP!");
 		await User.update(user.id, { verified: true });
 		return user.id;
+	}
+
+	@FieldResolver()
+	async department(@Root() { department, departmentId }: User) {
+		if (department) return department;
+		return Department.findOne(departmentId);
 	}
 }

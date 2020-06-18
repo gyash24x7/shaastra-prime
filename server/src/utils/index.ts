@@ -21,6 +21,12 @@ export interface TaskSaveOptionsData {
 	type: TaskActivityType;
 }
 
+export interface ChannelSaveOptionsData {
+	user: User;
+	pubsub: PubSubEngine;
+	content: string;
+}
+
 export enum UserRole {
 	COORD = "COORD",
 	HEAD = "HEAD",

@@ -1,18 +1,22 @@
-import graphqlFields from "graphql-fields";
 import {
 	Arg,
 	Authorized,
 	Ctx,
+	FieldResolver,
 	Info,
 	Mutation,
 	Query,
-	Resolver
+	Resolver,
+	Root
 } from "type-graphql";
 import { Channel } from "../entities/Channel";
+import { Department } from "../entities/Department";
 import { Invoice } from "../entities/Invoice";
 import { InvoiceActivity } from "../entities/InvoiceActivity";
 import { Media } from "../entities/Media";
 import { Message } from "../entities/Message";
+import { User } from "../entities/User";
+import { Vendor } from "../entities/Vendor";
 import {
 	ApproveInvoiceInput,
 	ConnectChannelsToInvoiceInput,
@@ -29,7 +33,7 @@ import {
 	UserRole
 } from "../utils";
 import { getInvoiceStatus } from "../utils/getInvoiceStatus";
-import getSelectionAndRelation from "../utils/getSelectionAndRelation";
+import getSelectAndRelation from "../utils/getSelectAndRelation";
 
 @Resolver()
 export class InvoiceResolver {
@@ -124,10 +128,7 @@ export class InvoiceResolver {
 		@Ctx() { user }: GraphQLContext,
 		@Info() info: any
 	) {
-		const { select, relations } = getSelectionAndRelation(
-			graphqlFields(info),
-			Invoice
-		);
+		const { select, relations } = getSelectAndRelation(info, Invoice);
 
 		switch (type) {
 			case "REJECTED":
@@ -248,5 +249,42 @@ export class InvoiceResolver {
 		});
 
 		return !!invoice;
+	}
+
+	@FieldResolver()
+	async vendor(@Root() { vendorId, vendor }: Invoice) {
+		if (vendor) return vendor;
+		return Vendor.findOne(vendorId);
+	}
+
+	@FieldResolver()
+	async uploadedBy(@Root() { uploadedById, uploadedBy }: Invoice) {
+		if (uploadedBy) return uploadedBy;
+		return User.findOne(uploadedById);
+	}
+
+	@FieldResolver()
+	async byDept(@Root() { byDeptId, byDept }: Invoice) {
+		if (byDept) return byDept;
+		return Department.findOne(byDeptId);
+	}
+
+	@FieldResolver()
+	async activity(@Root() { activity, id }: Invoice) {
+		if (activity) return activity;
+		return InvoiceActivity.find({ where: { invoiceId: id } });
+	}
+
+	@FieldResolver()
+	async channels(@Root() { channels, id }: Invoice) {
+		if (channels) return channels;
+		const invoice = await Invoice.findOne(id, { relations: ["channels"] });
+		return invoice?.channels;
+	}
+
+	@FieldResolver()
+	async media(@Root() { mediaId, media }: Invoice) {
+		if (media) return media;
+		return Media.findOne(mediaId);
 	}
 }

@@ -3,7 +3,7 @@ import { UserRole } from "../utils";
 
 @InputType("AssignFinManagerInput")
 export class AssignFinManagerInput {
-	@Field() userId: string;
+	@Field() finManagerId: string;
 	@Field() deptId: string;
 }
 

@@ -17,7 +17,7 @@ registerEnumType(MilestoneStatus, { name: "MilestoneStatus" });
 @ObjectType("Milestone")
 export class Milestone extends BaseEntity {
 	static primaryFields = ["id", "title", "status"];
-	static relationalFields = ["goal"];
+	static relationalFields = [];
 
 	// LISTENERS
 
@@ -46,7 +46,6 @@ export class Milestone extends BaseEntity {
 	// RELATIONS AND FOREIGN KEYS
 
 	@ManyToOne(() => Goal, (goal) => goal.milestones, { onDelete: "CASCADE" })
-	@Field(() => Goal)
 	goal: Goal;
 
 	@Column()

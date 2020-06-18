@@ -1,4 +1,3 @@
-import graphqlFields from "graphql-fields";
 import {
 	Arg,
 	Authorized,
@@ -12,49 +11,42 @@ import { Goal } from "../entities/Goal";
 import { Milestone } from "../entities/Milestone";
 import { CreateGoalInput } from "../inputs/Goal";
 import { GraphQLContext, MilestoneStatus } from "../utils";
-import getSelectionAndRelation from "../utils/getSelectionAndRelation";
+import getSelectAndRelation from "../utils/getSelectAndRelation";
 
 @Resolver()
 export class GoalResolver {
 	@Authorized()
 	@Mutation(() => Boolean)
 	async completeMilestone(@Arg("milestoneId") milestoneId: string) {
-		const milestone = await Milestone.update(milestoneId, {
+		const { affected } = await Milestone.update(milestoneId, {
 			status: MilestoneStatus.ACHIEVED
 		});
-
-		return !!milestone;
+		return affected === 1;
 	}
 
 	@Authorized()
 	@Mutation(() => Boolean)
 	async createGoal(
 		@Arg("data") { milestoneTitles, ...rest }: CreateGoalInput,
-		@Ctx() { user }: GraphQLContext
+		@Ctx() { user: { departmentId } }: GraphQLContext
 	) {
-		const goal = await Goal.create({
-			...rest,
-			deptId: user.departmentId,
-			milestones: Milestone.create(milestoneTitles.map((title) => ({ title })))
-		}).save();
-
+		const goal = await Goal.create({ ...rest, deptId: departmentId }).save();
+		await Promise.all(
+			milestoneTitles.map((title) =>
+				Milestone.create({ title, goalId: goal.id }).save()
+			)
+		);
 		return !!goal;
 	}
 
 	@Authorized()
 	@Query(() => [Goal])
 	async getGoals(@Ctx() { user }: GraphQLContext, @Info() info: any) {
-		const { select, relations } = getSelectionAndRelation(
-			graphqlFields(info),
-			Goal
-		);
-
-		const goals = Goal.find({
+		const { select, relations } = getSelectAndRelation(info, Goal);
+		return Goal.find({
 			where: { deptId: user.departmentId },
 			select,
 			relations
 		});
-
-		return goals;
 	}
 }

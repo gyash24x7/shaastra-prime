@@ -9,9 +9,10 @@ import {
 	JoinTable,
 	ManyToMany,
 	ManyToOne,
-	PrimaryColumn
+	PrimaryColumn,
+	SaveOptions
 } from "typeorm";
-import { ChannelType } from "../utils/index";
+import { ChannelSaveOptionsData, ChannelType, MessageType } from "../utils";
 import { Invoice } from "./Invoice";
 import { Message } from "./Message";
 import { Task } from "./Task";
@@ -47,6 +48,24 @@ export class Channel extends BaseEntity {
 	@BeforeInsert()
 	setId() {
 		this.id = cuid();
+		this.archived = false;
+	}
+
+	async save(options?: SaveOptions) {
+		const channel = await super.save();
+		if (options?.data) {
+			const { user, pubsub, content } = options.data as ChannelSaveOptionsData;
+			const message = new Message();
+			message.type = MessageType.SYSTEM;
+			message.content = content;
+			message.createdById = user.id;
+			message.channels = [channel];
+
+			message.save({ data: { channels: [channel], pubsub } }).then(() => {
+				console.log("System Message Sent!");
+			});
+		}
+		return channel;
 	}
 
 	// PRIMARY FIELDS

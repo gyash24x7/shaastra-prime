@@ -1,17 +1,17 @@
 import { PubSubEngine } from "apollo-server";
-import graphqlFields from "graphql-fields";
 import {
 	Arg,
 	Authorized,
 	Ctx,
+	FieldResolver,
 	Info,
 	Mutation,
 	PubSub,
 	Query,
-	Resolver
+	Resolver,
+	Root
 } from "type-graphql";
 import { Channel } from "../entities/Channel";
-import { Message } from "../entities/Message";
 import { User } from "../entities/User";
 import {
 	AddUsersToChannelInput,
@@ -19,7 +19,7 @@ import {
 	UpdateChannelDescriptionInput
 } from "../inputs/Channel";
 import { ChannelType, GraphQLContext } from "../utils";
-import getSelectionAndRelation from "../utils/getSelectionAndRelation";
+import getSelectAndRelation from "../utils/getSelectAndRelation";
 
 @Resolver(Channel)
 export class ChannelResolver {
@@ -35,17 +35,11 @@ export class ChannelResolver {
 			relations: ["members"]
 		});
 
-		channel.members.push(...usersToBeAdded);
-		await channel.save();
-
-		let msgContent = `${user!.name} added ${usersToBeAdded.map(
+		let content = `${user!.name} added ${usersToBeAdded.map(
 			({ name }) => name + ", "
 		)}`;
-
-		Message.sendSystemMessage(channel, msgContent, user.id, pubsub).then(() => {
-			console.log("Channel Update Message sent!");
-		});
-
+		channel.members.push(...usersToBeAdded);
+		await channel.save({ data: { user, pubsub, content } });
 		return !!channel;
 	}
 
@@ -58,14 +52,8 @@ export class ChannelResolver {
 	) {
 		const channel = await Channel.findOneOrFail(channelId);
 		channel.archived = true;
-		await channel.save();
-
-		const msgContent = `${user!.name} archived the Channel.`;
-
-		Message.sendSystemMessage(channel, msgContent, user.id, pubsub).then(() => {
-			console.log("Channel Update Message sent!");
-		});
-
+		const content = `${user!.name} archived the Channel.`;
+		await channel.save({ data: { user, content, pubsub } });
 		return !!channel;
 	}
 
@@ -75,16 +63,13 @@ export class ChannelResolver {
 		@Arg("data") { memberIds, name, description }: CreateChannelInput,
 		@Ctx() { user }: GraphQLContext
 	) {
-		const channelMembers = await User.findByIds(memberIds);
-		const channel = await Channel.create({
-			name,
-			type: ChannelType.GROUP,
-			description,
-			members: channelMembers,
-			createdById: user.id,
-			archived: false
-		}).save();
-
+		const channel = new Channel();
+		channel.name = name;
+		channel.type = ChannelType.GROUP;
+		channel.description = description;
+		channel.members = await User.findByIds(memberIds);
+		channel.createdById = user.id;
+		await channel.save();
 		return !!channel;
 	}
 
@@ -101,16 +86,11 @@ export class ChannelResolver {
 		@Arg("channelId") channelId: string,
 		@Info() info: any
 	) {
-		const { select, relations } = getSelectionAndRelation(
-			graphqlFields(info),
-			Channel
-		);
-
+		const { select, relations } = getSelectAndRelation(info, Channel);
 		const channel = await Channel.findOneOrFail(channelId, {
 			select,
 			relations
 		});
-
 		return channel;
 	}
 
@@ -132,14 +112,39 @@ export class ChannelResolver {
 	) {
 		const channel = await Channel.findOneOrFail(channelId);
 		channel.description = description;
-		await channel.save();
-
-		const msgContent = `${user!.name} changed the Channel Description`;
-
-		Message.sendSystemMessage(channel, msgContent, user.id, pubsub).then(() => {
-			console.log("Channel Update Message sent!");
-		});
-
+		const content = `${user!.name} changed the Channel Description`;
+		await channel.save({ data: { user, pubsub, content } });
 		return true;
+	}
+
+	@FieldResolver()
+	async members(@Root() { members, id }: Channel) {
+		if (members) return members;
+		const channel = await Channel.findOneOrFail(id, { relations: ["members"] });
+		return channel.members;
+	}
+
+	@FieldResolver()
+	async createdBy(@Root() { createdById, createdBy }: Channel) {
+		if (createdBy) return createdBy;
+		return await User.findOneOrFail(createdById);
+	}
+
+	@FieldResolver()
+	async connectedTasks(@Root() { connectedTasks, id }: Channel) {
+		if (connectedTasks) return connectedTasks;
+		const channel = await Channel.findOneOrFail(id, {
+			relations: ["connectedTasks"]
+		});
+		return channel.connectedTasks;
+	}
+
+	@FieldResolver()
+	async connectedInvoices(@Root() { connectedInvoices, id }: Channel) {
+		if (connectedInvoices) return connectedInvoices;
+		const channel = await Channel.findOneOrFail(id, {
+			relations: ["connectedInvoices"]
+		});
+		return channel.connectedInvoices;
 	}
 }
