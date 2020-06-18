@@ -1,4 +1,3 @@
-import cuid from "cuid";
 import graphqlFields from "graphql-fields";
 import moment from "moment";
 import {
@@ -15,7 +14,6 @@ import {
 import { Channel } from "../entities/Channel";
 import { Media } from "../entities/Media";
 import { Task } from "../entities/Task";
-import { TaskActivity } from "../entities/TaskActivity";
 import { User } from "../entities/User";
 import {
 	AssignTaskInput,
@@ -40,20 +38,11 @@ export class TaskResolver {
 		@Ctx() { user }: GraphQLContext,
 		@PubSub() pubsub: PubSubEngine
 	) {
-		let task = await Task.findOneOrFail(taskId, {
-			relations: ["channels"]
-		});
-
+		let task = await Task.findOneOrFail(taskId, { relations: ["channels"] });
 		task.status = TaskStatus.IN_PROGRESS;
-		task = await task.save();
-
-		await TaskActivity.create({
-			type: TaskActivityType.IN_PROGRESS,
-			createdById: user.id,
-			description: `${user!.name} started working on the task.`,
-			taskId
-		}).save({ data: { channels: task.channels, pubsub } });
-
+		await task.save({
+			data: { user, type: TaskActivityType.IN_PROGRESS, pubsub }
+		});
 		return !!task;
 	}
 
@@ -64,23 +53,12 @@ export class TaskResolver {
 		@Ctx() { user }: GraphQLContext,
 		@PubSub() pubsub: PubSubEngine
 	) {
-		let task = await Task.findOneOrFail(taskId, {
-			relations: ["channels"]
-		});
+		let task = await Task.findOneOrFail(taskId, { relations: ["channels"] });
 		task.assignedTo = await User.findByIds(assignedTo);
 		task.status = TaskStatus.ASSIGNED;
-		task = await task.save();
-
-		await TaskActivity.create({
-			type: TaskActivityType.ASSIGNED,
-			createdById: user.id,
-			description:
-				`${user?.name}` +
-				" assigned the task to " +
-				`${task.assignedTo?.map((user) => user.name + ", ")}`,
-			taskId
-		}).save({ data: { channels: task.channels, pubsub } });
-
+		await task.save({
+			data: { user, pubsub, type: TaskActivityType.ASSIGNED }
+		});
 		return !!task;
 	}
 
@@ -91,29 +69,21 @@ export class TaskResolver {
 		@Ctx() { user }: GraphQLContext,
 		@PubSub() pubsub: PubSubEngine
 	) {
-		let task = await Task.findOneOrFail(taskId, {
-			relations: ["channels"]
-		});
-
+		let task = await Task.findOneOrFail(taskId, { relations: ["channels"] });
 		await Promise.all(
-			urls.map((url) =>
-				Media.create({
-					url,
-					uploadedById: user.id,
-					type: MediaType.IMAGE,
-					id: cuid(),
-					taskId
-				}).save()
-			)
+			urls.map((url) => {
+				let media = new Media();
+				media.url = url;
+				media.uploadedById = user.id;
+				media.type = MediaType.IMAGE;
+				media.taskId = taskId;
+				return media.save();
+			})
 		);
 
-		await TaskActivity.create({
-			description: `${user?.name} attached ${urls.length} media files to this task.`,
-			type: TaskActivityType.ATTACH_MEDIA,
-			createdById: user.id,
-			taskId
-		}).save({ data: { channels: task.channels, pubsub } });
-
+		await task.save({
+			data: { user, pubsub, type: TaskActivityType.ATTACH_MEDIA }
+		});
 		return !!task;
 	}
 
@@ -124,20 +94,11 @@ export class TaskResolver {
 		@Ctx() { user }: GraphQLContext,
 		@PubSub() pubsub: PubSubEngine
 	) {
-		let task = await Task.findOneOrFail(taskId, {
-			relations: ["channels"]
-		});
-
+		let task = await Task.findOneOrFail(taskId, { relations: ["channels"] });
 		task.status = TaskStatus.COMPLETED;
-		task = await task.save();
-
-		await TaskActivity.create({
-			type: TaskActivityType.COMPLETED,
-			createdById: user.id,
-			description: `${user!.name} marked the task as completed.`,
-			taskId
-		}).save({ data: { channels: task.channels, pubsub } });
-
+		await task.save({
+			data: { user, pubsub, type: TaskActivityType.COMPLETED }
+		});
 		return !!task;
 	}
 
@@ -148,24 +109,12 @@ export class TaskResolver {
 		@Ctx() { user }: GraphQLContext,
 		@PubSub() pubsub: PubSubEngine
 	) {
-		let task = await Task.findOneOrFail(taskId, {
-			relations: ["channels"]
-		});
+		let task = await Task.findOneOrFail(taskId, { relations: ["channels"] });
 		const newChannels = await Channel.findByIds(channelIds);
-
 		task.channels.push(...newChannels);
-		task = await task.save();
-
-		await TaskActivity.create({
-			description:
-				`${user?.name} ` +
-				"connected the following channels to this task: " +
-				`${newChannels?.map(({ name }) => name + ", ")}`,
-			type: TaskActivityType.CONNECT_CHANNEL,
-			createdById: user.id,
-			taskId
-		}).save({ data: { channels: task.channels, pubsub } });
-
+		await task.save({
+			data: { user, pubsub, type: TaskActivityType.CONNECT_CHANNEL }
+		});
 		return !!task;
 	}
 
@@ -176,23 +125,16 @@ export class TaskResolver {
 		@Ctx() { user }: GraphQLContext,
 		@PubSub() pubsub: PubSubEngine
 	) {
-		const channels = await Channel.findByIds(channelIds);
+		let task = new Task();
+		task.brief = rest.brief;
+		task.deadline = moment(deadline, "DD/MM/YYYY").toISOString();
+		task.details = rest.details;
+		task.forDeptId = rest.forDeptId;
+		task.byDeptId = user.departmentId;
+		task.channels = await Channel.findByIds(channelIds);
+		task.createdById = user.id;
 
-		const task = await Task.create({
-			...rest,
-			deadline: moment(deadline, "DD/MM/YYYY").toISOString(),
-			createdById: user.id,
-			byDeptId: user.departmentId,
-			channels
-		}).save();
-
-		await TaskActivity.create({
-			description: `${user?.name} created the task.`,
-			type: TaskActivityType.CREATED,
-			createdById: user.id,
-			taskId: task.id
-		}).save({ data: { channels: task.channels, pubsub } });
-
+		await task.save({ data: { user, pubsub, type: TaskActivityType.CREATED } });
 		return !!task;
 	}
 
@@ -203,19 +145,11 @@ export class TaskResolver {
 		@Ctx() { user }: GraphQLContext,
 		@PubSub() pubsub: PubSubEngine
 	) {
-		let task = await Task.findOneOrFail(taskId, {
-			relations: ["channels"]
-		});
+		let task = await Task.findOneOrFail(taskId, { relations: ["channels"] });
 		task.deleted = true;
-		task = await task.save();
-
-		await TaskActivity.create({
-			createdById: user.id,
-			description: `${user?.name} deleted the task.`,
-			type: TaskActivityType.DELETED,
-			taskId
-		}).save({ data: { channels: task.channels, pubsub } });
-
+		task = await task.save({
+			data: { user, pubsub, type: TaskActivityType.DELETED }
+		});
 		return !!task;
 	}
 
@@ -261,7 +195,6 @@ export class TaskResolver {
 			graphqlFields(info),
 			Task
 		);
-
 		const task = await Task.findOne(taskId, { select, relations });
 		return task;
 	}
@@ -273,19 +206,11 @@ export class TaskResolver {
 		@Ctx() { user }: GraphQLContext,
 		@PubSub() pubsub: PubSubEngine
 	) {
-		let task = await Task.findOneOrFail(taskId, {
-			relations: ["channels"]
-		});
-
+		let task = await Task.findOneOrFail(taskId, { relations: ["channels"] });
 		task.status = TaskStatus.SUBMITTED;
-		task = await task.save();
-
-		await TaskActivity.create({
-			type: TaskActivityType.SUBMITTED,
-			createdById: user.id,
-			description: `${user!.name} submitted the task.`,
-			taskId
-		}).save({ data: { channels: task.channels, pubsub } });
+		task = await task.save({
+			data: { user, pubsub, type: TaskActivityType.SUBMITTED }
+		});
 
 		return !!task;
 	}

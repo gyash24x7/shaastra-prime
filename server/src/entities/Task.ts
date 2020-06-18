@@ -10,9 +10,11 @@ import {
 	ManyToMany,
 	ManyToOne,
 	OneToMany,
-	PrimaryColumn
+	PrimaryColumn,
+	SaveOptions
 } from "typeorm";
-import { TaskStatus } from "../utils";
+import { TaskSaveOptionsData, TaskStatus } from "../utils";
+import getTaskActivityDescription from "../utils/getTaskActivityDescription";
 import { Channel } from "./Channel";
 import { Department } from "./Department";
 import { Media } from "./Media";
@@ -48,6 +50,29 @@ export class Task extends BaseEntity {
 	@BeforeInsert()
 	setId() {
 		this.id = cuid();
+	}
+
+	async save(options?: SaveOptions) {
+		const task = await super.save();
+		if (options?.data) {
+			const { user, pubsub, type } = options.data as TaskSaveOptionsData;
+
+			const activity = new TaskActivity();
+			activity.type = type;
+			activity.createdById = user.id;
+			activity.taskId = task.id;
+			activity.description = getTaskActivityDescription({
+				type,
+				user,
+				assignedTo: task.assignedTo,
+				mediaLength: task.media?.length
+			});
+
+			activity.save({ data: { channels: task.channels, pubsub } }).then(() => {
+				console.log("Task Activity Created!");
+			});
+		}
+		return task;
 	}
 
 	// PRIMARY FIELDS

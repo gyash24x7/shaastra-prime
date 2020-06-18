@@ -15,6 +15,12 @@ export interface MessagePubsubOptions {
 	channels: Channel[];
 }
 
+export interface TaskSaveOptionsData {
+	user: User;
+	pubsub: PubSubEngine;
+	type: TaskActivityType;
+}
+
 export enum UserRole {
 	COORD = "COORD",
 	HEAD = "HEAD",
