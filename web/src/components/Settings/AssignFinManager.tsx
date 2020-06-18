@@ -12,7 +12,7 @@ import { VerticalSpace } from "../shared/VerticalSpace";
 const { Title } = Typography;
 
 export const AssignFinManager = () => {
-	const [userId, setUserId] = useState<string>();
+	const [finManagerId, setFinManagerId] = useState<string>();
 	const [deptId, setDeptId] = useState<string>();
 	const { user } = useContext(UserContext)!;
 	const { departments } = useContext(DepartmentContext);
@@ -22,7 +22,7 @@ export const AssignFinManager = () => {
 			refetchGetDeptmembersQuery({ deptId: user.department!.id! })
 		],
 		onCompleted: () => {
-			setUserId(undefined);
+			setFinManagerId(undefined);
 			setDeptId(undefined);
 			message.success("Fin Manager Assigned Successfully!");
 		}
@@ -42,8 +42,8 @@ export const AssignFinManager = () => {
 			<div className="grid-row">
 				<div className="grid-col" style={{ margin: 10 }}>
 					<Select
-						value={userId}
-						onChange={(val) => setUserId(val.toString())}
+						value={finManagerId}
+						onChange={(val) => setFinManagerId(val.toString())}
 						size="large"
 						allowClear
 						options={memberData?.getDeptMembers
@@ -80,10 +80,10 @@ export const AssignFinManager = () => {
 					className="button"
 					type="primary"
 					loading={loading}
-					disabled={!userId || !deptId}
+					disabled={!finManagerId || !deptId}
 					onClick={() =>
 						assignFinManager({
-							variables: { userId: userId!, deptId: deptId! }
+							variables: { finManagerId: finManagerId!, deptId: deptId! }
 						})
 					}
 				>
@@ -92,7 +92,7 @@ export const AssignFinManager = () => {
 				<Button
 					className="button"
 					onClick={() => {
-						setUserId(undefined);
+						setFinManagerId(undefined);
 						setDeptId(undefined);
 					}}
 				>

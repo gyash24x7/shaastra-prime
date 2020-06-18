@@ -1,7 +1,7 @@
 import { Button, Space } from "antd";
 import { convertToRaw, EditorState } from "draft-js";
 import React, { useContext, useState } from "react";
-import { useCreateMessageMutation, User } from "../../generated";
+import { useCreateTextMessageMutation, User } from "../../generated";
 import { RecursivePartial } from "../../generated/types";
 import { ModalContext } from "../../utils/context";
 import Editor, { composedDecorator } from "../Editor";
@@ -16,7 +16,7 @@ interface MessageInputProps {
 
 export const MessageInput = ({ channelId }: MessageInputProps) => {
 	const [emojiVisible, setEmojiVisible] = useState(false);
-	const [createMessage, { error, loading }] = useCreateMessageMutation();
+	const [createMessage, { error, loading }] = useCreateTextMessageMutation();
 
 	const [editorState, setEditorState] = useState(
 		EditorState.createEmpty(composedDecorator)
@@ -33,8 +33,8 @@ export const MessageInput = ({ channelId }: MessageInputProps) => {
 		});
 	};
 
-	const handleUpload = (media: string[]) => {
-		createMessage({ variables: { content: "", channelId, media } }).then(() =>
+	const handleUpload = (_media?: string[]) => {
+		createMessage({ variables: { content: "", channelId } }).then(() =>
 			toggleModal()
 		);
 	};
@@ -47,7 +47,7 @@ export const MessageInput = ({ channelId }: MessageInputProps) => {
 			.join("");
 
 		if (plainText.length !== 0) {
-			createMessage({ variables: { channelId, content, media: [] } }).then(() =>
+			createMessage({ variables: { channelId, content } }).then(() =>
 				setEditorState(EditorState.createEmpty())
 			);
 		} else {

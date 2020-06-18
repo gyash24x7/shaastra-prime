@@ -33,7 +33,7 @@ export const KanbanItem = ({ task }: KanbanItemProps) => {
 			<Title level={4}>{task.brief}</Title>
 			<div className="wrap-row">
 				<Tag icon={<CalendarFilled />} color="lime">
-					{moment(parseInt(task.createdAt!)).format("DD/MM/YYYY")}
+					{moment(parseInt(task.createdOn!)).format("DD/MM/YYYY")}
 				</Tag>
 				<Tag color="red">{task.byDept?.name}</Tag>
 				<Tag color={statusColor[task.status!]}>{task.status}</Tag>

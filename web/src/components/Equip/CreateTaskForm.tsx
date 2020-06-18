@@ -35,7 +35,7 @@ export const CreateTaskForm = () => {
 					deadline: (values["deadline"] as Moment).format("DD/MM/YYYY"),
 					details: values["details"],
 					forDeptId: values["forDept"],
-					channelIds: values["channelIds"]
+					channelIds: values["channelIds"] || []
 				}
 			});
 		} catch (error) {

@@ -15,7 +15,7 @@ const { Option } = Select;
 
 export const CreateChannelForm = () => {
 	const [form] = useForm();
-	const [searchStr, setSearchStr] = useState("");
+	const [phrase, setPhrase] = useState("");
 	const [searchUsers, setSearchUsers] = useState<RecursivePartial<User>[]>([]);
 
 	const [searchUser, { error, data }] = useSearchUserLazyQuery();
@@ -25,8 +25,8 @@ export const CreateChannelForm = () => {
 	] = useCreateChannelMutation({ refetchQueries: [refetchGetChannelsQuery()] });
 
 	useEffect(() => {
-		searchUser({ variables: { searchStr } });
-	}, [searchStr, searchUser]);
+		searchUser({ variables: { phrase } });
+	}, [phrase, searchUser]);
 
 	useEffect(() => {
 		if (data?.searchUser) setSearchUsers(data.searchUser);
@@ -54,7 +54,7 @@ export const CreateChannelForm = () => {
 				variables: {
 					name: values["name"],
 					description: values["description"],
-					members: values["members"]
+					memberIds: values["members"]
 				}
 			});
 		} catch (error) {}
@@ -85,7 +85,7 @@ export const CreateChannelForm = () => {
 			>
 				<Select
 					mode="multiple"
-					onSearch={setSearchStr}
+					onSearch={setPhrase}
 					filterOption={false}
 					onChange={(members) => form.setFieldsValue({ members })}
 					placeholder="Search Members"

@@ -4,7 +4,6 @@ import { UserContext } from "../../utils/context";
 import { VerticalSpace } from "../shared/VerticalSpace";
 import { AddSubDept } from "./AddSubDept";
 import { AssignFinManager } from "./AssignFinManager";
-import { DeleteMember } from "./DeleteMember";
 import { GrantAccess } from "./GrantAccess";
 import { SelectAvatar } from "./SelectAvatar";
 import { SubDeptView } from "./SubDeptView";
@@ -18,8 +17,6 @@ export const SettingsScreen = () => {
 			<SubDeptView />
 			<VerticalSpace />
 			{user.role === UserRole.Core && <AddSubDept />}
-			<VerticalSpace />
-			{user.role === UserRole.Core && <DeleteMember />}
 			<VerticalSpace />
 			{user.role === UserRole.Core && <GrantAccess />}
 			<VerticalSpace />

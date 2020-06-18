@@ -29,7 +29,7 @@ export const UpdateListItem = ({ update }: UpdateListItemProps) => {
 								<Tag color="red">{update.byDept?.name}</Tag>
 								<Tag color="cyan">{update.postedBy?.name}</Tag>
 								<Tag icon={<ClockCircleFilled />} color="lime">
-									{moment(parseInt(update.createdAt!)).fromNow()}
+									{moment(parseInt(update.createdOn!)).fromNow()}
 								</Tag>
 							</Space>
 						)
@@ -55,7 +55,7 @@ export const UpdateListItem = ({ update }: UpdateListItemProps) => {
 				<Tag color="red">{update.byDept?.name}</Tag>
 				<Tag color="cyan">{update.postedBy?.name}</Tag>
 				<Tag icon={<ClockCircleFilled />} color="lime">
-					{moment(parseInt(update.createdAt!)).fromNow()}
+					{moment(parseInt(update.createdOn!)).fromNow()}
 				</Tag>
 			</div>
 		</div>

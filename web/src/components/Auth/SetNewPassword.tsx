@@ -1,7 +1,7 @@
 import { Button, Form, Input, message, Typography } from "antd";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { useForgotPasswordMutation } from "../../generated";
+import { useUpdatePasswordMutation } from "../../generated";
 import { ShowError } from "../shared/ShowError";
 import { VerticalSpace } from "../shared/VerticalSpace";
 
@@ -15,9 +15,9 @@ export const SetNewPassword = ({ email }: SetNewPasswordProps) => {
 	const [form] = Form.useForm();
 	const history = useHistory();
 
-	const [resetPassword, { loading, error }] = useForgotPasswordMutation({
+	const [resetPassword, { loading, error }] = useUpdatePasswordMutation({
 		onCompleted(data) {
-			if (data.forgotPassword) {
+			if (data.updatePassword) {
 				message.success("Password changed successfully!");
 				history.push("/");
 			}

@@ -1,0 +1,6 @@
+query SearchUser($phrase: String!) {
+	searchUser(phrase: $phrase) {
+		id
+		name
+	}
+}

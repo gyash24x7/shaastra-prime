@@ -60,10 +60,10 @@ export const ChannelDescription = ({ channel }: ChannelDescriptionProps) => {
 				</div>
 			</Collapse.Panel>
 			<Collapse.Panel key="starred" header="Starred Messages">
-				{channel.starredMsgs?.map((message, i) => (
+				{[].map((message, i) => (
 					<MessageItem key={i} message={message!} />
 				))}
-				{!channel.starredMsgs?.length && (
+				{[].length && (
 					<div className="grid-row">
 						<Empty description="No Messages" />
 					</div>

@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 import * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client';
 export type Maybe<T> = T | null;
+export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -22,7 +23,7 @@ export type ApproveInvoiceInput = {
 };
 
 export type AssignFinManagerInput = {
-  userId: Scalars['String'];
+  finManagerId: Scalars['String'];
   deptId: Scalars['String'];
 };
 
@@ -290,7 +291,6 @@ export type Milestone = {
   id: Scalars['ID'];
   title: Scalars['String'];
   status: MilestoneStatus;
-  goal: Goal;
 };
 
 export enum MilestoneStatus {
@@ -602,6 +602,7 @@ export type Query = {
   getUsers: Array<User>;
   getUser: User;
   me?: Maybe<User>;
+  searchUser: Array<User>;
   getVendors: Array<Vendor>;
   getVerticals: Array<Vertical>;
 };
@@ -644,6 +645,11 @@ export type QueryGetTaskArgs = {
 
 export type QueryGetUserArgs = {
   userId: Scalars['String'];
+};
+
+
+export type QuerySearchUserArgs = {
+  phrase: Scalars['String'];
 };
 
 export type Registration = {
@@ -831,239 +837,246 @@ export type Vertical = {
   image?: Maybe<Media>;
 };
 
-export type AcceptTaskMutationVariables = {
+export type AcceptTaskMutationVariables = Exact<{
   taskId: Scalars['String'];
-};
+}>;
 
 
 export type AcceptTaskMutation = { acceptTask: boolean };
 
-export type AddSubDeptMutationVariables = {
+export type AddSubDeptMutationVariables = Exact<{
   subDept: Scalars['String'];
-};
+}>;
 
 
 export type AddSubDeptMutation = { addSubDepartment: boolean };
 
-export type AssignFinManagerMutationVariables = {
-  userId: Scalars['String'];
+export type AssignFinManagerMutationVariables = Exact<{
+  finManagerId: Scalars['String'];
   deptId: Scalars['String'];
-};
+}>;
 
 
 export type AssignFinManagerMutation = { assignFinManager: boolean };
 
-export type AssignTaskMutationVariables = {
+export type AssignTaskMutationVariables = Exact<{
   taskId: Scalars['String'];
   assignedTo: Array<Scalars['String']>;
-};
+}>;
 
 
 export type AssignTaskMutation = { assignTask: boolean };
 
-export type CompleteTaskMutationVariables = {
+export type CompleteTaskMutationVariables = Exact<{
   taskId: Scalars['String'];
-};
+}>;
 
 
 export type CompleteTaskMutation = { completeTask: boolean };
 
-export type CreateChannelMutationVariables = {
+export type CreateChannelMutationVariables = Exact<{
   name: Scalars['String'];
   description: Scalars['String'];
   memberIds: Array<Scalars['String']>;
-};
+}>;
 
 
 export type CreateChannelMutation = { createChannel: boolean };
 
-export type CreateMediaMessageMutationVariables = {
+export type CreateMediaMessageMutationVariables = Exact<{
   channelId: Scalars['String'];
   mediaUrls: Array<Scalars['String']>;
-};
+}>;
 
 
 export type CreateMediaMessageMutation = { createMediaMessage: boolean };
 
-export type CreateTaskMutationVariables = {
+export type CreateTaskMutationVariables = Exact<{
   brief: Scalars['String'];
   details: Scalars['String'];
   forDeptId: Scalars['String'];
   deadline: Scalars['String'];
   channelIds: Array<Scalars['String']>;
-};
+}>;
 
 
 export type CreateTaskMutation = { createTask: boolean };
 
-export type CreateTextMessageMutationVariables = {
+export type CreateTextMessageMutationVariables = Exact<{
   channelId: Scalars['String'];
   content: Scalars['String'];
-};
+}>;
 
 
 export type CreateTextMessageMutation = { createTextMessage: boolean };
 
-export type CreateUpdateMutationVariables = {
+export type CreateUpdateMutationVariables = Exact<{
   brief: Scalars['String'];
   subject: Scalars['String'];
   content: Scalars['String'];
-};
+}>;
 
 
 export type CreateUpdateMutation = { createUpdate: boolean };
 
-export type CreateUserMutationVariables = {
+export type CreateUserMutationVariables = Exact<{
   name: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
   departmentId: Scalars['String'];
   rollNumber: Scalars['String'];
   mobile: Scalars['String'];
-};
+}>;
 
 
 export type CreateUserMutation = { createUser: Array<string> };
 
-export type DeleteTaskMutationVariables = {
+export type DeleteTaskMutationVariables = Exact<{
   taskId: Scalars['String'];
-};
+}>;
 
 
 export type DeleteTaskMutation = { deleteTask: boolean };
 
-export type GetPasswordOtpMutationVariables = {
+export type GetPasswordOtpMutationVariables = Exact<{
   email: Scalars['String'];
-};
+}>;
 
 
 export type GetPasswordOtpMutation = { getPasswordOTP: boolean };
 
-export type GrantAccessMutationVariables = {
+export type GrantAccessMutationVariables = Exact<{
   userId: Scalars['String'];
   role: UserRole;
-};
+}>;
 
 
 export type GrantAccessMutation = { grantAccess: boolean };
 
-export type LoginMutationVariables = {
+export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
-};
+}>;
 
 
 export type LoginMutation = { login?: Maybe<Array<string>> };
 
-export type SubmitTaskMutationVariables = {
+export type SubmitTaskMutationVariables = Exact<{
   taskId: Scalars['String'];
-};
+}>;
 
 
 export type SubmitTaskMutation = { submitTask: boolean };
 
-export type UpdatePasswordMutationVariables = {
+export type UpdatePasswordMutationVariables = Exact<{
   email: Scalars['String'];
   newPassword: Scalars['String'];
-};
+}>;
 
 
 export type UpdatePasswordMutation = { updatePassword: boolean };
 
-export type UploadCoverPicMutationVariables = {
+export type UploadCoverPicMutationVariables = Exact<{
   coverPic: Scalars['String'];
-};
+}>;
 
 
 export type UploadCoverPicMutation = { uploadCoverPic: boolean };
 
-export type UploadProfilePicMutationVariables = {
+export type UploadProfilePicMutationVariables = Exact<{
   profilePic: Scalars['String'];
-};
+}>;
 
 
 export type UploadProfilePicMutation = { uploadProfilePic: boolean };
 
-export type VerifyPasswordOtpMutationVariables = {
+export type VerifyPasswordOtpMutationVariables = Exact<{
   email: Scalars['String'];
   passwordOTP: Scalars['String'];
-};
+}>;
 
 
 export type VerifyPasswordOtpMutation = { verifyPasswordOTP: boolean };
 
-export type VerifyUserMutationVariables = {
+export type VerifyUserMutationVariables = Exact<{
   otp: Scalars['String'];
-};
+}>;
 
 
 export type VerifyUserMutation = { verifyUser: string };
 
-export type GetChannelDetailsQueryVariables = {
+export type GetChannelDetailsQueryVariables = Exact<{
   channelId: Scalars['String'];
-};
+}>;
 
 
 export type GetChannelDetailsQuery = { getChannelDetails: { id: string, name: string, description: string, createdBy: { id: string, name: string }, members: Array<{ id: string, name: string, role: UserRole, department: { id: string, name: string } }>, connectedTasks: Array<{ id: string, brief: string, status: TaskStatus }> } };
 
-export type GetChannelsQueryVariables = {};
+export type GetChannelsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetChannelsQuery = { getChannels: Array<{ id: string, name: string }> };
 
-export type GetDepartmentsQueryVariables = {};
+export type GetDepartmentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetDepartmentsQuery = { getDepartments: Array<{ id: string, name: string, shortName: string, subDepartments: Array<string> }> };
 
-export type GetDeptmembersQueryVariables = {
+export type GetDeptmembersQueryVariables = Exact<{
   deptId: Scalars['String'];
-};
+}>;
 
 
 export type GetDeptmembersQuery = { getDeptMembers: Array<{ id: string, name: string, role: UserRole, profilePic: string, department: { name: string } }> };
 
-export type GetMessagesQueryVariables = {
+export type GetMessagesQueryVariables = Exact<{
   channelId: Scalars['String'];
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type GetMessagesQuery = { getMessages: Array<{ id: string, content: string, type: MessageType, starred: boolean, createdOn: string, createdBy: { id: string, name: string }, media: Array<{ id: string, url: string, type: MediaType }> }> };
 
-export type GetTaskQueryVariables = {
+export type GetTaskQueryVariables = Exact<{
   taskId: Scalars['String'];
-};
+}>;
 
 
 export type GetTaskQuery = { getTask: { id: string, brief: string, details: string, status: TaskStatus, createdOn: string, deadline: string, byDept: { id: string, name: string }, createdBy: { id: string, name: string, role: UserRole, department: { id: string, name: string } }, assignedTo: Array<{ id: string, name: string, role: UserRole, department: { id: string, name: string } }> } };
 
-export type GetTasksQueryVariables = {};
+export type GetTasksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetTasksQuery = { getTasks: Array<{ id: string, brief: string, status: TaskStatus, createdOn: string, deadline: string, byDept: { id: string, name: string }, assignedTo: Array<{ id: string, name: string }> }> };
 
-export type GetUpdatesQueryVariables = {};
+export type GetUpdatesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetUpdatesQuery = { getUpdates: Array<{ id: string, brief: string, subject: string, content: string, createdOn: string, postedBy: { id: string, name: string }, byDept: { id: string, name: string } }> };
 
-export type GetUserQueryVariables = {
+export type GetUserQueryVariables = Exact<{
   userId: Scalars['String'];
-};
+}>;
 
 
 export type GetUserQuery = { getUser: { id: string, name: string, email: string, coverPic: string, profilePic: string, role: UserRole, mobile: string, upi: string, rollNumber: string, department: { name: string } } };
 
-export type MeQueryVariables = {};
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { me?: Maybe<{ id: string, name: string, email: string, rollNumber: string, mobile: string, role: UserRole, profilePic: string, coverPic: string, about: string, verified: boolean, department: { id: string, name: string, shortName: string, subDepartments: Array<string> } }> };
 
-export type NewMessageSubscriptionVariables = {
+export type SearchUserQueryVariables = Exact<{
+  phrase: Scalars['String'];
+}>;
+
+
+export type SearchUserQuery = { searchUser: Array<{ id: string, name: string }> };
+
+export type NewMessageSubscriptionVariables = Exact<{
   channelId: Scalars['String'];
-};
+}>;
 
 
 export type NewMessageSubscription = { newMessage: { id: string, content: string, type: MessageType, starred: boolean, createdOn: string, createdBy: { id: string, name: string }, media: Array<{ id: string, url: string, type: MediaType }> } };
@@ -1094,8 +1107,8 @@ export type AddSubDeptMutationHookResult = ReturnType<typeof useAddSubDeptMutati
 export type AddSubDeptMutationResult = ApolloReactCommon.MutationResult<AddSubDeptMutation>;
 export type AddSubDeptMutationOptions = ApolloReactCommon.BaseMutationOptions<AddSubDeptMutation, AddSubDeptMutationVariables>;
 export const AssignFinManagerDocument = gql`
-    mutation AssignFinManager($userId: String!, $deptId: String!) {
-  assignFinManager(data: {userId: $userId, deptId: $deptId})
+    mutation AssignFinManager($finManagerId: String!, $deptId: String!) {
+  assignFinManager(data: {finManagerId: $finManagerId, deptId: $deptId})
 }
     `;
 export type AssignFinManagerMutationFn = ApolloReactCommon.MutationFunction<AssignFinManagerMutation, AssignFinManagerMutationVariables>;
@@ -1630,6 +1643,26 @@ export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
 export function refetchMeQuery(variables?: MeQueryVariables) {
       return { query: MeDocument, variables: variables }
+    }
+export const SearchUserDocument = gql`
+    query SearchUser($phrase: String!) {
+  searchUser(phrase: $phrase) {
+    id
+    name
+  }
+}
+    `;
+export function useSearchUserQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SearchUserQuery, SearchUserQueryVariables>) {
+        return ApolloReactHooks.useQuery<SearchUserQuery, SearchUserQueryVariables>(SearchUserDocument, baseOptions);
+      }
+export function useSearchUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SearchUserQuery, SearchUserQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<SearchUserQuery, SearchUserQueryVariables>(SearchUserDocument, baseOptions);
+        }
+export type SearchUserQueryHookResult = ReturnType<typeof useSearchUserQuery>;
+export type SearchUserLazyQueryHookResult = ReturnType<typeof useSearchUserLazyQuery>;
+export type SearchUserQueryResult = ApolloReactCommon.QueryResult<SearchUserQuery, SearchUserQueryVariables>;
+export function refetchSearchUserQuery(variables?: SearchUserQueryVariables) {
+      return { query: SearchUserDocument, variables: variables }
     }
 export const NewMessageDocument = gql`
     subscription NewMessage($channelId: String!) {

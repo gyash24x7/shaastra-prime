@@ -1,3 +1,3 @@
-mutation AssignFinManager($userId: String!, $deptId: String!) {
-	assignFinManager(data: { userId: $userId, deptId: $deptId })
+mutation AssignFinManager($finManagerId: String!, $deptId: String!) {
+	assignFinManager(data: { finManagerId: $finManagerId, deptId: $deptId })
 }

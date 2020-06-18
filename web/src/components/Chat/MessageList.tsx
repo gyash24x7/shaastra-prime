@@ -82,14 +82,14 @@ export const MessageList = ({ channelId }: MessageListProps) => {
 	const getGroupedMsgs = (messages: RecursivePartial<Message>[]) => {
 		let dates = new Set<string>(
 			messages.map((msg) =>
-				moment(parseInt(msg.createdAt!)).format("DD/MM/YYYY")
+				moment(parseInt(msg.createdOn!)).format("DD/MM/YYYY")
 			)
 		);
 		let dateWiseMsgs: Record<string, RecursivePartial<Message>[]> = {};
 
 		Array.from(dates).forEach((date) => {
 			dateWiseMsgs[date] = messages.filter(
-				(msg) => moment(parseInt(msg.createdAt!)).format("DD/MM/YYYY") === date
+				(msg) => moment(parseInt(msg.createdOn!)).format("DD/MM/YYYY") === date
 			);
 		});
 

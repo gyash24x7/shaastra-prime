@@ -1,10 +1,4 @@
-import {
-	ClockCircleFilled,
-	LikeFilled,
-	LikeOutlined,
-	StarFilled,
-	StarOutlined
-} from "@ant-design/icons";
+import { ClockCircleFilled, StarFilled, StarOutlined } from "@ant-design/icons";
 import { Avatar, Comment, Space } from "antd";
 import { convertFromRaw, Editor, EditorState } from "draft-js";
 import moment from "moment";
@@ -38,14 +32,10 @@ export const TextMessage = ({ message }: MessageItemProps) => {
 						<Space size="middle">
 							<Space>
 								<ClockCircleFilled />
-								{moment(parseInt(message.createdAt!)).format("hh:mm A")}
+								{moment(parseInt(message.createdOn!)).format("hh:mm A")}
 							</Space>
 							<Space>
 								{message.starred ? <StarFilled /> : <StarOutlined />}
-							</Space>
-							<Space>
-								{message.liked ? <LikeFilled /> : <LikeOutlined />}
-								{message.likes}
 							</Space>
 						</Space>
 					</Fragment>

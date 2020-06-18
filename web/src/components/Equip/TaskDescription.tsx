@@ -50,7 +50,7 @@ export const TaskDescription = ({ taskId }: TaskOperationProps) => {
 				</Descriptions.Item>
 				<Descriptions.Item label={<Text>Created&nbsp;On</Text>}>
 					<Tag color="lime">
-						{moment(parseInt(data.getTask.createdAt)).format("DD MMMM")}
+						{moment(parseInt(data.getTask.createdOn)).format("DD MMMM")}
 					</Tag>
 				</Descriptions.Item>
 				<Descriptions.Item label={<Text>Status</Text>}>
