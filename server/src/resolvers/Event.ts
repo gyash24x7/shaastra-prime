@@ -18,7 +18,7 @@ import { CreateEventInput, UpdateEventInput } from "../inputs/Event";
 import { GraphQLContext, MediaType } from "../utils";
 import getSelectAndRelation from "../utils/getSelectAndRelation";
 
-@Resolver()
+@Resolver(Event)
 export class EventResolver {
 	@Authorized("CORE", "HEAD")
 	@Mutation(() => Boolean)

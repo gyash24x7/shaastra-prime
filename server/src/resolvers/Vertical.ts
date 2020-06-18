@@ -9,14 +9,13 @@ import {
 	Resolver,
 	Root
 } from "type-graphql";
-import { Event } from "../entities/Event";
 import { Media } from "../entities/Media";
 import { Vertical } from "../entities/Vertical";
 import { CreateVerticalInput, UpdateVerticalInput } from "../inputs/Vertical";
 import { GraphQLContext, MediaType } from "../utils";
 import getSelectAndRelation from "../utils/getSelectAndRelation";
 
-@Resolver()
+@Resolver(Vertical)
 export class VerticalResolver {
 	@Authorized("CORE", "HEAD")
 	@Mutation(() => Boolean)
@@ -73,11 +72,5 @@ export class VerticalResolver {
 	async image(@Root() { image, imageId }: Vertical) {
 		if (image) return image;
 		return Media.findOne(imageId);
-	}
-
-	@FieldResolver()
-	async events(@Root() { events, id }: Vertical) {
-		if (events) return events;
-		return Event.find({ where: { verticalId: id } });
 	}
 }

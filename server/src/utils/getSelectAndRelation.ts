@@ -1,5 +1,7 @@
+import graphqlFields from "graphql-fields";
+
 export default (info: any, entity: any) => {
-	const fields = info;
+	const fields = graphqlFields(info);
 	const select: any[] = Object.keys(fields).filter((field) =>
 		entity.primaryFields.includes(field)
 	);

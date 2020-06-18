@@ -16,7 +16,7 @@ import { AssignFinManagerInput, GrantAccessInput } from "../inputs/Department";
 import { GraphQLContext } from "../utils";
 import getSelectAndRelation from "../utils/getSelectAndRelation";
 
-@Resolver()
+@Resolver(Department)
 export class DepartmentResolver {
 	@Authorized(["CORE"])
 	@Mutation(() => Boolean)

@@ -21,7 +21,7 @@ import { User } from "./User";
 @ObjectType("Vertical")
 export class Vertical extends BaseEntity {
 	static primaryFields = ["id", "rank", "info", "updatedOn"];
-	static relationalFields = ["image", "events"];
+	static relationalFields = ["image"];
 
 	// LISTENERS
 

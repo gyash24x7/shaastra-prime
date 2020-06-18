@@ -32,7 +32,7 @@ import {
 } from "../utils";
 import getSelectAndRelation from "../utils/getSelectAndRelation";
 
-@Resolver()
+@Resolver(Task)
 export class TaskResolver {
 	@Authorized()
 	@Mutation(() => Boolean)

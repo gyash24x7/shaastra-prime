@@ -11,6 +11,7 @@ import {
 	Resolver,
 	Root
 } from "type-graphql";
+import { Like } from "typeorm";
 import { Department } from "../entities/Department";
 import { User } from "../entities/User";
 import {
@@ -22,7 +23,7 @@ import {
 import { GraphQLContext } from "../utils";
 import getSelectAndRelation from "../utils/getSelectAndRelation";
 
-@Resolver()
+@Resolver(User)
 export class UserResolver {
 	@Mutation(() => [String])
 	async createUser(@Arg("data") data: CreateUserInput) {
@@ -114,6 +115,17 @@ export class UserResolver {
 		if (user?.verificationOTP !== otp) throw new Error("Invalid OTP!");
 		await User.update(user.id, { verified: true });
 		return user.id;
+	}
+
+	@Authorized()
+	@Query(() => [User])
+	async searchUser(@Arg("phrase") phrase: string, @Info() info: any) {
+		const { select, relations } = getSelectAndRelation(info, User);
+		return User.find({
+			where: { name: Like(`%${phrase}%`) },
+			select,
+			relations
+		});
 	}
 
 	@FieldResolver()

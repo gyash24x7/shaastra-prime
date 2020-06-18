@@ -16,7 +16,7 @@ import { CreateUpdateInput } from "../inputs/Update";
 import { GraphQLContext } from "../utils";
 import getSelectAndRelation from "../utils/getSelectAndRelation";
 
-@Resolver()
+@Resolver(Update)
 export class UpdateResolver {
 	@Authorized()
 	@Mutation(() => Boolean)

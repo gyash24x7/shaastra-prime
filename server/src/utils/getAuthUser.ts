@@ -1,7 +1,9 @@
+import dotenv from "dotenv";
 import { Request } from "express";
 import jwt from "jsonwebtoken";
 import { ExecutionParams } from "subscriptions-transport-ws";
 import { User } from "../entities/User";
+dotenv.config();
 
 interface AuthParams {
 	req: Request;

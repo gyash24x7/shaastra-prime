@@ -35,7 +35,7 @@ import {
 import { getInvoiceStatus } from "../utils/getInvoiceStatus";
 import getSelectAndRelation from "../utils/getSelectAndRelation";
 
-@Resolver()
+@Resolver(Invoice)
 export class InvoiceResolver {
 	@Authorized("CORE", "HEAD", "COCAD")
 	@Mutation(() => Boolean)

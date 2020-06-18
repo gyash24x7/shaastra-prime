@@ -13,7 +13,7 @@ import { Vendor } from "../entities/Vendor";
 import { CreateVendorInput } from "../inputs/Vendor";
 import getSelectAndRelation from "../utils/getSelectAndRelation";
 
-@Resolver()
+@Resolver(Vendor)
 export class VendorResolver {
 	@Authorized()
 	@Mutation(() => Boolean)
@@ -37,7 +37,7 @@ export class VendorResolver {
 	}
 
 	@FieldResolver()
-	async participant(@Root() { invoices, id }: Vendor) {
+	async invoices(@Root() { invoices, id }: Vendor) {
 		if (invoices) return invoices;
 		return Invoice.findOne(id);
 	}
