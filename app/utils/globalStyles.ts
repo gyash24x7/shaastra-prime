@@ -60,5 +60,13 @@ export default StyleSheet.create({
 		fontSize: 11,
 		textAlign: "center",
 		marginTop: 10
+	},
+
+	section: {
+		width: "100%",
+		padding: 15,
+		borderWidth: 1,
+		borderColor: "#303030",
+		borderRadius: 5
 	}
 });

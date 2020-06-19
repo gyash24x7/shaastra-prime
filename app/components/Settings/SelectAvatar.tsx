@@ -17,8 +17,8 @@ export const SelectAvatar = () => {
 	});
 
 	return (
-		<Layout style={{ width: "100%", padding: 10 }}>
-			<Text style={globalStyles.title}> Select Avatar</Text>
+		<Layout style={globalStyles.section}>
+			<Text style={globalStyles.title}>Select Avatar</Text>
 			<Divider style={{ backgroundColor: "#303030", marginVertical: 10 }} />
 			<Layout
 				style={{
@@ -51,7 +51,7 @@ export const SelectAvatar = () => {
 				))}
 			</Layout>
 			<VerticalSpace />
-			<Layout style={{ display: "flex", flexDirection: "row" }}>
+			<Layout style={{ display: "flex", flexDirection: "row", margin: -5 }}>
 				<Button
 					status="primary"
 					style={{ flex: 1, marginHorizontal: 5 }}
