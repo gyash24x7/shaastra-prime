@@ -1,32 +1,18 @@
-import { DrawerActions, useNavigation } from "@react-navigation/native";
-import {
-	Icon,
-	Layout,
-	Text,
-	TopNavigation,
-	TopNavigationAction
-} from "@ui-kitten/components";
+import { Layout } from "@ui-kitten/components";
 import React from "react";
+import { StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyles from "../../utils/globalStyles";
+import { TopNav } from "../Navigation/TopNav";
+import { SelectAvatar } from "./SelectAvatar";
 
 export const SettingsScreen = () => {
-	const { dispatch } = useNavigation();
-
 	return (
-		<SafeAreaView>
-			<TopNavigation
-				title="Shaastra Prime"
-				alignment="center"
-				accessoryLeft={() => (
-					<TopNavigationAction
-						icon={(props) => <Icon name="menu" {...props} />}
-						onPress={() => dispatch(DrawerActions.openDrawer)}
-					/>
-				)}
-			/>
+		<SafeAreaView style={{ flex: 1 }}>
+			<StatusBar backgroundColor="#141414" />
+			<TopNav title="Settings" />
 			<Layout style={globalStyles.wrapper}>
-				<Text>Settings Screen</Text>
+				<SelectAvatar />
 			</Layout>
 		</SafeAreaView>
 	);
