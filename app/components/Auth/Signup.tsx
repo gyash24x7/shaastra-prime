@@ -117,7 +117,7 @@ export const SignupScreen = () => {
 							placeholder="Roll Number"
 							size="large"
 							value={rollNumber}
-							onChangeText={setRollNumber}
+							onChangeText={(val) => setRollNumber(val.toUpperCase())}
 						/>
 						<Input
 							placeholder="Mobile"
@@ -125,18 +125,6 @@ export const SignupScreen = () => {
 							value={mobile}
 							onChangeText={setMobile}
 						/>
-						<Select
-							selectedIndex={departmentIndex}
-							onSelect={(index) => setDepartmentIndex(index as IndexPath)}
-							value={
-								departmentIndex &&
-								deptData.getDepartments[departmentIndex.row].name
-							}
-						>
-							{deptData.getDepartments.map((dept) => (
-								<SelectItem title={dept.name} key={dept.id} />
-							))}
-						</Select>
 						<Input
 							placeholder="Password"
 							textContentType="password"
@@ -145,10 +133,24 @@ export const SignupScreen = () => {
 							value={password}
 							onChangeText={setPassword}
 						/>
+						<Select
+							selectedIndex={departmentIndex}
+							onSelect={(index) => setDepartmentIndex(index as IndexPath)}
+							value={
+								departmentIndex &&
+								deptData.getDepartments[departmentIndex.row].name
+							}
+							size="large"
+						>
+							{deptData.getDepartments.map((dept) => (
+								<SelectItem title={dept.name} key={dept.id} />
+							))}
+						</Select>
+						<VerticalSpace size="tiny" />
 						<Button
 							onPress={handleSubmit}
 							children={() =>
-								loading ? <Spinner status="control" /> : <Text>LOGIN</Text>
+								loading ? <Spinner status="control" /> : <Text>SIGN UP</Text>
 							}
 						/>
 						<Text style={globalStyles.errorMsg}>{errorMsg}</Text>

@@ -5,7 +5,7 @@ import { WebSocketLink } from "@apollo/link-ws";
 import { AsyncStorage } from "react-native";
 
 const [WS_URL, HTTP_URL] =
-	process.env.NODE_ENV === "development"
+	process.env.NODE_ENV === "production"
 		? ["ws://192.168.43.59:8000", "http://192.168.43.59:8000"]
 		: ["wss://api.shaastra.org", "https://api.shaastra.org"];
 

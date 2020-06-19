@@ -31,14 +31,8 @@ export const TopNav = ({ title, isSmall }: TopNavProps) => {
 					return <PageTitle text={title} />;
 				}
 			}}
-			alignment="center"
+			alignment="start"
 			accessoryLeft={() => (
-				<TopNavigationAction
-					icon={(props) => <Icon name="menu" {...props} />}
-					onPress={() => dispatch(DrawerActions.openDrawer)}
-				/>
-			)}
-			accessoryRight={() => (
 				<TopNavigationAction
 					icon={(props) => <Icon name="menu" {...props} />}
 					onPress={() => dispatch(DrawerActions.openDrawer)}

@@ -1,13 +1,15 @@
 import { Avatar, Divider, Layout } from "@ui-kitten/components";
 import React from "react";
 import { Image, ImageBackground, StyleSheet } from "react-native";
+import { SvgUri } from "react-native-svg";
 import { User } from "../../generated";
+import { RecursivePartial } from "../../generated/types";
 import { Tag } from "./Tag";
 
 interface UserCardProps {
 	size: "large" | "small";
 	logo?: boolean;
-	user: Partial<User>;
+	user: RecursivePartial<User>;
 }
 
 export const UserCard = ({ size, logo, user }: UserCardProps) => {
@@ -42,7 +44,6 @@ export const UserCard = ({ size, logo, user }: UserCardProps) => {
 			width: "100%",
 			marginBottom: size === "large" ? 40 : 30
 		},
-
 		avatar: {
 			width: size === "large" ? 80 : 60,
 			height: size === "large" ? 80 : 60,
@@ -75,11 +76,28 @@ export const UserCard = ({ size, logo, user }: UserCardProps) => {
 							}}
 						/>
 					)}
-					<Avatar
-						source={{ uri: "https://source.unsplash.com/featured/300x300" }}
-						shape="round"
-						style={styles.avatar}
-					/>
+					{user.profilePic?.split(".").reverse()[0] === "svg" ? (
+						<Avatar
+							shape="round"
+							ImageComponent={() => (
+								<SvgUri
+									uri={user.profilePic!}
+									width={size === "large" ? 80 : 60}
+									height={size === "large" ? 80 : 60}
+								/>
+							)}
+						/>
+					) : (
+						<Avatar
+							shape="round"
+							source={{
+								uri:
+									user.profilePic! ||
+									"https://source.unsplash.com/featured/200x200"
+							}}
+							style={styles.avatar}
+						/>
+					)}
 				</Layout>
 			</ImageBackground>
 			<Layout style={styles.userCard}>

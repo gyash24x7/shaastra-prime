@@ -14,5 +14,6 @@ const ICON_MAP: Record<string, string> = {
 	Updates: "build",
 	Details: "profile",
 	Media: "file-image",
-	Logout: "logout"
+	Logout: "logout",
+	Settings: "setting"
 };

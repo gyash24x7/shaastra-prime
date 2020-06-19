@@ -2,10 +2,9 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import React from "react";
 import { useGetDepartmentsQuery, useMeQuery } from "../../generated";
 import { DepartmentContext, UserContext } from "../../utils/context";
-import { ChatScreen } from "../Chat";
 import { EquipScreen } from "../Equip";
-import { FinbooksScreen } from "../Finbooks";
 import { HomeScreen } from "../Home";
+import { SettingsScreen } from "../Settings";
 import { ShowError } from "../Shared/ShowError";
 import { UpdateScreen } from "../Updates";
 import { DrawerNav } from "./DrawerNav";
@@ -31,9 +30,9 @@ export const PrivateScreen = () => {
 					<Navigator drawerContent={DrawerNav}>
 						<Screen name="Home" component={HomeScreen} />
 						<Screen name="Equip" component={EquipScreen} />
-						<Screen name="Chat" component={ChatScreen} />
-						<Screen name="Finbooks" component={FinbooksScreen} />
+						{/* <Screen name="Chat" component={ChatScreen} />*/}
 						<Screen name="Updates" component={UpdateScreen} />
+						<Screen name="Settings" component={SettingsScreen} />
 					</Navigator>
 				</DepartmentContext.Provider>
 			</UserContext.Provider>

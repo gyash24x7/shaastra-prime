@@ -1,8 +1,9 @@
 import React from "react";
 import { Department, User } from "../generated";
+import { RecursivePartial } from "../generated/types";
 
 interface IUserContext {
-	user: Partial<User>;
+	user: RecursivePartial<User>;
 }
 
 export const UserContext = React.createContext<IUserContext | null>(null);
