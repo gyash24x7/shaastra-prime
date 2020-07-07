@@ -23,6 +23,7 @@ export class CreateUserInput {
 export class UpdatePasswordInput {
 	@Field() @IsEmail(undefined, { message: "Invalid Email!" }) email: string;
 	@Field() @MinLength(8, { message: "Password too short!" }) password: string;
+	@Field() passwordOTP: string;
 }
 
 @InputType("LoginInput")

@@ -4,6 +4,7 @@ import { GraphQLModule } from "@nestjs/graphql";
 import { AuthModule } from "./auth/auth.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { UserModule } from "./user/user.module";
+import { MailjetModule } from './mailjet/mailjet.module';
 
 @Module({
 	imports: [
@@ -16,7 +17,8 @@ import { UserModule } from "./user/user.module";
 		}),
 		AuthModule,
 		UserModule,
-		PrismaModule
+		PrismaModule,
+		MailjetModule
 	]
 })
 export class AppModule {}

@@ -2,6 +2,7 @@ import { forwardRef, Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
+import { MailjetModule } from "../mailjet/mailjet.module";
 import { PrismaModule } from "../prisma/prisma.module";
 import { UserModule } from "../user/user.module";
 import { UserService } from "../user/user.service";
@@ -23,7 +24,8 @@ import { JwtStrategy } from "./jwt.strategy";
 			imports: [ConfigModule, PrismaModule]
 		}),
 		forwardRef(() => UserModule),
-		PrismaModule
+		PrismaModule,
+		MailjetModule
 	],
 	exports: [AuthService, PassportModule, JwtStrategy]
 })

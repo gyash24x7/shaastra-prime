@@ -180,4 +180,5 @@ data/
 
 dump.rdb
 android
-migrations
+
+server2
