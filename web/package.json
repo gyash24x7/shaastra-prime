@@ -22,7 +22,7 @@
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "^3.4.1",
 		"react-stack-grid": "^0.7.1",
-		"react-use": "^15.2.5",
+		"react-use": "^15.3.2",
 		"subscriptions-transport-ws": "^0.9.16",
 		"typescript": "^3.9.5"
 	},
