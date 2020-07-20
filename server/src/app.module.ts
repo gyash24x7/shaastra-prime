@@ -5,6 +5,7 @@ import { AuthModule } from "./auth/auth.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { UserModule } from "./user/user.module";
 import { MailjetModule } from './mailjet/mailjet.module';
+import { ChannelModule } from './channel/channel.module';
 
 @Module({
 	imports: [
@@ -18,7 +19,8 @@ import { MailjetModule } from './mailjet/mailjet.module';
 		AuthModule,
 		UserModule,
 		PrismaModule,
-		MailjetModule
+		MailjetModule,
+		ChannelModule
 	]
 })
 export class AppModule {}

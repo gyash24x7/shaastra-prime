@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -42,13 +42,13 @@ model Channel {
   description String
   createdOn   DateTime    @default(now())
   archived    Boolean     @default(false)
-  type        TypeChannel @default(GROUP)
+  type        ChannelType @default(GROUP)
   members     User[]      @relation("ChannelMembers", references: [id])
   createdBy   User        @relation("ChannelCreatedBy", fields: [createdById], references: [id])
   createdById String
 }
 
-enum TypeChannel {
+enum ChannelType {
   DIRECT
   GROUP
 }
