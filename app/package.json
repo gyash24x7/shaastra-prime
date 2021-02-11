@@ -39,7 +39,7 @@
 		"react-native-screens": "~2.2.0",
 		"react-native-svg": "9.13.6",
 		"react-native-svg-uri": "^1.2.3",
-		"react-native-web": "~0.12.2",
+		"react-native-web": "~0.14.13",
 		"react-native-webview": "8.1.1",
 		"subscriptions-transport-ws": "^0.9.16"
 	},
