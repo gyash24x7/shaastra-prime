@@ -28,7 +28,7 @@
 		"graphql": "14.6.0",
 		"graphql-tag": "^2.10.3",
 		"lorem-ipsum": "^2.0.3",
-		"moment": "^2.26.0",
+		"moment": "^2.29.2",
 		"react": "~16.9.0",
 		"react-dom": "~16.9.0",
 		"react-native": "0.61.4",
